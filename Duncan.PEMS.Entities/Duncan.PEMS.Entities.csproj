@@ -58,9 +58,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Assemblies\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="LINQtoCSV, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -70,6 +70,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
@@ -102,6 +103,12 @@
     <Compile Include="Assets\SpaceModel.cs" />
     <Compile Include="AutoAlarm\AutoAlarmModel.cs" />
     <Compile Include="BatteryChange\BatteryChangeModel.cs" />
+    <Compile Include="CustomerProfile.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerSetting.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Customers\CustomerDemandZonesModel.cs" />
     <Compile Include="Customers\CustomerMaintenanceScheduleModel.cs" />
     <Compile Include="Customers\CustomerPAMConfigurationModel.cs" />
@@ -120,7 +127,28 @@
     <Compile Include="News\Dashboard.cs" />
     <Compile Include="News\DashboardRevenue.cs" />
     <Compile Include="PayByCell\PayByCell.cs" />
+    <Compile Include="ReportQuery.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportQueryModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReportQueryModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportQueryModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportQueryModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReportQueryModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Reports\ReportsModels.cs" />
+    <Compile Include="ReportType.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tariffs\HolidayRateModel.cs" />
     <Compile Include="Tariffs\RateScheduleModel.cs" />
     <Compile Include="Tariffs\ConfigProfileModel.cs" />
@@ -166,6 +194,12 @@
     <Compile Include="Transactions\RevenueAudit.cs" />
     <Compile Include="Transactions\SensorTransactionModel.cs" />
     <Compile Include="Transactions\TransactionDDLModel.cs" />
+    <Compile Include="UserCustomerAccess.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserProfile.cs">
+      <DependentUpon>ReportQueryModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Users\AccountModels.cs" />
     <Compile Include="Users\CustomerRoleModel.cs" />
     <Compile Include="Users\NoCommunication.cs" />
@@ -213,11 +247,26 @@
     <None Include="app.config" />
     <None Include="Duncan.PEMS.Entities.cd" />
     <None Include="packages.config" />
+    <EntityDeploy Include="ReportQueryModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ReportQueryModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ReportQueryModel.edmx.diagram">
+      <DependentUpon>ReportQueryModel.edmx</DependentUpon>
+    </None>
     <None Include="WebServices\FieldMaintenance\FieldMaintenanceSchema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReportQueryModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReportQueryModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="ReportQueryModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReportQueryModel.cs</LastGenOutput>
+    </Content>
     <Content Include="WebServices\SchemaGeneration.txt" />
   </ItemGroup>
   <ItemGroup>

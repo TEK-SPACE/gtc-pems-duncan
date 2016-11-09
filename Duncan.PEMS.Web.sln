@@ -1,10 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duncan.PEMS.Web", "Duncan.PEMS.Web\Duncan.PEMS.Web.csproj", "{703191F0-DCF0-489E-9AAE-4049C054C54F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duncan.PEMS.Entities", "Duncan.PEMS.Entities\Duncan.PEMS.Entities.csproj", "{656EB4F5-0353-41CB-B1CA-47D7209E9388}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duncan.PEMS.Business", "Duncan.PEMS.Business\Duncan.PEMS.Business.csproj", "{BDCA08A9-47E5-4AA2-9ADA-7ACD08768760}"
 EndProject
@@ -71,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duncan.PEMS.SpaceStatus", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBACProvider", "RBACProvider\RBACProvider.csproj", "{10EEBE03-826A-48AF-9A9B-043796BD4D65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duncan.PEMS.Entities", "Duncan.PEMS.Entities\Duncan.PEMS.Entities.csproj", "{656EB4F5-0353-41CB-B1CA-47D7209E9388}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,14 +87,6 @@ Global
 		{703191F0-DCF0-489E-9AAE-4049C054C54F}.dev|Any CPU.Build.0 = Debug|Any CPU
 		{703191F0-DCF0-489E-9AAE-4049C054C54F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{703191F0-DCF0-489E-9AAE-4049C054C54F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.demo|Any CPU.ActiveCfg = demo|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.demo|Any CPU.Build.0 = demo|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.dev|Any CPU.ActiveCfg = dev|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.dev|Any CPU.Build.0 = dev|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BDCA08A9-47E5-4AA2-9ADA-7ACD08768760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BDCA08A9-47E5-4AA2-9ADA-7ACD08768760}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDCA08A9-47E5-4AA2-9ADA-7ACD08768760}.demo|Any CPU.ActiveCfg = demo|Any CPU
@@ -186,6 +178,14 @@ Global
 		{10EEBE03-826A-48AF-9A9B-043796BD4D65}.dev|Any CPU.Build.0 = Debug|Any CPU
 		{10EEBE03-826A-48AF-9A9B-043796BD4D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10EEBE03-826A-48AF-9A9B-043796BD4D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.demo|Any CPU.ActiveCfg = demo|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.demo|Any CPU.Build.0 = demo|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.dev|Any CPU.ActiveCfg = dev|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.dev|Any CPU.Build.0 = dev|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656EB4F5-0353-41CB-B1CA-47D7209E9388}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

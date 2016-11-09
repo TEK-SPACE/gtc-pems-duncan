@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ReportQueryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CustomerProfile">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StatusChangeDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DefaultLocale" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="smalldatetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="smalldatetime" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="Is24HrFormat" Type="bit" />
+          <Property Name="TimeZoneID" Type="int" />
+          <Property Name="PEMSConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaintenanceConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReportingConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerTypeId" Type="int" Nullable="false" />
+          <Property Name="ConnectionStringName" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="CustomerSettings">
+          <Key>
+            <PropertyRef Name="CustomerSettingsId" />
+          </Key>
+          <Property Name="CustomerSettingsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="CustomerSettingTypeId" Type="int" Nullable="false" />
+          <Property Name="SettingValue" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ReportQuery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReportId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Query" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ReportType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCustomerAccess">
+          <Key>
+            <PropertyRef Name="UserCustomerAccessId" />
+          </Key>
+          <Property Name="UserCustomerAccessId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="56" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="RequirePasswordReset" Type="bit" />
+        </EntityType>
+        <Association Name="FK_CustomerSettings_CustomerProfile">
+          <End Role="CustomerProfile" Type="Self.CustomerProfile" Multiplicity="1" />
+          <End Role="CustomerSettings" Type="Self.CustomerSettings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSettings">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportQuery_CustomerProfile_Id">
+          <End Role="CustomerProfile" Type="Self.CustomerProfile" Multiplicity="1" />
+          <End Role="ReportQuery" Type="Self.ReportQuery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="ReportQuery">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportQuery_ReportType_Id">
+          <End Role="ReportType" Type="Self.ReportType" Multiplicity="1" />
+          <End Role="ReportQuery" Type="Self.ReportQuery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ReportQuery">
+              <PropertyRef Name="ReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_User">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1" />
+          <End Role="UserCustomerAccess" Type="Self.UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ReportQueryModelStoreContainer">
+          <EntitySet Name="CustomerProfile" EntityType="Self.CustomerProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerSettings" EntityType="Self.CustomerSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportQuery" EntityType="Self.ReportQuery" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportType" EntityType="Self.ReportType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCustomerAccess" EntityType="Self.UserCustomerAccess" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CustomerSettings_CustomerProfile" Association="Self.FK_CustomerSettings_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="CustomerSettings" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportQuery_CustomerProfile_Id" Association="Self.FK_ReportQuery_CustomerProfile_Id">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="ReportQuery" EntitySet="ReportQuery" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportQuery_ReportType_Id" Association="Self.FK_ReportQuery_ReportType_Id">
+            <End Role="ReportType" EntitySet="ReportType" />
+            <End Role="ReportQuery" EntitySet="ReportQuery" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_User" Association="Self.FK_UserCustomerAccess_User">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccess" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ReportQueryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ReportingQueryEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="UserProfiles" EntityType="ReportQueryModel.UserProfile" />
+          <EntitySet Name="CustomerProfiles" EntityType="ReportQueryModel.CustomerProfile" />
+          <EntitySet Name="CustomerSettings" EntityType="ReportQueryModel.CustomerSetting" />
+          <EntitySet Name="UserCustomerAccesses" EntityType="ReportQueryModel.UserCustomerAccess" />
+          <AssociationSet Name="FK_CustomerSettings_CustomerProfile" Association="ReportQueryModel.FK_CustomerSettings_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="CustomerSetting" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_User" Association="ReportQueryModel.FK_UserCustomerAccess_User">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccesses" />
+          </AssociationSet>
+          <EntitySet Name="ReportQueries" EntityType="ReportQueryModel.ReportQuery" />
+          <EntitySet Name="ReportTypes" EntityType="ReportQueryModel.ReportType" />
+          <AssociationSet Name="FK_ReportQuery_CustomerProfile_Id" Association="ReportQueryModel.FK_ReportQuery_CustomerProfile_Id">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="ReportQuery" EntitySet="ReportQueries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReportQuery_ReportType_Id" Association="ReportQueryModel.FK_ReportQuery_ReportType_Id">
+            <End Role="ReportType" EntitySet="ReportTypes" />
+            <End Role="ReportQuery" EntitySet="ReportQueries" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="56" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RequirePasswordReset" Type="Boolean" />
+          <NavigationProperty Name="UserCustomerAccesses" Relationship="ReportQueryModel.FK_UserCustomerAccess_User" FromRole="UserProfile" ToRole="UserCustomerAccess" />
+        </EntityType>
+        <EntityType Name="CustomerProfile">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="StatusChangeDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DefaultLocale" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="0" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="0" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="Is24HrFormat" Type="Boolean" />
+          <Property Name="TimeZoneID" Type="Int32" />
+          <Property Name="PEMSConnectionStringName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MaintenanceConnectionStringName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ReportingConnectionStringName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ConnectionStringName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerSettings" Relationship="ReportQueryModel.FK_CustomerSettings_CustomerProfile" FromRole="CustomerProfile" ToRole="CustomerSetting" />
+          <NavigationProperty Name="ReportQueries" Relationship="ReportQueryModel.FK_ReportQuery_CustomerProfile_Id" FromRole="CustomerProfile" ToRole="ReportQuery" />
+        </EntityType>
+        <EntityType Name="CustomerSetting">
+          <Key>
+            <PropertyRef Name="CustomerSettingsId" />
+          </Key>
+          <Property Name="CustomerSettingsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerSettingTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SettingValue" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerProfile" Relationship="ReportQueryModel.FK_CustomerSettings_CustomerProfile" FromRole="CustomerSetting" ToRole="CustomerProfile" />
+        </EntityType>
+        <EntityType Name="UserCustomerAccess">
+          <Key>
+            <PropertyRef Name="UserCustomerAccessId" />
+          </Key>
+          <Property Name="UserCustomerAccessId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserProfile" Relationship="ReportQueryModel.FK_UserCustomerAccess_User" FromRole="UserCustomerAccess" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_CustomerSettings_CustomerProfile">
+          <End Type="ReportQueryModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="ReportQueryModel.CustomerSetting" Role="CustomerSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSetting">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_User">
+          <End Type="ReportQueryModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="ReportQueryModel.UserCustomerAccess" Role="UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ReportQuery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="Query" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerProfile" Relationship="ReportQueryModel.FK_ReportQuery_CustomerProfile_Id" FromRole="ReportQuery" ToRole="CustomerProfile" />
+          <NavigationProperty Name="ReportType" Relationship="ReportQueryModel.FK_ReportQuery_ReportType_Id" FromRole="ReportQuery" ToRole="ReportType" />
+        </EntityType>
+        <EntityType Name="ReportType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ReportQueries" Relationship="ReportQueryModel.FK_ReportQuery_ReportType_Id" FromRole="ReportType" ToRole="ReportQuery" />
+        </EntityType>
+        <Association Name="FK_ReportQuery_CustomerProfile_Id">
+          <End Type="ReportQueryModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="ReportQueryModel.ReportQuery" Role="ReportQuery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="ReportQuery">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReportQuery_ReportType_Id">
+          <End Type="ReportQueryModel.ReportType" Role="ReportType" Multiplicity="1" />
+          <End Type="ReportQueryModel.ReportQuery" Role="ReportQuery" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ReportType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ReportQuery">
+              <PropertyRef Name="ReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ReportQueryModelStoreContainer" CdmEntityContainer="ReportingQueryEntities" >
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="ReportQueryModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="RequirePasswordReset" ColumnName="RequirePasswordReset" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerProfiles">
+            <EntityTypeMapping TypeName="ReportQueryModel.CustomerProfile">
+              <MappingFragment StoreEntitySet="CustomerProfile">
+                <ScalarProperty Name="ConnectionStringName" ColumnName="ConnectionStringName" />
+                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
+                <ScalarProperty Name="ReportingConnectionStringName" ColumnName="ReportingConnectionStringName" />
+                <ScalarProperty Name="MaintenanceConnectionStringName" ColumnName="MaintenanceConnectionStringName" />
+                <ScalarProperty Name="PEMSConnectionStringName" ColumnName="PEMSConnectionStringName" />
+                <ScalarProperty Name="TimeZoneID" ColumnName="TimeZoneID" />
+                <ScalarProperty Name="Is24HrFormat" ColumnName="Is24HrFormat" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="DefaultLocale" ColumnName="DefaultLocale" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="StatusChangeDate" ColumnName="StatusChangeDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettings">
+            <EntityTypeMapping TypeName="ReportQueryModel.CustomerSetting">
+              <MappingFragment StoreEntitySet="CustomerSettings">
+                <ScalarProperty Name="SettingValue" ColumnName="SettingValue" />
+                <ScalarProperty Name="CustomerSettingTypeId" ColumnName="CustomerSettingTypeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerSettingsId" ColumnName="CustomerSettingsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCustomerAccesses">
+            <EntityTypeMapping TypeName="ReportQueryModel.UserCustomerAccess">
+              <MappingFragment StoreEntitySet="UserCustomerAccess">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserCustomerAccessId" ColumnName="UserCustomerAccessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportQueries">
+            <EntityTypeMapping TypeName="ReportQueryModel.ReportQuery">
+              <MappingFragment StoreEntitySet="ReportQuery">
+                <ScalarProperty Name="Query" ColumnName="Query" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ReportId" ColumnName="ReportId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportTypes">
+            <EntityTypeMapping TypeName="ReportQueryModel.ReportType">
+              <MappingFragment StoreEntitySet="ReportType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

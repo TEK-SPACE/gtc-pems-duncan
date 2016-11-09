@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3f562a6903e041d5a984c7fbd92f2d29" Name="Diagram1" >
+        <EntityTypeShape EntityType="ReportQueryModel.UserProfile" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ReportQueryModel.CustomerProfile" Width="1.5" PointX="0.75" PointY="5" />
+        <EntityTypeShape EntityType="ReportQueryModel.CustomerSetting" Width="1.5" PointX="3" PointY="6.25" />
+        <EntityTypeShape EntityType="ReportQueryModel.UserCustomerAccess" Width="1.5" PointX="3.375" PointY="1.375" />
+        <AssociationConnector Association="ReportQueryModel.FK_CustomerSettings_CustomerProfile" />
+        <AssociationConnector Association="ReportQueryModel.FK_UserCustomerAccess_User" />
+        <EntityTypeShape EntityType="ReportQueryModel.ReportQuery" Width="1.5" PointX="3" PointY="9.125" />
+        <EntityTypeShape EntityType="ReportQueryModel.ReportType" Width="1.5" PointX="0.75" PointY="10.5" />
+        <AssociationConnector Association="ReportQueryModel.FK_ReportQuery_CustomerProfile_Id" />
+        <AssociationConnector Association="ReportQueryModel.FK_ReportQuery_ReportType_Id" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

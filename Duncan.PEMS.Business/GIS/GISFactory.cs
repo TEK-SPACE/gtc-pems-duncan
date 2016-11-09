@@ -26,6 +26,7 @@ using System.Data.Objects;
 using Duncan.PEMS.Business.Exports;
 using Duncan.PEMS.Entities.News;
 using System.Data.Entity.Infrastructure;
+using Duncan.PEMS.Entities;
 using Oracle.ManagedDataAccess.Client;
 
 namespace Duncan.PEMS.Business.GIS
@@ -1588,47 +1589,35 @@ namespace Duncan.PEMS.Business.GIS
                     //** Valid end date 
                 }
 
-                //** To avoid Timeout Error in EF 5.0, use the below command
-                ((IObjectContextAdapter)NewOrleansDataContext).ObjectContext.CommandTimeout = 3600;
+                var user = HttpContext.Current.User.Identity.Name;
+                string connectionString, reportQuery;
+                string factory = "GIS";
+                using (ReportingQueryEntities context = new ReportingQueryEntities())
+                {
+                    var entity = (from up in context.UserProfiles
+                        join uca in context.UserCustomerAccesses on up.UserId equals uca.UserId
+                        join cs in context.CustomerSettings on uca.CustomerId equals cs.CustomerId
+                        join cp in context.CustomerProfiles on cs.CustomerId equals cp.CustomerId
+                        where up.UserName == user && cp.CustomerId == CurrentCity
+                        select new {cp.CustomerId, cp.ConnectionStringName, cp.DisplayName}
+                    ).FirstOrDefault();
 
-                string connectionString = "DATA SOURCE=aipro2;PASSWORD=atOu!8%2n;PERSIST SECURITY INFO=True;USER ID=VGANESAN";
+
+                    connectionString = entity?.ConnectionStringName;
+                    reportQuery = (from rq in context.ReportQueries
+                        join rt in context.ReportTypes on rq.ReportId equals rt.Id
+                        where rt.Name == factory && rq.CustomerId == entity.CustomerId
+                        select rq.Query).FirstOrDefault();
+                }
+
+                //** To avoid Timeout Error in EF 5.0, use the below command
+                    ((IObjectContextAdapter)NewOrleansDataContext).ObjectContext.CommandTimeout = 3600;
+
+                //string connectionString = "DATA SOURCE=aipro2;PASSWORD=atOu!8%2n;PERSIST SECURITY INFO=True;USER ID=VGANESAN";
                 using (OracleConnection connection = new OracleConnection(connectionString))
                 {
                     var oracleCommand =
-                        new OracleCommand(
-                            @"SELECT ALG.OFFICERID,
-                              ALG.OFFICERNAME,
-                              ALG.PRIMARYACTIVITYNAME,
-                              ALG.END_LOCLATITUDE,
-                              ALG.END_LOCLONGITUDE,
-                              MAX(ALG.ENDDATE) AS  ENDDATE,
-                              MAX(ALG.ENDTIME) AS  ENDTIME
-                            FROM
-                              (SELECT AL.OFFICERID,
-                                AL.OFFICERNAME,
-                                FIRST_VALUE(AL.PRIMARYACTIVITYNAME) OVER(ORDER BY AL.OFFICERID, AL.OFFICERNAME ASC ROWS UNBOUNDED PRECEDING) AS PRIMARYACTIVITYNAME,
-                                FIRST_VALUE(AL.END_LOCLATITUDE) OVER(ORDER BY AL.OFFICERID, AL.OFFICERNAME ASC ROWS UNBOUNDED PRECEDING)     AS END_LOCLATITUDE,
-                                FIRST_VALUE(AL.END_LOCLONGITUDE) OVER(ORDER BY AL.OFFICERID, AL.OFFICERNAME ASC ROWS UNBOUNDED PRECEDING)    AS END_LOCLONGITUDE,
-                                MAX(AL.ENDDATE) ENDDATE,
-                                MAX(AL.ENDTIME) ENDTIME
-                              FROM NEWORLEANSLA.ACTIVITYLOG AL
-                              WHERE(AL.ENDDATE >= TO_DATE(:STARTTIMEOUTPUT, 'DD-MON-YY') AND TRUNC(AL.ENDTIME) >= TO_DATE(:STARTTIMEENDOUTPUT, 'DD-MON-YY'))
-                                    AND
-                                    (AL.ENDDATE <= TO_DATE(:ENDTIMEOUTPUT, 'DD-MON-YY') AND TRUNC(AL.ENDTIME) <= TO_DATE(:ENDTIMEENDOUTPUT, 'DD-MON-YY'))
-                              GROUP BY AL.OFFICERID,
-                                AL.OFFICERNAME,
-                                AL.PRIMARYACTIVITYNAME,
-                                AL.END_LOCLATITUDE,
-                                AL.END_LOCLONGITUDE
-                              ) ALG
-                            GROUP BY ALG.OFFICERID,
-                              ALG.OFFICERNAME,
-                              ALG.PRIMARYACTIVITYNAME,
-                              ALG.END_LOCLATITUDE,
-                              ALG.END_LOCLONGITUDE
-                            ORDER BY ALG.OFFICERID,
-                              ALG.OFFICERNAME,
-                              ALG.PRIMARYACTIVITYNAME", connection);
+                        new OracleCommand(reportQuery, connection);
                     oracleCommand.Parameters.Add(new OracleParameter("STARTTIMEOUTPUT", startTimeOutput.ToString("dd-MMM-yyyy")));
                     oracleCommand.Parameters.Add(new OracleParameter("STARTTIMEENDOUTPUT", startTimeEndOutput.ToString("dd-MMM-yyyy")));
                     oracleCommand.Parameters.Add(new OracleParameter("ENDTIMEOUTPUT", endTimeOutput.ToString("dd-MMM-yyyy")));
