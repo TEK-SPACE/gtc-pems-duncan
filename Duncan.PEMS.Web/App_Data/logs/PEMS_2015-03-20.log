@@ -1,0 +1,97 @@
+2015-03-20 16:40:27.1563 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:40:27.2603 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2015-03-20 16:40:27.2603 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-03-20 16:40:27.2603 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:40:58.3621 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:40:58.6891 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2015-03-20 16:40:58.6891 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:40:58.6891 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:40:58.9992 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:40:59.1592 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_New, A:GIS
+2015-03-20 16:40:59.1592 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:40:59.1592 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:00.0402 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:00.1892 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_New, A:GIS
+2015-03-20 16:41:00.1892 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:41:00.1892 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:00.3102 | Error | Duncan.PEMS.Web.Areas.city.Controllers.GISController.GetCustomerGridDetails_New | ERROR IN GetCustomerGridDetails Method (GIS Reports)
+2015-03-20 16:41:18.2563 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:18.3313 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Events
+2015-03-20 16:41:18.3313 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-03-20 16:41:18.3313 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:20.0384 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:20.1634 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetFilterValues, A:Events
+2015-03-20 16:41:20.1634 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:41:20.1634 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:25.2447 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:25.3327 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:41:25.3327 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:41:25.3327 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:25.6557 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:25.7437 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:41:25.7437 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:41:25.7437 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:41:44.2007 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:41:44.3077 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:41:44.3077 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:41:44.3077 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:42:26.5262 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:42:26.6252 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:42:26.6252 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:42:26.6252 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:42:43.2681 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:42:43.3681 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:42:43.3681 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:42:43.3681 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:45:48.9457 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:45:49.0357 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:45:49.0357 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:45:49.0357 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:46:43.1168 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:46:43.2158 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:46:43.2158 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:46:43.2158 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:46:48.8402 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:46:48.9322 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:46:48.9322 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:46:48.9322 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:48:00.9163 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:48:01.0363 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:48:01.0383 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:48:01.0383 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:48:06.9636 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:48:07.0636 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:48:07.0636 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:48:07.0636 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:51:03.5277 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:51:03.6287 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:51:03.6287 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:51:03.6287 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:51:06.8369 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:51:06.9479 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:51:06.9479 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:51:06.9479 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:55:27.0358 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:55:27.1458 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:55:27.1458 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:55:27.1458 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:55:57.1935 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:55:57.5395 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAlarmEvents, A:Events
+2015-03-20 16:55:57.5395 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:55:57.5395 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:55:58.1666 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:55:58.2566 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:55:58.2566 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:55:58.2566 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:55:59.7827 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:55:59.8777 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAlarmEvents, A:Events
+2015-03-20 16:55:59.8777 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:55:59.8777 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:56:11.1243 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:56:11.2273 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Events
+2015-03-20 16:56:11.2273 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:56:11.2273 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-03-20 16:56:13.2614 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-03-20 16:56:13.3435 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryEvents, A:Events
+2015-03-20 16:56:13.3435 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-03-20 16:56:13.3435 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit

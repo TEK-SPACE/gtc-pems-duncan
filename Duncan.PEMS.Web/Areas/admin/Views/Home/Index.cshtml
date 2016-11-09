@@ -1,0 +1,46 @@
+﻿@using Duncan.PEMS.DataAccess
+@using Duncan.PEMS.DataAccess.RBAC
+@using Duncan.PEMS.Utilities
+@model List<Duncan.PEMS.Entities.News.NewsItem>
+
+@{
+    ViewBag.Title = "PEMS Administration Home Page";
+}
+                      
+<div class="two-column" id="news">
+    <h2>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "News and Announcements" )</h2>
+    <h3>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Today is" )  @String.Format("{0:D}", ViewData[Constants.ViewData.CurrentLocalTime]) </h3>
+    
+    <ul>
+        @foreach (var newsItem in Model)
+        {
+            <li>
+                <span style="font-style: italic">
+                    @newsItem.EffectiveDate.ToShortDateString()
+                </span>
+                <br/>
+                <span>
+                    @Html.Raw( @HttpUtility.HtmlDecode( @newsItem.Content ) )
+                </span>
+            </li>
+        }
+    </ul>
+</div>
+
+@section PageHeader 
+{
+    @{
+        var userContext = new PEMRBACEntities();
+        var username = User.Identity.Name;
+        var user = userContext.UserProfiles.SingleOrDefault( u => u.UserName == username );
+        <h1><span style="margin-left: 20px;">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Welcome"), @String.Format("{0} {1}", user.FirstName, user.LastName)</span></h1>
+    }
+    @if ( ViewBag.PWExpirationDays < 15 )
+    {
+        <div class="message">
+            <ul>
+                 <li>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Your password will expire in" ) @ViewBag.PWExpirationDays @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "day(s)." )</li>
+           </ul>
+        </div>
+    }
+}

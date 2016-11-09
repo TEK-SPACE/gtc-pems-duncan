@@ -1,0 +1,25 @@
+﻿#reportNameDiv {
+	display: none;
+	font-size: 20px;
+	line-height: 30px;
+	font-family: "Segoe UI", Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.reportNameModalDialog {
+	border: 1px solid #ddd;
+	background-color: #fff;
+	z-index: 1001;
+}
+
+.ui-widget-overlay {
+	z-index: 1000;
+}
+
+.reportNameBody {
+	width: 100%;
+	height: 100%;
+}
+
+.reportNameBody>table {
+	margin: 20px 10px;
+}

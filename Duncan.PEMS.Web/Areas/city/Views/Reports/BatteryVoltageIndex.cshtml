@@ -1,0 +1,882 @@
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.BatteryChange.BatteryChangeModel
+
+@{
+    ViewBag.Title = "Battery Voltage Report";
+}
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+    <style type="text/css">
+        .labels {
+            color: black;
+            background-color: white;
+            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            width: 41px;
+            /*width: 16px;*/
+            border: 2px solid black;
+            white-space: nowrap;
+        }
+
+        .k-chart.small-chart {
+            width: 320px;
+            height: 260px;
+        }
+
+
+        /*#note
+        {
+            position: absolute;
+            top: 50%;
+            margin-top: -30px;
+            left: 50%;
+            margin-left: -200px;
+            z-index: 2;
+            width: 400px;
+            height: 60px;
+            background: #ffd;
+            border: 1px solid #f00;
+            padding: 1em;
+            text-align: center;
+        }*/
+
+
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+            .filter-SearchButton:hover {
+                background: #ccc !important;
+                text-decoration: none !important;
+            }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker {
+            background-color: transparent !important;
+        }
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+        #grdCustomerDetails {
+            margin: 0;
+            padding: 0;
+            border-width: 0;
+            height: 100%; /* DO NOT USE !important for setting the Grid height! */
+        }
+
+
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+    </style>
+}
+
+@section PageHeader
+{
+    <h1>Admin / <span>Battery Voltage Report</span></h1>
+
+
+}
+
+@section PageFilter
+{
+    <div class="one-column" style="display:none;">
+        <div class="filter-option">
+            <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Range")</span>
+            <input id="dp-1" data-role="datetimepicker" style="width: 210px" data-bind="value: startDate" />
+            to
+            <input id="dp-2" data-role="datetimepicker" style="width: 210px" data-bind="value: endDate" />
+            <span class="required_asterisk">*</span>
+        </div>
+    </div>
+
+    <div style="clear:both;" class="two-column">
+        <div class="filter-option">
+            <label class="filter-label">Location Type:</label>
+            @(Html.Kendo().DropDownList()
+                      .Name("ddlLocationType")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                       .HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlLocationType", onchange = "GetLocationTypeId()" })
+                     .Events(e => e
+                                    .DataBound("onDataBound_LocationType")
+                                )
+                      .OptionLabel("All")
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                              Text = "Area",
+                              Value = "Area"
+                          },
+                          new SelectListItem() {
+                              Text = "Zone",
+                              Value = "Zone"
+                          },
+                          new SelectListItem() {
+                              Text = "Street",
+                              Value = "Street"
+                          },
+                           new SelectListItem() {
+                              Text = "Suburb",
+                              Value = "Suburb"
+                          }
+                      })
+
+            )
+        </div>
+
+    </div>
+
+    <div>
+        <div class="filter-option" id="location-container">
+            <label id="lblLocationType" class="filter-label">Location:</label>
+            @(Html.Kendo().AutoCompleteFor(a => a.AssetID).Name("autocompleteLocationId").DataTextField("Text").HtmlAttributes(new { style = "width:239px;font-size:16px;" })
+
+                             .DataSource(source =>
+                             {
+                                 source.Read(read =>
+                                 {
+                                     read.Url("../BatteryChange/GetLocationTypeId").Data("SetLocationType");
+                                 });
+                                 source.ServerFiltering(true);
+                             }).Filter("startswith")
+                             .Suggest(true)
+                             .MinLength(1)
+
+            )
+
+
+        </div>
+    </div>
+
+    <div style="clear:both;" class="two-column">
+        <div class="filter-option">
+            <label class="filter-label">Asset ID:</label>
+            @(Html.Kendo().AutoCompleteFor(a => a.Area).Name("autocompleteAssetId").DataTextField("Text").HtmlAttributes(new { style = "width:289px;font-size:16px;" })
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                        {
+                                            read.Url("../BatteryChange/GetAssetIds").Data("GetParametersForAssetIds");
+                                        });
+                                        source.ServerFiltering(true);
+                                    }).Filter("startswith").MinLength(2).Suggest(true)
+
+            )
+
+        </div>
+
+    </div>
+
+    <div style="float:left;">
+        <div class="filter-option" style="width:213px;">
+            <label class="filter-label" style="width:125px;">Voltage Range:</label>
+            @(Html.Kendo().NumericTextBox()
+                  .Name("highVol")
+                  .HtmlAttributes(new { style = "width:85px;font-size:16px;" })
+                    //.Format("c")
+                  .Min(1)
+                  .Value(1)
+            )
+
+
+
+
+        </div>
+        <div class="filter-option" style="width:130px;">
+            <label class="filter-label" style="float:left;width:32px;">to</label>
+            @(Html.Kendo().NumericTextBox()
+                  .Name("lowVol")
+                  .HtmlAttributes(new { style = "width:85px;font-size:16px;" })
+                    //.Format("c")
+                  .Min(1)
+                  .Value(3.99)
+            )
+        </div>
+
+    </div>
+
+
+    <div id="refreshControls" style="clear:both;margin-left: 20px; float: left;">
+        <div style="float: left;">
+            <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick="GetCustomerGridDetails_func('clicked', 'Search')">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+        </div>
+
+
+    </div>
+
+}
+
+
+@section ExportButtons
+{
+    @*Export options - Step 1 *@
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action("ExportToExcel_BatteryChange", "BatteryChange",new { page = 1, pageSize = "~", filter = "~", sort = "~", startDate = "~", endDate = "~", AssetId = "~", LocationTypeId = "~", LocationTypeName="~", LocationId="~", voltageStart="~", voltageEnd="~" })">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action("ExportToCSV_BatteryChange", "BatteryChange", new { page = 1, pageSize = "~", filter = "~", sort = "~", startDate = "~", endDate = "~", AssetId = "~", LocationTypeId = "~", LocationTypeName="~", LocationId="~", voltageStart="~", voltageEnd="~" })">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action("ExportToPDF_BatteryChange", "BatteryChange", new { page = 1, pageSize = "~", filter = "~", sort = "~", startDate = "~", endDate = "~", AssetId = "~", LocationTypeId = "~", LocationTypeName="~", LocationId="~", voltageStart="~", voltageEnd="~" })">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+<div style="width:100%;height:100%"></div>
+<div id="piechart" class="k-chart" style="visibility:hidden;">
+    @* @(Html.Kendo().Chart()
+        .Name("batVoltChart")
+          .HtmlAttributes(new { style = "width:100%;height:290px;font-size:12px;" })
+
+        .Legend(legend => legend
+            .Visible(true).Position(ChartLegendPosition.Top).Font("12px Arial")
+        ).ChartArea(chartArea => chartArea.Margin(5, 0, 0, 0).Border(0, "#FFF", ChartDashType.Dot))
+        .Series(series =>
+        {
+            series.Pie(new dynamic[] {
+                new {category="Normal",value= 80, percentage=80, color="#00a2e8"},
+                new {category="Plan to Change",value= 15, percentage=10, color="#3ec770"},
+                new {category="Change",value= 5, percentage=10, color="#ff6112"}
+
+            })
+            .Labels(labels => labels
+                .Template("#:value# (#:percentage#%)")
+                .Background("transparent")
+                .Visible(true)
+                .Font("12px Arial")
+                .Format("{0}%")
+                .Position(ChartPieLabelsPosition.Center)
+            )
+            .StartAngle(150);
+        })
+        .Tooltip(tooltip => tooltip
+            .Visible(true)
+             .Format("{0}%")
+        )
+        )*@
+</div>
+<div id="DivCustomerDetails" style="display: none; width: 100%;height:5000px;margin-left:0px;">
+
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.BatteryChange.BatteryChangeModel>()
+
+        .Name("grdCustomerDetails")
+        .HtmlAttributes(new { style = "width:100%;height:5000px" })
+        .Columns(col =>
+        {
+            col.Bound(a => a.TimeOfLastStatus).Title("Time of Status Report").Width("178px");
+            col.Bound(a => a.AssetType).Title("Asset Type").Width("144px");
+            col.Bound(a => a.MID).Title("Asset Id").Width("95px");
+            col.Bound(a => a.MeterName).Title("Asset Name").Width("85px");
+            col.Bound(a => a.Area).Title("Area").Width("90px");
+            col.Bound(a => a.Zone).Title("Zone").Width("135px");
+            col.Bound(a => a.Street).Title("Street").Width("135px");
+            col.Bound(a => a.Suburb).Title("Suburb").Width("80px");
+            col.Bound(a => a.avgVoltage).Title("Battery Voltage (V)").Width("95px");
+
+        }
+            )
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+            //.Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Read(read => read.Action("GetBatteryChangeDetails", "BatteryChange").Data("GetAllFilterData_PieChart"))
+                .PageSize(100)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 500 })) // Enable paging
+
+    )
+
+
+</div>
+
+@section Scripts
+{
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    <script type="text/javascript" src="~/Scripts/html2canvas.js"></script>
+
+
+    @Scripts.Render("~/bundles/kendo")
+
+    @*Scripts by Sampath Start*@
+
+    <script type="text/javascript">
+
+        var spinner;
+        var timeInterval;
+        var AssetStatus_timeInterval;
+        var spCrit_layer_2_timeInterval;
+        var isLegendDisplayed = false;
+        var ROOT = '@Url.Content("~/")';
+        var myChartData;
+
+        var layer2_Criteria;
+        var layer3_Criteria;
+        var temp = 0;
+
+
+        var isAssetTypeLoaded = false;
+        var isAssetStatusLoaded = false;
+        var isLocationTypeLoaded = false;
+        var isDemandZonesLoaded = false;
+        var isLayer2_SpecCriteriaLoaded = false;
+        var isLayer3_SpecCriteriaLoaded = false;
+
+        var isLocationTypeLoaded = false;
+
+        var startD = new Date();
+        startD.setDate(new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]').getDate() - 1);
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+        var endD = new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate() - 1);
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+
+        var viewModel = kendo.observable({
+            startDate: startD,
+            endDate: endD,
+
+        });
+
+
+        //** STEP-2
+        var gridFilters = { "CurrentPage": 1, "PageSize": 100 };
+        var sorts = {};
+
+        function GetParametersForAssetIds() {
+
+            var LocationTypeId = $("#ddlLocationType").val();
+            var ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            var typedText = $('#autocompleteAssetId').val();
+
+
+            return { myLocationTypeId: LocationTypeId, myParallerLocationId: ParallerLocationId, myTypedText: typedText }
+
+        }
+
+        //** STEP-3a
+        function UpdateGridState() {
+
+            /// Update the grid state object with grid's current state
+            var currentGrid = $("#grdCustomerDetails").data("kendoGrid");
+
+            gridFilters.CurrentPage = currentGrid.dataSource.page();
+            //gridFilters.SelectedRow = currentGrid.select().index();
+            gridFilters.sorts = JSON.stringify(currentGrid.dataSource._sort);
+
+            gridFilters.pageSize = currentGrid.dataSource.pageSize();
+
+        }
+
+        //** STEP-3b
+        function UpdateExportLinks() { //** Export options - Step 3
+
+            /// Update the href for the export buttons
+            var grid = $('#grdCustomerDetails').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+
+            $("#exportButtons").css("display", "inline");
+
+        }
+
+        function GetExportHref(href, requestObject, grid) { //** Export options - Step 4
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            //href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            var $StartDate = $('#dp-1').val();//viewModel.get('startDate');
+            href = href.replace(/startDate=([^&]*)/, 'startDate=' + ($StartDate));
+
+            var $EndDate = $('#dp-2').val();//viewModel.get('endDate');
+            href = href.replace(/endDate=([^&]*)/, 'endDate=' + ($EndDate));
+
+            var $AssetId = $("#autocompleteAssetId").val();
+            href = href.replace(/AssetId=([^&]*)/, 'AssetId=' + ($AssetId));
+
+            var $LocationTypeId = $("#ddlLocationType").val();
+            href = href.replace(/LocationTypeId=([^&]*)/, 'LocationTypeId=' + ($LocationTypeId));
+
+            var $LocationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            href = href.replace(/LocationTypeName=([^&]*)/, 'LocationTypeName=' + ($LocationTypeName));
+
+            var $ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            href = href.replace(/LocationId=([^&]*)/, 'LocationId=' + ($ParallerLocationId));
+
+            var $volStartRange = $('#highVol').val();
+            href = href.replace(/voltageStart=([^&]*)/, 'voltageStart=' + ($volStartRange));
+
+            var $volEndRange = $('#lowVol').val();
+            href = href.replace(/voltageEnd=([^&]*)/, 'voltageEnd=' + ($volEndRange));
+
+            return href;
+        }
+
+        $(window).resize(function () {
+            resizeGrid();
+        });
+
+        function resizeGrid() {
+
+            var gridElement = $("#grdCustomerDetails"),
+                dataArea = gridElement.find(".k-grid-content"),
+                gridHeight = gridElement.innerHeight(),
+                otherElements = gridElement.children().not(".k-grid-content"),
+                otherElementsHeight = 0;
+            otherElements.each(function () {
+                otherElementsHeight += $(this).outerHeight();
+            });
+            dataArea.height(gridHeight - otherElementsHeight);
+        }
+
+
+        $(document).ready(function () {
+
+            // bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+
+            // when the view state changes, cache it
+            viewModel.bind("change", function (e) {
+            });
+
+            $("#autocompleteLocationId").val("Select a type");
+
+
+
+        });
+
+
+
+
+        function SetLocationType() {
+
+            var LocationType = $("#ddlLocationType").val();
+            var typedText = String($("#autocompleteLocationId").val()).trim();
+            return { locationType: LocationType, myTypedText: typedText }
+        }
+
+        function SetAssetType() {
+
+            var AssetType = $("#ddlAssetType").val();
+            var layerID = $("#layerDropDown").val();
+
+            return { assetType: AssetType, LayerID: layerID }
+        }
+
+        function GetLocationTypeId() {
+
+
+            var AutoComplete = $("#autocompleteLocationId").data("kendoAutoComplete");
+
+            var LocationType = $("#ddlLocationType").data("kendoDropDownList").text();
+            $("#autocompleteLocationId").val("");
+            if (LocationType != "All") {
+
+                $("#lblLocationType").html(LocationType + ":");
+
+            }
+            else {
+
+                $("#lblLocationType").html("Location:");
+                $("#autocompleteLocationId").val("Select a type");
+            }
+
+            // AutoComplete.dataSource.read();
+
+            //  AutoComplete.refresh();
+
+
+        }
+
+        function createChart() {
+            $("#piechart").kendoChart({
+                legend: {
+                    position: "top",
+                    //offsetX: 785,
+                    //offsetY: 113
+                },
+                seriesDefaults: {
+                    labels: {
+                        template: "#:value# " + " (#= kendo.format('{0:P}', percentage)#)",
+                        position: "center",
+                        visible: true,
+                        Font: "12px Arial",
+                        background: "transparent"
+                    }
+                },
+                chartArea: {
+                    background: ""
+                },
+                series: [{
+                    type: "pie",
+                    data: myChartData,
+                    padding: 20
+                }],
+                tooltip: {
+                    visible: true,
+                    template: "#= category # - #= kendo.format('{0:P}', percentage) #"
+                }
+            });
+
+            // Resize the chart whenever window is resized
+            //$(window).resize(function () {
+            //    $("#piechart svg").width(Number($(window).width()));
+            //    $("#piechart svg").height(Number($(window).height()));
+            //    $("#piechart").data("kendoChart").refresh();
+            //});
+        }
+
+
+
+        function onDataBound_LocationType() {
+            isLocationTypeLoaded = true;
+        }
+
+
+        function onDataBound(arg) {
+            showProgressBar(false);
+            var result = $("#grdCustomerDetails").data().kendoGrid.dataSource.data()
+
+            if (result.length == 0) {
+                alert('No data.');
+                $("#piechart svg").width(Number(0));
+                $("#piechart svg").height(Number(0));
+                $("#piechart").css('visibility', 'hidden');
+
+                $('#DivCustomerDetails').css('display', 'none');
+                return;
+            }
+
+            //** Show Chart
+            //** Declare an array to hold all PieChart Data
+            myChartData = [];
+
+            for (var i = 0; i < 3; i++) {
+                myChartData.push(result[0].chartData[i])
+            }
+
+
+            // alert('myChartData.length' + myChartData.length);
+            if (myChartData.length > 0) {
+                $("#piechart").css('visibility', 'visible');
+
+                // Initialize the chart with a delay to make sure the initial animation is visible
+                createChart();
+
+                // Initial settings for chart
+                $("#piechart svg").width(Number(360));
+                $("#piechart svg").height(Number(280));
+                $("#piechart").data("kendoChart").refresh();
+
+            } else {
+
+                $("#piechart svg").width(Number(0));
+                $("#piechart svg").height(Number(0));
+                $("#piechart").css('visibility', 'hidden');
+            }
+
+            //** SHow Grid
+
+            $("#grdCustomerDetails").find(".k-pager-wrap").insertBefore(".k-grid-header");
+
+            $("#DivCustomerDetails").show();
+            $('#DivCustomerDetails').css('display', 'inline');
+
+
+
+
+            //** Export options - Step 3
+
+            UpdateGridState();
+            UpdateExportLinks();
+
+            //************************************************************************************************
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+
+
+
+
+        }
+
+
+        function GetCustomerGridDetails_func(IsClicked, ClickType) {
+
+            if (IsClicked == "clicked") {
+
+                var $startDate = viewModel.startDate;
+
+                //Test to see if the start date is not empty, and if it is a valid date
+                if (!Date.parse($startDate)) {
+                    alert("Start date must be a valid date");
+                    return;
+                }
+                var $endDate = viewModel.endDate;
+
+                //Test to see if the end date is not empty and if it is a valid date
+                if (!Date.parse($endDate)) {
+                    alert("End date must be a valid date.");
+                    return;
+                }
+
+
+                //Test to see if start date is less than end date
+                if ($startDate != '' && $endDate != '') {
+                    if (Date.parse($startDate) > Date.parse($endDate)) {
+                        alert("End date must be greater than start Date.");
+                        return;
+                    }
+                }
+
+
+                //** Validation for one day date range
+
+                var dayIs = viewModel.startDate;
+                var day = dayIs.getDate()
+                var month = viewModel.startDate.getMonth() + 1
+                var year = viewModel.startDate.getFullYear()
+                var tempStartDate = month + '/' + day + '/' + year;
+
+                var day = viewModel.endDate.getDate()
+                var month = viewModel.endDate.getMonth() + 1
+                var year = viewModel.endDate.getFullYear()
+                var tempEndDate = month + '/' + day + '/' + year;
+
+                var date1 = new Date(tempStartDate);
+                var date2 = new Date(tempEndDate);
+                var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+                var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+
+                if (diffDays > 0) {
+                    alert("Battery voltage report can be viewed for a single day only.");
+                    return;
+                }
+
+                var CustomerId = '@ViewBag.CurrentCityID';
+
+                //ajaxCallForPieChart();
+
+                invokeDataSource(100);
+            }
+
+        }
+
+        function dateDiff(date1, date2) {
+            //Get 1 day in milliseconds
+            var one_day = 1000 * 60 * 60 * 24;
+
+            // Convert both dates to milliseconds
+            var date1_ms = new Date(date1).getTime();
+            var date2_ms = new Date(date2).getTime();
+
+            // Calculate the difference in milliseconds
+            var difference_ms = date2_ms - date1_ms;
+
+            // Convert back to days and return
+            return Math.round(difference_ms / one_day);
+        }
+
+        function invokeDataSource(maxCount) {
+
+            showProgressBar(true);
+
+            var $filter = new Array();
+
+            var finalStart = $('#dp-1').val();
+            var finalEnd = $('#dp-2').val();
+            var AssetId = $("#autocompleteAssetId").val();
+            var LocationTypeId = $("#ddlLocationType").val();
+            var LocationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            var ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            var volStartRange = $('#highVol').val();
+            var volEndRange = $('#lowVol').val();
+
+
+            if (finalStart) {
+                gridFilters.DateRangeFrom = finalStart;
+                $filter.push({ field: "startDate", operator: "gte", value: finalStart });
+            }
+            if (finalEnd) {
+                gridFilters.DateRangeTo = finalEnd;
+                $filter.push({ field: "endDate", operator: "lte", value: finalEnd });
+            }
+
+            $filter.push({ field: "AssetId", operator: "equals", value: AssetId });
+            $filter.push({ field: "LocationTypeId", operator: "equals", value: LocationTypeId });
+            $filter.push({ field: "LocationTypeName", operator: "equals", value: LocationTypeName });
+            $filter.push({ field: "LocationId", operator: "equals", value: ParallerLocationId });
+            $filter.push({ field: "voltageStart", operator: "gte", value: volStartRange });
+            $filter.push({ field: "voltageEnd", operator: "lte", value: volEndRange });
+
+
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.filter($filter);
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.view({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+
+        }
+
+        function GetAllFilterData_PieChart() {
+            var CustomerId = '@ViewBag.CurrentCityID';
+
+            var finalStart = $('#dp-1').val();
+            var finalEnd = $('#dp-2').val();
+
+            var AssetId = $("#autocompleteAssetId").val();
+            var LocationTypeId = $("#ddlLocationType").val();
+            var LocationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            var ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+
+            var volStartRange = $('#highVol').val();
+            var volEndRange = $('#lowVol').val();
+
+            return { customerId: CustomerId, startDate: finalStart, endDate: finalEnd, AssetId: AssetId, LocationTypeId: LocationTypeId, LocationTypeName: LocationTypeName, LocationId: ParallerLocationId, voltageStart: volStartRange, voltageEnd: volEndRange }
+        }
+
+        function GetAllFilterData() {
+            var CustomerId = '@ViewBag.CurrentCityID';
+
+            //**start and end dates
+
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+            var finalStart = $('#dp-1').val();
+            var finalEnd = $('#dp-2').val();
+
+            return { customerId: CustomerId, startDate: finalStart, endDate: finalEnd }
+        }
+
+
+        function fetchCustomerID() {
+            var CustomerId = '@ViewBag.CurrentCityID';
+            return { customerid: CustomerId }
+        }
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '380px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+
+    </script>
+
+
+
+
+
+
+}
+

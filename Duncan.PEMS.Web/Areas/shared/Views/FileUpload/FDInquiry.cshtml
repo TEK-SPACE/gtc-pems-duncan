@@ -1,0 +1,1145 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.FileUpload.FDFilesModel1
+
+
+@{
+    ViewBag.Title = "File Download Inquiry";
+
+}
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!-- file upload -->
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+
+    <script type="text/javascript">
+
+
+        var spinner;
+        var isFileType = false;
+        var isStatus = false;
+      
+        var startD = new Date();
+
+        startD.setDate(new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]').getDate());
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+
+        var endD = new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate());
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+       
+        var viewModel = kendo.observable({
+            startDate: startD,
+            endDate: endD,
+
+            FileTypes: [],
+            FileType: "All",
+
+            Actives: [],
+            Active: "All",
+
+            AssetIds: [],
+            AssetId: "All",
+
+            AssetNames: [],
+            AssetName: "All",
+            selectedDataItems:[],
+            GridEdited:false,
+            ispageload:false
+  
+
+        });
+
+       
+
+        function getRoleId(){
+
+            var roleID =  @ViewData[Constants.ViewData.CurrentCityId];
+            return { RoleID: roleID }
+        }
+
+        
+        var prevfileType='';// to maintain last checked file file in grid and compare with newly checked file's type
+
+        function BindGridOnTimer() {
+            if (viewModel.GridEdited==false){
+                alert("Please select a comment for cancelling download");
+                CheckBoxState()
+                return  false;
+            }
+
+            var selectedValue = $("#ddlAction").val();
+            if (selectedValue != "") {
+                var $grid = $("#grdCustomerDetails").data("kendoGrid");
+                $grid.dataSource.at(0).fields["JobStatusID"].editable = false;
+                prevfileType='';
+                var dropdownlist = $("#ddlAction").data("kendoDropDownList");
+                dropdownlist.select(0);
+                $("#ddlAction").val("");
+                viewModel.selectedDataItems.splice(0, viewModel.selectedDataItems.length);
+                viewModel.GridEdited=false;
+                invokeDataSource(50)
+            }
+            else  
+            {
+                alert('Please select a status to set');
+                CheckBoxState()
+            }
+
+        }
+
+        function CheckBoxState() {
+            var arrayLength = viewModel.selectedDataItems.length;
+            for (var p = 0; p < arrayLength; p++) {
+                $("#"+viewModel.selectedDataItems[p]).attr('checked','checked');
+            } 
+                      }
+
+
+        $(document).ready(function () {
+            $(".k-grid-cancel-changes", "#grdCustomerDetails").hide();
+                   function allowchanges(e, isonechecked) {
+                var selectedValue = $("#ddlAction").val();
+                if (isonechecked == true && selectedValue != "") {
+                    var $grid = $("#grdCustomerDetails").data("kendoGrid");
+                    $grid.dataSource.at(1).fields["VehLicNo"].editable = true;
+                }
+                else {
+                    var dropdownlist = $("#ddlAction").data("kendoDropDownList");
+                    dropdownlist.select(0);
+                    $("#ddlAction").val("");
+                }
+
+            }
+
+
+            $('#autocompleteAssetId').keyup(function (key) {
+                var code = key.keyCode || key.which;
+                if(code==46 || code==8) { // enter,delete and backspace
+                    var assetIdTxt = $("#autocompleteAssetId").val()
+                    $("#txtAssetName").val("");
+                  
+                }
+            });
+
+         
+
+            $('#txtAssetName').keyup(function (key) {
+                var code = key.keyCode || key.which;
+
+                if(code==46 || code==8) { // enter,delete and backspace
+                    var assetIdTxt = $("#txtAssetName").val()
+                    $("#autocompleteAssetId").val("");
+                }
+            });
+
+
+            $('#grdCustomerDetails').on('click', '.c-ok', function (e) {
+                
+                var ischecked = false;
+                var grid = $("#grdCustomerDetails").data().kendoGrid;
+                var rowindex = grid.select().index();
+                var datasource = grid.dataSource.data()[rowindex];
+                var IsAdd = $(this).is(':checked');
+               
+                if (IsAdd==true){
+                    var stat = datasource.get('Active');
+                    if (stat==0)
+                    {
+                    alert('Only active files can be selected');
+                    return false;
+                    }
+
+                }
+
+                $("#grdCustomerDetails  tbody").find('.c-ok').each(function () {
+                    var IsAdd = $(this).is(':checked');
+                    if (IsAdd == true) { 
+                       ischecked = true;
+                       return true
+                    }
+                });
+               
+                var filetype = datasource.get('FileType');
+                var JobID = datasource.get('JobID');
+
+                if (IsAdd==false){
+                    viewModel.selectedDataItems.pop(JobID);
+                   }
+                if (ischecked == false) {
+                    prevfileType='';
+                    var dropdownlist = $("#ddlAction").data("kendoDropDownList");
+                    dropdownlist.select(0);
+                    $("#ddlAction").val("");
+                    checkGridColumns(-1)
+                    return true;
+                }
+              
+                if (IsAdd == true) {
+                    if (prevfileType=='')// if 1st item set type as prevfiletype
+                    {
+                        prevfileType=filetype;
+                        viewModel.selectedDataItems.push(JobID);
+                    
+                        return true
+                    }
+
+                    else
+                    {
+                        if(prevfileType==filetype)
+                        {
+                            viewModel.selectedDataItems.push(JobID);
+                           return true
+                        }
+                        else
+                        { alert('Please select same file type to change status')
+                            return false}
+                    }
+                   
+                    return true
+                }
+            
+            });
+
+            $('#ddlAction').change(function() {
+                //only perform action on valid actions
+                var selectedValue = $("#ddlAction").val();
+                if (selectedValue == "") {
+                    checkGridColumns(-1);
+                } else {
+
+                    var oneIsChecked = false;
+                  
+                    var grid = $("#grdCustomerDetails").data("kendoGrid");
+                    // mvc model binder requires arrays to be in specific format
+                    grid.tbody
+                        .find(":checked")
+                        .each(function(idx) {  
+                            oneIsChecked = true;                      
+                        });
+
+
+                    //make sure they selected a valid value (not empty) and they have checked some boxes on the grid.
+                    if (oneIsChecked) {
+                        var $grid = $("#grdCustomerDetails").data("kendoGrid");
+                        $grid.dataSource.at(0).fields["JobStatusID"].editable = true;
+                        checkGridColumns(selectedValue);
+                    } else {
+                        alert("No items have been selected.");
+                        var dropdownlist = $("#ddlAction").data("kendoDropDownList");
+                        // selects by index
+                        dropdownlist.select(0);
+                        $("#ddlAction").val("");
+                    }
+                }
+            });
+
+
+            kendo.bind($(document.body), viewModel);
+
+            // when the view state changes, cache it
+            viewModel.bind("change", function (e) {
+                SaveViewState();
+            });
+
+            // if returning from details page, load cached page state (filters, grid state, etc)
+            if (getParameterByName('rtn') == 'true') {
+                LoadViewState();
+             
+            } else {
+
+                // Since not pulling filter values from cache, get them from server
+                GetDynamicFilterValues();
+
+            }
+
+        }
+       );
+   
+
+        function SaveViewState() {
+
+            /// Save filters view state to local storage, with fallback to
+            /// server if HTML5 local storage not supported (IE7)
+
+            // serialize viewstate
+            var json = viewModel.toJSON();
+            var stringified = JSON.stringify(json);
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                window.sessionStorage.setItem("FileUploadViewState", stringified);
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+        }
+
+
+        function LoadViewState() {
+            /// Load filter view state if found in session
+
+            var stringified;
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("FileUploadViewState");
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+
+            // reconstruct the view model from the cache
+            if (stringified) {
+                var parsed = JSON.parse(stringified);
+                if (parsed) {
+
+                    if (parsed.FileTypes) {
+                        viewModel.set('FileTypes', parsed.FileTypes);
+                    }
+                    viewModel.set('FileType', parsed.FileType);
+
+                    if (parsed.Actives) {
+                        viewModel.set('Actives', parsed.Actives);
+                    }
+                    viewModel.set('Active', parsed.Active);
+
+                    if (parsed.AssetIds) {
+                        viewModel.set('AssetIds', parsed.AssetIds);
+                    }
+                    viewModel.set('AssetId', parsed.AssetId);
+
+                    if (parsed.AssetNames) {
+                        viewModel.set('AssetNames', parsed.AssetNames);
+                    }
+                    viewModel.set('AssetName', parsed.AssetName);
+
+                    // don't want to create a new Date if null because will default to 1970
+                    if (parsed.startDate) {
+
+                        viewModel.set('startDate', new Date(parsed.startDate));
+                    }
+                    if (parsed.endDate) {
+                        viewModel.set('endDate', new Date(parsed.endDate));
+                    }
+
+                }
+            } else {
+                // No view state stored in cache, so get dynamic filter values from server
+                //console.log('no view state found, defaults will be used');
+                GetDynamicFilterValues();
+            }
+
+            showProgressBar(false);
+        }
+        function GetDynamicFilterValues() {
+
+            var url = '@Url.Action("GetFilterValues")';
+            $.post(url, function (data) {
+
+                viewModel.set("FileTypes", data.FileTypes);
+                viewModel.set("Actives", data.Actives);
+                viewModel.set("startDate", data.startDate);
+                viewModel.set("endDate", data.endDate);
+                viewModel.set("AssetId",data.AssetId);
+                viewModel.set("AssetName",data.AssetName);
+                showProgressBar(false);
+
+            });
+        }
+
+
+        function LoadFreshGrid() {
+
+
+            showProgressBar(false); //** Display Progress bar animation till the server returns response;
+
+            var $startDate = viewModel.startDate;
+
+            //Test to see if the start date is not empty, and if it is a valid date
+            if (!Date.parse($startDate)) {
+                alert("Start Date Must Be A Valid Date");
+                return;
+            }
+            var $endDate = viewModel.endDate;
+
+            //Test to see if the end date is not empty and if it is a valid date
+            if (!Date.parse($endDate)) {
+                alert("End Date Must Be A Valid Date");
+                return;
+            }
+
+
+            //Test to see if start date is less than end date
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($startDate) > Date.parse($endDate)) {
+                    alert("End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+
+            var x = $("#autocompleteAssetId").val()
+            if (isNaN(x)) {
+                alert('"' + x + '" Asset ID should be numeric.')
+                document.getElementById('autocompleteAssetId').value = ""
+                return;
+            }
+
+            prevfileType='';
+            var dropdownlist = $("#ddlAction").data("kendoDropDownList");
+            dropdownlist.select(0);
+            $("#ddlAction").val("");
+
+            invokeDataSource(50) //** set the default no. of records as 50         
+
+        
+
+        }
+
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+        var sorts = {};
+
+        function invokeDataSource(maxCount) {
+          
+            //** The below line needs to be uncommented after fetching service
+            showProgressBar(true); //** Display Progress bar animation till the server returns response;
+
+            var $filter = new Array();
+
+
+
+            // Date Range
+            var startDate = viewModel.startDate;
+            var endDate = viewModel.endDate;
+
+            var finalStart = new Date(startDate).toJSON()
+            var finalEnd = new Date(endDate).toJSON()
+
+
+            if (finalStart) {
+                gridFilters.DateRangeFrom = finalStart;
+                $filter.push({ field: "StartDate", operator: "gte", value: finalStart });
+            }
+            if (finalEnd) {
+                gridFilters.DateRangeTo = finalEnd;
+                $filter.push({ field: "EndDate", operator: "lte", value: finalEnd });
+            }
+
+
+
+
+            //FileType
+            var $FileTypeVal = $("#fType").data("kendoDropDownList").text();
+            if ($FileTypeVal && $FileTypeVal != "All") {
+                gridFilters.FileType = $FileTypeVal;
+                $filter.push({ field: "FileType", operator: "equals", value: $("#fType").data("kendoDropDownList").value() });
+            } else {
+                $filter.push({ field: "FileType", operator: "equals", value: "" });
+            }
+
+
+
+            //FileStatus
+            var $fStatusVal = $("#fStatus").data("kendoDropDownList").text();
+            if ($fStatusVal && $fStatusVal != "All") {
+                gridFilters.FileStatus = $fStatusVal;
+                $filter.push({ field: "FileStatus", operator: "equals", value: $("#fStatus").data("kendoDropDownList").value() });
+            } else {
+                $filter.push({ field: "FileStatus", operator: "equals", value: "" });
+            }
+
+            //AssetId
+            var $AssetIdVal = $("#autocompleteAssetId").val();
+
+
+            if ($AssetIdVal) {
+
+                gridFilters.assetID = $AssetIdVal;
+                $filter.push({ field: "assetID", operator: "contains", value: $("#autocompleteAssetId").val() });
+            }
+            else {
+                $filter.push({ field: "assetID", operator: "contains", value: "" });
+            }
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+      
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.filter($filter);
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.view({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+
+
+        }
+
+        function GetAllFilterData() {
+            //**start and end dates
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+            var finalStart = new Date($startDate).toJSON()
+            var finalEnd = new Date($endDate).toJSON()
+
+            var getTxtFromFileType = $("#fType").data("kendoDropDownList").text()
+            var FileType;
+            if (getTxtFromFileType == "All") {
+                FileType = -1;
+            }
+            else {
+                FileType = $("#fType").val();
+            }
+
+            var getTxtFromFileType = $("#fStatus").data("kendoDropDownList").text()
+            var SelectedFileStatus;
+            if (getTxtFromFileType == "All") {
+                SelectedFileStatus = -1;
+            }
+            else {
+                SelectedFileStatus = $("#fStatus").val();
+            }
+            var AssetID = $("#autocompleteAssetId").val();
+            return {
+                startDate: finalStart,
+                endDate: finalEnd,
+                FileType: FileType,
+                FileStatus: SelectedFileStatus,
+                assetID:AssetID
+            }
+        }
+
+        function GetStatusToSet() {
+           
+            var Grid = $("#grdCustomerDetails").data("kendoGrid");
+            var getddlStatustoSet = $("#ddlAction").data("kendoDropDownList").text()
+            var FileStatustoSet;
+            if (getddlStatustoSet == "Select") {
+                alert('Please select a status to set')
+                FileStatustoSet=''
+            }
+            else {
+                FileStatustoSet = $("#ddlAction").val();
+            }
+            viewModel.GridEdited=true;
+            return {
+                FileStatus: FileStatustoSet,
+            }
+        }
+
+        function onDataBound_FileType() {
+            isFileType = true;
+        }
+
+        function onDataBound_Active() {
+            isStatus = true;
+        }
+
+        var set = -1;
+        function onDataBound(arg) {
+           if(viewModel.ispageload==false)
+            {
+              
+               //***************************************
+               //var grid = $("#grdCustomerDetails").data("kendoGrid");
+               //grid.hideColumn("FileCancelationDateFinal");
+               //grid.hideColumn("CanceledBy"); 
+               //grid.hideColumn("JobStatusID");
+               //*************************************** 
+               viewModel.ispageload=true;
+               
+            }
+           
+           set++;
+            //then once the page changes it hits this -  select the row
+           if (set == 0) {
+               //highlight the selected row (if they did)
+               if (gridFilters.SelectedIndex > -1) {
+                   //we have to set a timeout since the databind event gets called again :(
+                   var row = $("#grdCustomerDetails").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                   $("#grdCustomerDetails").data("kendoGrid").select(row);
+               }
+           }
+            var result = $("#grdCustomerDetails").data().kendoGrid.dataSource.data()
+            showProgressBar(false); //** Hide Progress bar animation after the server response;
+
+            //**First clear the Grid
+            $('#DivCustomerDetails').css('display', 'none');
+            $("#DivCustomerDetails").show();
+            $('#DivCustomerDetails').css('visibility', 'visible');
+            if (result.length == 0) {
+                alert('No Data.');
+                return;
+            }
+           
+            SetExportData();
+        }
+
+        function checkGridColumns(selectedAction)
+        {
+            
+            var status= $("#fStatus").val();
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+            if (selectedAction.toString() == "0" || status.toString() == "0" )
+            {
+               
+                //Commented and kept for later use to show or hide column when needed.
+                //grid.showColumn("JobStatusID");
+                //grid.showColumn("FileCancelationDateFinal");
+                //grid.showColumn("CanceledBy"); 
+                //grid.hideColumn("FileAdditionDateFinal");
+                //grid.hideColumn("DateCompletedFinal");
+                //grid.hideColumn("UploadedBy");
+
+            }
+            else
+            {                
+            //grid.showColumn("FileAdditionDateFinal");
+            //grid.showColumn("DateCompletedFinal");
+            //grid.showColumn("UploadedBy");
+
+          
+            //grid.hideColumn("FileCancelationDateFinal");
+            //grid.hideColumn("CanceledBy"); 
+            //grid.hideColumn("JobStatusID");
+            }
+            //grid.refresh();
+            //var grid = $("#grdCustomerDetails").data("kendoGrid");
+            //grid.dataSource.read();
+            CheckBoxState();
+        }
+
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '280px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            //href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            return href;
+        }
+        function edit_handler(e) {
+
+            // var fieldName = e.container.find("input").attr("name");
+           
+            if (!$("#"+e.model.JobID).attr('checked'))            
+                this.closeCell();
+            else
+            {
+            }
+            
+        }
+
+        function SetExportData() {
+            var grid = $('#grdCustomerDetails').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+
+    </script>
+}
+
+
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+       ready .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+        ready .filter-SearchButton:hover {
+	            background: #ccc!important;
+	            text-decoration: none!important;
+         }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .k-widget .templateCell {
+            overflow: visible;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+
+      
+    </style>
+}
+
+@section PageHeader
+{
+        <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Configuration") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "File Download Inquiry")</h1>
+
+}
+
+@section PageFilter
+{
+    <div class="one-column">
+        <div class="filter-option">
+            <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Range")</span>
+            <input id="dp-1" data-role="datetimepicker" style="width: 210px" data-bind="value: startDate"  />
+            to
+            <input id="dp-2" data-role="datetimepicker" style="width: 210px" data-bind="value: endDate"  />
+            <span class="required_asterisk">*</span>
+        </div>
+    </div>
+
+    <div class="two-column-wrapper">
+        <div class="two-column" style="width: 455px;">
+            <div class="filter-option">
+                <label class="filter-label">File Status:</label>
+
+                @(Html.Kendo().DropDownList()
+              .Name("fStatus")
+              .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })
+              .OptionLabel("All")
+                       .BindTo(new List<SelectListItem>() {
+                        new SelectListItem() {
+                              Text = "Active",
+                              Value = "1" 
+                          },
+                          new SelectListItem() {
+                             Text = "Inactive",
+                              Value = "0"
+                          }
+                      })
+                      .Value("-1")
+                )
+
+            </div>
+        </div>
+        <div class="two-column" style="width: 455px;">
+            <div class="filter-option">
+                <label class="filter-label">File Type:</label>
+                @(Html.Kendo().DropDownList()
+                .Name("fType")
+                .OptionLabel("All")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;", onchange = "GetAssetIds()" })
+                .DataTextField("FileName")
+                .DataValueField("FileType")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../FileUpload/GetFileTypes").Data("getRoleId");
+                                    });
+                                })
+                )
+            </div>
+        </div>
+
+        <div class="two-column" style="width: 455px;">
+            <div class="filter-option">
+                <label class="filter-label">Asset ID:</label>
+                @(Html.Kendo().AutoCompleteFor(a => a.FileID).Name("autocompleteAssetId").DataTextField("Value").HtmlAttributes(new { style = "width:280px;font-size:16px;" })
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Url("../FileUpload/GetAssetIds").Data("SetAssetType");
+                         });
+                     })
+                                    .Events(e => e.Close("GetAssetName"))
+                )
+
+            </div>
+        </div>
+
+        <div class="two-column" style="width: 455px;">
+            <div class="filter-option">
+                <label class="filter-label">Asset Name:</label>
+                @(Html.Kendo().AutoCompleteFor(a => a.FileID).Name("txtAssetName").DataTextField("Text").HtmlAttributes(new { style = "width:280px;font-size:16px;" })
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Url("../FileUpload/GetAssetIds").Data("SetAssetType");
+                         });
+                     })
+                                    .Events(e => e.Close("GetAssetID"))
+                )
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="filter-searchBox">
+        <div style="float: left">
+            <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+        </div>
+        <div id="ReturnButtonDiv" style="float: right; display: none">
+            <a id="btnReturn" class="button previous filter-ReturnButton" href="@Url.Action("Index", "Assets", new { rtn = "true" })">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString()
+            </a>
+        </div>
+
+    </div>
+
+
+}
+
+@section ExportButtons
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action("FileSummaryExportToExcel", new { page = 1, pageSize = "~", filter = "~", sort = "~" })">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action("FileSummaryExportToCsv", new { page = 1, pageSize = "~", filter = "~", sort = "~" })">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action("FileSummaryExportToPdf", new { page = 1, pageSize = "~", filter = "~", sort = "~" })">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+<div class="export-buttons" id="exportActions">
+    <div style="padding-right: 20px; padding-top: 3px;">
+        @using (Html.BeginForm("Action", "Assets", FormMethod.Post, new { @id = "actionForm" }))
+        {
+            <span class="filter-label" style="padding-right: 3px; position:relative; top:5px">Action:</span>
+            <select title="action" style="width: 200px;" id="ddlAction" class="filter-dropdown" style="width: auto" name="ddlActionValue" data-role="dropdownlist">
+                <option value="">Select</option>
+                <option value="0">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Cancel Download")</option>
+                @*    <option value="1">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "SET ACTIVE")</option>*@
+
+            </select>
+            @Html.Hidden("AssetTypeId")
+            @Html.Hidden("CustomerId", @ViewData[Constants.ViewData.CurrentCityId])
+        }
+    </div>
+</div>
+<div class="grid-header" style="margin-left:-40px">
+
+</div>
+<div id="DivCustomerDetails" class="grid-content" style="display: none; width: 100%;margin-left:0px;">
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.FileUpload.FDFilesModel1>()
+
+        .Name("grdCustomerDetails")
+        .Columns(col =>
+        {
+            col.Bound(a => a.JobID).Title("").Width("30px").ClientTemplate("<input id='#= JobID #' type='checkbox' class='c-ok'></input>");
+            col.Bound(a => a.FileName).Title("File Name").Width("250px");
+            col.Bound(a => a.FileTypeName).Title("File Type").Width("180px");
+            col.Bound(a => a.JobStatusDesc).Title("File Status").Width("100px");
+            col.Bound(a => a.MeterID).Title("Asset ID").Width("80px");
+            col.Bound(a => a.MeterName).Title("Asset Name").Width("180px");
+            //col.Bound(a => a.FileAdditionDate).Format("{0:dd/MM/yyyy hh:mm tt}").Title("Date Scheduled").Width("190px");
+            //col.Bound(a => a.DateCompleted).Format("{0:dd/MM/yyyy hh:mm tt}").Title("Date Completed").Width("190px");
+            col.Bound(a => a.FileAdditionDate).Format("{0:MM/dd/yyyy}").Title("Date Scheduled").Width("190px");
+            col.Bound(a => a.DateCompleted).Format("{0:MM/dd/yyyy}").Title("Date Completed").Width("190px");
+            col.Bound(a => a.UploadedBy).Title("Uploaded By").Width("150px");
+            col.ForeignKey(a => a.JobStatusID, ViewBag.Companies as IEnumerable<Duncan.PEMS.Entities.FileUpload.FDFilesModel1>, "JobStatusID", "JobStatusName").Title("Comment").EditorViewData(new { type = "DropDownList" }).Width("200px");
+            col.Bound(a => a.FileCancelationDate).Format("{0:dd/MM/yyyy hh:mm tt}").Title("Date Canceled").Width("190px");
+            col.Bound(a => a.CanceledBy).Title("Canceled By").Width("150px");
+        }
+            )
+                .Scrollable()
+                         .Events(events => events.DataBound("onDataBound"))
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+                  .ToolBar(toolBar =>
+                      {
+                          toolBar.Save().HtmlAttributes(new { onclick = "setTimeout(function(){BindGridOnTimer()},1000)" });
+                      })
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+               
+                .Events(events =>
+                    {
+                        events.Edit("edit_handler");
+                    })
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                     {
+                         model.Id(p => p.JobID);
+                         model.Field(p => p.FileID).Editable(false);
+                         model.Field(p => p.FileName).Editable(false);
+                         model.Field(p => p.JobStatusID).Editable(false);
+                         model.Field(p => p.FileTypeName).Editable(false);
+                         model.Field(p => p.JobStatusDesc).Editable(false);
+                         model.Field(p => p.Active).Editable(false);
+                         model.Field(p => p.FileAdditionDateFinal).Editable(false);
+                         model.Field(p => p.UploadedBy).Editable(false);
+                         model.Field(p => p.MeterID).Editable(false);
+                         model.Field(p => p.DateCompletedFinal).Editable(false);
+                         model.Field(p => p.MeterName).Editable(false);
+                         model.Field(p => p.CanceledBy).Editable(false);
+                         model.Field(p => p.FileCancelationDateFinal).Editable(false);
+
+                     })
+                        .Read(read => read.Action("GetFileSummary", "FileUpload").Data("GetAllFilterData"))
+                        .Update(update => update.Action("FileUploadGrid_Update_Active", "FileUpload").Data("GetStatusToSet").Type(HttpVerbs.Post))
+
+                        .PageSize(50)
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10,50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+
+
+
+<script>
+    function GetAssetIds() {
+        var AutoCompleteID = $("#autocompleteAssetId").data("kendoAutoComplete");
+        $("#autocompleteAssetId").val("");
+        $("#txtAssetName").val("");
+        AutoCompleteID.dataSource.read();
+        AutoCompleteID.refresh();
+        var AutoCompleteName = $("#txtAssetName").data("kendoAutoComplete");
+        AutoCompleteName.dataSource.read();
+        AutoCompleteName.refresh();
+
+    }
+    function SetAssetType() {
+        var Filetype = $("#fType").val();
+        return { FileType: Filetype }
+    }
+
+    function GetAssetName() {
+        var MeterId = $("#autocompleteAssetId").val();
+
+        $.ajax(
+        {
+            url: '../FileUpload/GetAssetName?meterId=' + MeterId,
+            type: 'GET',
+            contentType: 'application.json',
+            success: function (data) {
+                $("#txtAssetName").val(data);
+            },
+            error: function () {
+
+            }
+
+        });
+
+    }
+    function GetAssetID() {
+
+        var MeterName = $("#txtAssetName").val();
+        $.ajax(
+        {
+            url: '../FileUpload/GetAssetID?meterName=' + MeterName,
+            type: 'GET',
+            contentType: 'application.json',
+            success: function (data) {
+                $("#autocompleteAssetId").val(data);
+            },
+            error: function () {
+
+            }
+
+        });
+
+    }
+
+
+
+</script>
+
+
+
+
+
+@*http://www.sitereq.com/post/kendo-mvc-dropdown-lists-inside-inline-kendo-mvc-grids*@

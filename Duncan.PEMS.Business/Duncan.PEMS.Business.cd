@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Duncan.PEMS.Business.Alarms.AlarmFactory">
+    <Position X="17.75" Y="7.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>NQEEAAAABQACAAAAAAAgAABBIQEABAIAiAABAQAAABE=</HashCode>
+      <FileName>Alarms\AlarmFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.NamespaceDoc" Collapsed="true">
+    <Position X="98.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\AssetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.AssetFactory">
+    <Position X="44.5" Y="7.25" Width="2.75" />
+    <NestedTypes>
+      <Class Name="Duncan.PEMS.Business.Assets.AssetFactory.GlobalMeterId" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\AssetFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CACEgCJAgsBBBAAAAABEYACAAKAgAwCAAQgAIAAACCA=</HashCode>
+      <FileName>Assets\AssetFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.CashboxFactory">
+    <Position X="45.25" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAEAAAAAAAAAIMxKAAAAgQAEAAAAAAAEAAABA=</HashCode>
+      <FileName>Assets\CashboxFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.GatewayFactory">
+    <Position X="48" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAIEAAABAAAAAIM1KAAAAgQAEAAAAAAAEAAABA=</HashCode>
+      <FileName>Assets\GatewayFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.MeterFactory">
+    <Position X="50.75" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CgAIAABAEAAABABAAAIMxKAAIAgQAEAAAAAAAEAgABA=</HashCode>
+      <FileName>Assets\MeterFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.PendingFactory">
+    <Position X="53.5" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAABAAAAAAAAAIAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\PendingFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.SensorFactory">
+    <Position X="36.25" Y="15.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAEQAABAAAAAIMxKAAIAgQAEAAAAAAAEAAABA=</HashCode>
+      <FileName>Assets\SensorFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.SpaceFactory">
+    <Position X="39.25" Y="15.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAACEIAAAAAAJAoMxKAAIAgQAEAAAAAAAEAQABA=</HashCode>
+      <FileName>Assets\SpaceFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.UploadFactory">
+    <Position X="42" Y="15.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAoSAIAgBiAAAAQABgRAEQAAIAAEBIAQISgAAgAAAAA=</HashCode>
+      <FileName>Assets\UploadFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Assets.VersionFactory">
+    <Position X="65.25" Y="7.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEEAAAAAEAAAAAAAAAIAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\VersionFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.BaseFactory">
+    <Position X="48.25" Y="3.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAEAAAAAAAAIAAIAAAAAAAAAQAQAAg=</HashCode>
+      <FileName>BaseFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.MaintenanceBaseFactory">
+    <Position X="85.25" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIBAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MaintenanceBaseFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.RbacBaseFactory">
+    <Position X="48" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAIgAAAAAAAkAAAAIAAAA=</HashCode>
+      <FileName>RbacBaseFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Collections.CollectionsFactory">
+    <Position X="25.25" Y="7.25" Width="3" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Business.Collections.CollectionsFactory.Status" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Collections\CollectionsFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>SIQAFAAoCAAAQBAAFAAgBAAAIAAAQAAgAEAAAAAIAAU=</HashCode>
+      <FileName>Collections\CollectionsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Customers.CustomerFactory">
+    <Position X="29" Y="7.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>VARBxQCAAAQEQEHQ4AWplYEm4EgiBQBBAEFCgoSUBo4=</HashCode>
+      <FileName>Customers\CustomerFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Customers.PropertiesFactory">
+    <Position X="62.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAABEBAAAAACAAAIAAAAhAAAAAAAAAwAAI=</HashCode>
+      <FileName>Customers\PropertiesFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Customers.SettingsFactory">
+    <Position X="10.75" Y="3.75" Width="3.25" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Business.Customers.SettingsFactory.SettingType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Customers\SettingsFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQIAAABABAgAAAAAAAoAAAAAEAAAAAAAABAAI=</HashCode>
+      <FileName>Customers\SettingsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Discounts.DiscountFactory">
+    <Position X="72" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAIAEAAAAAKAAAGQAIAgAQEDEAoAAAEEAAIQ=</HashCode>
+      <FileName>Discounts\DiscountFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Email.EmailFactory" Collapsed="true">
+    <Position X="98.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Email\EmailFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Errors.ErrorManager">
+    <Position X="90.5" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAQAAAAIAAAUAAAAAEAAACAEQAAAAA=</HashCode>
+      <FileName>Errors\ErrorManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Events.EventCodesFactory">
+    <Position X="21.25" Y="7.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAIAiAAAoACCAAQAAFAQEAAMEAAAEAAAAAAACAAAAA=</HashCode>
+      <FileName>Events\EventCodesFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Events.EventModelFactory">
+    <Position X="33" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAEACAAAAAAAAAAJAAAIAAIQABECAAAIAAAAgAAAA=</HashCode>
+      <FileName>Events\EventModelFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Events.UploadFactory">
+    <Position X="21.75" Y="12.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAgAgAAAAQgBgQAEAAAIAAABAAQIAAAggAAAAA=</HashCode>
+      <FileName>Events\UploadFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Exports.ExportFactory" Collapsed="true">
+    <Position X="100" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Duncan.PEMS.Business.Exports.ExportFactory.ItemPositions" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Exports\ExportFactory.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAACAAAAAAAACCJAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Exports\ExportFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Globalization.GlobalizationManager" Collapsed="true">
+    <Position X="101.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAIAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Globalization\GlobalizationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Grids.GridFactory">
+    <Position X="88" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAMBAAAAAQAAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Grids\GridFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.MaintenanceGroups.MaintenanceGroupFactory">
+    <Position X="94.25" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AABAAQgAAAAAAAJAAAAAEKkAIAAIBAAAAAACAAAUBAA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.News.NewsManager">
+    <Position X="0.5" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAIAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>News\NewsManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Occupancy.OccupancyFactory">
+    <Position X="56.25" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACQQIAAgAAEAIgAAAAAAAAA=</HashCode>
+      <FileName>Occupancy\OccupancyFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Reports.ReportsFactory">
+    <Position X="5.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAAAAIAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Reports\ReportsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Resources.ResourceFactory" Collapsed="true">
+    <Position X="100" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Resources\ResourceFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Roles.RoleFactory">
+    <Position X="82.5" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAIAAAAAAAoIAAAAAEAABAAAAAAAA=</HashCode>
+      <FileName>Roles\RoleFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Tariffs.TariffFactory">
+    <Position X="78.25" Y="7.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>BwERAAAAAARgBCAICEACRgASMCkDAAAQAIBAAEAAEAY=</HashCode>
+      <FileName>Tariffs\TariffFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory">
+    <Position X="75" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>kAIACACAAAAAAAAAAAAAAAQAIAgAACAAAAAQAACAQAA=</HashCode>
+      <FileName>Transactions\CustomerTransactionFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Users.SettingsFactory">
+    <Position X="3" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAABABAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Users\SettingsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Users.TechnicianFactory">
+    <Position X="59" Y="7.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIgAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Users\TechnicianFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Users.UserFactory">
+    <Position X="7.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IQSCABAICQIAAAiEAAAECAAEMASAADCAAAAAAAAAgAA=</HashCode>
+      <FileName>Users\UserFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Utility.Audit.AuditFactory">
+    <Position X="14.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAQAAABABAAAAAABAAAAAAAAAAAAAgAAAAAAE=</HashCode>
+      <FileName>Utility\Audit\AuditFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.Utility.EnvironmentSettingsFactory">
+    <Position X="69" Y="7.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\EnvironmentSettingsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Business.WorkOrders.WorkOrderFactory">
+    <Position X="85.25" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WorkOrders\WorkOrderFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

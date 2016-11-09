@@ -1,0 +1,216 @@
+﻿@model Duncan.PEMS.Entities.Tariffs.ConfigProfileSpaceViewModel
+@using Duncan.PEMS.Entities.Tariffs
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Rate Schedules Overview");
+}
+
+@section Styles
+{
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/kendo");
+
+}
+    
+@section PageHeader 
+{
+    @if (Model.Space == null)
+    {
+        <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Inquiry")</h1>
+    }
+    else
+    {
+        <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "View Tariff")</span></h1>
+    }
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_tab_content">
+
+    @using (Html.BeginForm("Details", "Tariffs", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+    {
+        @Html.HiddenFor(m => m.CustomerId)
+
+        if (Model.Space != null)
+        {
+
+             <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Space Information")</div>
+
+             <div class="clear">
+
+                 <div class="two-column payment">
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.AssetId, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.AssetId)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Number")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.BayNumber, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.BayNumber)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.Street, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Street)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.Area, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Area)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.Zone, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Zone)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.Suburb, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Suburb)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Latitude")@Html.Raw(": ")</div>
+                         @Html.DisplayForLatLong((double)Model.Space.Latitude, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Latitude)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Longitude")@Html.Raw(": ")</div>
+                         @Html.DisplayForLatLong((double)Model.Space.Longitude, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Longitude)&nbsp;
+                     </div>
+                 </div>
+
+                 <div class="two-column payment">
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.AssetModel, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.AssetModel)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Name")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.Name, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.Name)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Demand Status")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Space.DemandStatus, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Space.DemandStatus)&nbsp;
+                     </div>
+
+                 </div>
+
+             </div>
+
+        }
+        
+
+             <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Profile")</div>
+
+             <div class="clear">
+
+                 <div class="two-column payment">
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Name")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.ConfigurationName, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.ConfigurationName)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Policy Name")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.TariffPolicyName, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.TariffPolicyName)&nbsp;
+                     </div>
+                 </div>
+
+                 <div class="two-column payment">
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "15 Minutes Free")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.Minute15FreeParking, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.Minute15FreeParking)&nbsp;
+                     </div>
+                     <div class="clear">
+                         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created On")@Html.Raw(": ")</div>
+                         @Html.DisplayFor(m => m.CreatedOnDisplay, new { @class = "customer_text" })
+                         @Html.HiddenFor(m => m.CreatedOnDisplay)&nbsp;
+                     </div>
+
+                 </div>
+
+             </div>
+        
+        
+        
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Rate Schedules")</div>
+        <div class="clear">
+                @(Html.Kendo().Grid<RateScheduleModel>()
+              .Name("gridRSC")
+              .Columns(columns =>
+              {
+                          columns.Bound(m => m.DayOfWeekName);
+                          columns.Bound(m => m.StartTime);
+                          columns.Bound(m => m.OperationModeName);
+                          columns.Bound(m => m.TariffRateName);
+              })
+          .Scrollable()
+          .HtmlAttributes(new { style = "height:430px;" })
+              .Events(events => events.DataBound("DisplayNoDataMessage"))
+              .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .Read(read => read.Action("GetConfiguredRateSchedules", "Tariffs",
+                                                                new
+                                                                    {
+                                                                        customerId = Model.CustomerId, 
+                                                                        configProfileId = Model.ConfigProfileId,
+                                                                        rateScheduleConfigurationId = Model.RateScheduleConfigurationIdDisplay
+                                                                    }).Type(HttpVerbs.Get))
+              )
+              )
+
+
+
+        </div>
+
+        
+    }
+</div>
+
+        <div class="customer_actions" style="float: left">
+
+            @if (Model.Space == null)
+            {
+                @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous" })
+            }
+            else
+            {
+                @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "ViewSpace", "Assets",
+                    new { customerId = Model.CustomerId, assetId = Model.Space.AssetId }, new { @class = "button previous" })
+            }
+
+        </div>
+
+
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+    });
+
+    function DisplayNoDataMessage(e) {
+        var grid = e.sender;
+        var gridHasData = grid.dataSource.data().length > 0;
+        if (!gridHasData) {
+            var columnCount = $(grid.thead.get(0)).children("tr").first().children("th").length;
+            $(grid.tbody.get(0)).append(
+            kendo.format("<tr class='custom-no-data-row'><td colspan='{0}'>No data to display.</td></tr>", columnCount)
+            );
+        }
+    }
+
+</script>

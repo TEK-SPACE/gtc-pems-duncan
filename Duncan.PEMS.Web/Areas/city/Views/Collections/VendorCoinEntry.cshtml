@@ -1,0 +1,390 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Vendor Coin Entry" );
+}
+
+
+@section ExportButtons 
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportVCEToExcel", new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = "~",  startDate = "~", endDate = "~"} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportVCEToCsv", new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = "~",  startDate = "~", endDate = "~"} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportVCEToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = "~",  startDate = "~", endDate = "~"} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /   <a href="Aggregation">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a>   / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Vendor Coin Entry" )</span></h1>
+}
+
+
+@section Styles
+{
+    <style type="text/css">
+        #CurrentGrid { display: none; }
+
+        #exportButtons { display: none; }
+
+        #exportActions { display: none; }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+    </style>
+
+}
+@model IEnumerable<Duncan.PEMS.Entities.Collections.VCEListModel>
+
+
+<div class="grid-header">
+    <div style="float: left">
+        @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add Route" ).ToString(), "CreateCollection", "Collections", new {customerId = @ViewBag.CurrentCityId}, new {@class = "button", @type = "button"} )
+    </div>
+</div>
+<div style="clear: both"></div>
+
+
+@(Html.Kendo().Grid( Model )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+          .Name( "CurrentGrid" )
+          .Columns( columns =>
+                        {
+                            columns.Bound(p => p.CollectionRunId).ClientTemplate(@Html.ActionLink("#= CollectionRunName #", "VendorCoinEntryDetails", "Collections", new
+                            {
+                                collectionRunId = "#= CollectionRunId #",
+                                customerId = "#= CustomerId #"
+                            }, new { @onclick = "RowClick(this);"}).ToHtmlString()).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Name").ToString());
+                            columns.Bound(p => p.ActivationDate).ClientTemplate("#= ActivationDateDisplay  #").Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Date").ToString());
+                            columns.Bound(p => p.TotalAmountReportedByMeter).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Total Meter Amount Reported").ToString());
+                            columns.Bound(p => p.TotalAmountCounted).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Total Amount Counted").ToString());
+                        } )
+        .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnDataBound" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetVendorCoinEntry", "Collections" ).Data( "additionalData" ).Type( HttpVerbs.Get ) )
+          )
+          )
+
+
+@section PageFilter 
+{      
+    <div class="two-column-wrapper">
+    <div class="two-column">
+           <div class="filter-option">
+              <div class="two-inputs">
+               <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Date" ):</span>
+               <input id="dpCreatedStart" data-role="datepicker" style="width: 130px" data-bind="value: startDate" />
+           </div>
+           <div class="two-inputs">
+               <span class="to">to</span>
+               <input id="dpCreatedEnd" data-role="datepicker" style="width: 130px" data-bind="value: endDate" />
+           </div>
+        </div>
+        </div>
+    <div class="two-column">
+         <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Name" ):</span>
+                <input id="txtCollectionName" class="filter-input k-textbox" /></div>     
+    </div>
+        </div>
+    <div class="filter-searchBox">
+        <input type="button" value="@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )" id="btnSearch" class="button important filter-SearchButton"  onclick=" LoadFreshGrid(); return false; " /></div>
+        
+    <script type="text/javascript">
+
+
+        var startD = new Date();
+        startD.setDate(new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]').getDate() - 14);
+           startD.setHours(0);
+           startD.setMinutes(0);
+           startD.setSeconds(0);
+           var endD = new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate());
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+        var viewModel = kendo.observable({
+            startDate: startD,
+            endDate: endD,
+            collectionName: null,
+        });
+
+        //ON LOAD
+        $(document).ready(function () {
+
+            // bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+            LoadSorts();
+        });
+
+
+        //SORTS 
+        var sorts = {};
+        function LoadSorts() {
+            $.post('/Collections/GetSavedSortValues?indexType=VCEs', OnSortsLoaded);
+        }
+
+        function OnSortsLoaded(data) {
+            if (!isEmptyObject(data)) {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetVCEFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+            if (!isEmptyObject(data) && getParameterByName('rtn') == 'true') {
+                gridFilters = data;
+
+                $("#txtCollectionName").val(gridFilters.CollectionRunName);
+                // don't want to create a new Date if null because will default to 1970
+                if (gridFilters.DateStart) {
+                    viewModel.set('startDate', new Date(gridFilters.DateStart));
+                }
+                if (gridFilters.DateEnd) {
+                    viewModel.set('endDate', new Date(gridFilters.DateEnd));
+                }
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+            }
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .filter method will call the read automatically
+
+        function LoadGrid() {
+            LoadGridData();
+        }
+
+        function LoadFreshGrid() {
+            var currentPageSize = $("#CurrentGrid").data("kendoGrid").dataSource.pageSize();
+            // Ensure the page size is at least 100
+            if (currentPageSize < 100) {
+                currentPageSize = 100;
+            }
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": currentPageSize };
+            LoadGrid();
+        }
+
+        function LoadGridData() {
+
+            var $dpStart = viewModel.startDate;
+            if ($dpStart) {
+                //Test to see if the start date is not empty, and if it is a valid date
+                if (!Date.parse($dpStart)) {
+                    alert("Start Date Must Be A Valid Date");
+                    return;
+                }
+            }
+            var $dpEnd = viewModel.endDate;
+            if ($dpEnd) {
+                //Test to see if the end date is not empty and if it is a valid date
+                if (!Date.parse($dpEnd)) {
+                    alert("End Date Must Be A Valid Date");
+                    return;
+                }
+            }
+            //Test to see if start date is less than end date
+            if ($dpStart != '' && $dpEnd != '') {
+                if (Date.parse($dpStart) > Date.parse($dpEnd)) {
+                    alert("End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+
+            var $filter = new Array();
+
+            //user name
+            var $txtCollectionName = $("#txtCollectionName").val();
+            if ($txtCollectionName) {
+                gridFilters.CollectionRunName = $txtCollectionName;
+                $filter.push({ field: "CollectionRunName", operator: "contains", value: $txtCollectionName });
+            }
+            //Created Date
+            var startDate = viewModel.startDate;
+            var endDate = viewModel.endDate;
+            if (startDate) {
+                gridFilters.DateStart = startDate;
+            }
+            if (endDate) {
+                endDate.setHours(23, 59, 59, 999); // set to end of day
+                gridFilters.DateEnd = endDate;
+            }
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+
+        //ROW CLICK
+
+        function RowClick() {
+            // Get the grid
+            var grid = $("#CurrentGrid").data("kendoGrid");
+            //get the current page 
+            gridFilters.CurrentPage = grid.dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = grid.select().index();
+            // get the page size
+            gridFilters.PageSize = grid.dataSource.pageSize();
+            //save the filters
+            $.post('/shared/Sessions/SaveVCEFilters', gridFilters);
+        }
+
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound(e) {
+
+            var grid = e.sender;
+            var gridHasData = grid.dataSource.data().length > 0;
+            if (!gridHasData) {
+                var columnCount = $(grid.thead.get(0)).children("tr").first().children("th").length;
+                $(grid.tbody.get(0)).append(
+                kendo.format("<tr class='custom-no-data-row'><td colspan='{0}'>No data to display.</td></tr>", columnCount)
+                );
+            }
+
+
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            SetExportData();
+
+        }
+
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+            //if (set == 0) {
+            //    $(".k-grid-toolbar", "#CurrentGrid").append("<span class='exportButton'>Export: </span>");
+            //}
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            //href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            //Additional Data
+            var $currentCid = '@ViewData[Constants.ViewData.CurrentCityId]';
+            href = href.replace(/customerId=([^&]*)/, 'customerId=' + ($currentCid || '~'));
+
+
+            //start date and end date ticks
+            var startTicks = 0;
+            var endTicks = 0;
+
+            // Date Range
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+
+            if (Date.parse($startDate)) {
+                var newStartDate = new Date($startDate);
+                startTicks = ((newStartDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            if (Date.parse($endDate)) {
+                $endDate.setHours(23, 59, 59, 999); // set to end of day
+                var newEndDate = new Date($endDate);
+                endTicks = ((newEndDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            href = href.replace(/startDate=([^&]*)/, 'startDate=' + (startTicks));
+            href = href.replace(/endDate=([^&]*)/, 'endDate=' + (endTicks));
+            return href;
+        }
+
+        //additional data sent to the action when the read method is called (when we apply a filter)
+        function additionalData() {
+
+            var startTicks = 0;
+            var endTicks = 0;
+
+            // Date Range
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+
+            if (Date.parse($startDate)) {
+                var newStartDate = new Date($startDate);
+                startTicks = ((newStartDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            if (Date.parse($endDate)) {
+                $endDate.setHours(23, 59, 59, 999); // set to end of day
+                var newEndDate = new Date($endDate);
+                endTicks = ((newEndDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            return {
+                startDate: startTicks,
+                endDate: endTicks,
+                customerId: '@ViewData[Constants.ViewData.CurrentCityId]'
+            };
+        }
+
+    </script>
+}

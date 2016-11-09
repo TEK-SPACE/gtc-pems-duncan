@@ -1,0 +1,22 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Assets.AssetVersionModel
+
+@{
+    Layout = null;
+}
+
+
+<div class="clear">
+@*    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Version")@Html.Raw(": ")</div>
+    @Html.EditorFor(m => m.Name, null, new {@required=true})*@
+    
+    
+    <div class="k-edit-label">Version Name: </div>
+    <div class="k-edit-field">
+        <input name="Name" required class="k-textbox"/>
+    </div>
+    @Html.RequiredMarkFor(m => m.Name, new { @class = "required_asterisk" })
+     
+</div>
+
+

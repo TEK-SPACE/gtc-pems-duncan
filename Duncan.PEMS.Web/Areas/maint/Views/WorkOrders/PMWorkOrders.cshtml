@@ -1,0 +1,162 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderListModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Preventative Maintenance" );
+}
+                     
+@section PageHeader 
+{
+    <h2>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Preventative Maintenance" ) (@Model.WorkOrders.Count().ToString())</h2>
+    <a class="back" href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Back" )</a>
+}
+
+<style>
+    .red {
+        background-color: red !important;
+    }
+    .yellow {
+        background-color: yellow !important;
+    }
+
+        .k-upload-button {
+            visibility: hidden;
+        }
+      
+</style>
+
+
+@using (Html.BeginForm("PMWorkOrders", "WorkOrders", FormMethod.Post, new {@id = "listForm"}))
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#ddlSort").change(function () {
+                var url = '@Url.Action("PMWorkOrders", "WorkOrders", new { selectedSort = "__SortValue__", sortDirection = ViewBag.SortDirection, assetId = "__AssetId__" })';
+                url = url.replace('__SortValue__', $("#ddlSort").val());
+                url = url.replace('__AssetId__', $("#cbAssetId").data("kendoComboBox").value());
+                url = url.replace(/\&amp;/g, '&');
+                window.location.href = url;
+            });
+        });
+
+
+        $(function () {
+            $("#cbAssetId").change(function () {
+                var url = '@Url.Action("PMWorkOrders", "WorkOrders", new { selectedSort = "__SortValue__", sortDirection = ViewBag.SortDirection, assetId = "__AssetId__" })';
+                url = url.replace('__SortValue__', $("#ddlSort").val());
+                url = url.replace('__AssetId__', $("#cbAssetId").data("kendoComboBox").value());
+                url = url.replace(/\&amp;/g, '&');
+                window.location.href = url;
+            });
+         });
+
+
+        function SendToWorkOrderDetails(itemId) {
+            //set the vairable that am item has been selected
+            var url = '@Url.Action("WorkSiteSafe", "WorkOrders", new {workOrderId = "__itemId__", selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })';
+            url = url.replace('__itemId__', itemId);
+            url = url.replace(/\&amp;/g, '&');
+            window.location.href = url;
+        }
+
+        function SetReturnURL() {
+            var returnURLObject = new Object();
+            returnURLObject.url = location.pathname + "?";
+            returnURLObject.url += "selectedSort=@ViewBag.SortOrder";
+            returnURLObject.url += "&sortDirection=@ViewBag.SortDirection";
+            returnURLObject.url += "&assetId=@ViewBag.AssetId";
+            if (typeof (Storage) !== "undefined") {
+                window.sessionStorage.setItem("fmReturnUrl", JSON.stringify(returnURLObject));
+            }
+        }
+
+        function asChange(e) {
+            if (this.value() && this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text("");
+                this.value("");
+                this._selectItem();
+            }
+        }
+
+        SetReturnURL();
+    </script>
+    <div id="content-inner">
+       
+            <div class="clear" id="sort">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Sort by"):</div><br/>
+                @(Html.Kendo().DropDownListFor(x=>x.SelectedSort).HtmlAttributes(new {style = "width:85%", @id = "ddlSort", @class = "customer_text"}).SelectedIndex(2).BindTo(new SelectList(Model.SortOptions, "Value", "Text")))
+                <a href='@Url.Action("PMWorkOrders", "WorkOrders", new { selectedSort = Model.SelectedSort, sortDirection = "ASC" })' ><img src="~/Images/arrow-up.png" alt="" /></a>
+                <a href='@Url.Action("PMWorkOrders", "WorkOrders", new { selectedSort = Model.SelectedSort, sortDirection = "DESC" })' ><img src="~/Images/arrow-down.png" alt="" /></a>
+                <div id="sort-controls"></div>
+            </div>
+        
+             <div class="clear" id="assetSearch">
+                 <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Search for Asset ID"):</div><br/>
+                @if (Model.AssetIdOptions.Any())
+                {
+                    @(Html.Kendo().ComboBoxFor(x => x.SelectedAssetKey)
+                          .Filter("contains")
+                          .HtmlAttributes(new {style = "width:100%", @id = "cbAssetId"})
+                          .Events(evt => evt.Change("asChange"))
+                          .BindTo(new SelectList(Model.AssetIdOptions, "UniqueKey", "AssetIdFullDisplay"))
+                          .Suggest(true)
+                          )
+                }
+                else
+                {
+                    <div  >
+                        No Assets Found.
+                    </div>
+                }
+             </div>
+        
+
+
+        @if (!Model.WorkOrders.Any())
+        {
+            <div class="clear" >
+               No Preventative Maintenance Work Orders Found.
+            </div>
+        }
+        else
+        {
+            
+            <div class="clear" id="work-orders">
+                @{
+            foreach (var workOrder in Model.WorkOrders)
+            {
+                //red if in one day
+                bool red = (workOrder.Deadline - (DateTime)Session[Constants.ViewData.CurrentLocalTime]).TotalMinutes <= 10080;
+                //yellow within 7 days
+                string classname = red ? "red" : "";
+                        <div class="wo @classname" onclick=" SendToWorkOrderDetails('@workOrder.WorkOrderId') ">
+                           
+                              <div class="clear">
+                                <div class="customer_text_label">@workOrder.AssetType:</div>
+                                    <div class="customer_text">@workOrder.AssetName (@workOrder.WorkOrderAsset.AssetId : @workOrder.AreaName)</div>
+                            </div>
+                          
+                            <div class="clear">
+                                <div class="customer_text">@workOrder.Location</div>
+                            </div>
+                            <div class="clear">
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"):</div>
+                                <div class="customer_text">@workOrder.DeadlineDisplay</div>
+                            </div>
+                            <div class="clear">
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last PM Date"):</div>
+                                <div class="customer_text">@workOrder.AssetLastPMDateDisplay</div>
+                            </div>
+                        </div>
+            }
+                }
+            </div>
+         
+        }
+           <div class="clear button-row">
+                 <a id="refresh" style="cursor: pointer" class="button important" href='@Url.Action("PMWorkOrders", "WorkOrders", new { selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection, assetId = ViewBag.AssetId })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</a>
+            </div>
+    </div>
+}

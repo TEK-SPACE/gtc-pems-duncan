@@ -1,0 +1,89 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Resolve Multiple Alarms");
+}
+                     
+@section PageHeader 
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Work Order Event Detail")</h2>
+     <a class="back" href='@Url.Action("WorkOrderDetails", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+}
+
+
+@using (Html.BeginForm("GetResolveEvents", "WorkOrders", FormMethod.Get, new { @id = "eventForm" }))
+{
+
+<input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+<input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+<input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+
+
+    <div id="content-inner">
+           <div class="validationSum-container">@Html.HeaderMessage()</div>
+        <div class="clear">
+            <div class="two-column">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+                <div class="customer_text">@Model.WorkOrderId</div>
+            </div>
+            <div class="two-column">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"):</div>
+                <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+            </div>
+        </div>
+
+        <div class="clear">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Events To Resolve"):</div>
+      
+      
+        <div class="clear" id="event-detail">
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="2" class="event-detail-header">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Event Detail")</td>
+                </tr>
+                @{
+
+                    if (Model.WorkOrderEvents.Any())
+                    {
+                        bool even = false;
+                        foreach (var workOrderEvent in Model.WorkOrderEvents)
+                        {
+                            string classname = even ? "even" : "";
+
+                            <tr class="event-detail-row @classname">
+                                <td>
+                                    <div class="customer_text_label">@workOrderEvent.EventDesc - @workOrderEvent.EventCode - @workOrderEvent.StatusDisplay</div>
+                                </td>
+                                <td>
+                                    <input name="eventIds" value="@workOrderEvent.WorkOrderEventId" class="checkbox" type="checkbox">
+                                </td>
+                            </tr>
+                            even = !even;
+                        }
+                    }
+                    else
+                    {
+                        <tr class="event-detail-row ">
+                            <td>
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")</div>
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </table>
+        </div>
+
+        <div class="clear button-row">
+            <a class="button important" onclick="Submit('Resolve');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve")</a>
+        </div>
+    </div>
+    
+    <script>
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#eventForm');
+            $('#eventForm').submit();
+        }
+    </script>
+}
+    

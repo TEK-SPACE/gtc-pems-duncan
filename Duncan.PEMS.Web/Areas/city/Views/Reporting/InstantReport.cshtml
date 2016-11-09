@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "InstantReport";
+}
+
+
+
+
+<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/print.css")" type="text/css" media="print" />
+<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/fun.css")" type="text/css" />
+@*<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/main.css")" type="text/css" />*@
+@*<link rel="shortcut icon" href="@Url.Content("~/Reporting/rs.aspx?image=ModernImages.report-icon.png")" type='image/png' />*@
+<script type="text/javascript" src="@Url.Content("~/Reporting/Resources/js/main.js")"></script>
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-responsive")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-modals")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-override")" rel="stylesheet" />
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-dropdown")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-tab")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-transition")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-modal")"></script>
+
+@Html.Partial("_InstantReport-Head")
+
+
+
+
+    <div class="layout">
+
+    <script type="text/javascript">
+        function insertParam(key, value) {
+            key = escape(key); value = escape(value);
+            var kvp = document.location.search.substr(1).split('&');
+            if (kvp.length == 1 && kvp[0] == '')
+                kvp.length = 0;
+            var i = kvp.length; var x; while (i--) {
+                x = kvp[i].split('=');
+                if (x[0] == key) {
+                    x[1] = value;
+                    kvp[i] = x.join('=');
+                    break;
+                }
+            }
+            if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
+            document.location.search = kvp.join('&');
+        }
+
+        function ShowRlToDbLoading() {
+            document.getElementById('mainContentDiv').style.display = 'none';
+            var dld = document.getElementById('dashLoadingVg');
+            dld.style.height = document.body.scrollHeight + 'px';
+            dld.style.display = '';
+            var limg = document.getElementById('limgDb');
+            var lw = document.getElementById('loadingWordDb');
+            var vSize = document.body.offsetHeight;
+            lw.style.paddingTop = (3 + vSize / 3) + 'px';
+        }
+    </script>
+
+    <div id="dashLoadingVg" style="text-align: center; width: 100%; height: 100%; top: 130px; left: 0px; background-color: #FFFFFF; z-index: 8000; display: none;">
+        <div id="loadingWordDb" style="font-size: 20px; margin-left: 70px; font-size: 20px; color: #1D5987; font-family: Verdana,Arial,Helvetica,sans-serif; font-weight: normal !important; font-size: 20px; font-style: normal;">Loading...</div>
+        <img id="limgDb" style="margin-left: 70px; margin-top:40px;" src="@Url.Content("~/Reporting/rs.aspx?image=loading.gif")" alt="" />
+    </div>
+
+    <div class="main-content" id="mainContentDiv">
+
+
+@Html.Partial("_InstantReport-Body")
+        
+    </div>
+
+</div>

@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Forgot Username").ToString();
+    ViewBag.BodyId = "login";
+    ViewBag.SubTitle = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Forgot Username");
+}
+
+<p class="message-success">@ViewBag.StatusMessage</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p>Enter your email address and you will be emailed your username. 
+        If you do not have an email address or need assistance, contact your Customer Support personnel.
+    </p>
+    <div class="validationSum-containerMain">
+        <ul>
+            <li>@Html.ValidationSummary( true )</li>
+        </ul>
+    </div>
+    <fieldset id="forgot-password-username">
+        <ul>
+            <li>
+                <label for="EmailAddress">Email Address</label>
+                <input data-val="true" data-val-required="The Email Address field is required." id="EmailAddress" class="textBox"  name="emailAddress" type="text" />
+            </li>
+            <li>&nbsp;</li>
+            <li>
+                <input type="submit" value="Submit" class="button">
+            </li>
+        </ul>
+    </fieldset>
+}
+@section PageHeader 
+{
+    <h1>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Forgot Username" )</h1>
+    <a href="@Url.Action( "Login" )" class="button previous">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Back To Login" )</a>
+}

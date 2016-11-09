@@ -1,0 +1,232 @@
+2016-05-02 15:23:28.9553 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:23:31.8773 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2016-05-02 15:23:31.8773 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 15:23:31.8773 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:13.8869 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:17.3391 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetChangeBatteryRep, A:Home
+2016-05-02 15:27:17.3401 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:17.3401 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:19.0292 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:21.8483 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSpacestatusSensorRep, A:Home
+2016-05-02 15:27:21.8483 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:21.8493 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:28.1707 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:31.5339 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2016-05-02 15:27:31.5339 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:31.5339 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:32.8330 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:35.6661 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOccupancyForMobile, A:GIS
+2016-05-02 15:27:35.6661 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:35.6661 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:42.4105 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:45.2757 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetPaymentRep, A:Home
+2016-05-02 15:27:45.2757 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:45.2757 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:27:51.0230 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:27:54.4982 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetEnforceableSpaceRep, A:Home
+2016-05-02 15:27:54.4982 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:27:54.4982 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:03.2107 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:28:05.8919 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Collections
+2016-05-02 15:28:05.8919 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 15:28:05.8919 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:22.0658 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:28:27.4761 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Aggregation, A:Collections
+2016-05-02 15:28:27.4761 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 15:28:27.4761 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:30.7083 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:28:34.8065 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetBatteryRep, A:Home
+2016-05-02 15:28:34.8065 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:28:34.8065 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:36.4036 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:28:36.4036 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetSavedSortValues, A:Collections
+2016-05-02 15:28:36.4036 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 15:28:36.4036 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:54.3556 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:28:54.3576 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 15:28:54.3576 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 15:28:54.3576 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 15:28:58.9289 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 15:29:01.8351 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 15:29:01.8351 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 15:29:01.8351 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 16:31:16.9362 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 16:31:17.3162 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 16:31:17.3662 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 16:31:17.3662 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 16:31:21.8962 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 16:31:25.9862 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 16:31:25.9862 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 16:31:25.9862 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 16:32:56.3739 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 16:32:56.3739 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 16:32:56.3739 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 16:32:56.3739 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 16:32:58.5639 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 16:33:01.3969 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 16:33:01.3969 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 16:33:01.3969 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 16:42:17.8213 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 16:42:23.9013 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: AggregationDetails, A:Collections
+2016-05-02 16:42:23.9013 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 16:42:23.9013 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:13:53.5599 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:13:59.1299 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Aggregation, A:Collections
+2016-05-02 17:13:59.1299 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:13:59.1299 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:16:48.6774 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:16:48.6774 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetSavedSortValues, A:Collections
+2016-05-02 17:16:48.6774 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:16:48.6774 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:19:37.2789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:19:37.2789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 17:19:37.2789 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:19:37.2789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:19:39.6789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:19:43.3389 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 17:19:43.3389 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:19:43.3389 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:20:13.3420 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:20:15.9991 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: AggregationDetails, A:Collections
+2016-05-02 17:20:15.9991 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:20:15.9991 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:41:51.8424 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:41:51.9924 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2016-05-02 17:41:51.9924 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:41:51.9924 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:51.0325 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:51.9106 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2016-05-02 17:42:51.9106 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:51.9106 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:52.6326 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:52.9526 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOccupancyForMobile, A:GIS
+2016-05-02 17:42:52.9526 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:52.9526 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:53.1766 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:53.4537 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetPaymentRep, A:Home
+2016-05-02 17:42:53.4537 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:53.4537 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:53.6827 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:53.9037 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSpacestatusSensorRep, A:Home
+2016-05-02 17:42:53.9037 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:53.9037 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:54.1817 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:54.5477 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetChangeBatteryRep, A:Home
+2016-05-02 17:42:54.5477 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:54.5477 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:55.2278 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:55.6058 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetEnforceableSpaceRep, A:Home
+2016-05-02 17:42:55.6058 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:55.6058 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:42:56.2568 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:42:56.5258 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetBatteryRep, A:Home
+2016-05-02 17:42:56.5258 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:42:56.5258 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:00.7011 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:00.8091 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Aggregation, A:Collections
+2016-05-02 17:43:00.8091 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:43:00.8091 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:10.4336 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:10.4336 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetSavedSortValues, A:Collections
+2016-05-02 17:43:10.4366 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:43:10.4366 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:16.4810 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:16.4810 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 17:43:16.4810 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:43:16.4810 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:16.7000 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:16.9770 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 17:43:16.9770 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:16.9770 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:24.5224 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:24.5244 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 17:43:24.5244 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:43:24.5244 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:24.6574 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:25.0475 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 17:43:25.0475 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:25.0475 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:42.2084 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:42.2784 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2016-05-02 17:43:42.2784 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:43:42.2784 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:47.9528 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:48.1718 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2016-05-02 17:43:48.1738 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:48.1738 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:48.4698 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:48.6548 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetChangeBatteryRep, A:Home
+2016-05-02 17:43:48.6548 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:48.6548 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:48.9838 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:49.1578 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetPaymentRep, A:Home
+2016-05-02 17:43:49.1578 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:49.1578 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:49.4999 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:49.8949 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetEnforceableSpaceRep, A:Home
+2016-05-02 17:43:49.8949 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:49.8949 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:50.2339 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:50.6319 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOccupancyForMobile, A:GIS
+2016-05-02 17:43:50.6319 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:50.6319 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:51.0439 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:51.2870 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSpacestatusSensorRep, A:Home
+2016-05-02 17:43:51.2870 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:51.2870 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:51.5590 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:52.0080 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetBatteryRep, A:Home
+2016-05-02 17:43:52.0080 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:52.0080 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:52.2500 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:52.2920 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Aggregation, A:Collections
+2016-05-02 17:43:52.2920 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:43:52.2920 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:53.5601 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:53.5601 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetSavedSortValues, A:Collections
+2016-05-02 17:43:53.5601 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:43:53.5601 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:57.8473 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:57.8473 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 17:43:57.8473 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 17:43:57.8473 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:43:57.9983 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:43:58.2854 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 17:43:58.2854 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:43:58.2854 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:44:11.0611 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:44:11.3661 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAggregationRoutes, A:Collections
+2016-05-02 17:44:11.3661 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 17:44:11.3661 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 17:44:33.5724 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 17:44:33.6334 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: AggregationDetails, A:Collections
+2016-05-02 17:44:33.6334 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 17:44:33.6334 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:04:02.7238 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:04:02.7238 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 18:04:02.7238 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 18:04:02.7238 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:15:52.3856 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:15:52.4656 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: AggregationDetails, A:Collections
+2016-05-02 18:15:52.4656 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 18:15:52.4656 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:16:10.1377 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:16:10.1377 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax, C: GetGridData, A:Collections
+2016-05-02 18:16:10.1377 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAjax Pass execution to action
+2016-05-02 18:16:10.1377 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:33:35.2624 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:33:35.3524 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Assets
+2016-05-02 18:33:35.3624 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2016-05-02 18:33:35.3624 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:33:48.8764 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:33:49.1564 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetFilterValues, A:Assets
+2016-05-02 18:33:49.1564 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 18:33:49.1564 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:33:49.8864 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:33:50.2164 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetGrid, A:Assets
+2016-05-02 18:33:50.2164 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 18:33:50.2164 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2016-05-02 18:33:56.2027 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2016-05-02 18:33:56.5427 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetSummaryItems, A:Assets
+2016-05-02 18:33:56.5427 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2016-05-02 18:33:56.5427 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit

@@ -1,0 +1,221 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Details");
+}
+
+@section PageHeader 
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Work Order Summary Detail") </h2>
+    <a id="backBtn" class="back" href='@Url.Action("WorkOrders", "WorkOrders", new { selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+}
+
+@section Scripts 
+{
+}
+
+@using (Html.BeginForm("WorkSiteSafe", "WorkOrders", FormMethod.Post, new { @id = "siteSafeForm" }))
+{
+    
+    <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+    <input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+    <input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+
+    <div id="content-inner">
+
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Id"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Is work site safe to work on?"):</div>
+            <br />
+             @(Html.Kendo().DropDownList()
+          .Name("ddlSiteSafe").HtmlAttributes(new { style = "width:100%", @id = "ddlSiteSafe" }).DataTextField("Text").DataValueField("Value")
+          .BindTo(new List<SelectListItem>() {
+              new SelectListItem() {
+                  Text = "Yes",
+                  Value = "Yes"
+              },
+              new SelectListItem() {
+                  Text = "No",
+                  Value = "No"
+              }
+          }).Value("Yes"))
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new { @class = "customer_text_area long_text_area", rows = "5", @id="Notes" })
+        </div>
+        <div class="clear" id="image-upload">
+            <a class="button" id="get-images" href="#" onclick="LoadFileUpload()"></a>
+            <input name="files" id="files" type="file" />
+
+            @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Attached Images"):<br />
+            @{
+                if (Model.WorkOrderImages.Any())
+                {
+                    foreach (var workOrderImage in Model.WorkOrderImages)
+                    {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions
+                                                      .Close())
+                              .Content(@<text>
+                                            <img alt="" style="max-width: 100%" src="@workOrderImage.ImageSource"/>
+                                        </text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+
+                              )
+                        <a href="#" id='open_@workOrderImage.WorkOrderImageId' >WO# @workOrderImage.ImageName</a>
+                        <br/>
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").open();
+                                    dialog.data("kendoWindow").center();
+                                });
+                            });
+
+                            $(document).on('click', ".k-overlay", function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                dialog.data("kendoWindow").close();
+                            });
+                        </script>
+                    }
+                }
+                else
+                {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+                }
+            }
+        </div>
+        <div class="clear button-row">
+            <a class="button important" style="float: right" id="btnNext" onclick="Submit('Next');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Next")</a>
+            <a class="button important" style="float: right" id="btnSuspend" onclick="Suspend();" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suspend")</a>
+        </div>
+    </div>
+    <script>
+
+        function LoadFileUpload() {
+            $("#files").click();
+        }
+        function UpdateDDLButton() {
+
+            $("#btnNext").hide();
+            $("#btnSuspend").hide();
+            var siteSafe = $("#ddlSiteSafe").val();
+            if (siteSafe == "Yes") {
+                $("#btnNext").show();
+            } else {
+                $("#btnSuspend").show();
+            }
+        }
+
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#siteSafeForm');
+            $('#siteSafeForm').submit();
+        }
+
+        function Suspend() {
+            //make sure notes are filled in first
+            var notes = $("#Notes").val();
+            if (notes == "") {
+                alert('Notes are required.');
+                return false;
+            }
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', "Suspend").appendTo('#siteSafeForm');
+            $('#siteSafeForm').submit();
+        }
+
+        $(document).ready(function () {
+            $("#files").kendoUpload({
+                select: onSelect,
+                remove: onRemove
+            });
+            $("#ddlSiteSafe").change(function () {
+                //set the onclick event to be either  onclick="Submit('Next');" or  onclick="Submit('Suspend');"
+                UpdateDDLButton();
+            });
+            UpdateDDLButton();
+
+            CreateReturnButton();
+        });
+
+        var totalFiles = @Model.WorkOrderImages.Count();
+        var onSelect = function (e) {
+            var selectedFiles = e.files.length;
+            //only 3 per work order
+            if (totalFiles + selectedFiles > 3) {
+                alert("Only 3 images allowed");
+                e.preventDefault();
+            }
+            else {
+                totalFiles += selectedFiles;
+            }
+
+            $.each(e.files, function (index, value) {
+                var extension = value.extension.trim().toLowerCase();
+                //only images
+                if (extension != ".png"
+                    && extension != ".jpeg"
+                    && extension != ".jpg") {
+                    e.preventDefault();
+                    alert("Image Files Only");
+                }
+            });
+        };
+
+        function onRemove(e) {
+            totalFiles--;
+        }
+
+    function CreateReturnButton() {
+
+        var stringified;
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            stringified = window.sessionStorage.getItem("fmReturnUrl");
+        } 
+
+        // Create the return URL
+        if (stringified) {
+            var parsed = JSON.parse(stringified);
+            if (parsed) {
+                if (parsed.url) {
+                    $("#backBtn").attr("href", parsed.url);
+                }
+            }
+        }
+    }
+
+</script>
+    
+    
+    <style>
+        .k-upload-button {
+            visibility: hidden;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+    </style>
+}

@@ -1,0 +1,49 @@
+/**********************************************************************************************
+PURPOSE
+This CSS file provide a clever way to add browser and OS specific css styles.
+
+USAGE
+.[os].[browser] .mylink { font-weight: bold; } -> without space between .[os] and .[browser]
+
+AVAILABLE OS CODES [os]:
+win - Microsoft Windows
+linux - Linux (x11 and linux)
+mac - Mac OS
+freebsd - FreeBSD
+ipod - iPod Touch
+iphone - iPhone
+webtv - WebTV
+mobile - J2ME Devices (ex: Opera mini)
+
+AVIALABLE BROWSER CODES [browser]:
+ie - Internet Explorer (All versions)
+ie8 - Internet Explorer 8.x
+ie7 - Internet Explorer 7.x
+ie6 - Internet Explorer 6.x
+ie5 - Internet Explorer 5.x
+gecko - Mozilla, Firefox (all versions), Camino
+ff2 - Firefox 2
+ff3 - Firefox 3
+ff3_5 - Firefox 3.5 new
+opera - Opera (All versions)
+opera8 - Opera 8.x
+opera9 - Opera 9.x
+opera10 - Opera 10.x
+konqueror - Konqueror
+webkit or safari - Safari, NetNewsWire, OmniWeb, Shiira, Google Chrome
+safari3 - Safari 3.x
+chrome - Google Chrome
+iron - SRWare Iron
+
+EXAMPLES:
+html.gecko div#header { margin: 1em; }
+.opera #header { margin: 1.2em; }
+.ie .mylink { font-weight: bold; }
+.mac.ie .mylink { font-weight: bold; }
+
+***********************************************************************************************/
+
+/*div#banner div.samples ul li.ie { display:none; }
+html.ie div#banner div.samples ul li { display:none; }
+html.ie div#banner div.samples ul li.ie { display:block; }
+*/

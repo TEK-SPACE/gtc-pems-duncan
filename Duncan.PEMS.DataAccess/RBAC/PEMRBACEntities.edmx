@@ -1,0 +1,2225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PEMRBACModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="PEMRBACModelStoreContainer">
+          <EntitySet Name="AccessLog" EntityType="PEMRBACModel.Store.AccessLog" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AccessLogMembershipEvents" EntityType="PEMRBACModel.Store.AccessLogMembershipEvents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerGrids" EntityType="PEMRBACModel.Store.CustomerGrids" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerProfile" EntityType="PEMRBACModel.Store.CustomerProfile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerReports" EntityType="PEMRBACModel.Store.CustomerReports" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerReportsAdHoc" EntityType="PEMRBACModel.Store.CustomerReportsAdHoc" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerReportsCategory" EntityType="PEMRBACModel.Store.CustomerReportsCategory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerReportsSource" EntityType="PEMRBACModel.Store.CustomerReportsSource" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSettings" EntityType="PEMRBACModel.Store.CustomerSettings" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSettingsGroup" EntityType="PEMRBACModel.Store.CustomerSettingsGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSettingsGroupMember" EntityType="PEMRBACModel.Store.CustomerSettingsGroupMember" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSettingType" EntityType="PEMRBACModel.Store.CustomerSettingType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSettingTypeList" EntityType="PEMRBACModel.Store.CustomerSettingTypeList" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerType" EntityType="PEMRBACModel.Store.CustomerType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ErrorMessages" EntityType="PEMRBACModel.Store.ErrorMessages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GridDefinition" EntityType="PEMRBACModel.Store.GridDefinition" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="HelpMap" EntityType="PEMRBACModel.Store.HelpMap" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LocaleResources" EntityType="PEMRBACModel.Store.LocaleResources" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LocaleResourcesCustom" EntityType="PEMRBACModel.Store.LocaleResourcesCustom" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LoginAttemptHistory" EntityType="PEMRBACModel.Store.LoginAttemptHistory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MaintenanceGroupCustomer" EntityType="PEMRBACModel.Store.MaintenanceGroupCustomer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MembershipEventTypes" EntityType="PEMRBACModel.Store.MembershipEventTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="netsqlazman_StoreGroupsTable" EntityType="PEMRBACModel.Store.netsqlazman_StoreGroupsTable" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="netsqlazman_StoresTable" EntityType="PEMRBACModel.Store.netsqlazman_StoresTable" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="News" EntityType="PEMRBACModel.Store.News" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NewsContent" EntityType="PEMRBACModel.Store.NewsContent" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ResourceEvents" EntityType="PEMRBACModel.Store.ResourceEvents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ResourceEventTypes" EntityType="PEMRBACModel.Store.ResourceEventTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SystemInformation" EntityType="PEMRBACModel.Store.SystemInformation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TimeZones" EntityType="PEMRBACModel.Store.TimeZones" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="User_CustomerGrids" EntityType="PEMRBACModel.Store.User_CustomerGrids" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserCustomerAccess" EntityType="PEMRBACModel.Store.UserCustomerAccess" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserPasswordHistory" EntityType="PEMRBACModel.Store.UserPasswordHistory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserPasswordQuestion" EntityType="PEMRBACModel.Store.UserPasswordQuestion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProfile" EntityType="PEMRBACModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserSettings" EntityType="PEMRBACModel.Store.UserSettings" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Membership" EntityType="PEMRBACModel.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_Roles" EntityType="PEMRBACModel.Store.webpages_Roles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="PEMRBACModel.Store.webpages_UsersInRoles" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_AccessLogMembershipEvents_MembershipEventTypes" Association="PEMRBACModel.Store.FK_AccessLogMembershipEvents_MembershipEventTypes">
+            <End Role="MembershipEventTypes" EntitySet="MembershipEventTypes" />
+            <End Role="AccessLogMembershipEvents" EntitySet="AccessLogMembershipEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerGrids_CustomerProfile" Association="PEMRBACModel.Store.FK_CustomerGrids_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="CustomerGrids" EntitySet="CustomerGrids" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerProfile_CustomerType" Association="PEMRBACModel.Store.FK_CustomerProfile_CustomerType">
+            <End Role="CustomerType" EntitySet="CustomerType" />
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerReports_CustomerReportsCategory" Association="PEMRBACModel.Store.FK_CustomerReports_CustomerReportsCategory">
+            <End Role="CustomerReportsCategory" EntitySet="CustomerReportsCategory" />
+            <End Role="CustomerReports" EntitySet="CustomerReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettings_CustomerProfile" Association="PEMRBACModel.Store.FK_CustomerSettings_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="CustomerSettings" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettings_CustomerSetting" Association="PEMRBACModel.Store.FK_CustomerSettings_CustomerSetting">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingType" />
+            <End Role="CustomerSettings" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroup_CustomerProfile" Association="PEMRBACModel.Store.FK_CustomerSettingsGroup_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="CustomerSettingsGroup" EntitySet="CustomerSettingsGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroupMember_CustomerSetting" Association="PEMRBACModel.Store.FK_CustomerSettingsGroupMember_CustomerSetting">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingType" />
+            <End Role="CustomerSettingsGroupMember" EntitySet="CustomerSettingsGroupMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroupMember_CustomerSettingsGroup" Association="PEMRBACModel.Store.FK_CustomerSettingsGroupMember_CustomerSettingsGroup">
+            <End Role="CustomerSettingsGroup" EntitySet="CustomerSettingsGroup" />
+            <End Role="CustomerSettingsGroupMember" EntitySet="CustomerSettingsGroupMember" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingTypeList_CustomerSettingType" Association="PEMRBACModel.Store.FK_CustomerSettingTypeList_CustomerSettingType">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingType" />
+            <End Role="CustomerSettingTypeList" EntitySet="CustomerSettingTypeList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaintenanceGroupCustomer_Customer" Association="PEMRBACModel.Store.FK_MaintenanceGroupCustomer_Customer">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="MaintenanceGroupCustomer" EntitySet="MaintenanceGroupCustomer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaintenanceGroupCustomer_MaintenanceGroup" Association="PEMRBACModel.Store.FK_MaintenanceGroupCustomer_MaintenanceGroup">
+            <End Role="CustomerProfile" EntitySet="CustomerProfile" />
+            <End Role="MaintenanceGroupCustomer" EntitySet="MaintenanceGroupCustomer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NewsContent_News" Association="PEMRBACModel.Store.FK_NewsContent_News">
+            <End Role="News" EntitySet="News" />
+            <End Role="NewsContent" EntitySet="NewsContent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceEvents_ResourceEventTypes" Association="PEMRBACModel.Store.FK_ResourceEvents_ResourceEventTypes">
+            <End Role="ResourceEventTypes" EntitySet="ResourceEventTypes" />
+            <End Role="ResourceEvents" EntitySet="ResourceEvents" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleId" Association="PEMRBACModel.Store.fk_RoleId">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoreGroups_Stores" Association="PEMRBACModel.Store.FK_StoreGroups_Stores">
+            <End Role="netsqlazman_StoresTable" EntitySet="netsqlazman_StoresTable" />
+            <End Role="netsqlazman_StoreGroupsTable" EntitySet="netsqlazman_StoreGroupsTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_CustomerGrids" Association="PEMRBACModel.Store.FK_User_CustomerGrids">
+            <End Role="CustomerGrids" EntitySet="CustomerGrids" />
+            <End Role="User_CustomerGrids" EntitySet="User_CustomerGrids" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_Customer" Association="PEMRBACModel.Store.FK_UserCustomerAccess_Customer">
+            <End Role="netsqlazman_StoresTable" EntitySet="netsqlazman_StoresTable" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccess" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_User" Association="PEMRBACModel.Store.FK_UserCustomerAccess_User">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccess" />
+          </AssociationSet>
+          <AssociationSet Name="fk_UserId" Association="PEMRBACModel.Store.fk_UserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPasswordHistory_UserProfile" Association="PEMRBACModel.Store.FK_UserPasswordHistory_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserPasswordHistory" EntitySet="UserPasswordHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPasswordQuestion_UserProfile" Association="PEMRBACModel.Store.FK_UserPasswordQuestion_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserPasswordQuestion" EntitySet="UserPasswordQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSettings_UserProfile" Association="PEMRBACModel.Store.FK_UserSettings_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserSettings" EntitySet="UserSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_Membership_UserProfile" Association="PEMRBACModel.Store.FK_webpages_Membership_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="webpages_Membership" EntitySet="webpages_Membership" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccessLog">
+          <Key>
+            <PropertyRef Name="AccessLogId" />
+          </Key>
+          <Property Name="AccessLogId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Area" Type="nvarchar" MaxLength="255" />
+          <Property Name="City" Type="nvarchar" MaxLength="255" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="255" />
+          <Property Name="Action" Type="nvarchar" MaxLength="255" />
+          <Property Name="SessionID" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="AccessRights" Type="int" Nullable="false" />
+          <Property Name="AccessDuration" Type="float" />
+          <Property Name="AccessOverhead" Type="float" />
+          <Property Name="AccessDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccessLogMembershipEvents">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="TimeStamp" Type="datetime" />
+          <Property Name="EventTypeId" Type="int" />
+          <Property Name="SessionID" Type="nvarchar" MaxLength="50" />
+          <Property Name="IPAddress" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustomerGrids">
+          <Key>
+            <PropertyRef Name="CustomerGridsId" />
+          </Key>
+          <Property Name="CustomerGridsId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Controller" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Action" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Position" Type="int" Nullable="false" />
+          <Property Name="OriginalTitle" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="OriginalPosition" Type="int" Nullable="false" />
+          <Property Name="IsHidden" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerProfile">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StatusChangeDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="DefaultLocale" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="smalldatetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="ModifiedOn" Type="smalldatetime" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="Is24HrFormat" Type="bit" />
+          <Property Name="TimeZoneID" Type="int" />
+          <Property Name="PEMSConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MaintenanceConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ReportingConnectionStringName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerTypeId" Type="int" Nullable="false" />
+          <Property Name="ConnectionStringName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustomerReports">
+          <Key>
+            <PropertyRef Name="CustomerReportId" />
+          </Key>
+          <Property Name="CustomerReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="CustomerReportsCategoryId" Type="int" Nullable="false" />
+          <Property Name="ReportAction" Type="varchar" Nullable="false" MaxLength="32" />
+          <Property Name="Host" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Path" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Parameters" Type="varchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CustomerReportsAdHoc">
+          <Key>
+            <PropertyRef Name="CustomerReportsAdHocId" />
+          </Key>
+          <Property Name="CustomerReportsAdHocId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="ReportSource" Type="varchar" Nullable="false" MaxLength="64" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="CustomerReportsCategory">
+          <Key>
+            <PropertyRef Name="CustomerReportsCategoryId" />
+          </Key>
+          <Property Name="CustomerReportsCategoryId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="32" />
+        </EntityType>
+        <EntityType Name="CustomerReportsSource">
+          <Key>
+            <PropertyRef Name="CustomerReportsSourceId" />
+          </Key>
+          <Property Name="CustomerReportsSourceId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="ReportSource" Type="varchar" Nullable="false" MaxLength="64" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="CustomerSettings">
+          <Key>
+            <PropertyRef Name="CustomerSettingsId" />
+          </Key>
+          <Property Name="CustomerSettingsId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="CustomerSettingTypeId" Type="int" Nullable="false" />
+          <Property Name="SettingValue" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CustomerSettingsGroup">
+          <Key>
+            <PropertyRef Name="CustomerSettingsGroupId" />
+          </Key>
+          <Property Name="CustomerSettingsGroupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="SettingGroupName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerSettingsGroupMember">
+          <Key>
+            <PropertyRef Name="CustomerSettingsGroupMemberId" />
+          </Key>
+          <Property Name="CustomerSettingsGroupMemberId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerSettingsGroupId" Type="int" Nullable="false" />
+          <Property Name="CustomerSettingTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerSettingType">
+          <Key>
+            <PropertyRef Name="CustomerSettingTypeId" />
+          </Key>
+          <Property Name="CustomerSettingTypeId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerSettingTypeName" Type="nvarchar" MaxLength="50" />
+          <Property Name="SettingTypeId" Type="int" Nullable="false" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+          <Property Name="DefaultValue" Type="nvarchar" MaxLength="255" />
+          <Property Name="InternalValue" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CustomerSettingTypeList">
+          <Key>
+            <PropertyRef Name="CustomerSettingTypeListId" />
+          </Key>
+          <Property Name="CustomerSettingTypeListId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerSettingTypeId" Type="int" Nullable="false" />
+          <Property Name="SettingValue" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="InternalValue" Type="nvarchar" MaxLength="255" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="Default" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerType">
+          <Key>
+            <PropertyRef Name="CustomerTypeId" />
+          </Key>
+          <Property Name="CustomerTypeId" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ErrorMessages">
+          <Key>
+            <PropertyRef Name="ErrorMessageID" />
+          </Key>
+          <Property Name="ErrorMessageID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ErrorCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ErrorMessage" Type="nvarchar" Nullable="false" MaxLength="250" />
+          <Property Name="Locale" Type="nvarchar" Nullable="false" MaxLength="6" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GridDefinition">
+          <Key>
+            <PropertyRef Name="GridDefinitionId" />
+          </Key>
+          <Property Name="GridDefinitionId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Controller" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Action" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="HelpMap">
+          <Key>
+            <PropertyRef Name="HelpMapId" />
+          </Key>
+          <Property Name="HelpMapId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CultureCode" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Area" Type="nvarchar" MaxLength="255" />
+          <Property Name="Controller" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Action" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Server" Type="nvarchar" MaxLength="255" />
+          <Property Name="File" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Topic" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="LocaleResources">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="nvarchar" MaxLength="255" />
+          <Property Name="Name" Type="nvarchar" MaxLength="128" />
+          <Property Name="Value" Type="nvarchar(max)" />
+          <Property Name="CultureCode" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="LocaleResourcesCustom">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LoginAttemptHistory">
+          <Key>
+            <PropertyRef Name="LoginAttemptHistoryId" />
+          </Key>
+          <Property Name="LoginAttemptHistoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="128" />
+          <Property Name="AccessDate" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="MaintenanceGroupCustomer">
+          <Key>
+            <PropertyRef Name="MaintenanceGroupCustomerId" />
+          </Key>
+          <Property Name="MaintenanceGroupCustomerId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="MaintenanceGroupId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MembershipEventTypes">
+          <Key>
+            <PropertyRef Name="EventTypeId" />
+          </Key>
+          <Property Name="EventTypeId" Type="int" Nullable="false" />
+          <Property Name="EventName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="netsqlazman_StoreGroupsTable">
+          <Key>
+            <PropertyRef Name="StoreGroupId" />
+          </Key>
+          <Property Name="StoreGroupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StoreId" Type="int" Nullable="false" />
+          <Property Name="objectSid" Type="varbinary" Nullable="false" MaxLength="85" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Description" Type="nvarchar" Nullable="false" MaxLength="1024" />
+          <Property Name="LDapQuery" Type="nvarchar" />
+          <Property Name="GroupType" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="netsqlazman_StoresTable">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Name="StoreId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Description" Type="nvarchar" Nullable="false" MaxLength="1024" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="ContentId" />
+          </Key>
+          <Property Name="ContentId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="EffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="ExpirationDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="Display" Type="bit" />
+        </EntityType>
+        <EntityType Name="NewsContent">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ContentId" Type="int" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CultureCode" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ResourceEvents">
+          <Key>
+            <PropertyRef Name="ResourceEventsId" />
+          </Key>
+          <Property Name="ResourceEventsId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="TimeStamp" Type="datetime" />
+          <Property Name="EventTypeId" Type="int" />
+          <Property Name="SessionID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Controller" Type="nvarchar" MaxLength="128" />
+          <Property Name="Action" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="ResourceEventTypes">
+          <Key>
+            <PropertyRef Name="EventTypeId" />
+          </Key>
+          <Property Name="EventTypeId" Type="int" Nullable="false" />
+          <Property Name="EventName" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="SystemInformation">
+          <Key>
+            <PropertyRef Name="SystemInformationId" />
+          </Key>
+          <Property Name="SystemInformationId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TableName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="PrimaryKey" Type="int" Nullable="false" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedBy" Type="int" />
+          <Property Name="LastModifiedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TimeZones">
+          <Key>
+            <PropertyRef Name="TimeZoneID" />
+          </Key>
+          <Property Name="TimeZoneID" Type="int" Nullable="false" />
+          <Property Name="LocalTimeUTCDifference" Type="int" Nullable="false" />
+          <Property Name="DaylightSavingAdjustment" Type="int" Nullable="false" />
+          <Property Name="UTCSummerTimeStart" Type="smalldatetime" Nullable="false" />
+          <Property Name="UTCSummerTimeEnd" Type="smalldatetime" Nullable="false" />
+          <Property Name="TimeZoneName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="User_CustomerGrids">
+          <Key>
+            <PropertyRef Name="CustomerGridsId" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="CustomerGridsId" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="Controller" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Action" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="OriginalColName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="OriginalColPos" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCustomerAccess">
+          <Key>
+            <PropertyRef Name="UserCustomerAccessId" />
+          </Key>
+          <Property Name="UserCustomerAccessId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPasswordHistory">
+          <Key>
+            <PropertyRef Name="UserPasswordHistoryId" />
+          </Key>
+          <Property Name="UserPasswordHistoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="ChangeDate" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPasswordQuestion">
+          <Key>
+            <PropertyRef Name="UserPasswordQuestionId" />
+          </Key>
+          <Property Name="UserPasswordQuestionId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="QuestionNumber" Type="int" Nullable="false" />
+          <Property Name="Question" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="Answer" Type="nvarchar" Nullable="false" MaxLength="64" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="56" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="RequirePasswordReset" Type="bit" />
+        </EntityType>
+        <EntityType Name="UserSettings">
+          <Key>
+            <PropertyRef Name="UserSettingsId" />
+          </Key>
+          <Property Name="UserSettingsId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SettingName" Type="nvarchar" Nullable="false" MaxLength="64" />
+          <Property Name="SettingValue" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="256" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AccessLogMembershipEvents_MembershipEventTypes">
+          <End Role="MembershipEventTypes" Type="PEMRBACModel.Store.MembershipEventTypes" Multiplicity="0..1" />
+          <End Role="AccessLogMembershipEvents" Type="PEMRBACModel.Store.AccessLogMembershipEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipEventTypes">
+              <PropertyRef Name="EventTypeId" />
+            </Principal>
+            <Dependent Role="AccessLogMembershipEvents">
+              <PropertyRef Name="EventTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerGrids_CustomerProfile">
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="1" />
+          <End Role="CustomerGrids" Type="PEMRBACModel.Store.CustomerGrids" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerGrids">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerProfile_CustomerType">
+          <End Role="CustomerType" Type="PEMRBACModel.Store.CustomerType" Multiplicity="1" />
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerType">
+              <PropertyRef Name="CustomerTypeId" />
+            </Principal>
+            <Dependent Role="CustomerProfile">
+              <PropertyRef Name="CustomerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerReports_CustomerReportsCategory">
+          <End Role="CustomerReportsCategory" Type="PEMRBACModel.Store.CustomerReportsCategory" Multiplicity="1" />
+          <End Role="CustomerReports" Type="PEMRBACModel.Store.CustomerReports" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerReportsCategory">
+              <PropertyRef Name="CustomerReportsCategoryId" />
+            </Principal>
+            <Dependent Role="CustomerReports">
+              <PropertyRef Name="CustomerReportsCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettings_CustomerProfile">
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="1" />
+          <End Role="CustomerSettings" Type="PEMRBACModel.Store.CustomerSettings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSettings">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettings_CustomerSetting">
+          <End Role="CustomerSettingType" Type="PEMRBACModel.Store.CustomerSettingType" Multiplicity="1" />
+          <End Role="CustomerSettings" Type="PEMRBACModel.Store.CustomerSettings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSettings">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroup_CustomerProfile">
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="1" />
+          <End Role="CustomerSettingsGroup" Type="PEMRBACModel.Store.CustomerSettingsGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroup">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroupMember_CustomerSetting">
+          <End Role="CustomerSettingType" Type="PEMRBACModel.Store.CustomerSettingType" Multiplicity="1" />
+          <End Role="CustomerSettingsGroupMember" Type="PEMRBACModel.Store.CustomerSettingsGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroupMember">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroupMember_CustomerSettingsGroup">
+          <End Role="CustomerSettingsGroup" Type="PEMRBACModel.Store.CustomerSettingsGroup" Multiplicity="1" />
+          <End Role="CustomerSettingsGroupMember" Type="PEMRBACModel.Store.CustomerSettingsGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingsGroup">
+              <PropertyRef Name="CustomerSettingsGroupId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroupMember">
+              <PropertyRef Name="CustomerSettingsGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingTypeList_CustomerSettingType">
+          <End Role="CustomerSettingType" Type="PEMRBACModel.Store.CustomerSettingType" Multiplicity="1" />
+          <End Role="CustomerSettingTypeList" Type="PEMRBACModel.Store.CustomerSettingTypeList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSettingTypeList">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaintenanceGroupCustomer_Customer">
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="1" />
+          <End Role="MaintenanceGroupCustomer" Type="PEMRBACModel.Store.MaintenanceGroupCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="MaintenanceGroupCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaintenanceGroupCustomer_MaintenanceGroup">
+          <End Role="CustomerProfile" Type="PEMRBACModel.Store.CustomerProfile" Multiplicity="1" />
+          <End Role="MaintenanceGroupCustomer" Type="PEMRBACModel.Store.MaintenanceGroupCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="MaintenanceGroupCustomer">
+              <PropertyRef Name="MaintenanceGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NewsContent_News">
+          <End Role="News" Type="PEMRBACModel.Store.News" Multiplicity="1" />
+          <End Role="NewsContent" Type="PEMRBACModel.Store.NewsContent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="News">
+              <PropertyRef Name="ContentId" />
+            </Principal>
+            <Dependent Role="NewsContent">
+              <PropertyRef Name="ContentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceEvents_ResourceEventTypes">
+          <End Role="ResourceEventTypes" Type="PEMRBACModel.Store.ResourceEventTypes" Multiplicity="0..1" />
+          <End Role="ResourceEvents" Type="PEMRBACModel.Store.ResourceEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceEventTypes">
+              <PropertyRef Name="EventTypeId" />
+            </Principal>
+            <Dependent Role="ResourceEvents">
+              <PropertyRef Name="EventTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleId">
+          <End Role="webpages_Roles" Type="PEMRBACModel.Store.webpages_Roles" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="PEMRBACModel.Store.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoreGroups_Stores">
+          <End Role="netsqlazman_StoresTable" Type="PEMRBACModel.Store.netsqlazman_StoresTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="netsqlazman_StoreGroupsTable" Type="PEMRBACModel.Store.netsqlazman_StoreGroupsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="netsqlazman_StoresTable">
+              <PropertyRef Name="StoreId" />
+            </Principal>
+            <Dependent Role="netsqlazman_StoreGroupsTable">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_CustomerGrids">
+          <End Role="CustomerGrids" Type="PEMRBACModel.Store.CustomerGrids" Multiplicity="1" />
+          <End Role="User_CustomerGrids" Type="PEMRBACModel.Store.User_CustomerGrids" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerGrids">
+              <PropertyRef Name="CustomerGridsId" />
+            </Principal>
+            <Dependent Role="User_CustomerGrids">
+              <PropertyRef Name="CustomerGridsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_Customer">
+          <End Role="netsqlazman_StoresTable" Type="PEMRBACModel.Store.netsqlazman_StoresTable" Multiplicity="1" />
+          <End Role="UserCustomerAccess" Type="PEMRBACModel.Store.UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="netsqlazman_StoresTable">
+              <PropertyRef Name="StoreId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_User">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="UserCustomerAccess" Type="PEMRBACModel.Store.UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_UserId">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="PEMRBACModel.Store.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPasswordHistory_UserProfile">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="UserPasswordHistory" Type="PEMRBACModel.Store.UserPasswordHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPasswordHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPasswordQuestion_UserProfile">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="UserPasswordQuestion" Type="PEMRBACModel.Store.UserPasswordQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPasswordQuestion">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserSettings_UserProfile">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="UserSettings" Type="PEMRBACModel.Store.UserSettings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserSettings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_Membership_UserProfile">
+          <End Role="UserProfile" Type="PEMRBACModel.Store.UserProfile" Multiplicity="1" />
+          <End Role="webpages_Membership" Type="PEMRBACModel.Store.webpages_Membership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="webpages_Membership">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ChangeStoreId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OriginalId" Type="int" Mode="In" />
+          <Parameter Name="NewId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_RefreshCustomerGrids" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_ResetCustomerGrid" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerId" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Controller" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Action" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_UpdateCustomerGridEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CustomerGridId" Type="int" Mode="In" />
+          <Parameter Name="Title" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Position" Type="int" Mode="In" />
+          <Parameter Name="IsHidden" Type="bit" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PEMRBACModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PEMRBACEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="AccessLogs" EntityType="PEMRBACModel.AccessLog" />
+          <EntitySet Name="AccessLogMembershipEvents" EntityType="PEMRBACModel.AccessLogMembershipEvent" />
+          <EntitySet Name="CustomerGrids" EntityType="PEMRBACModel.CustomerGrid" />
+          <EntitySet Name="CustomerProfiles" EntityType="PEMRBACModel.CustomerProfile" />
+          <EntitySet Name="CustomerReports" EntityType="PEMRBACModel.CustomerReport" />
+          <EntitySet Name="CustomerReportsAdHocs" EntityType="PEMRBACModel.CustomerReportsAdHoc" />
+          <EntitySet Name="CustomerReportsCategories" EntityType="PEMRBACModel.CustomerReportsCategory" />
+          <EntitySet Name="CustomerReportsSources" EntityType="PEMRBACModel.CustomerReportsSource" />
+          <EntitySet Name="CustomerSettings" EntityType="PEMRBACModel.CustomerSetting" />
+          <EntitySet Name="CustomerSettingsGroups" EntityType="PEMRBACModel.CustomerSettingsGroup" />
+          <EntitySet Name="CustomerSettingsGroupMembers" EntityType="PEMRBACModel.CustomerSettingsGroupMember" />
+          <EntitySet Name="CustomerSettingTypes" EntityType="PEMRBACModel.CustomerSettingType" />
+          <EntitySet Name="CustomerSettingTypeLists" EntityType="PEMRBACModel.CustomerSettingTypeList" />
+          <EntitySet Name="CustomerTypes" EntityType="PEMRBACModel.CustomerType" />
+          <EntitySet Name="ErrorMessages" EntityType="PEMRBACModel.ErrorMessage" />
+          <EntitySet Name="GridDefinitions" EntityType="PEMRBACModel.GridDefinition" />
+          <EntitySet Name="HelpMaps" EntityType="PEMRBACModel.HelpMap" />
+          <EntitySet Name="LocaleResources" EntityType="PEMRBACModel.LocaleResource" />
+          <EntitySet Name="LocaleResourcesCustoms" EntityType="PEMRBACModel.LocaleResourcesCustom" />
+          <EntitySet Name="LoginAttemptHistories" EntityType="PEMRBACModel.LoginAttemptHistory" />
+          <EntitySet Name="MaintenanceGroupCustomers" EntityType="PEMRBACModel.MaintenanceGroupCustomer" />
+          <EntitySet Name="MembershipEventTypes" EntityType="PEMRBACModel.MembershipEventType" />
+          <EntitySet Name="netsqlazman_StoreGroupsTable" EntityType="PEMRBACModel.netsqlazman_StoreGroupsTable" />
+          <EntitySet Name="netsqlazman_StoresTable" EntityType="PEMRBACModel.netsqlazman_StoresTable" />
+          <EntitySet Name="News" EntityType="PEMRBACModel.News" />
+          <EntitySet Name="NewsContents" EntityType="PEMRBACModel.NewsContent" />
+          <EntitySet Name="ResourceEvents" EntityType="PEMRBACModel.ResourceEvent" />
+          <EntitySet Name="ResourceEventTypes" EntityType="PEMRBACModel.ResourceEventType" />
+          <EntitySet Name="SystemInformations" EntityType="PEMRBACModel.SystemInformation" />
+          <EntitySet Name="CustomerTimeZones" EntityType="PEMRBACModel.CustomerTimeZone" />
+          <EntitySet Name="User_CustomerGrids" EntityType="PEMRBACModel.User_CustomerGrids" />
+          <EntitySet Name="UserCustomerAccesses" EntityType="PEMRBACModel.UserCustomerAccess" />
+          <EntitySet Name="UserPasswordHistories" EntityType="PEMRBACModel.UserPasswordHistory" />
+          <EntitySet Name="UserPasswordQuestions" EntityType="PEMRBACModel.UserPasswordQuestion" />
+          <EntitySet Name="UserProfiles" EntityType="PEMRBACModel.UserProfile" />
+          <EntitySet Name="UserSettings" EntityType="PEMRBACModel.UserSetting" />
+          <EntitySet Name="Memberships" EntityType="PEMRBACModel.Membership" />
+          <EntitySet Name="webpages_Roles" EntityType="PEMRBACModel.webpages_Roles" />
+          <AssociationSet Name="FK_AccessLogMembershipEvents_MembershipEventTypes" Association="PEMRBACModel.FK_AccessLogMembershipEvents_MembershipEventTypes">
+            <End Role="MembershipEventType" EntitySet="MembershipEventTypes" />
+            <End Role="AccessLogMembershipEvent" EntitySet="AccessLogMembershipEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerGrids_CustomerProfile" Association="PEMRBACModel.FK_CustomerGrids_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="CustomerGrid" EntitySet="CustomerGrids" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_CustomerGrids" Association="PEMRBACModel.FK_User_CustomerGrids">
+            <End Role="CustomerGrid" EntitySet="CustomerGrids" />
+            <End Role="User_CustomerGrids" EntitySet="User_CustomerGrids" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerProfile_CustomerType" Association="PEMRBACModel.FK_CustomerProfile_CustomerType">
+            <End Role="CustomerType" EntitySet="CustomerTypes" />
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettings_CustomerProfile" Association="PEMRBACModel.FK_CustomerSettings_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="CustomerSetting" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroup_CustomerProfile" Association="PEMRBACModel.FK_CustomerSettingsGroup_CustomerProfile">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="CustomerSettingsGroup" EntitySet="CustomerSettingsGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaintenanceGroupCustomer_Customer" Association="PEMRBACModel.FK_MaintenanceGroupCustomer_Customer">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="MaintenanceGroupCustomer" EntitySet="MaintenanceGroupCustomers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MaintenanceGroupCustomer_MaintenanceGroup" Association="PEMRBACModel.FK_MaintenanceGroupCustomer_MaintenanceGroup">
+            <End Role="CustomerProfile" EntitySet="CustomerProfiles" />
+            <End Role="MaintenanceGroupCustomer" EntitySet="MaintenanceGroupCustomers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerReports_CustomerReportsCategory" Association="PEMRBACModel.FK_CustomerReports_CustomerReportsCategory">
+            <End Role="CustomerReportsCategory" EntitySet="CustomerReportsCategories" />
+            <End Role="CustomerReport" EntitySet="CustomerReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettings_CustomerSetting" Association="PEMRBACModel.FK_CustomerSettings_CustomerSetting">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingTypes" />
+            <End Role="CustomerSetting" EntitySet="CustomerSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroupMember_CustomerSettingsGroup" Association="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSettingsGroup">
+            <End Role="CustomerSettingsGroup" EntitySet="CustomerSettingsGroups" />
+            <End Role="CustomerSettingsGroupMember" EntitySet="CustomerSettingsGroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingsGroupMember_CustomerSetting" Association="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSetting">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingTypes" />
+            <End Role="CustomerSettingsGroupMember" EntitySet="CustomerSettingsGroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CustomerSettingTypeList_CustomerSettingType" Association="PEMRBACModel.FK_CustomerSettingTypeList_CustomerSettingType">
+            <End Role="CustomerSettingType" EntitySet="CustomerSettingTypes" />
+            <End Role="CustomerSettingTypeList" EntitySet="CustomerSettingTypeLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StoreGroups_Stores" Association="PEMRBACModel.FK_StoreGroups_Stores">
+            <End Role="netsqlazman_StoresTable" EntitySet="netsqlazman_StoresTable" />
+            <End Role="netsqlazman_StoreGroupsTable" EntitySet="netsqlazman_StoreGroupsTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_Customer" Association="PEMRBACModel.FK_UserCustomerAccess_Customer">
+            <End Role="netsqlazman_StoresTable" EntitySet="netsqlazman_StoresTable" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_NewsContent_News" Association="PEMRBACModel.FK_NewsContent_News">
+            <End Role="News" EntitySet="News" />
+            <End Role="NewsContent" EntitySet="NewsContents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResourceEvents_ResourceEventTypes" Association="PEMRBACModel.FK_ResourceEvents_ResourceEventTypes">
+            <End Role="ResourceEventType" EntitySet="ResourceEventTypes" />
+            <End Role="ResourceEvent" EntitySet="ResourceEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCustomerAccess_User" Association="PEMRBACModel.FK_UserCustomerAccess_User">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserCustomerAccess" EntitySet="UserCustomerAccesses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPasswordHistory_UserProfile" Association="PEMRBACModel.FK_UserPasswordHistory_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserPasswordHistory" EntitySet="UserPasswordHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPasswordQuestion_UserProfile" Association="PEMRBACModel.FK_UserPasswordQuestion_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserPasswordQuestion" EntitySet="UserPasswordQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSettings_UserProfile" Association="PEMRBACModel.FK_UserSettings_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserSetting" EntitySet="UserSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_Membership_UserProfile" Association="PEMRBACModel.FK_webpages_Membership_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Membership" EntitySet="Memberships" />
+          </AssociationSet>
+          <AssociationSet Name="webpages_UsersInRoles" Association="PEMRBACModel.webpages_UsersInRoles">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
+          <FunctionImport Name="ChangeStoreId">
+            <Parameter Name="OriginalId" Mode="In" Type="Int32" />
+            <Parameter Name="NewId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_RefreshCustomerGrids" />
+          <FunctionImport Name="sp_ResetCustomerGrid">
+            <Parameter Name="CustomerId" Mode="In" Type="String" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_UpdateCustomerGridEntry">
+            <Parameter Name="CustomerGridId" Mode="In" Type="Int32" />
+            <Parameter Name="Title" Mode="In" Type="String" />
+            <Parameter Name="Position" Mode="In" Type="Int32" />
+            <Parameter Name="IsHidden" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="AccessLog">
+          <Key>
+            <PropertyRef Name="AccessLogId" />
+          </Key>
+          <Property Type="Int32" Name="AccessLogId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Area" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="City" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Controller" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SessionID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="Int32" Name="AccessRights" Nullable="false" />
+          <Property Type="Double" Name="AccessDuration" />
+          <Property Type="Double" Name="AccessOverhead" />
+          <Property Type="DateTime" Name="AccessDate" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="AccessLogMembershipEvent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="DateTime" Name="TimeStamp" Precision="3" />
+          <Property Type="Int32" Name="EventTypeId" />
+          <Property Type="String" Name="SessionID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="IPAddress" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MembershipEventType" Relationship="PEMRBACModel.FK_AccessLogMembershipEvents_MembershipEventTypes" FromRole="AccessLogMembershipEvent" ToRole="MembershipEventType" />
+        </EntityType>
+        <EntityType Name="CustomerGrid">
+          <Key>
+            <PropertyRef Name="CustomerGridsId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerGridsId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Position" Nullable="false" />
+          <Property Type="String" Name="OriginalTitle" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="OriginalPosition" Nullable="false" />
+          <Property Type="Boolean" Name="IsHidden" Nullable="false" />
+          <NavigationProperty Name="CustomerProfile" Relationship="PEMRBACModel.FK_CustomerGrids_CustomerProfile" FromRole="CustomerGrid" ToRole="CustomerProfile" />
+          <NavigationProperty Name="User_CustomerGrids" Relationship="PEMRBACModel.FK_User_CustomerGrids" FromRole="CustomerGrid" ToRole="User_CustomerGrids" />
+        </EntityType>
+        <EntityType Name="CustomerProfile">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="Status" Nullable="false" />
+          <Property Type="DateTime" Name="StatusChangeDate" Nullable="false" Precision="0" />
+          <Property Type="String" Name="DisplayName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DefaultLocale" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedOn" Precision="0" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="DateTime" Name="ModifiedOn" Precision="0" />
+          <Property Type="Int32" Name="ModifiedBy" />
+          <Property Type="Boolean" Name="Is24HrFormat" />
+          <Property Type="Int32" Name="TimeZoneID" />
+          <Property Type="String" Name="PEMSConnectionStringName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MaintenanceConnectionStringName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ReportingConnectionStringName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CustomerTypeId" Nullable="false" />
+          <Property Type="String" Name="ConnectionStringName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerGrids" Relationship="PEMRBACModel.FK_CustomerGrids_CustomerProfile" FromRole="CustomerProfile" ToRole="CustomerGrid" />
+          <NavigationProperty Name="CustomerType" Relationship="PEMRBACModel.FK_CustomerProfile_CustomerType" FromRole="CustomerProfile" ToRole="CustomerType" />
+          <NavigationProperty Name="CustomerSettings" Relationship="PEMRBACModel.FK_CustomerSettings_CustomerProfile" FromRole="CustomerProfile" ToRole="CustomerSetting" />
+          <NavigationProperty Name="CustomerSettingsGroups" Relationship="PEMRBACModel.FK_CustomerSettingsGroup_CustomerProfile" FromRole="CustomerProfile" ToRole="CustomerSettingsGroup" />
+          <NavigationProperty Name="MaintenanceGroupCustomers" Relationship="PEMRBACModel.FK_MaintenanceGroupCustomer_Customer" FromRole="CustomerProfile" ToRole="MaintenanceGroupCustomer" />
+          <NavigationProperty Name="MaintenanceGroupCustomers1" Relationship="PEMRBACModel.FK_MaintenanceGroupCustomer_MaintenanceGroup" FromRole="CustomerProfile" ToRole="MaintenanceGroupCustomer" />
+        </EntityType>
+        <EntityType Name="CustomerReport">
+          <Key>
+            <PropertyRef Name="CustomerReportId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerReportsCategoryId" Nullable="false" />
+          <Property Type="String" Name="ReportAction" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Host" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Path" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Parameters" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CustomerReportsCategory" Relationship="PEMRBACModel.FK_CustomerReports_CustomerReportsCategory" FromRole="CustomerReport" ToRole="CustomerReportsCategory" />
+        </EntityType>
+        <EntityType Name="CustomerReportsAdHoc">
+          <Key>
+            <PropertyRef Name="CustomerReportsAdHocId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerReportsAdHocId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="ReportSource" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedOn" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+        </EntityType>
+        <EntityType Name="CustomerReportsCategory">
+          <Key>
+            <PropertyRef Name="CustomerReportsCategoryId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerReportsCategoryId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CustomerReports" Relationship="PEMRBACModel.FK_CustomerReports_CustomerReportsCategory" FromRole="CustomerReportsCategory" ToRole="CustomerReport" />
+        </EntityType>
+        <EntityType Name="CustomerReportsSource">
+          <Key>
+            <PropertyRef Name="CustomerReportsSourceId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerReportsSourceId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="ReportSource" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedOn" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+        </EntityType>
+        <EntityType Name="CustomerSetting">
+          <Key>
+            <PropertyRef Name="CustomerSettingsId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerSettingsId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerSettingTypeId" Nullable="false" />
+          <Property Type="String" Name="SettingValue" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerProfile" Relationship="PEMRBACModel.FK_CustomerSettings_CustomerProfile" FromRole="CustomerSetting" ToRole="CustomerProfile" />
+          <NavigationProperty Name="CustomerSettingType" Relationship="PEMRBACModel.FK_CustomerSettings_CustomerSetting" FromRole="CustomerSetting" ToRole="CustomerSettingType" />
+        </EntityType>
+        <EntityType Name="CustomerSettingsGroup">
+          <Key>
+            <PropertyRef Name="CustomerSettingsGroupId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerSettingsGroupId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="SettingGroupName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <NavigationProperty Name="CustomerProfile" Relationship="PEMRBACModel.FK_CustomerSettingsGroup_CustomerProfile" FromRole="CustomerSettingsGroup" ToRole="CustomerProfile" />
+          <NavigationProperty Name="CustomerSettingsGroupMembers" Relationship="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSettingsGroup" FromRole="CustomerSettingsGroup" ToRole="CustomerSettingsGroupMember" />
+        </EntityType>
+        <EntityType Name="CustomerSettingsGroupMember">
+          <Key>
+            <PropertyRef Name="CustomerSettingsGroupMemberId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerSettingsGroupMemberId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerSettingsGroupId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerSettingTypeId" Nullable="false" />
+          <NavigationProperty Name="CustomerSettingsGroup" Relationship="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSettingsGroup" FromRole="CustomerSettingsGroupMember" ToRole="CustomerSettingsGroup" />
+          <NavigationProperty Name="CustomerSettingType" Relationship="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSetting" FromRole="CustomerSettingsGroupMember" ToRole="CustomerSettingType" />
+        </EntityType>
+        <EntityType Name="CustomerSettingType">
+          <Key>
+            <PropertyRef Name="CustomerSettingTypeId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerSettingTypeId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="CustomerSettingTypeName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SettingTypeId" Nullable="false" />
+          <Property Type="Boolean" Name="IsRequired" Nullable="false" />
+          <Property Type="String" Name="DefaultValue" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="InternalValue" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerSettings" Relationship="PEMRBACModel.FK_CustomerSettings_CustomerSetting" FromRole="CustomerSettingType" ToRole="CustomerSetting" />
+          <NavigationProperty Name="CustomerSettingsGroupMembers" Relationship="PEMRBACModel.FK_CustomerSettingsGroupMember_CustomerSetting" FromRole="CustomerSettingType" ToRole="CustomerSettingsGroupMember" />
+          <NavigationProperty Name="CustomerSettingTypeLists" Relationship="PEMRBACModel.FK_CustomerSettingTypeList_CustomerSettingType" FromRole="CustomerSettingType" ToRole="CustomerSettingTypeList" />
+        </EntityType>
+        <EntityType Name="CustomerSettingTypeList">
+          <Key>
+            <PropertyRef Name="CustomerSettingTypeListId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerSettingTypeListId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerSettingTypeId" Nullable="false" />
+          <Property Type="String" Name="SettingValue" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="InternalValue" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="SortOrder" Nullable="false" />
+          <Property Type="Boolean" Name="Default" Nullable="false" />
+          <NavigationProperty Name="CustomerSettingType" Relationship="PEMRBACModel.FK_CustomerSettingTypeList_CustomerSettingType" FromRole="CustomerSettingTypeList" ToRole="CustomerSettingType" />
+        </EntityType>
+        <EntityType Name="CustomerType">
+          <Key>
+            <PropertyRef Name="CustomerTypeId" />
+          </Key>
+          <Property Type="Int32" Name="CustomerTypeId" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomerProfiles" Relationship="PEMRBACModel.FK_CustomerProfile_CustomerType" FromRole="CustomerType" ToRole="CustomerProfile" />
+        </EntityType>
+        <EntityType Name="ErrorMessage">
+          <Key>
+            <PropertyRef Name="ErrorMessageID" />
+          </Key>
+          <Property Type="Int32" Name="ErrorMessageID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ErrorCode" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ErrorMessage1" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Locale" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Active" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="DateModified" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="GridDefinition">
+          <Key>
+            <PropertyRef Name="GridDefinitionId" />
+          </Key>
+          <Property Type="Int32" Name="GridDefinitionId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="HelpMap">
+          <Key>
+            <PropertyRef Name="HelpMapId" />
+          </Key>
+          <Property Type="Int32" Name="HelpMapId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="CultureCode" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Area" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Server" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="File" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Topic" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LocaleResource">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Type" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CultureCode" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="LocaleResourcesCustom">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LoginAttemptHistory">
+          <Key>
+            <PropertyRef Name="LoginAttemptHistoryId" />
+          </Key>
+          <Property Type="Int32" Name="LoginAttemptHistoryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="IpAddress" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="AccessDate" Precision="0" />
+        </EntityType>
+        <EntityType Name="MaintenanceGroupCustomer">
+          <Key>
+            <PropertyRef Name="MaintenanceGroupCustomerId" />
+          </Key>
+          <Property Type="Int32" Name="MaintenanceGroupCustomerId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="MaintenanceGroupId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <NavigationProperty Name="CustomerProfile" Relationship="PEMRBACModel.FK_MaintenanceGroupCustomer_Customer" FromRole="MaintenanceGroupCustomer" ToRole="CustomerProfile" />
+          <NavigationProperty Name="CustomerProfile1" Relationship="PEMRBACModel.FK_MaintenanceGroupCustomer_MaintenanceGroup" FromRole="MaintenanceGroupCustomer" ToRole="CustomerProfile" />
+        </EntityType>
+        <EntityType Name="MembershipEventType">
+          <Key>
+            <PropertyRef Name="EventTypeId" />
+          </Key>
+          <Property Type="Int32" Name="EventTypeId" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AccessLogMembershipEvents" Relationship="PEMRBACModel.FK_AccessLogMembershipEvents_MembershipEventTypes" FromRole="MembershipEventType" ToRole="AccessLogMembershipEvent" />
+        </EntityType>
+        <EntityType Name="netsqlazman_StoreGroupsTable">
+          <Key>
+            <PropertyRef Name="StoreGroupId" />
+          </Key>
+          <Property Type="Int32" Name="StoreGroupId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="StoreId" Nullable="false" />
+          <Property Type="Binary" Name="objectSid" Nullable="false" MaxLength="85" FixedLength="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LDapQuery" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="GroupType" Nullable="false" />
+          <NavigationProperty Name="netsqlazman_StoresTable" Relationship="PEMRBACModel.FK_StoreGroups_Stores" FromRole="netsqlazman_StoreGroupsTable" ToRole="netsqlazman_StoresTable" />
+        </EntityType>
+        <EntityType Name="netsqlazman_StoresTable">
+          <Key>
+            <PropertyRef Name="StoreId" />
+          </Key>
+          <Property Type="Int32" Name="StoreId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="netsqlazman_StoreGroupsTable" Relationship="PEMRBACModel.FK_StoreGroups_Stores" FromRole="netsqlazman_StoresTable" ToRole="netsqlazman_StoreGroupsTable" />
+          <NavigationProperty Name="UserCustomerAccesses" Relationship="PEMRBACModel.FK_UserCustomerAccess_Customer" FromRole="netsqlazman_StoresTable" ToRole="UserCustomerAccess" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="ContentId" />
+          </Key>
+          <Property Type="Int32" Name="ContentId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="DateTime" Name="EffectiveDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="ExpirationDate" Precision="3" />
+          <Property Type="Int32" Name="CreatedBy" />
+          <Property Type="String" Name="Description" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+          <Property Type="Boolean" Name="Display" />
+          <NavigationProperty Name="NewsContents" Relationship="PEMRBACModel.FK_NewsContent_News" FromRole="News" ToRole="NewsContent" />
+        </EntityType>
+        <EntityType Name="NewsContent">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="ContentId" Nullable="false" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CultureCode" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="News" Relationship="PEMRBACModel.FK_NewsContent_News" FromRole="NewsContent" ToRole="News" />
+        </EntityType>
+        <EntityType Name="ResourceEvent">
+          <Key>
+            <PropertyRef Name="ResourceEventsId" />
+          </Key>
+          <Property Type="Int32" Name="ResourceEventsId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="DateTime" Name="TimeStamp" Precision="3" />
+          <Property Type="Int32" Name="EventTypeId" />
+          <Property Type="String" Name="SessionID" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Controller" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ResourceEventType" Relationship="PEMRBACModel.FK_ResourceEvents_ResourceEventTypes" FromRole="ResourceEvent" ToRole="ResourceEventType" />
+        </EntityType>
+        <EntityType Name="ResourceEventType">
+          <Key>
+            <PropertyRef Name="EventTypeId" />
+          </Key>
+          <Property Type="Int32" Name="EventTypeId" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ResourceEvents" Relationship="PEMRBACModel.FK_ResourceEvents_ResourceEventTypes" FromRole="ResourceEventType" ToRole="ResourceEvent" />
+        </EntityType>
+        <EntityType Name="SystemInformation">
+          <Key>
+            <PropertyRef Name="SystemInformationId" />
+          </Key>
+          <Property Type="Int32" Name="SystemInformationId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TableName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PrimaryKey" Nullable="false" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="false" />
+          <Property Type="DateTime" Name="CreatedOn" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="LastModifiedBy" />
+          <Property Type="DateTime" Name="LastModifiedOn" Precision="3" />
+        </EntityType>
+        <EntityType Name="CustomerTimeZone">
+          <Key>
+            <PropertyRef Name="TimeZoneID" />
+          </Key>
+          <Property Type="Int32" Name="TimeZoneID" Nullable="false" />
+          <Property Type="Int32" Name="LocalTimeUTCDifference" Nullable="false" />
+          <Property Type="Int32" Name="DaylightSavingAdjustment" Nullable="false" />
+          <Property Type="DateTime" Name="UTCSummerTimeStart" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="UTCSummerTimeEnd" Nullable="false" Precision="0" />
+          <Property Type="String" Name="TimeZoneName" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="User_CustomerGrids">
+          <Key>
+            <PropertyRef Name="CustomerGridsId" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Type="Int32" Name="CustomerGridsId" Nullable="false" />
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="OriginalColName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="OriginalColPos" Nullable="false" />
+          <NavigationProperty Name="CustomerGrid" Relationship="PEMRBACModel.FK_User_CustomerGrids" FromRole="User_CustomerGrids" ToRole="CustomerGrid" />
+        </EntityType>
+        <EntityType Name="UserCustomerAccess">
+          <Key>
+            <PropertyRef Name="UserCustomerAccessId" />
+          </Key>
+          <Property Type="Int32" Name="UserCustomerAccessId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="CustomerId" Nullable="false" />
+          <NavigationProperty Name="netsqlazman_StoresTable" Relationship="PEMRBACModel.FK_UserCustomerAccess_Customer" FromRole="UserCustomerAccess" ToRole="netsqlazman_StoresTable" />
+          <NavigationProperty Name="UserProfile" Relationship="PEMRBACModel.FK_UserCustomerAccess_User" FromRole="UserCustomerAccess" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserPasswordHistory">
+          <Key>
+            <PropertyRef Name="UserPasswordHistoryId" />
+          </Key>
+          <Property Type="Int32" Name="UserPasswordHistoryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="false" Precision="0" />
+          <NavigationProperty Name="UserProfile" Relationship="PEMRBACModel.FK_UserPasswordHistory_UserProfile" FromRole="UserPasswordHistory" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserPasswordQuestion">
+          <Key>
+            <PropertyRef Name="UserPasswordQuestionId" />
+          </Key>
+          <Property Type="Int32" Name="UserPasswordQuestionId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="Int32" Name="QuestionNumber" Nullable="false" />
+          <Property Type="String" Name="Question" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Answer" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="PEMRBACModel.FK_UserPasswordQuestion_UserProfile" FromRole="UserPasswordQuestion" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="56" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="FirstName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="MiddleName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Email" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Phone" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="3" />
+          <Property Type="Boolean" Name="RequirePasswordReset" />
+          <NavigationProperty Name="UserCustomerAccesses" Relationship="PEMRBACModel.FK_UserCustomerAccess_User" FromRole="UserProfile" ToRole="UserCustomerAccess" />
+          <NavigationProperty Name="UserPasswordHistories" Relationship="PEMRBACModel.FK_UserPasswordHistory_UserProfile" FromRole="UserProfile" ToRole="UserPasswordHistory" />
+          <NavigationProperty Name="UserPasswordQuestions" Relationship="PEMRBACModel.FK_UserPasswordQuestion_UserProfile" FromRole="UserProfile" ToRole="UserPasswordQuestion" />
+          <NavigationProperty Name="UserSettings" Relationship="PEMRBACModel.FK_UserSettings_UserProfile" FromRole="UserProfile" ToRole="UserSetting" />
+          <NavigationProperty Name="Membership" Relationship="PEMRBACModel.FK_webpages_Membership_UserProfile" FromRole="UserProfile" ToRole="Membership" />
+          <NavigationProperty Name="webpages_Roles" Relationship="PEMRBACModel.webpages_UsersInRoles" FromRole="UserProfile" ToRole="webpages_Roles" />
+        </EntityType>
+        <EntityType Name="UserSetting">
+          <Key>
+            <PropertyRef Name="UserSettingsId" />
+          </Key>
+          <Property Type="Int32" Name="UserSettingsId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="String" Name="SettingName" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SettingValue" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="PEMRBACModel.FK_UserSettings_UserProfile" FromRole="UserSetting" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" />
+          <Property Type="DateTime" Name="CreateDate" Precision="3" />
+          <Property Type="String" Name="ConfirmationToken" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsConfirmed" />
+          <Property Type="DateTime" Name="LastPasswordFailureDate" Precision="3" />
+          <Property Type="Int32" Name="PasswordFailuresSinceLastSuccess" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="PasswordChangedDate" Precision="3" />
+          <Property Type="String" Name="PasswordSalt" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PasswordVerificationToken" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="PasswordVerificationTokenExpirationDate" Precision="3" />
+          <Property Type="Boolean" Name="IsActive" />
+          <NavigationProperty Name="UserProfile" Relationship="PEMRBACModel.FK_webpages_Membership_UserProfile" FromRole="Membership" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Type="Int32" Name="RoleId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfiles" Relationship="PEMRBACModel.webpages_UsersInRoles" FromRole="webpages_Roles" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_AccessLogMembershipEvents_MembershipEventTypes">
+          <End Type="PEMRBACModel.MembershipEventType" Role="MembershipEventType" Multiplicity="0..1" />
+          <End Type="PEMRBACModel.AccessLogMembershipEvent" Role="AccessLogMembershipEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MembershipEventType">
+              <PropertyRef Name="EventTypeId" />
+            </Principal>
+            <Dependent Role="AccessLogMembershipEvent">
+              <PropertyRef Name="EventTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerGrids_CustomerProfile">
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerGrid" Role="CustomerGrid" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerGrid">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_CustomerGrids">
+          <End Type="PEMRBACModel.CustomerGrid" Role="CustomerGrid" Multiplicity="1" />
+          <End Type="PEMRBACModel.User_CustomerGrids" Role="User_CustomerGrids" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerGrid">
+              <PropertyRef Name="CustomerGridsId" />
+            </Principal>
+            <Dependent Role="User_CustomerGrids">
+              <PropertyRef Name="CustomerGridsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerProfile_CustomerType">
+          <End Type="PEMRBACModel.CustomerType" Role="CustomerType" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerType">
+              <PropertyRef Name="CustomerTypeId" />
+            </Principal>
+            <Dependent Role="CustomerProfile">
+              <PropertyRef Name="CustomerTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettings_CustomerProfile">
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSetting" Role="CustomerSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSetting">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroup_CustomerProfile">
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSettingsGroup" Role="CustomerSettingsGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroup">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaintenanceGroupCustomer_Customer">
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.MaintenanceGroupCustomer" Role="MaintenanceGroupCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="MaintenanceGroupCustomer">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MaintenanceGroupCustomer_MaintenanceGroup">
+          <End Type="PEMRBACModel.CustomerProfile" Role="CustomerProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.MaintenanceGroupCustomer" Role="MaintenanceGroupCustomer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerProfile">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="MaintenanceGroupCustomer">
+              <PropertyRef Name="MaintenanceGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerReports_CustomerReportsCategory">
+          <End Type="PEMRBACModel.CustomerReportsCategory" Role="CustomerReportsCategory" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerReport" Role="CustomerReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerReportsCategory">
+              <PropertyRef Name="CustomerReportsCategoryId" />
+            </Principal>
+            <Dependent Role="CustomerReport">
+              <PropertyRef Name="CustomerReportsCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettings_CustomerSetting">
+          <End Type="PEMRBACModel.CustomerSettingType" Role="CustomerSettingType" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSetting" Role="CustomerSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSetting">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroupMember_CustomerSettingsGroup">
+          <End Type="PEMRBACModel.CustomerSettingsGroup" Role="CustomerSettingsGroup" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSettingsGroupMember" Role="CustomerSettingsGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingsGroup">
+              <PropertyRef Name="CustomerSettingsGroupId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroupMember">
+              <PropertyRef Name="CustomerSettingsGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingsGroupMember_CustomerSetting">
+          <End Type="PEMRBACModel.CustomerSettingType" Role="CustomerSettingType" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSettingsGroupMember" Role="CustomerSettingsGroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSettingsGroupMember">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CustomerSettingTypeList_CustomerSettingType">
+          <End Type="PEMRBACModel.CustomerSettingType" Role="CustomerSettingType" Multiplicity="1" />
+          <End Type="PEMRBACModel.CustomerSettingTypeList" Role="CustomerSettingTypeList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSettingType">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Principal>
+            <Dependent Role="CustomerSettingTypeList">
+              <PropertyRef Name="CustomerSettingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StoreGroups_Stores">
+          <End Type="PEMRBACModel.netsqlazman_StoresTable" Role="netsqlazman_StoresTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PEMRBACModel.netsqlazman_StoreGroupsTable" Role="netsqlazman_StoreGroupsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="netsqlazman_StoresTable">
+              <PropertyRef Name="StoreId" />
+            </Principal>
+            <Dependent Role="netsqlazman_StoreGroupsTable">
+              <PropertyRef Name="StoreId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_Customer">
+          <End Type="PEMRBACModel.netsqlazman_StoresTable" Role="netsqlazman_StoresTable" Multiplicity="1" />
+          <End Type="PEMRBACModel.UserCustomerAccess" Role="UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="netsqlazman_StoresTable">
+              <PropertyRef Name="StoreId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_NewsContent_News">
+          <End Type="PEMRBACModel.News" Role="News" Multiplicity="1" />
+          <End Type="PEMRBACModel.NewsContent" Role="NewsContent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="News">
+              <PropertyRef Name="ContentId" />
+            </Principal>
+            <Dependent Role="NewsContent">
+              <PropertyRef Name="ContentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResourceEvents_ResourceEventTypes">
+          <End Type="PEMRBACModel.ResourceEventType" Role="ResourceEventType" Multiplicity="0..1" />
+          <End Type="PEMRBACModel.ResourceEvent" Role="ResourceEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ResourceEventType">
+              <PropertyRef Name="EventTypeId" />
+            </Principal>
+            <Dependent Role="ResourceEvent">
+              <PropertyRef Name="EventTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCustomerAccess_User">
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.UserCustomerAccess" Role="UserCustomerAccess" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCustomerAccess">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPasswordHistory_UserProfile">
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.UserPasswordHistory" Role="UserPasswordHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPasswordHistory">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPasswordQuestion_UserProfile">
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.UserPasswordQuestion" Role="UserPasswordQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserPasswordQuestion">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserSettings_UserProfile">
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.UserSetting" Role="UserSetting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserSetting">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_Membership_UserProfile">
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="1" />
+          <End Type="PEMRBACModel.Membership" Role="Membership" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Membership">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="webpages_UsersInRoles">
+          <End Type="PEMRBACModel.webpages_Roles" Role="webpages_Roles" Multiplicity="*" />
+          <End Type="PEMRBACModel.UserProfile" Role="UserProfile" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PEMRBACModelStoreContainer" CdmEntityContainer="PEMRBACEntities">
+          <EntitySetMapping Name="AccessLogs">
+            <EntityTypeMapping TypeName="PEMRBACModel.AccessLog">
+              <MappingFragment StoreEntitySet="AccessLog">
+                <ScalarProperty Name="AccessDate" ColumnName="AccessDate" />
+                <ScalarProperty Name="AccessOverhead" ColumnName="AccessOverhead" />
+                <ScalarProperty Name="AccessDuration" ColumnName="AccessDuration" />
+                <ScalarProperty Name="AccessRights" ColumnName="AccessRights" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="SessionID" ColumnName="SessionID" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="AccessLogId" ColumnName="AccessLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccessLogMembershipEvents">
+            <EntityTypeMapping TypeName="PEMRBACModel.AccessLogMembershipEvent">
+              <MappingFragment StoreEntitySet="AccessLogMembershipEvents">
+                <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+                <ScalarProperty Name="SessionID" ColumnName="SessionID" />
+                <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerGrids">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerGrid">
+              <MappingFragment StoreEntitySet="CustomerGrids">
+                <ScalarProperty Name="IsHidden" ColumnName="IsHidden" />
+                <ScalarProperty Name="OriginalPosition" ColumnName="OriginalPosition" />
+                <ScalarProperty Name="OriginalTitle" ColumnName="OriginalTitle" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerGridsId" ColumnName="CustomerGridsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerProfiles">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerProfile">
+              <MappingFragment StoreEntitySet="CustomerProfile">
+                <ScalarProperty Name="ConnectionStringName" ColumnName="ConnectionStringName" />
+                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
+                <ScalarProperty Name="ReportingConnectionStringName" ColumnName="ReportingConnectionStringName" />
+                <ScalarProperty Name="MaintenanceConnectionStringName" ColumnName="MaintenanceConnectionStringName" />
+                <ScalarProperty Name="PEMSConnectionStringName" ColumnName="PEMSConnectionStringName" />
+                <ScalarProperty Name="TimeZoneID" ColumnName="TimeZoneID" />
+                <ScalarProperty Name="Is24HrFormat" ColumnName="Is24HrFormat" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="DefaultLocale" ColumnName="DefaultLocale" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="StatusChangeDate" ColumnName="StatusChangeDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerReports">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerReport">
+              <MappingFragment StoreEntitySet="CustomerReports">
+                <ScalarProperty Name="Parameters" ColumnName="Parameters" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Host" ColumnName="Host" />
+                <ScalarProperty Name="ReportAction" ColumnName="ReportAction" />
+                <ScalarProperty Name="CustomerReportsCategoryId" ColumnName="CustomerReportsCategoryId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerReportId" ColumnName="CustomerReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerReportsAdHocs">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerReportsAdHoc">
+              <MappingFragment StoreEntitySet="CustomerReportsAdHoc">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ReportSource" ColumnName="ReportSource" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerReportsAdHocId" ColumnName="CustomerReportsAdHocId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerReportsCategories">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerReportsCategory">
+              <MappingFragment StoreEntitySet="CustomerReportsCategory">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CustomerReportsCategoryId" ColumnName="CustomerReportsCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerReportsSources">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerReportsSource">
+              <MappingFragment StoreEntitySet="CustomerReportsSource">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ReportSource" ColumnName="ReportSource" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerReportsSourceId" ColumnName="CustomerReportsSourceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettings">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerSetting">
+              <MappingFragment StoreEntitySet="CustomerSettings">
+                <ScalarProperty Name="SettingValue" ColumnName="SettingValue" />
+                <ScalarProperty Name="CustomerSettingTypeId" ColumnName="CustomerSettingTypeId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerSettingsId" ColumnName="CustomerSettingsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettingsGroups">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerSettingsGroup">
+              <MappingFragment StoreEntitySet="CustomerSettingsGroup">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="SettingGroupName" ColumnName="SettingGroupName" />
+                <ScalarProperty Name="CustomerSettingsGroupId" ColumnName="CustomerSettingsGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettingsGroupMembers">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerSettingsGroupMember">
+              <MappingFragment StoreEntitySet="CustomerSettingsGroupMember">
+                <ScalarProperty Name="CustomerSettingTypeId" ColumnName="CustomerSettingTypeId" />
+                <ScalarProperty Name="CustomerSettingsGroupId" ColumnName="CustomerSettingsGroupId" />
+                <ScalarProperty Name="CustomerSettingsGroupMemberId" ColumnName="CustomerSettingsGroupMemberId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettingTypes">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerSettingType">
+              <MappingFragment StoreEntitySet="CustomerSettingType">
+                <ScalarProperty Name="InternalValue" ColumnName="InternalValue" />
+                <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="SettingTypeId" ColumnName="SettingTypeId" />
+                <ScalarProperty Name="CustomerSettingTypeName" ColumnName="CustomerSettingTypeName" />
+                <ScalarProperty Name="CustomerSettingTypeId" ColumnName="CustomerSettingTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSettingTypeLists">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerSettingTypeList">
+              <MappingFragment StoreEntitySet="CustomerSettingTypeList">
+                <ScalarProperty Name="Default" ColumnName="Default" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="InternalValue" ColumnName="InternalValue" />
+                <ScalarProperty Name="SettingValue" ColumnName="SettingValue" />
+                <ScalarProperty Name="CustomerSettingTypeId" ColumnName="CustomerSettingTypeId" />
+                <ScalarProperty Name="CustomerSettingTypeListId" ColumnName="CustomerSettingTypeListId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTypes">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerType">
+              <MappingFragment StoreEntitySet="CustomerType">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CustomerTypeId" ColumnName="CustomerTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ErrorMessages">
+            <EntityTypeMapping TypeName="PEMRBACModel.ErrorMessage">
+              <MappingFragment StoreEntitySet="ErrorMessages">
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Locale" ColumnName="Locale" />
+                <ScalarProperty Name="ErrorMessage1" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessageID" ColumnName="ErrorMessageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GridDefinitions">
+            <EntityTypeMapping TypeName="PEMRBACModel.GridDefinition">
+              <MappingFragment StoreEntitySet="GridDefinition">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="GridDefinitionId" ColumnName="GridDefinitionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HelpMaps">
+            <EntityTypeMapping TypeName="PEMRBACModel.HelpMap">
+              <MappingFragment StoreEntitySet="HelpMap">
+                <ScalarProperty Name="Topic" ColumnName="Topic" />
+                <ScalarProperty Name="File" ColumnName="File" />
+                <ScalarProperty Name="Server" ColumnName="Server" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="CultureCode" ColumnName="CultureCode" />
+                <ScalarProperty Name="HelpMapId" ColumnName="HelpMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LocaleResources">
+            <EntityTypeMapping TypeName="PEMRBACModel.LocaleResource">
+              <MappingFragment StoreEntitySet="LocaleResources">
+                <ScalarProperty Name="CultureCode" ColumnName="CultureCode" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LocaleResourcesCustoms">
+            <EntityTypeMapping TypeName="PEMRBACModel.LocaleResourcesCustom">
+              <MappingFragment StoreEntitySet="LocaleResourcesCustom">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginAttemptHistories">
+            <EntityTypeMapping TypeName="PEMRBACModel.LoginAttemptHistory">
+              <MappingFragment StoreEntitySet="LoginAttemptHistory">
+                <ScalarProperty Name="AccessDate" ColumnName="AccessDate" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="LoginAttemptHistoryId" ColumnName="LoginAttemptHistoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MaintenanceGroupCustomers">
+            <EntityTypeMapping TypeName="PEMRBACModel.MaintenanceGroupCustomer">
+              <MappingFragment StoreEntitySet="MaintenanceGroupCustomer">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="MaintenanceGroupId" ColumnName="MaintenanceGroupId" />
+                <ScalarProperty Name="MaintenanceGroupCustomerId" ColumnName="MaintenanceGroupCustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipEventTypes">
+            <EntityTypeMapping TypeName="PEMRBACModel.MembershipEventType">
+              <MappingFragment StoreEntitySet="MembershipEventTypes">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="netsqlazman_StoreGroupsTable">
+            <EntityTypeMapping TypeName="PEMRBACModel.netsqlazman_StoreGroupsTable">
+              <MappingFragment StoreEntitySet="netsqlazman_StoreGroupsTable">
+                <ScalarProperty Name="GroupType" ColumnName="GroupType" />
+                <ScalarProperty Name="LDapQuery" ColumnName="LDapQuery" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="objectSid" ColumnName="objectSid" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+                <ScalarProperty Name="StoreGroupId" ColumnName="StoreGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="netsqlazman_StoresTable">
+            <EntityTypeMapping TypeName="PEMRBACModel.netsqlazman_StoresTable">
+              <MappingFragment StoreEntitySet="netsqlazman_StoresTable">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StoreId" ColumnName="StoreId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="PEMRBACModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="Display" ColumnName="Display" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ContentId" ColumnName="ContentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewsContents">
+            <EntityTypeMapping TypeName="PEMRBACModel.NewsContent">
+              <MappingFragment StoreEntitySet="NewsContent">
+                <ScalarProperty Name="CultureCode" ColumnName="CultureCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="ContentId" ColumnName="ContentId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceEvents">
+            <EntityTypeMapping TypeName="PEMRBACModel.ResourceEvent">
+              <MappingFragment StoreEntitySet="ResourceEvents">
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="SessionID" ColumnName="SessionID" />
+                <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
+                <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ResourceEventsId" ColumnName="ResourceEventsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResourceEventTypes">
+            <EntityTypeMapping TypeName="PEMRBACModel.ResourceEventType">
+              <MappingFragment StoreEntitySet="ResourceEventTypes">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="EventTypeId" ColumnName="EventTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemInformations">
+            <EntityTypeMapping TypeName="PEMRBACModel.SystemInformation">
+              <MappingFragment StoreEntitySet="SystemInformation">
+                <ScalarProperty Name="LastModifiedOn" ColumnName="LastModifiedOn" />
+                <ScalarProperty Name="LastModifiedBy" ColumnName="LastModifiedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="PrimaryKey" ColumnName="PrimaryKey" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="SystemInformationId" ColumnName="SystemInformationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerTimeZones">
+            <EntityTypeMapping TypeName="PEMRBACModel.CustomerTimeZone">
+              <MappingFragment StoreEntitySet="TimeZones">
+                <ScalarProperty Name="TimeZoneName" ColumnName="TimeZoneName" />
+                <ScalarProperty Name="UTCSummerTimeEnd" ColumnName="UTCSummerTimeEnd" />
+                <ScalarProperty Name="UTCSummerTimeStart" ColumnName="UTCSummerTimeStart" />
+                <ScalarProperty Name="DaylightSavingAdjustment" ColumnName="DaylightSavingAdjustment" />
+                <ScalarProperty Name="LocalTimeUTCDifference" ColumnName="LocalTimeUTCDifference" />
+                <ScalarProperty Name="TimeZoneID" ColumnName="TimeZoneID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User_CustomerGrids">
+            <EntityTypeMapping TypeName="PEMRBACModel.User_CustomerGrids">
+              <MappingFragment StoreEntitySet="User_CustomerGrids">
+                <ScalarProperty Name="OriginalColPos" ColumnName="OriginalColPos" />
+                <ScalarProperty Name="OriginalColName" ColumnName="OriginalColName" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="CustomerGridsId" ColumnName="CustomerGridsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCustomerAccesses">
+            <EntityTypeMapping TypeName="PEMRBACModel.UserCustomerAccess">
+              <MappingFragment StoreEntitySet="UserCustomerAccess">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserCustomerAccessId" ColumnName="UserCustomerAccessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPasswordHistories">
+            <EntityTypeMapping TypeName="PEMRBACModel.UserPasswordHistory">
+              <MappingFragment StoreEntitySet="UserPasswordHistory">
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserPasswordHistoryId" ColumnName="UserPasswordHistoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserPasswordQuestions">
+            <EntityTypeMapping TypeName="PEMRBACModel.UserPasswordQuestion">
+              <MappingFragment StoreEntitySet="UserPasswordQuestion">
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="Question" ColumnName="Question" />
+                <ScalarProperty Name="QuestionNumber" ColumnName="QuestionNumber" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserPasswordQuestionId" ColumnName="UserPasswordQuestionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="PEMRBACModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="RequirePasswordReset" ColumnName="RequirePasswordReset" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserSettings">
+            <EntityTypeMapping TypeName="PEMRBACModel.UserSetting">
+              <MappingFragment StoreEntitySet="UserSettings">
+                <ScalarProperty Name="SettingValue" ColumnName="SettingValue" />
+                <ScalarProperty Name="SettingName" ColumnName="SettingName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserSettingsId" ColumnName="UserSettingsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Memberships">
+            <EntityTypeMapping TypeName="PEMRBACModel.Membership">
+              <MappingFragment StoreEntitySet="webpages_Membership">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="PasswordVerificationTokenExpirationDate" ColumnName="PasswordVerificationTokenExpirationDate" />
+                <ScalarProperty Name="PasswordVerificationToken" ColumnName="PasswordVerificationToken" />
+                <ScalarProperty Name="PasswordSalt" ColumnName="PasswordSalt" />
+                <ScalarProperty Name="PasswordChangedDate" ColumnName="PasswordChangedDate" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="PasswordFailuresSinceLastSuccess" ColumnName="PasswordFailuresSinceLastSuccess" />
+                <ScalarProperty Name="LastPasswordFailureDate" ColumnName="LastPasswordFailureDate" />
+                <ScalarProperty Name="IsConfirmed" ColumnName="IsConfirmed" />
+                <ScalarProperty Name="ConfirmationToken" ColumnName="ConfirmationToken" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="webpages_Roles">
+            <EntityTypeMapping TypeName="PEMRBACModel.webpages_Roles">
+              <MappingFragment StoreEntitySet="webpages_Roles">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="PEMRBACModel.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
+            <EndProperty Name="UserProfile">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="webpages_Roles">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="ChangeStoreId" FunctionName="PEMRBACModel.Store.ChangeStoreId" />
+          <FunctionImportMapping FunctionImportName="sp_RefreshCustomerGrids" FunctionName="PEMRBACModel.Store.sp_RefreshCustomerGrids" />
+          <FunctionImportMapping FunctionImportName="sp_ResetCustomerGrid" FunctionName="PEMRBACModel.Store.sp_ResetCustomerGrid" />
+          <FunctionImportMapping FunctionImportName="sp_UpdateCustomerGridEntry" FunctionName="PEMRBACModel.Store.sp_UpdateCustomerGridEntry" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

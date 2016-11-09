@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{15F2BA36-E10F-45DB-9371-E05AF332719E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Duncan.PEMS.Install</RootNamespace>
+    <AssemblyName>Duncan.PEMS.Install</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <PublishUrl>C:\Users\sostrerov\Sergey\Projects\PEMS\Build Package\PEMS Install\Publishing\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>37BE596ACD3403AD724F1773BF5167885281A17C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Duncan.PEMS.Install_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\CommandLine.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.30506.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Installer.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\PROD DB\PEMSRBAC_AU_PRO.sql" />
+    <Content Include="Scripts\PROD DB\PEMS_AU_PRO.sql" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ConfigFiles\Discount\connectionStrings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ConfigFiles\Discount\mailSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ConfigFiles\Discount\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ConfigFiles\PEMS\connectionStrings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ConfigFiles\PEMS\mailSettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="ConfigFiles\PEMS\NLog.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="ConfigFiles\PEMS\Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Custom Grid Options.docx" />
+    <None Include="Documentation\Grid Management.docx" />
+    <None Include="Documentation\Help\Duncan.PEMS.Business.shfbproj_rhoward" />
+    <None Include="Documentation\Help\Duncan.PEMS.Entities.shfbproj_rhoward" />
+    <None Include="Documentation\Help\Duncan.PEMS.Framework.shfbproj_rhoward" />
+    <None Include="Documentation\Help\Duncan.PEMS.Security.shfbproj_rhoward" />
+    <None Include="Documentation\Help\Duncan.PEMS.Utilities.shfbproj_rhoward" />
+    <None Include="Documentation\Help\Duncan.PEMS.Web.shfbproj_rhoward" />
+    <CodeAnalysisDictionary Include="Documentation\Help\Help\Duncan.PEMS.Business.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </CodeAnalysisDictionary>
+    <None Include="Documentation\Help\Help\Duncan.PEMS.Entities.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Help\Help\Duncan.PEMS.Framework.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Help\Help\Duncan.PEMS.Security.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Help\Help\Duncan.PEMS.Utilities.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Help\Help\Duncan.PEMS.Web.chm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Help\Help\LastBuild.log" />
+    <None Include="Documentation\Installing And Configuring Duncan Web Services.docx" />
+    <None Include="Documentation\Kendo Grids.docx" />
+    <None Include="Documentation\List of Required Documents and Areas to Cover.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\Installing.and.Configuring.PEMS.and.RBAC.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Documentation\PEMS AI Enforcement Database.docx" />
+    <None Include="Documentation\PEMS Architecture Overview.docx" />
+    <None Include="Documentation\PEMS Architecture.docx" />
+    <None Include="Documentation\PEMS Authentication and Menus Users Guide.docx" />
+    <None Include="Documentation\PEMS Conditional Fields.docx" />
+    <None Include="Documentation\PEMS Localization.docx" />
+    <None Include="Documentation\PEMS Web Services.docx" />
+    <None Include="Duncan.PEMS.Install_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Duncan.PEMS.Business\Duncan.PEMS.Business.csproj">
+      <Project>{bdca08a9-47e5-4aa2-9ada-7acd08768760}</Project>
+      <Name>Duncan.PEMS.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Duncan.PEMS.DataAccess\Duncan.PEMS.DataAccess.csproj">
+      <Project>{331e3202-9c03-4497-89f5-134694e84770}</Project>
+      <Name>Duncan.PEMS.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Duncan.PEMS.Entities\Duncan.PEMS.Entities.csproj">
+      <Project>{656eb4f5-0353-41cb-b1ca-47d7209e9388}</Project>
+      <Name>Duncan.PEMS.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Duncan.PEMS.Security\Duncan.PEMS.Security.csproj">
+      <Project>{5cbc28ca-ce8d-4d94-9243-967af1ed09a5}</Project>
+      <Name>Duncan.PEMS.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Duncan.PEMS.Utilities\Duncan.PEMS.Utilities.csproj">
+      <Project>{e614401a-cc8c-4664-aadb-9e41e8afd2dc}</Project>
+      <Name>Duncan.PEMS.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="ConfigFiles\PEMS\lib\itextsharp.dll" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Business.shfbproj" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Entities.shfbproj" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Framework.shfbproj" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Security.shfbproj" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Utilities.shfbproj" />
+    <Content Include="Documentation\Help\Duncan.PEMS.Web.shfbproj" />
+    <Content Include="lib\itextsharp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="rbac\Duncan.Auth.Admin.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RequiredAssemblies\System.Web.Helpers.dll" />
+    <Content Include="RequiredAssemblies\System.Web.WebPages.Administration.dll" />
+    <Content Include="RequiredAssemblies\System.Web.WebPages.Deployment.dll" />
+    <Content Include="RequiredAssemblies\System.Web.WebPages.dll" />
+    <Content Include="RequiredAssemblies\System.Web.WebPages.Razor.dll" />
+    <Content Include="Scripts\PEMS_RBAC_Database_PostPopulate.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PEMS_RBAC_Database_Build.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PEMS_RBAC_Database_Create.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\PEMS_RBAC_Database_Populate.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

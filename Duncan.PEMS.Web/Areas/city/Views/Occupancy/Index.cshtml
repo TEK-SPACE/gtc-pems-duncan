@@ -1,0 +1,847 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Occupancy.OccupancyInquiryItem>
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Parking Session Inquiry");
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Transaction Management") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Parking Session Inquiry")</span></h1>
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+        .filter-SearchButton:hover {
+	            background: #ccc!important;
+	            text-decoration: none!important;
+         }
+
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: pre-wrap;
+            height: auto !important; 
+        }
+
+        #CurrentGrid {
+            display: none;
+        }
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+        .filter-label {
+            width: 150px !important;
+        }
+    </style>
+
+}
+@section Scripts
+{
+    <script src="~/Scripts/TransactionsGrid.js"> </script>
+}
+
+@section PageFilter
+{
+    @using (Html.BeginForm())
+    {
+        <div class="one-column">
+            <div class="filter-option" id="divDateRange">
+
+                <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Arrival Date Range"):</span>
+                <input id="dateFrom" data-role="datetimepicker" style="width: 209px;height:30px" data-bind="value: startDate" />
+                <span>&nbsp;to&nbsp;</span>
+                <input id="dateTo" data-role="datetimepicker" style="width: 209px;height:30px" data-bind="value: endDate" />
+                <span class="required_asterisk" id="dpRequired">*</span>
+            </div>
+        </div>
+        <div class="two-column-wrapper">
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")</span>
+                    <select id="ddlAssetType" class="filter-dropdown" data-role="dropdownlist" data-bind="source: assetTypes, value: assetType" data-text-field="Text" data-value-field="Id" data-option-label="All"></select>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    &nbsp;
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")</span>
+                    <input id="txtAssetID" class="filter-input k-textbox" data-bind="value: assetId" />
+                </div>
+            </div>
+            <div class="two-column">
+
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")</span>
+                    <input id="txtAssetName" class="filter-input k-textbox" data-bind="value: assetName" />
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Occupancy Status")</span>
+                    <select id="ddlOccupancy" class="filter-dropdown" data-role="dropdownlist" data-bind="source: occupancyStatusTypes, value: occupancyStatusType" data-text-field="Text" data-value-field="Id"></select>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status")@Html.Tooltip("OperationalStatus")</span>
+                    <select id="ddlOperationalStatus" style="font-size: 14px;height:30px" class="filter-dropdown" data-role="dropdownlist" data-bind="source: operationStatusTypes, value: operationalStatusType" data-text-field="Text" data-value-field="Id"></select>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Non-Compliant Status")</span>
+                    <select id="ddlNonCompliant" class="filter-dropdown" data-role="dropdownlist" data-bind="source: noncompliantStatusTypes, value: noncompliantStatusType" data-text-field="Text" data-value-field="Id"></select>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Time Type")</span>
+                    <select id="ddlTimeType" class="filter-dropdown" data-role="dropdownlist" data-bind="source: timeTypes, value: timeType" data-text-field="Text" data-value-field="Id"></select>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Location Type")@Html.Tooltip("LocationFilter")</span>
+                    <select id="ddlLocationType" class="filter-dropdown" data-role="dropdownlist" data-bind="source: locationTypes, value: locationType, events:{ change: OnLocationTypeChange }"></select>
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="filter-option" id="location-container">
+                    <span class="filter-label" id="lblLocationType" data-bind="text: locationLabel"></span>
+                    <input id="txtLocation" class="filter-input k-textbox disabled" disabled="disabled" data-bind="value: location" />
+                </div>
+            </div>
+
+            <div class="two-column">
+                <div class="filter-option">
+                    <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Historical")</span>
+                    <select id="ddlGridType" class="filter-dropdown" data-role="dropdownlist" data-bind="source: gridTypes, value: gridType, events:{ change: OnGridTypeChange }"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-searchBox">
+            <input type="button" data-bind="click: Refresh" value="@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )" id="btnSearch" class="filter-SearchButton" />
+        </div>
+    }
+}
+
+@section ExportButtons
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportToExcel", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportToCsv", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+
+@(Html.Kendo().Grid(Model)
+      .Name("CurrentGrid")
+      .HtmlAttributes(new { style = "max-width: 1693px; height: 470px;" })
+      .Columns(columns =>
+                    {
+                        columns.Bound(p => p.ArrivalTime).ClientTemplate(@Html.ActionLink("#= ArrivalTimeDisplay #", "Details", "Occupancy", new { spaceid = "#= SensorPaymentTransactionId #" },
+                                                                                        new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(175);
+                        columns.Bound(p => p.MeterName).Width(110);
+                        columns.Bound(p => p.TotalOccupiedMinute).ClientTemplate("#= TotalOccupiedMinuteDisplay #").Width(135).Title("Duration Occupied");
+                        columns.Bound(p => p.TotalTimePaidMinute).ClientTemplate("#= TotalTimePaidMinuteDisplay #").Width(135).Title("Duration Purchased");
+                        columns.Bound(p => p.TotalNumberOfPayment).Width(100).Width(150).Title("Total No Of Payments");
+                        columns.Bound(p => p.TotalAmountInCent).ClientTemplate("#= TotalAmountInCentDisplay #").Width(90).Title("Total Paid");
+                        //columns.Bound(p => p.SecondsResold).ClientTemplate("#= SecondsResold #").Width(130).Title("Seconds Resold");
+                        columns.Bound(p => p.SecondsResold).ClientTemplate("#= SecondsResold #").Width(125).Title("Duration Resold");
+                        //columns.Bound(p => p.RemaingPaidTimeMinute).ClientTemplate("#= RemaingPaidTimeMinuteDisplay #").Width(130).Title("Seconds Cleared");
+                        columns.Bound(p => p.RemaingPaidTimeMinute).ClientTemplate("#= RemaingPaidTimeMinuteDisplay #").Width(125).Title("Duration Cleared");
+                        //columns.Bound(p => p.ViolationMinute).ClientTemplate("#= ViolationMinuteDisplay #").Width(125).Title("Violation Seconds");
+                        columns.Bound(p => p.ViolationMinute).ClientTemplate("#= ViolationMinuteDisplay #").Width(125).Title("Duration Violated");
+                        columns.Bound(p => p.DepartureTime).ClientTemplate("#= DepartureTimeDisplay #").Width(175).Title("Departure Time");
+                        columns.Bound(p => p.OperationalStatus).Width(150);  //10
+                        columns.Bound(p => p.MeterId).Width(100);
+                        columns.Bound(p => p.SensorId).Width(100);
+                        columns.Bound(p => p.SpaceType).Width(150);
+                        columns.Bound(p => p.SpaceId).ClientTemplate("#= DisplaySpaceId  #").Width(200);
+                        columns.Bound(p => p.Area).Width(100);   //15
+                        columns.Bound(p => p.Street).Width(150);
+                        columns.Bound(p => p.Zone).Width(100);
+                        columns.Bound(p => p.Suburb).Width(150); //18
+                        columns.Bound(p => p.BayNumber).Width(110);
+                        columns.Bound(p => p.BayName).Width(150);
+                    })
+      .Selectable(select => select.Mode(GridSelectionMode.Single).Type(GridSelectionType.Row))
+      .Reorderable(reorder => reorder.Columns(false))
+      .Pageable(pager => pager.PageSizes(true).PageSizes(new int[] { 100, 250, 500, 1000 }))
+      .AutoBind(false)
+      .Sortable(sortable => sortable.SortMode(GridSortMode.MultipleColumn))
+      .Resizable(resize => resize.Columns(true))
+      .Scrollable()
+      .Events(events => events.DataBound("OnGridDataBound"))
+      .Events(events => events.Change("OnRowSelected"))
+      .Events(events => events.ColumnResize("OnRowResized"))
+        //todo - pass gridtype via add data
+      .DataSource(dataSource => dataSource.Ajax().Read(read => read.Action("GetItems", "Occupancy").Data("additionalData").Type(HttpVerbs.Get))
+      ))
+
+<script type="text/javascript">
+
+    // Define default datepicker dates
+    var startD = new Date();
+    startD.setDate(new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]').getDate() - 1);
+    startD.setHours(0);
+    startD.setMinutes(0);
+    startD.setSeconds(0);
+    var endD = new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]');
+    endD.setDate(endD.getDate()-1);
+    endD.setHours(23);
+    endD.setMinutes(59);
+    endD.setSeconds(59);
+
+
+    var viewModel = kendo.observable({
+        assetTypes: [],
+        assetType: "All",
+        assetId: "",
+        assetName: "",
+        startDate: startD,
+        endDate: endD,
+        gridTypes: ["Historical", "Current"],
+        gridType: "Historical",
+        locationTypes: ["All", "Area", "Zone", "Street", "Suburb", "Demand Area"],
+        locationType: "All",
+        location: "Select a type",
+        locationLabel: "Location",
+        timeTypes: [],
+        timeType: "All",
+        operationStatusTypes: [],
+        operationalStatusType: "All",
+        occupancyStatusTypes: [],
+        occupancyStatusType: "All",
+        noncompliantStatusTypes: [],
+        noncompliantStatusType: "All",
+
+        OnLocationTypeChange: function() {
+            // 'Location Type' filter (e.g. Area ID, Suburb, etc) drives the location input.
+            // So when the location type drop-down is changed, update the location type label
+
+            var $locationInput = $('#txtLocation');
+
+            switch (viewModel.locationType) {
+                case 'All':
+                    $locationInput.attr("disabled", "disabled"); // disable textbox
+                    $locationInput.addClass('disabled'); // gray background
+                    viewModel.set("location", "Select a type");
+                    viewModel.set("locationLabel", "Location");
+                    break;
+                default:
+                    $locationInput.removeAttr("disabled");
+                    $locationInput.removeClass('disabled');
+                    viewModel.set("locationLabel", viewModel.locationType );
+                    if (viewModel.location == 'Select a type') {
+                        viewModel.set("location", "");
+                    }
+            }
+        },
+        OnGridTypeChange: function() {
+            var $dpRequired = $("#dpRequired");
+            var dateFrom = $("#dateFrom").data("kendoDatePicker");
+            var dateTo = $("#dateTo").data("kendoDatePicker");
+            switch (viewModel.gridType) {
+                case 'Historical':
+                    $dpRequired.show();
+                    dateFrom.enable(true);
+                    dateTo.enable(true);
+                    break;
+                default:
+                    dateFrom.enable(false);
+                    dateTo.enable(false);
+                    $dpRequired.hide();
+                    break;
+            }
+        },
+        Refresh: function() {
+
+            LoadFreshGrid();
+        }
+    });
+
+
+
+    function GetDynamicFilterValues() {
+        /// Populate the the dropdown lists with data from
+        /// lookup tables
+
+        var url = '@Url.Action( "GetTimeTypes" )';
+
+        $.post(url, function(data) {
+            //console.log('timeTypes loaded from server: ');
+            viewModel.set("timeTypes", data);
+        });
+        url = '@Url.Action( "GetNoncompliantStatuses" )';
+
+        $.post(url, function(data) {
+            //console.log('timeTypes loaded from server: ');
+            viewModel.set("noncompliantStatusTypes", data);
+        });
+        url = '@Url.Action( "GetOccupancyStatuses" )';
+
+        $.post(url, function(data) {
+            //console.log('timeTypes loaded from server: ');
+            viewModel.set("occupancyStatusTypes", data);
+        });
+
+        url = '@Url.Action( "GetOperationalStatuses" )';
+
+        $.post(url, function(data) {
+            //console.log('timeTypes loaded from server: ');
+            viewModel.set("operationStatusTypes", data);
+        });
+
+        url = '@Url.Action( "GetAssetTypes" )';
+
+        $.post(url, function(data) {
+            //console.log('timeTypes loaded from server: ');
+            viewModel.set("assetTypes", data);
+        });
+    }
+
+    var gridState = {
+        CurrentPage: 1,
+        SelectedRow: -1,
+        sorts: "[]",
+        PageSize: 100
+    };
+
+    $(document).ready(function() {
+
+        kendo.bind($(document.body), viewModel);
+        viewModel.bind("change", function(e) {
+            // when the view state changes, cache it
+            //  SaveViewState();
+        });
+
+        if (getParameterByName('rtn') == 'true') {
+            LoadViewState();
+            LoadGridState();
+            LoadGrid();
+        } else {
+            // Since not pulling filter values from cache, get them from server
+            GetDynamicFilterValues();
+        }
+
+
+        LoadGridState();
+        LoadViewState();
+        //GetDynamicFilterValues();
+        $(window).bind('resize', function() {
+            $('#CurrentGrid').freezeGridColumn(2);
+        });
+
+        // Submit 'Refresh' button on Enter key
+        $('input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                $('#btnSearch').focus().click();
+                return false;
+            }
+        });
+
+    });
+
+    function OnRowResized(e) {
+
+        var th = $('#CurrentGrid .k-grid-header table th[data-field="' + e.column.field + '"][data-title="' + e.column.title + '"]');
+        var index = $('#CurrentGrid .k-grid-header table th').index(th);
+        $('#CurrentGrid').UpdateWidths(index, 2, e.newWidth, e.oldWidth);
+        $('#CurrentGrid').freezeGridColumn(2);
+    }
+
+    function RowClick() {
+        //get the current page
+        // gridFilters.CurrentPage = $("#CurrentGrid").data("kendoGrid").dataSource.page();
+        //get selected row here
+        // gridFilters.SelectedIndex = $("#CurrentGrid").data("kendoGrid").select().index();
+        //save the filters
+        //  $.post('/shared/Sessions/SaveUserFilters', gridFilters);
+    }
+
+
+
+    function LoadGrid() {
+        //Get the grid data out of the DB and load it
+        var $currentCid = @ViewBag.CurrentCityId;
+        $.post('/Occupancy/GetGridData?cid=' + $currentCid + '&cont=Occupancy&act=GetItems', OnGridDataLoaded);
+    }
+
+    function LoadFreshGrid() {
+        gridState = {
+            CurrentPage: 1,
+            SelectedRow: -1,
+            sorts: "[]",
+            PageSize: 100
+        };
+        LoadGrid();
+    }
+    var hasBeenOrdered = false;
+    function OnGridDataLoaded(data) {
+        if (!isEmptyObject(data) &&  !hasBeenOrdered){
+            //update the grid titles
+            LoadGridTitles(data);
+
+        } else {
+            //if there is no grid data for this in the DB, jsut load the grid as usual
+            LoadGridData();
+        }
+    }
+
+    function LoadGridTitles(data) {
+        //load all the titles for the grid here
+        var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+        for (var i = 0; i < data.length; i++) {
+            $(tableHeaderCol).eq(i).find('a,span').text(data[i].Title);
+        }
+
+        //once that is complete, load the grid order
+        LoadGridOrder(data);
+    }
+
+    function LoadGridOrder(data) {
+        //update the grid orders here
+        //data is sorted by original position name, so the logic is as follows
+        //create an array of expected positions. this is what we will use to get the value at a specified index
+        hasBeenOrdered = true;
+        var postionArray = [];
+        var hiddenCount = 0;
+        for (var h = 0; h < data.length; h++) {
+            postionArray.push(data[h].Position);
+            if (data[h].IsHidden)
+                hiddenCount = hiddenCount + 1;
+        }
+        var grid = $("#CurrentGrid").data("kendoGrid");
+        //foreach item in data
+        for (var currentIndex = 0; currentIndex < data.length; currentIndex++) {
+            var actualIndex = jQuery.inArray(currentIndex, postionArray);
+
+            //check to see if the original and new posisiton is different (if it is the same, do nothing)
+            if (currentIndex != actualIndex) {
+                //if different, find the index of the original position item  that has the same value of the current position of the loop (i)
+                //once you have the index, you wil need to reporder the columns with index of the original with the current position of hte loop
+                grid.reorderColumn(currentIndex, grid.columns[actualIndex]);
+                grid.reorderColumn(actualIndex, grid.columns[currentIndex + 1]);
+
+                //update the position array to reflect the change
+                postionArray[actualIndex] = postionArray[currentIndex];
+                postionArray[currentIndex] = currentIndex;
+            }
+        }
+        if (hiddenCount > 0)
+            $('#CurrentGrid').hideLastColumns(hiddenCount);
+        //then load the data for the grid
+        LoadGridData();
+    }
+
+
+    function LoadGridData() {
+
+        //check dates only if it is a historical grid
+        if (viewModel.gridType == "Historical") {
+            var $startDate = viewModel.startDate;
+            //Test to see if the start date is not empty, and if it is a valid date
+            if (!Date.parse($startDate)) {
+                alert("Start Date Must Be A Valid Date");
+                return;
+            }
+            var $endDate = viewModel.endDate;
+
+            //Test to see if the end date is not empty and if it is a valid date
+            if (!Date.parse($endDate)) {
+                alert("End Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if start date is less than end date
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($startDate) > Date.parse($endDate)) {
+                    alert("End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+            var CurrentsDate = new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]');
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($endDate)>=CurrentsDate) {
+                    alert("End Date Must Be Less Than Todays Date");
+                    return;
+                }
+            }
+        }
+
+        var filters = GetFilters();
+        var sorts = "[]";
+
+        if (gridState.sorts != "[]")
+            sorts = JSON.parse(gridState.sorts);
+
+        $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridState.CurrentPage, filter: filters, pageSize: gridState.PageSize, sort: sorts });
+        $("#CurrentGrid").css("display", "block");
+    }
+
+    function OnRowSelected(e) {
+        /// save selected row index
+        var selected = $("#CurrentGrid").data("kendoGrid").select().index();
+        SaveViewState();
+
+        if (gridState.rowSelectedByDatabound) {
+            // event was fired as a result of the OnDataBound event, not a user
+            // clicking a row...so don't do anything.
+            delete gridState.rowSelectedByDatabound;
+        } else {
+            // Get (and cache) selected row
+            UpdateGridState();
+        }
+    }
+
+    function OnGridDataBound(e) {
+
+        UpdateExportLinks();
+        var grid = $("#CurrentGrid").data("kendoGrid");
+
+        // if current grid page is != saved grid page that means this databound
+        // event is the result of paging...therefore, de-select any previously
+        // selected rows
+        if (grid.dataSource.page() != gridState.CurrentPage) {
+            //console.log('page changed from: ', gridState.CurrentPage, ' to: ', grid.dataSource.page());
+            gridState.SelectedRow = -1;
+        }
+
+        if (JSON.stringify(grid.dataSource._sort) != gridState.sorts) {
+            //console.log('sort changed from: ', gridState.sorts, ' to: ', JSON.stringify(grid.dataSource._sort));
+            gridState.SelectedRow = -1;
+        }
+
+        if (gridState.SelectedRow > -1) {
+            var row = grid.tbody.find(">tr:not(.k-grouping-row)").eq(gridState.SelectedRow);
+            gridState.rowSelectedByDatabound = true;
+            grid.select(row); // OnRowSelected will be called
+        } else {
+            UpdateGridState();
+        }
+
+        //lock the columns
+        $('#CurrentGrid').freezeGridColumn(2);
+
+    }
+
+    function GetFilters() {
+        /// collect filter values from the filter controls
+        /// and build array
+        var filters = new Array();
+        var currentCid = @ViewBag.CurrentCityId;
+        filters.push({ field: "CustomerId", operator: "equals", value: currentCid });
+        //Asset Type
+        var assetType = viewModel.assetType;
+        //alert(assetType);
+        if (assetType && assetType != "All") {
+            filters.push({ field: "AssetType", operator: "equals", value: assetType });
+        } else {
+            filters.push({ field: "AssetType", operator: "equals", value: "" });
+        }
+
+        // Asset Id
+        var assetName = viewModel.assetName;
+        filters.push({ field: "AssetName", operator: "equals", value: assetName });
+        var assetId = viewModel.assetId;
+        filters.push({ field: "AssetId", operator: "equals", value: assetId });
+
+        var occupancyStatusType = viewModel.occupancyStatusType;
+        //alert(occupancyStatusType);
+        if (occupancyStatusType && occupancyStatusType != 'All') {
+            filters.push({ field: "OccupancyStatus", operator: "equals", value: occupancyStatusType });
+        } else {
+            filters.push({ field: "OccupancyStatus", operator: "equals", value: "" });
+        }
+        var operationalStatusType = viewModel.operationalStatusType;
+        //alert(operationalStatusType);
+        //alert(viewModel.operationalStatusType);
+        if (operationalStatusType && operationalStatusType != 'All') {
+            filters.push({ field: "OperationalStatus", operator: "equals", value: operationalStatusType });
+        } else {
+            filters.push({ field: "OperationalStatus", operator: "equals", value: "" });
+        }
+        var noncompliantStatusType = viewModel.noncompliantStatusType;
+        if (noncompliantStatusType && noncompliantStatusType != 'All') {
+            filters.push({ field: "NoncompliantStatus", operator: "equals", value: noncompliantStatusType });
+        } else {
+            filters.push({ field: "NoncompliantStatus", operator: "equals", value: "" });
+        }
+
+        var timeType = viewModel.timeType;
+        if (timeType && timeType != 'All' && timeType != "-1") {
+            filters.push({ field: "TimeType", operator: "equals", value: timeType });
+        } else {
+            filters.push({ field: "TimeType", operator: "equals", value: "" });
+        }
+        var locationType = viewModel.locationType;
+        var location = viewModel.location;
+        if (locationType == "Street") {
+            filters.push({ field: "Street", operator: "equals", value: location });
+        } else {
+            filters.push({ field: "Street", operator: "equals", value: "" });
+        }
+        if (locationType == "Zone") {
+            filters.push({ field: "Zone", operator: "contains", value: location });
+        } else {
+            filters.push({ field: "Zone", operator: "contains", value: "" });
+        }
+        if (locationType == "Suburb") {
+            filters.push({ field: "Suburb", operator: "equals", value: location });
+        } else {
+            filters.push({ field: "Suburb", operator: "equals", value: "" });
+        }
+        if (locationType == "Area") {
+            filters.push({ field: "Area", operator: "equals", value: location });
+        } else {
+            filters.push({ field: "Area", operator: "equals", value: "" });
+        }
+        if (locationType == "Demand Area") {
+            filters.push({ field: "DemandArea", operator: "equals", value: location });
+        } else {
+            filters.push({ field: "DemandArea", operator: "equals", value: "" });
+        }
+
+        // Date Range
+        var startDate = new Date(viewModel.startDate);
+        var endDate = new Date(viewModel.endDate);
+        if (startDate) {
+            filters.push({ field: "StartDate", operator: "gte", value: startDate });
+        }
+        if (endDate) {
+            filters.push({ field: "EndDate", operator: "lte", value: endDate });
+        }
+        return filters;
+    }
+
+    function UpdateExportLinks() {
+        /// Update the href for the export buttons
+
+        var grid = $('#CurrentGrid').data('kendoGrid');
+
+        // ask the parameterMap to create the request object for you
+        var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+            .options.parameterMap({
+                page: grid.dataSource.page(),
+                sort: grid.dataSource.sort(),
+                filter: grid.dataSource.filter()
+            });
+
+        //EXCEL
+        var $excelLink = $('#exportExcel');
+        $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+        //CSV
+        var $csvLink = $('#exportCSV');
+        $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+        //PDF
+        var $pdfLink = $('#exportPDF');
+        $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+        //show the div holding these items
+        $("#exportButtons").css("display", "block");
+    }
+
+    function GetExportHref(href, requestObject, grid) {
+        // Update the 'page' parameter with the grid's current page
+        href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+        // Update the 'sort' parameter with the grid's current sort descriptor
+        href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+        // Update the 'pageSize' parameter with the grid's current pageSize
+        //  href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+        href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+        //update filter descriptor with the filters applied
+        href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+        // update the grid type parameter
+        href = href.replace(/gridType=([^&]*)/, 'gridType=' + viewModel.gridType);
+        //todo - add historic or not here
+        return href;
+    }
+
+    function SaveViewState() {
+        /// Save filters view state to local storage, with fallback to
+        /// server if HTML5 local storage not supported (IE7)
+
+        // serialize viewstate
+        var json = viewModel.toJSON();
+        var stringified = JSON.stringify(json);
+
+        // test for HTML5 local storage support
+        if (typeof(Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("viewStateOccupancyList", stringified);
+        } else {
+            // No web storage support..
+            //implement fall back to server caching
+        }
+    }
+
+    function LoadViewState() {
+        /// Load filter view state if found in session
+
+        var stringified;
+
+        // test for HTML5 local storage support
+        if (typeof(Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            stringified = window.sessionStorage.getItem("viewStateOccupancyList");
+        } else {
+            // No web storage support..
+            //implement fall back to server caching
+        }
+
+        // reconstruct the view model from the cache
+        if (stringified) {
+            var parsed = JSON.parse(stringified);
+            if (parsed) {
+                //console.log('View state retrieved from local storage: ', parsed);
+                if (parsed.assetTypes) {
+                    viewModel.set('assetTypes', parsed.assetTypes);
+                    //console.log('timeTypes loaded from cache: ', parsed.timeTypes);
+                }
+
+                viewModel.set('assetId', parsed.assetId);
+
+                viewModel.set('assetType', parsed.assetType);
+                viewModel.set('assetName', parsed.assetName);
+                viewModel.set('gridType', parsed.gridType);
+                viewModel.set('locationType', parsed.locationType);
+                viewModel.set('location', parsed.location);
+                viewModel.set('locationLabel', parsed.locationLabel);
+                if (parsed.timeTypes) {
+                    viewModel.set('timeTypes', parsed.timeTypes);
+                }
+
+                viewModel.set('timeType', parsed.timeType);
+                //alert(parsed.timeType);
+                //alert(parsed.timeTypes);
+                if (parsed.occupancyStatusTypes) {
+                    viewModel.set('occupancyStatusTypes', parsed.occupancyStatusTypes);
+                }
+                viewModel.set('occupancyStatusType', parsed.occupancyStatusType);
+
+                if (parsed.operationStatusTypes) {
+                    viewModel.set('operationStatusTypes', parsed.operationStatusTypes);
+                }
+                viewModel.set('operationalStatusType', parsed.operationalStatusType);
+                //viewModel.set('operationStatusType', parsed.operationStatusType);
+                //alert(parsed.operationalStatusTypes);
+                //alert(parsed.operationalStatusType);
+                if (parsed.noncompliantStatusTypes) {
+                    viewModel.set('noncompliantStatusTypes', parsed.noncompliantStatusTypes);
+                }
+                viewModel.set('noncompliantStatusType', parsed.noncompliantStatusType);
+
+                if (parsed.startDate) {
+                    viewModel.set('startDate', new Date(parsed.startDate));
+                }
+                if (parsed.endDate) {
+                    viewModel.set('endDate', new Date(parsed.endDate));
+                }
+
+                LoadGridData();
+            }
+        } else {
+            GetDynamicFilterValues();
+        }
+    }
+
+    function UpdateGridState() {
+        /// Update the grid state object with grid's current state
+        var currentGrid = $("#CurrentGrid").data("kendoGrid");
+        gridState.CurrentGrid = viewModel.gridType;
+        gridState.CurrentPage = currentGrid.dataSource.page();
+        gridState.SelectedRow = currentGrid.select().index();
+        gridState.PageSize = currentGrid.dataSource._pageSize;
+        gridState.sorts = JSON.stringify(currentGrid.dataSource._sort);
+        SaveGridState();
+    }
+
+    function SaveGridState() {
+        /// Save grid view state to local storage, with fallback to
+        /// server if HTML5 local storage not supported (IE7)
+
+        // serialize
+        var stringified = JSON.stringify(gridState);
+
+        // Test for HTML5 local storage support
+        if (typeof(Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+
+            // save to session
+            window.sessionStorage.setItem("gridStateOccupancies", stringified);
+
+        } else {
+            // No web storage support..
+            //implement fall back to server caching
+        }
+    }
+
+    function LoadGridState() {
+        /// load grid state from session, if exists
+
+        // Test for HTML5 local storage support
+        if (typeof(Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+
+            // get serialized grid state from session
+            var stringified = window.sessionStorage.getItem("gridStateOccupancies");
+
+            // deserialize to JSON object
+            var parsed = JSON.parse(stringified);
+            if (parsed != null) {
+                gridState = parsed;
+                LoadGrid();
+            } else {
+                // no grid state found, defaults will be used
+            }
+        } else {
+            // No web storage support..
+            //implement fall back to server
+        }
+
+        return gridState;
+    }
+
+
+    //additional data sent to the action when the read method is called (when we apply a filter)
+
+    function additionalData() {
+        return {
+            gridType: viewModel.gridType
+        };
+    }
+</script>

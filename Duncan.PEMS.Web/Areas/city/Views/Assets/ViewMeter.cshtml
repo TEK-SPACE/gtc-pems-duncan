@@ -1,0 +1,650 @@
+﻿@model Duncan.PEMS.Entities.Assets.MeterViewModel
+@using System.Activities.Expressions
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "View Meter");
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "View Asset")</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+
+<div class="customer_tab_content">
+
+    @using (Html.BeginForm("ViewMeter", "Assets", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+    {
+        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(m => m.AreaId)
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Information")
+            @if (Model.HasPendingChanges)
+            {
+                <div style="float: right">
+                    @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "View Pending Changes") ?? "View Pending Changes"), "ViewMeterPending", "Assets",
+                                      new { customerId = @Model.CustomerId, areaId = @Model.AreaId, assetId = @Model.AssetId }, null)
+                </div>
+            }
+        </div>
+
+        <div class="clear">
+
+            <div class="two-column payment">
+
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Street, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Street)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Area, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Area)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Zone)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Suburb, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Suburb)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Latitude")@Html.Raw(": ")</div>
+                    @Html.DisplayForLatLong(m => m.Latitude, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Latitude)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Longitude")@Html.Raw(": ")</div>
+                    @Html.DisplayForLatLong(m => m.Longitude, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Longitude)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone Number")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.PhoneNumber, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.PhoneNumber)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetModel, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetModel)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Name, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Name)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("LastPreventativeMaintenance")</div>
+                    @Html.DisplayFor(m => m.LastPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.LastPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Next Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("NextPreventativeMaintenance")</div>
+                    @Html.DisplayFor(m => m.NextPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.NextPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection Route")@Html.Raw(": ")@Html.Tooltip("CollectionRoute")</div>
+                    @Html.DisplayFor(m => m.CollectionRoute, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.CollectionRoute)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Maintenance Route")@Html.Raw(": ")@Html.Tooltip("MaintenanceRoute")</div>
+                    @Html.DisplayFor(m => m.MaintenanceRoute, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.MaintenanceRoute)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Warranty Expiration")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.WarrantyExpiration, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.WarrantyExpiration)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Number of Spaces")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Spaces, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Spaces)&nbsp;
+                    @if (Model.ViewOnly == false)
+                    {
+                        @Html.ActionLink("View Spaces", "ViewMeterToSpaceMapping", "Assets", new { customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetId, viewOnly = true }, null)
+                    }
+                </div>
+                @*@if (Model.MechanismId == 3)
+                {
+                    <div class="clear">
+                        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Mechanism Name")@Html.Tooltip("MechanismName")</div>
+                        @Html.DisplayFor(m => m.MechanismName, new { @class = "customer_text" })
+                        @Html.HiddenFor(m => m.MechanismName)&nbsp;
+                    </div>
+                    <div class="clear">
+                        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Mechanism ID")@Html.Tooltip("MechanismID")</div>
+                        @Html.DisplayFor(m => m.MechanismName, new { @class = "customer_text" })
+                        @Html.HiddenFor(m => m.MechanismName)&nbsp;
+                    </div>
+                }*@
+
+                @if (Model.Type == "Single Space Meter")
+                {
+                    <div class="clear" id="locid">
+                        <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Location ID")</div>
+                        @Html.DisplayFor(m => m.LocationName, new { @class = "customer_text" })
+                        @Html.HiddenFor(m => m.LocationName)&nbsp;
+
+                    </div>
+                    <div class="clear" id="mechserilaID">
+                        <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Mech Serial Number")</div>
+                        @Html.DisplayFor(m => m.MechSerialNo, new { @class = "customer_text" })
+                        @Html.HiddenFor(m => m.MechSerialNo)&nbsp;
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Detail")</div>
+        <div class="clear">
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Installed")@Html.Raw(": ")</div>
+                @Html.DisplayFor(m => m.Configuration.DateInstalled, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.DateInstalled)&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration")@Html.Raw(": ")</div>
+                @Html.DisplayFor(m => m.Configuration.ConfigurationName, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.ConfigurationName)&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "MPV Version")@Html.Raw(": ")@Html.Tooltip("MPVVersion")</div>
+                @Html.DisplayFor(m => m.Configuration.MPVVersion, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.MPVVersion)&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Software Version")@Html.Raw(": ")@Html.Tooltip("SoftwareVersion")</div>
+                @Html.DisplayFor(m => m.Configuration.SoftwareVersion, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.SoftwareVersion)&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Firmware Version")@Html.Raw(": ")@Html.Tooltip("FirmwareVersion")</div>
+                @Html.DisplayFor(m => m.Configuration.FirmwareVersion, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.FirmwareVersion)&nbsp;
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Functional Status")</div>
+        <div class="clear">
+            <div class="two-column payment">
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status")@Html.Raw(": ")@Html.Tooltip("OperationalStatus")</div>
+                    @Html.DisplayFor(m => m.Status, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Status)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status Date")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.StatusDateDisplay, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.StatusDate)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Class")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Class, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Class)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Code")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Code, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Code)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Duration")@Html.Raw(": ")@Html.Tooltip("AlarmDuration")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Duration, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Duration)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Target Time")@Html.Raw(": ")@Html.Tooltip("RepairTargetTime")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.RepairTargetTime, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.RepairTargetTime)&nbsp;
+                </div>
+            </div>
+
+        </div>
+
+        <div class="customer_actions" style="float: left">
+            @if (Model.ViewOnly)
+            {
+                if (Model.ActiveSpace > 0)
+                {
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "ViewSpace", "Assets",
+                                      new { customerId = Model.CustomerId, assetId = Model.ActiveSpace, viewOnly = false },
+                                      new { @class = "button previous" })
+                }
+                else if (Model.ActiveSensor > 0)
+                {
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "ViewSensor", "Assets",
+                                      new { customerId = Model.CustomerId, assetId = Model.ActiveSensor, viewOnly = false },
+                                      new { @class = "button previous" })
+                }
+                else
+                {
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "Index", "Assets",
+                                      new { rtn = true }, new { @class = "button previous" })
+                }
+            }
+            else
+            {
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Update") ?? "Update"), "EditMeter", "Assets",
+                                  new { customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetId, parentAssetId = 0 },
+                                  new { @class = "button important", @onclick = "SetReturnURL();" })
+                <button type="submit" name="submitButton" onclick="ShowCopyMeter(); return false; " class="button" value="COPY">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Copy")</button>
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Reset") ?? "Reset"), "ResetMeter", "Assets",
+                                  new { customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetId }, new { @class = "button", id = "ResetButton" })
+                @*<button type="submit" name="submitButton" class="button" onclick=" OnShowAddMeterTime(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add Time")</button>*@
+                @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "Index", "Assets",
+                                  new { rtn = true }, new { @class = "button previous" })
+            }
+        </div>
+        <div>
+            <div style="float: right">
+                <select id="detailsActions" class="filter-dropdown">
+                    <option value="NavigateToTransactions">Transactions</option>
+                    <option value="NavigateToEvents">Events</option>
+                    <option value="NavigateToAlarms">Alarms</option>
+                    <option value="NavigateToHistory">History</option>
+                </select>
+                <button type="button" name="submitButton" class="button" onclick=" NavigateTo(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Go")</button>
+            </div>
+        </div>
+
+        <div class="asset_footer">
+            <div class="asset_last_mod_by">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Modified by"): @Html.DisplayFor(m => m.LastUpdatedBy)
+                @Html.Raw(" on ")
+                @Html.DisplayFor(m => m.LastUpdatedOnDisplay)
+            </div>
+            <div class="asset_created_by">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created by"): @Html.DisplayFor(m => m.CreatedBy)
+                @Html.Raw(" on ")
+                @Html.DisplayFor(m => m.CreatedOnDisplay)
+            </div>
+        </div>        
+        
+    }
+</div>
+
+
+
+@(Html.Kendo().Window()
+      .Name("meterAddTimeDialog")
+      .Title(false)
+      .Content(@<text>
+@Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Add Time to Meter") ?? "Add Time to Meter").ToString())
+Select Bay:
+                     <div id="divBayDropdown">
+                     </div>
+<div id="meterAddTimeDialogContent">
+    <input type="text" style="width: 50px" data-role="numerictextbox" data-format="##;" data-step="1" data-min="0" data-max="23" name="AddTimeHours"
+        value="0" data-bind="value: HoursToAdd" />:
+                         <input type="text" style="width: 50px" data-role="numerictextbox" data-format="##;" data-step="1" data-min="0" data-max="59" name="AddTimeMinutes"
+                             value="0" data-bind="value: MinutesToAdd" />
+</div>
+<div id="meterAddTimeDialogButtons" style="horiz-align: center">
+    <input type="button" class="button important" title="SAVE" value="Save" onclick=" javascript: AddMeterTime(); " />
+    <input type="button" class="button previous" title="CANCEL" value="Cancel" onclick=" javascript: $('#meterAddTimeDialog').data('kendoWindow').close(); " />
+</div>
+</text>)
+      .Draggable().Width(300).Scrollable(false).Modal(true).Visible(false)
+      )
+
+
+@(Html.Kendo().Window()
+      .Name("meterCopyDialog")
+      .Title(false)
+      .Content(@<text>
+<div>
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Start")</div>
+    <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999"
+        data-bind="value: StartBay" name="StartBay" id="StartBay" value="1" />
+</div>
+<div>
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay End")</div>
+    <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999"
+        data-bind="value: EndBay" name="EndBay" id="EndBay" value="1" />
+</div>
+
+<div style="horiz-align: center">
+    <input type="button" class="button important" title="SAVE" value="Save" onclick=" javascript: CopyMeter(); " />
+    <input type="button" class="button previous" title="CANCEL" value="Cancel" onclick=" javascript: $('#meterCopyDialog').data('kendoWindow').close(); " />
+</div>
+</text>)
+      .Draggable().Width(300).Scrollable(false).Modal(true).Visible(false))
+<script type="text/javascript">
+
+    var viewModel = kendo.observable({
+        HoursToAdd: 0,
+        MinutesToAdd: 0,
+        StartBay: 1,
+        EndBay: 1,
+    });
+
+    $(document).ready(function () {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+
+        $("#ResetButton").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '@Url.Action("ResetMeter")',
+                data: { customerId: '@Model.CustomerId', areaId: '@Model.AreaId', assetId: '@Model.AssetId' },
+                type: 'POST',
+                success: OnActionMeterSuccess,
+                error: function (data) {
+                    pemsPopupShowErrorWithTag(
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                        "1234", data);
+                },
+            });
+        });
+
+        ResetReturnURL();
+
+    });
+
+    function OnActionMeterSuccess(data, textStatus, jqXHR) {
+        if (data.Success) {
+            pemsPopupShowMessage(data.Description);
+        } else {
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.Description);
+        }
+    }
+
+    function OnShowAddMeterTime() {
+        $.ajax({
+            url: '@Url.Action("GetMeterBays")',
+            data: { customerId: '@Model.CustomerId', areaId: '@Model.AreaId', assetId: '@Model.AssetId' },
+            type: 'POST',
+            success: OnActionGetMeterBaysSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                    "1234", data.responseText);
+            },
+        });
+    }
+
+    function OnActionGetMeterBaysSuccess(data, textStatus, jqXHR) {
+
+        if (data.Success) {
+
+            // Populate Bay drop-down with data.
+            var ddl = "<select id=\"BayList\" name=\"BayList\">\n";
+            for (var bay in data.Model.Spaces) {
+                var myBay = data.Model.Spaces[bay];
+                ddl += "<option value=\"" + myBay.BayNumber + "\">Bay " + myBay.BayNumber + "</option>\n";
+            }
+            ddl += "</select>\n";
+
+            $("#divBayDropdown").html(ddl);
+            ShowAddMeterTime();
+
+        } else {
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", "Unable to retrieve list of bays associated with meter.");
+        }
+    }
+
+    function ShowAddMeterTime() {
+        viewModel.set("HoursToAdd", 0);
+        viewModel.set("MinutesToAdd", 0);
+
+        var popup = $("#meterAddTimeDialog").data("kendoWindow");
+        popup.center();
+        popup.open();
+    }
+
+    function ShowCopyMeter() {
+        viewModel.set("StartBay", 1);
+        viewModel.set("EndBay", 1);
+        var popup = $("#meterCopyDialog").data("kendoWindow");
+        popup.center();
+        popup.open();
+    }
+
+    function AddMeterTime() {
+
+        $('#meterAddTimeDialog').data('kendoWindow').close();
+
+        var minutes = viewModel.HoursToAdd * 60 + viewModel.MinutesToAdd;
+        var bayNumber = $("#BayList").val();
+
+        if (minutes > 0) {
+            $.ajax({
+                url: '@Url.Action("AddTimeToMeter")',
+                data: { customerId: '@Model.CustomerId', areaId: '@Model.AreaId', assetId: '@Model.AssetId', minutesToAdd: minutes, bayNumber: bayNumber },
+                type: 'POST',
+                success: OnActionMeterSuccess,
+                error: function (data) {
+                    pemsPopupShowErrorWithTag(
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                        "1234", data.responseText);
+                },
+            });
+        } else {
+            pemsPopupShowMessage("Meter can not add time of 0.");
+        }
+    }
+
+    function CopyMeter() {
+
+
+        var startBay = viewModel.StartBay;
+        var endBay = viewModel.EndBay;
+        //NOT doing validation - due to TX meters not having spaces
+        //if (startBay < 1) {
+        //    alert("Start Bay has to be greater than 0.");
+        //}
+        //else if (endBay < 1) {
+        //    alert("End Bay has to be greater than 0.");
+        //}
+        // else 
+        if (endBay < startBay) {
+            alert("End Bay cannot be greater than Start bay.");
+        }
+        else {
+            $('#meterCopyDialog').data('kendoWindow').close();
+
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', 'COPY').appendTo('#actionForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'startBay').attr('value', startBay).appendTo('#actionForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'endBay').attr('value', endBay).appendTo('#actionForm');
+            $('#actionForm').submit();
+        }
+    }
+
+
+    // *************************************************************
+    // Set/Reset Return URL
+    // *************************************************************
+
+    function SetReturnURL() {
+        var returnURLObject = new Object();
+
+        returnURLObject.url = location.pathname + "?";
+
+        if (getParameterByName('customerId')) {
+            returnURLObject.url += "customerId=" + getParameterByName('customerId');
+        }
+        if (getParameterByName('areaId')) {
+            returnURLObject.url += "&areaId=" + getParameterByName('areaId');
+        }
+        if (getParameterByName('assetId')) {
+            returnURLObject.url += "&assetId=" + getParameterByName('assetId');
+        }
+
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("returnToAssetURL", JSON.stringify(returnURLObject));
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+    }
+
+    function ResetReturnURL() {
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.removeItem("returnToAssetURL");
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+    }
+
+
+    // *************************************************************
+    // Navigation to Events Index Page
+    // *************************************************************
+
+    function NavigateTo() {
+
+        SetReturnURL();
+        eval($("#detailsActions").val() + '()');
+    }
+
+    // *************************************************************
+    // Navigation to Events Index Page
+    // *************************************************************
+
+    function NavigateToEvents() {
+
+        var eventsIndexObject = new Object();
+
+        eventsIndexObject.assetId = "@Model.AssetId";
+        eventsIndexObject.assetIdentifier = "AssetId";
+        eventsIndexObject.assetType = "@Model.Type";
+        eventsIndexObject.eventClass = "All";
+        eventsIndexObject.eventIdentifier = "EventClass";
+        eventsIndexObject.eventCode = "";
+        eventsIndexObject.hideEventCode = true;
+        eventsIndexObject.hideEventClass = false;
+        eventsIndexObject.hideAssetName = true;
+        eventsIndexObject.hideAssetId = false;
+        eventsIndexObject.gridType = "Summary";
+        eventsIndexObject.location = "Select a type";
+        eventsIndexObject.locationLabel = "Location";
+
+        var stringified = JSON.stringify(eventsIndexObject);
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("eventsViewState", stringified);
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+
+        window.location = '@Html.Raw(@Url.Action("Index", "Events", new { rtn = true }))';
+    }
+
+    // *************************************************************
+    // Navigation to Transactions Index Page
+    // *************************************************************
+
+    function NavigateToTransactions() {
+
+        var transactionIndexObject = new Object();
+
+        transactionIndexObject.assetId = "@Model.AssetId";
+        transactionIndexObject.assetIdentifier = "AssetId";
+        transactionIndexObject.assetType = "@Model.Type";
+
+        var stringified = JSON.stringify(transactionIndexObject);
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("viewStateTransactions", stringified);
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+
+        window.location = '@Html.Raw(@Url.Action("Index", "Transactions", new { rtn = true }))';
+    }
+
+    // *************************************************************
+    // Navigation to Alarms Index Page
+    // *************************************************************
+
+    function NavigateToAlarms() {
+
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        gridFilters.AssetId = "@Model.AssetId";
+        gridFilters.AssetType = "@Model.Type";
+
+        //save the filters
+        $.post('/shared/Sessions/SaveAlarmFilters', gridFilters)
+            .done(OnNavigateToAlarmsDone);
+    }
+
+    function OnNavigateToAlarmsDone() {
+        window.location = '@Html.Raw(@Url.Action("Index", "Alarms", new { rtn = true }))';
+    }
+
+
+
+    // *************************************************************
+    // Navigation to History Page
+    // *************************************************************
+
+    function NavigateToHistory() {
+
+        window.location = '@Html.Raw(Url.Action("ViewMeterHistory", "Assets", new { customerId = @Model.CustomerId, areaId = @Model.AreaId, assetId = @Model.AssetIdDisplay }))';
+    }
+
+
+
+
+</script>
+
+

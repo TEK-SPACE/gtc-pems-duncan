@@ -1,0 +1,6 @@
+﻿@using Duncan.PEMS.Utilities
+
+@if ( Request.IsAuthenticated )
+{
+    @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Logout As" ) + " (" + User.Identity.Name + ")", "Logoff", "Account", new {@id = "logout", @title = "Logout"} )
+}

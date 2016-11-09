@@ -1,0 +1,337 @@
+﻿@model Duncan.PEMS.Entities.Customers.CustomerRulesModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Security
+@using System.Data;
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit Customer Rules" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer Edit" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Rules" )</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.CustomerId )</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_new">@Html.DisplayFor( m => m.Status.Status )</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor( m => m.Status.StatusDate )</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink( "Identification", "EditCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Assets", "EditAssets", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Payments", "EditPayments", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink( "Rules", "EditRules", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Custom Labels", "EditCustomLabels", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Custom Grids", "EditCustomGrids", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Event Codes", "EditEventCodes", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Areas" ).ToString(), "EditAreas", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Maintenance Schedule" ).ToString(), "EditMaintenanceSchedule", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>*@
+
+    @if ( Model.Status.StatusId == CustomerStatus.New )
+    {
+        <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Activate" ).ToString(), "ActivateCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    }
+</div>
+
+@using (Html.BeginForm( "EditRules", "Customers", FormMethod.Post, new {@class = "customer-form", @id = "createCustomerIdentification"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+
+    <div class="customer_tab_content">
+        
+        <div class="two-column">
+
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Rules" )</div>    
+        
+            <div class="checkbox">
+                <input type="checkbox" name="ChkZeroOutMeter" data-bind="checked: ZeroOutMeter">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zero Out Meter" )
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" name="ChkBlackListCC" data-bind="checked: BlackListCC">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Black List CC" )
+            </div>
+       
+            <div class="checkbox">
+                <input type="checkbox" name="ChkStreetline" data-bind="checked: Streetline">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Streetline" )
+            </div>
+               <div class="checkbox">
+                <input type="checkbox" name="ChkCloseWorkOrderEvents" data-bind="checked: CloseWorkOrderEvents">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Work Orders: Close Individual Events" )
+            </div>
+            <div class="checkbox">
+                <input type="checkbox" name="ChkDisplayFullMenu" data-bind="checked: DisplayFullMenu">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label,"Display Full Menu")
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "PM Event Code" ):</div>
+                <input type="text"  data-role="numerictextbox"  style="width: 150px" name="PMEventCode"  data-format="#;"  value="@Model.PMEventCode" />
+            </div>   
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Grace Period" )@Html.Raw( ": " )</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="60" name="GracePeriod"  
+                        value="@Model.GracePeriod" />&nbsp;Minutes
+                @Html.RequiredMarkFor( m => m.GracePeriod, new {@class = "required_asterisk"} )
+                @Html.ValidationMessageFor( m => m.GracePeriod )
+            </div>    
+
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Free Parking Limit" )@Html.Raw( ": " )</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="3600" name="FreeParkingLimit"  
+                        value="@Model.FreeParkingLimit" />&nbsp;Minutes
+                @Html.RequiredMarkFor( m => m.FreeParkingLimit, new {@class = "required_asterisk"} )
+                @Html.ValidationMessageFor( m => m.FreeParkingLimit )
+            </div>    
+        </div>
+        
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Discount Scheme" )</div>    
+
+            <div>
+                @if ( Model.DiscountSchemas.Any() )
+                {
+                    
+                    <style>
+                    
+                        td, th
+{
+padding:2px 10px;
+}
+                        th
+{
+                            border-bottom: 2px solid #456E97;
+                            font-weight: normal;
+                            background-color:  #456E97;
+                            color: white;
+}
+                        td
+{
+                            
+}
+                     
+                    </style>
+                    
+                    <div>
+                        @Html.CheckBoxFor( m => m.DiscountSchema, new {@class = "checkbox", onchange = "discountSchemasChanged();"} )&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Allow Discount Schemes" )
+                    </div>
+                    <div id="DiscountSchema_Schemas" style="float: left;">
+                        <div id="DiscountSchemas_Div" class="add-remove-box" style="width:auto !important; border:0px !important;">
+                            <table >
+                               <tr>
+                                    <th>Active</th>
+                                    <th>Name</th>
+                                   <th>Type</th>
+                                    <th>Expiration Type</th>
+                                </tr>
+                               
+                            @foreach (var schema in @Model.DiscountSchemas)
+                            {
+                                 <tr>
+                                    <td>   @Html.CheckBox(Model.SchemaPrefix + Model.Separator + schema.Id, schema.Enabled, new { @class = "checkbox" })</td>
+                                    <td> @Html.Raw(schema.Name)</td>
+                                    <td>  @Html.Raw(schema.Type ?? "")</td>
+                                    <td> @Html.Raw(schema.ExpirationType)</td>
+                                </tr>
+                            }
+                            </table>
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        No Discount Schemes are available for this customer.
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operation / Time Tier")</div>    
+        
+        @{
+                var dateTimeFormat = "";
+                var basicTimePicker = "style=\"width: 120px\" data-role=\"timepicker\" data-interval=\"15\"";
+                if (@Model.Is24HrFormat)
+                {
+                    dateTimeFormat += " data-format=\"H:mm\"";
+                }
+                else
+                {
+                }
+        }
+        
+        <div class="time-picker">
+            <div  class="time-picker-checkbox">
+                <input type="checkbox" name="ChkOperationTime" data-bind="checked: OperationTime">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operation Time")
+            </div>
+            <div>
+                @Html.Raw("Start: ")<input type="text" @Html.Raw(basicTimePicker) name="OperationTimeStart" @Html.Raw(dateTimeFormat)
+                                             data-bind="value: OperationTimeStart, enabled: OperationTime, events:{ change: OnChange }"/>
+                @Html.Raw("&nbsp;&nbsp;")
+                @Html.Raw("End: ")<input type="text" @Html.Raw(basicTimePicker) name="OperationTimeEnd"  @Html.Raw(dateTimeFormat)
+                                           data-bind="value: OperationTimeEnd, enabled: OperationTime, events:{ change: OnChange }" />
+                @Html.ValidationMessage("OperationTime")
+            </div>
+        </div>
+
+        <div class="time-picker">
+            <div  class="time-picker-checkbox">
+                <input type="checkbox" name="ChkPeakTime" data-bind="checked: PeakTime">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Peak Time")
+            </div>
+            <div>
+                @Html.Raw("Start: ")<input type="text" @Html.Raw(basicTimePicker) name="PeakTimeStart"  @Html.Raw(dateTimeFormat)
+                                             data-bind="value: PeakTimeStart, enabled: PeakTime, events:{ change: OnChange }"/>
+                @Html.Raw("&nbsp;&nbsp;")
+                @Html.Raw("End: ")<input type="text" @Html.Raw(basicTimePicker) name="PeakTimeEnd"  @Html.Raw(dateTimeFormat)
+                                           data-bind="value: PeakTimeEnd, enabled: PeakTime, events:{ change: OnChange }" />
+                @Html.ValidationMessage("PeakTime")
+            </div>
+        </div>
+
+        <div class="time-picker">
+            <div  class="time-picker-checkbox">
+                <input type="checkbox" name="ChkEveningTime" data-bind="checked: EveningTime">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Evening Time")
+            </div>
+            <div>
+                @Html.Raw("Start: ")<input type="text" @Html.Raw(basicTimePicker) name="EveningTimeStart"  @Html.Raw(dateTimeFormat)
+                                             data-bind="value: EveningTimeStart, enabled: EveningTime, events:{ change: OnChange }"/>
+                @Html.Raw("&nbsp;&nbsp;")
+                @Html.Raw("End: ")<input type="text" @Html.Raw(basicTimePicker) name="EveningTimeEnd"  @Html.Raw(dateTimeFormat)
+                                           data-bind="value: EveningTimeEnd, enabled: EveningTime, events:{ change: OnChange }" />
+                @Html.ValidationMessage("EveningTime")
+            </div>
+        </div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Hidden Fields / Filters")</div>    
+    
+        <div class="two-column">
+        
+             <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldDemandArea" data-bind="checked: HFieldDemandArea">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Demand Area" )
+            </div>
+              <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldZone" data-bind="checked: HFieldZone">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" )
+            </div>
+             <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldDiscountScheme" data-bind="checked: HFieldDiscountScheme">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Discount Scheme" )
+            </div>
+        </div>
+        <div class="two-column">
+             <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldCG1" data-bind="checked: HFieldCG1">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 1" )
+            </div>
+                        <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldCG2" data-bind="checked: HFieldCG2">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 2" )
+            </div>
+               <div class="checkbox">
+                <input type="checkbox" name="ChkHFieldCG3" data-bind="checked: HFieldCG3">&nbsp;@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 3" )
+            </div>
+        </div>        
+
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="CONTINUE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue")</button>
+            <button type="submit" name="submitButton" class="button" value="SAVE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            <button type="submit" name="submitButton" class="button previous" value="RETURN" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+        </div>
+
+    </div>
+}
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Modified by"): @Html.DisplayFor(m => m.Status.ModifiedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.ModifiedOn)
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created by"): @Html.DisplayFor(m => m.Status.CreatedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.CreatedOn)
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // Create a view-model for the page controls. Model holds variables and view-related methods
+    var viewModel = kendo.observable({
+        DiscountSchema: @Html.Raw(Model.DiscountSchema).ToString().ToLower(),
+
+        ZeroOutMeter: @Html.Raw(Model.ZeroOutMeter).ToString().ToLower(),
+        BlackListCC: @Html.Raw(Model.BlacklistCC).ToString().ToLower(),
+        Streetline: @Html.Raw(Model.Streetline).ToString().ToLower(),
+        CloseWorkOrderEvents: @Html.Raw(Model.CloseWorkOrderEvents).ToString().ToLower(),
+        OperationTime: @Html.Raw(Model.OperationalTimes.HasOperationTime).ToString().ToLower(),
+        OperationTimeStart: new Date("@Html.Raw(Model.OperationalTimes.OperationStart)"),
+        OperationTimeEnd: new Date("@Html.Raw(Model.OperationalTimes.OperationEnd)"),
+        PeakTime: @Html.Raw(Model.OperationalTimes.HasPeakTime).ToString().ToLower(),
+        PeakTimeStart: new Date("@Html.Raw(Model.OperationalTimes.PeakStart)"),
+        PeakTimeEnd: new Date("@Html.Raw(Model.OperationalTimes.PeakEnd)"),
+        EveningTime: @Html.Raw(Model.OperationalTimes.HasEveningTime).ToString().ToLower(),
+        EveningTimeStart: new Date("@Html.Raw(Model.OperationalTimes.EveningStart)"),
+        EveningTimeEnd: new Date("@Html.Raw( Model.OperationalTimes.EveningEnd )"),
+        DisplayFullMenu: @Html.Raw(Model.DisplayFullMenu).ToString().ToLower(),
+        
+        HFieldDemandArea: @Html.Raw(Model.FieldDemandArea).ToString().ToLower(),
+        HFieldZone: @Html.Raw(Model.FieldZone).ToString().ToLower(),
+        HFieldDiscountScheme: @Html.Raw(Model.FieldDiscountScheme).ToString().ToLower(),
+        HFieldCG1: @Html.Raw(Model.FieldCG1).ToString().ToLower(),
+        HFieldCG2: @Html.Raw(Model.FieldCG2).ToString().ToLower(),
+        HFieldCG3: @Html.Raw(Model.FieldCG3).ToString().ToLower(),
+
+        OnChange: function(e) {
+
+            var senderName = e.sender.element[0].name;
+
+            if (senderName == "OperationTimeStart" || senderName == "OperationTimeEnd") {
+                if (this.OperationTimeEnd < this.OperationTimeStart) {
+                    this.set("OperationTimeEnd", this.OperationTimeStart);
+                }
+            } else if (senderName == "PeakTimeStart" || senderName == "PeakTimeEnd") {
+                if (this.PeakTimeEnd < this.PeakTimeStart) {
+                    this.set("PeakTimeEnd", this.PeakTimeStart);
+                }
+            } else { // (senderName == "EveningTimeStart" || senderName == "EveningTimeEnd") {
+                if (this.EveningTimeEnd < this.EveningTimeStart) {
+                    this.set("EveningTimeEnd", this.EveningTimeStart);
+                }
+            }
+        }
+    });
+
+    $(document).ready(function() {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+
+        discountSchemasChanged();
+
+    });
+
+    function discountSchemasChanged() {
+
+        if ($("#DiscountSchema").is(':checked')) {
+            $("#DiscountSchema_Schemas").find('*').removeAttr("disabled");
+        } else {
+            $("#DiscountSchema_Schemas").find('*').attr("disabled", "true");
+        }
+
+    }
+
+    ;
+
+</script>

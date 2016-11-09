@@ -1,0 +1,405 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+
+@{
+    ViewBag.Title = "Pay By Cell";
+
+}
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+}
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        ready .filter-SearchButton {
+            background-color: #33BAB1 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-grid .k-button.k-grid-add {
+            float: right;
+        }
+
+
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .k-widget .templateCell {
+            overflow: visible;
+        }
+
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+    </style>
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell Vendor Inquiry")</h1>
+
+}
+
+<div style="padding-bottom:40px">
+    <div  style="float:left;margin-top:3px;">
+       @* <div class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vendor ID")@Html.Raw(": ")</div>*@
+        <label style="width:70px;">Vendor ID:</label>
+        <label id="labelId1" style="width:175px;" for="label">@ViewData["MaxVendorID"].ToString()</label>
+    </div>
+
+    <div class="filter-option" style="margin-left:-80px;">
+        @*<div class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vendor Name")@Html.Raw(": ")</div>*@
+        <label style="width:105px;margin-top:2px;">Vendor Name:</label>
+        <input id="VendorName" class="k-textbox" maxlength="50" style="width: 230px; font-size: 14px;margin-left:-5px; " />
+    </div>
+
+    <div class="filter-option" style="margin-left:60px;" >
+            <label class="filter-label" style="width:111px;">Select Customer:</label>
+            @(Html.Kendo().DropDownList()
+                      .Name("custName")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .HtmlAttributes(new { style = "width:269px;font-size:16px;" })
+                      //.Events(e => e.Change("layerChange"))
+                      .DataSource(source =>
+                      {
+                        source.Read(read =>
+                        {
+                            //read.Url("../GIS/GetAssetTypes_Inventory");//.Data("SetLayerId");
+                            read.Action("GetCustomerList", "PayByCell");
+                        });
+                      })
+            )
+        </div>
+
+</div>
+
+
+
+<div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Duncan Property")</div>
+
+<div id="DivDuncanProp" class="grid-content" style=" width: 100%;margin-left:0px;padding-bottom:10px">
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.PayByCell.DuncanPropertyModel>()
+     .Name("GridDuncanProp")
+        .Columns(col =>
+        {
+            col.Bound(a => a.KeyText).Title("Key").Width("200px");
+            col.Bound(a => a.ValueText).Title("Value").Width("300px");
+
+        }).ToolBar(toolBar =>
+        {
+            toolBar.Custom().Text("Add Property").HtmlAttributes(new { style = "font-weight:bold", id = "customCommandDuncan" });//.Url("#_").HtmlAttributes(new { onclick = "PopulateAddressForm()" });
+        })
+                                     .Editable(editable => editable.Mode(GridEditMode.InCell))
+             .Scrollable(scr => scr.Height(120))
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax().Batch(true)
+                .Model(model =>
+                                     {
+                                         model.Id(p => p.KeyText);
+                                     })
+                 .Read(read => read.Action("GetDuncanProperties", "PayByCell").Data("GetVendorID"))
+                   .PageSize(50)
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10, 50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+
+<div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Property")</div>
+<div id="DivCustProp" class="grid-content" style=" width: 100%; margin-left: 0px; padding-bottom: 10px">
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.PayByCell.CustomerPropertyModel>()
+     .Name("GridCustProp")
+        .Columns(col =>
+        {
+            col.Bound(a => a.KeyText).Title("ID").Width("200px");
+            col.Bound(a => a.ValueText).Title("Key").Width("300px");
+
+        })
+                .ToolBar(toolBar =>
+                              {
+                                  toolBar.Custom().Text("Add Property").HtmlAttributes(new { style = "font-weight:bold", id = "customCommand" });//.Url("#_").HtmlAttributes(new { onclick = "PopulateAddressForm()" });
+                              })
+                       .Scrollable(scr => scr.Height(120))
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+                .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Batch(true)
+                .Model(model =>
+                             {
+                                 model.Id(p => p.KeyText);
+                             })
+                    .Read(read => read.Action("GetCustomerProperties", "PayByCell").Data("GetVendorID"))
+                    .PageSize(50)
+
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10, 50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+<div>
+    <button id="btnAddVendor" value="Save" class="button" onclick="OnSaveButtonClick()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save Vendor")</button>
+    @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous returnButton" })
+</div>
+
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+    });
+    //next 2 lines is for placing the toolbar below the grid
+    //Required
+    $("#GridCustProp").find(".k-grid-toolbar").insertAfter($("#GridCustProp .k-grid-content"));
+    $("#GridDuncanProp").find(".k-grid-toolbar").insertAfter($("#GridDuncanProp .k-grid-content"));
+
+    $("#customCommand").click(function (e) {
+        e.preventDefault();
+        OnAddNewRowButtonClick();
+    });
+    function OnAddNewRowButtonClick() {
+        $('#GridCustProp').data('kendoGrid').addRow();
+        // $('#GridCustProp').data('kendoGrid').refresh()
+    }
+
+    $("#customCommandDuncan").click(function (e) {
+        e.preventDefault();
+        OnAddNewRowButtonClickDuncan();
+    });
+    function OnAddNewRowButtonClickDuncan() {
+        $('#GridDuncanProp').data('kendoGrid').addRow();
+    }
+
+
+    function OnSaveButtonClick() {
+
+        if ($('#VendorName').val() == "") {
+            alert("Please enter vendor name");
+            return false;
+        }
+
+        if ($('#custName').val() == "") {
+            alert("Please select Customer name");
+            return false;
+        }
+        var DuncanProp = $("#GridDuncanProp").data().kendoGrid.dataSource.data()
+        if (DuncanProp.length == 0) {
+            alert("Please enter Ducan Properties");
+            return false;
+        }
+
+
+        var t = $("#GridDuncanProp").data("kendoGrid").dataSource.view().toJSON();
+        for (i = 0; i < t.length; i++) {
+            if (t[i].ValueText == "") {
+                if (t[i].KeyText != "") {
+                    alert("Please enter Duncan Property value for key " + t[i].KeyText);
+                    return false;
+                }
+            }
+        }
+
+        var CustProp = $("#GridCustProp").data().kendoGrid.dataSource.data()
+        if (CustProp.length == 0) {
+            alert("Please enter Customer Properties");
+            return false;
+        }
+
+
+        var t1 = $("#GridCustProp").data("kendoGrid").dataSource.view().toJSON();
+        for (i = 0; i < t1.length; i++) {
+            if (t1[i].ValueText == "") {
+                if (t1[i].KeyText != "") {
+                    alert("Please enter Customer Property value for key " + t1[i].KeyText);
+                    return false;
+                }
+            }
+        }
+
+        $.ajax({
+            url: '@Url.Action("AddNewVendorRecords", "PayByCell", Request.RequestContext.RouteData.Values)',
+            type: 'POST',
+            traditional: true,
+            dataType: "json",
+            contentType: "application/json",
+            data: kendo.stringify({ DuncanPropGriditems: $("#GridDuncanProp").data("kendoGrid").dataSource.view().toJSON(), CustPropGriditems: $("#GridCustProp").data("kendoGrid").dataSource.view().toJSON(), vendorID: $('#labelId1').text(), VendorName: $('#VendorName').val(), CustID: $('#custName').val() }),
+            success: function (data) {
+                alert(data)
+                $('#GridDuncanProp').data('kendoGrid').dataSource.read();
+                $('#GridCustProp').data('kendoGrid').dataSource.read();
+            }
+        });
+    }
+
+    function GetVendorID() {
+        var VID = $('#labelId1').text()
+        return { vendorid: VID }
+    }
+
+
+
+
+
+</script>

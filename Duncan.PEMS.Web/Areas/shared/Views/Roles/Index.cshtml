@@ -1,0 +1,274 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Roles.ListRoleModel>
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Inquiry" )</span></h1>
+}
+
+@section ExportButtons 
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportToExcel", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~",customerId = "~"} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportToCsv", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~",customerId = "~"} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~",customerId = "~"} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+<div class="grid-header">
+    <div style="float: left">
+        @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add Role" ).ToString(), "Create", "Roles", null, new {@class = "button", @type = "button"} )
+    </div>
+</div>
+<div style="clear: both"></div>
+
+@(Html.Kendo().Grid( Model )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Name( "CurrentGrid" )
+      .Columns( columns =>
+                    {
+                        // columns.Bound(p => p.CustomerName).Width(200);
+                        columns.Bound( p => p.RoleName ).ClientTemplate( @Html.ActionLink( "#= RoleName #", "Edit", "Roles", new {roleName = "#= RoleName #", customerInternalName = "#= CustomerInternalName #", customerName = "#= CustomerName #"},
+                                                                                           new {@onclick = "RowClick(this);"} ).ToHtmlString() ).Width( 200 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Role Name" ).ToString() );
+                        columns.Bound(p => p.LastModifiedOn).ClientTemplate("#= LastModifiedOnDisplay #").Width(200)
+                               .Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Last Modified On" ).ToString() );
+                        columns.Bound( p => p.LastModifiedBy ).Width( 200 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Last Modified By" ).ToString() );
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnDataBound" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetRoles", "Roles" ).Data( "additionalData" ).Type( HttpVerbs.Get ) )
+      ))
+
+
+@section Styles
+{
+    <style type="text/css">
+        #CurrentGrid { display: none; }
+
+        #exportButtons { display: none; }
+         /*#btnSearch {
+        display: none;
+    }*/
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+    </style>
+}
+
+@section PageFilter 
+{
+    <div class="filter-option" id="roleDiv">
+        <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role Name" )</span>
+        <select id="ddlRoleName" data-role="dropdownlist" class="filter-dropdown" data-bind="source: roles, value: role" data-option-label="All" data-text-field="Text" data-value-field="Value"></select>
+    </div>
+    <div class="filter-searchBox">
+        <button type="button" value="Refresh" id="btnSearch" class="button important filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )</button>
+    </div>
+    
+    <script type="text/javascript">
+        
+        var viewModel = kendo.observable({
+            roles: [],
+            role: null,
+        });
+        
+        //ON LOAD
+        $(document).ready(function() {
+            
+            // bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+
+            LoadRoles();
+            LoadSorts();
+        });
+
+        function LoadRoles() {
+            //get roles based on current client
+            var $customerId = @ViewData[Constants.ViewData.CurrentCityId];
+            $.post('/shared/Roles/GetRoles?cid=' + $customerId, OnRolesLoaded);
+        }
+
+        function OnRolesLoaded(data) {
+            viewModel.set('roles', data);
+        }
+
+        //SORTS
+        var sorts = {};
+
+        function LoadSorts() {
+            $.post('/shared/Roles/GetSavedSortValues?indexType=Roles', OnSortsLoaded);
+        }
+
+        function OnSortsLoaded(data) {
+            if (!isEmptyObject(data))  {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1 };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetRoleFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+            if (!isEmptyObject(data))  {
+                gridFilters = data;
+                $("#ddlCustomer").val(gridFilters.CustomerId);
+                LoadRoles();
+                $("#ddlRoleName").val(gridFilters.RoleName);
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                gridFilters = { "SelectedIndex": -1, "CurrentPage": 1 };
+            }
+
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .query method will call the read automatically
+
+        function LoadGrid() {
+            //Get the grid data out of the DB and load it
+            LoadGridData();
+        }
+
+        function LoadFreshGrid() {
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1 };
+            LoadGrid();
+        }
+
+        function LoadGridData() {
+            //now that the grid order has been set, bind the data
+            var $filter = new Array();
+
+            //roleID
+            var $roleName = $("#ddlRoleName :selected").text();
+            if ($roleName != "All") {
+                gridFilters.RoleName = $("#ddlRoleName").val();
+                $filter.push({ field: "Name", operator: "contains", value: $roleName });
+            }
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: 100, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+
+        //ROW CLICK
+
+        function RowClick() {
+            //get the current page 
+            gridFilters.CurrentPage = $("#CurrentGrid").data("kendoGrid").dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = $("#CurrentGrid").data("kendoGrid").select().index();
+            //save the filters
+            $.post('/shared/Sessions/SaveRoleFilters', gridFilters);
+        }
+
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            applyFrozenColumns();
+            SetExportData();
+        }
+
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            var $customerID = @ViewData[Constants.ViewData.CurrentCityId];
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            //Additional Data
+            href = href.replace(/roleId=([^&]*)/, 'roleId=' + ($("#ddlRoleName").val() || 'All'));
+            href = href.replace(/customerId=([^&]*)/, 'customerId=' + ($customerID || ''));
+            return href;
+        }
+
+        //Freeze columns if you need to for this grid - all columns must have a width for this to work correctly.
+
+        function applyFrozenColumns() {
+            //  $('#CurrentGrid').freezeGridColumn(2);
+        }
+
+        //additional data sent to the action when the read method is called (when we apply a filter)
+
+        function additionalData() {
+            var roleId = $("#ddlRoleName").val();
+            var customerId = @ViewData[Constants.ViewData.CurrentCityId];
+
+            return {
+                roleId: roleId,
+                customerId: customerId
+            };
+        }
+
+    </script>
+}

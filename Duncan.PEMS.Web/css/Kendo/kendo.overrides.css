@@ -1,0 +1,50 @@
+﻿/* GRID OVERRIDES */
+
+.k-grid .k-header {
+    /*background-color: #456E97 !important;*/ /* Changed By Rajesh on 08 Feb 2016*/
+    background-color: #808080 !important;
+    color: #FFFFFF !important;
+}
+
+.k-grid .k-header .k-link { color: #FFFFFF !important; }
+
+tr.k-state-selected,
+tr.k-button:active {
+    background-color: #B9EBE8 !important;
+    color: black !important;
+}
+
+.k-grid .k-i-arrow-n {
+    background-image: url("/Images/grid-arrow.png") !important;
+    background-position: right -30px !important;
+}
+
+.k-grid .k-i-arrow-s {
+    background-image: url("/Images/grid-arrow.png") !important;
+    background-position: right 4px !important;
+}
+
+.k-input,
+input.k-textbox,
+textarea.k-textbox,
+input.k-textbox:hover,
+textarea.k-textbox:hover,
+.k-textbox > input {
+    background-color: #FFFFFF !important;
+    color: black  !important;
+}
+
+.k-grid-header .k-header {
+  border-style: solid !important;
+  border-width: 0 0 1px 1px !important;
+  font-weight: normal !important;
+  overflow: hidden !important;
+  padding: 0.2em 0.6em !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+}
+
+.k-grid-content a {
+    text-decoration: underline !important;
+    color: black !important;
+}

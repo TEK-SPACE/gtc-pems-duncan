@@ -1,0 +1,227 @@
+﻿@using Duncan.PEMS.Entities.Tariffs
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Tariffs.RateScheduleModel
+
+@{
+    Layout = null;
+}
+
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.DayOfWeek )
+    @Html.HiddenFor( m => m.DayOfWeekName )
+    @Html.HiddenFor( m => m.OperationMode )
+    @Html.HiddenFor( m => m.OperationModeName )
+
+    @Html.HiddenFor( m => m.TariffRateId )
+    @Html.HiddenFor( m => m.TariffRateName )
+
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Day(s) of Week" )@Html.Raw( ": " )</div>
+    <div class="tdow-week" id="div-dayofweek">
+        <div class="tdow-weekend">
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "6" )" class="tdow-chkbox"><div class="tdow-name">Sat</div>
+            </div>
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "0")" class="tdow-chkbox"><div class="tdow-name">Sun</div>
+            </div>
+        </div>
+        <div class="tdow-weekday">
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "1" )" class="tdow-chkbox"><div class="tdow-name">Mon</div>
+            </div>
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "2" )" class="tdow-chkbox"><div class="tdow-name">Tues</div>
+            </div>
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "3" )" class="tdow-chkbox"><div class="tdow-name">Wed</div>
+            </div>
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "4" )" class="tdow-chkbox"><div class="tdow-name">Thur</div>
+            </div>
+            <div class="tdow-day">
+                <input type="checkbox" name="@Html.Raw(RateScheduleModel.ChkBoxPrepend + RateScheduleModel.ChkBoxDivider + "5" )" class="tdow-chkbox"><div class="tdow-name">Fri</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Start Time" )@Html.Raw( ": " )</div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "StartTimeHour" ).Min( 0 ).Max( 23 ).Format( "n00" ).Value( Model.StartTimeHour ))                    
+    </div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "RateInStartTimeMinute" ).Min( 0 ).Max( 60 ).Format( "n00" ).Value( Model.StartTimeMinute ))                    
+    </div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Operation Mode" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        <div id="ddlOperationModes" class = "k-edit-field"></div>
+    </div>
+    <div class = "required_asterisk"  style="float: left">*</div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Tariff Rate" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        <div id="ddlTariffRates" class = "k-edit-field"></div>
+    </div>
+</div>    
+
+
+
+<br/>
+<br/>
+<br/>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function() {
+        SelectOperationModes();
+        SelectTariffRates();
+    });
+    
+
+    function SelectDaysOfWeek() {
+
+        $.ajax({
+            url: '@Url.Action( "GetDaysOfWeek", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val() },
+            type: 'POST',
+            success: SelectDaysOfWeekSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+
+    function SelectDaysOfWeekSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'DaysOfWeekList' name = 'DaysOfWeekList' onchange = 'OnDaysOfWeekChange();'>";
+        var dayOfWeek = $("#DayOfWeekName").val();
+
+        $.each(data.list, function (i, item) {
+            divContent += "<option value = \"" + item.Value + "\"";
+            if (item.Text == dayOfWeek)
+                divContent += " selected";
+            divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlDaysOfWeek").html(divContent);
+            
+    }
+
+    function OnDaysOfWeekChange(e) {
+
+        //console.log("OnDaysOfWeekChange");
+
+        $("#DayOfWeekName").val($("#DaysOfWeekList option:selected").text());
+        $("#DayOfWeek").val($("#DaysOfWeekList option:selected").val());
+    }
+
+    function SelectOperationModes() {
+
+        $.ajax({
+            url: '@Url.Action( "GetOperationModes", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val() },
+            type: 'POST',
+            success: SelectOperationModesSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+    function SelectOperationModesSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'OperationModesList' name = 'OperationModesList' onchange = 'OnOperationModeChange();'>";
+        var operationMode = $("#OperationMode").val();
+
+        $.each(data.list, function (i, item) {
+            divContent += "<option value = \"" + item.Value + "\"";
+            if (item.Value == operationMode)
+                divContent += " selected";
+            divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlOperationModes").html(divContent);
+            
+    }
+
+    function OnOperationModeChange(e) {
+
+        $("#OperationModeName").val($("#OperationModesList option:selected").text());
+        $("#OperationMode").val($("#OperationModesList option:selected").val());
+    }
+
+    function SelectTariffRates() {
+
+        $.ajax({
+            url: '@Url.Action( "GetSessionTariffRates", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val() },
+            type: 'GET',
+            success: SelectTariffRatesSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+    function SelectTariffRatesSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'TariffRatesList' name = 'TariffRatesList' onchange = 'OnTariffRatesChange();'>";
+        var tariffRateId = $("#TariffRateId").val();
+
+        if (data.Data) {
+
+            if (!tariffRateId) {
+                divContent += "<option value = '0' selected></option>";
+            } else {
+                divContent += "<option value = '0'></option>";
+            }
+
+            $.each(data.Data, function (i, item) {
+                divContent += "<option value = \"" + item.TariffRateId + "\"";
+                if (item.TariffRateId == tariffRateId)
+                    divContent += " selected";
+                divContent += ">" + item.RateName + "</option>";
+            });
+        } else {
+            divContent += "<option value = '0' selected></option>";
+        }
+
+        divContent += "</select>";
+        $("#ddlTariffRates").html(divContent);
+    }
+
+    function OnTariffRatesChange(e) {
+        $("#TariffRateId").val($("#TariffRatesList option:selected").val());
+        $("#TariffRateName").val($("#TariffRatesList option:selected").text());
+    }
+
+</script>

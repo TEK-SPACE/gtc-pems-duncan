@@ -1,0 +1,10 @@
+﻿@model Duncan.PEMS.Entities.Help.HelpLinkModel
+
+@if ( @Model != null )
+{
+    @Html.Raw( "<a href=\"" )@Model.Server@Html.Raw( "/" )@Model.File@Html.Raw( ".htm#cshid=" )@Model.Topic@Html.Raw( "\" id=\"help\" title=\"Help\"  target=\"_blank\"></a>" )
+}
+else
+{
+    @Html.Raw( "<a href=/Help/Default.htm id=\"help\" title=\"Help\"  target=\"_blank\"></a>" )
+}

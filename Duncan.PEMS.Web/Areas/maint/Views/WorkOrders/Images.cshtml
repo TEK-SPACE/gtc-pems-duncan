@@ -1,0 +1,141 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Images" );
+}
+                     
+@section PageHeader 
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Work Order Images") </h2>
+   <a class="back" href='@Url.Action("ResolveWorkOrder", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+}
+
+@section Scripts 
+{
+}
+
+@using (Html.BeginForm("Images", "WorkOrders", FormMethod.Post, new { @id = "imageForm" }))
+{
+    <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+    <input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+    <input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+    <div id="content-inner">
+        <div class="validationSum-container">@Html.HeaderMessage()</div>
+        <div   class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Do you have images to attach?"):</div>
+        </div>
+           <div class="clear" id="image-upload">
+            <a class="button" id="get-images" href="#" onclick="LoadFileUpload()"></a>
+            <input name="files" id="files" type="file" />
+
+            @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Attached Images"):<br />
+            @{
+                if (Model.WorkOrderImages.Any())
+                {
+                    foreach (var workOrderImage in Model.WorkOrderImages)
+                    {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions
+                                                      .Close())
+                              .Content(@<text>
+                                             <img alt="" style="max-width: 100%" src="@workOrderImage.ImageSource"/>
+                                        </text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+
+                              )
+                        <a href="#" id='open_@workOrderImage.WorkOrderImageId' >WO# @workOrderImage.ImageName</a><br/>
+
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                               
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").open();
+                                    dialog.data("kendoWindow").center();
+                                });
+                            });
+                            $(document).on('click', ".k-overlay" , function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                dialog.data("kendoWindow").close();
+                            });
+                        </script>
+                    }
+                }
+                else
+                {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+                }
+            }
+        </div>
+        <div class="clear button-row">
+              <a class="button important" onclick="Submit('Save');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Update")</a>
+        </div>
+    </div>
+
+    <script>
+
+        $(document).ready(function() {
+            $("#files").kendoUpload({
+                select: onSelect,
+                remove: onRemove
+            });
+        });
+
+        function LoadFileUpload() {
+            $("#files").click();
+        }
+
+        var totalFiles = @Model.WorkOrderImages.Count();
+        var onSelect = function(e) {
+            var selectedFiles = e.files.length;
+            //only 3 per work order
+            if (totalFiles + selectedFiles > 3) {
+                alert("3 images allowed");
+                e.preventDefault();
+            } else {
+                totalFiles += selectedFiles;
+            }
+
+            $.each(e.files, function(index, value) {
+                var extension = value.extension.trim().toLowerCase();
+                //only images
+                if (extension != ".png"
+                    && extension != ".jpeg"
+                    && extension != ".jpg") {
+                    e.preventDefault();
+                    alert("Image Files Only");
+                }
+            });
+        };
+
+        function onRemove(e) {
+            totalFiles--;
+        }
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#imageForm');
+            $('#imageForm').submit();
+        }
+    </script>
+        <style>
+        .k-upload-button {
+            visibility: hidden;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+    </style>
+}

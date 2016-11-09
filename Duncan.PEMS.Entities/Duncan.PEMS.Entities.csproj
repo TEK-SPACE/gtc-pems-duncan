@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{656EB4F5-0353-41CB-B1CA-47D7209E9388}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Duncan.PEMS.Entities</RootNamespace>
+    <AssemblyName>Duncan.PEMS.Entities</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Duncan.PEMS.Entities.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Duncan.PEMS.Entities.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'dev|AnyCPU'">
+    <OutputPath>bin\dev\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'demo|AnyCPU'">
+    <OutputPath>bin\demo\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="LINQtoCSV, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\LINQtoCSV.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\PROJECTS\PEMS USA-AI\Duncan.PEMS.Web\bin\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Alarms\Alarm.cs" />
+    <Compile Include="Alarms\AlarmDDLModel.cs" />
+    <Compile Include="Alarms\AlarmListItem.cs" />
+    <Compile Include="Alarms\AlarmModels.cs" />
+    <Compile Include="Alarms\AssetStateModel.cs" />
+    <Compile Include="Assets\Asset.cs" />
+    <Compile Include="Assets\AssetListModel.cs" />
+    <Compile Include="Assets\AssetTypesModel.cs" />
+    <Compile Include="Assets\AssetUploadModel.cs" />
+    <Compile Include="Assets\DataKeyModel.cs" />
+    <Compile Include="Assets\MechanismModel.cs" />
+    <Compile Include="Assets\VersionModel.cs" />
+    <Compile Include="Assets\CashboxModel.cs" />
+    <Compile Include="Assets\GatewayModel.cs" />
+    <Compile Include="Assets\MeterModel.cs" />
+    <Compile Include="Assets\SensorModel.cs" />
+    <Compile Include="Assets\SpaceModel.cs" />
+    <Compile Include="AutoAlarm\AutoAlarmModel.cs" />
+    <Compile Include="BatteryChange\BatteryChangeModel.cs" />
+    <Compile Include="Customers\CustomerDemandZonesModel.cs" />
+    <Compile Include="Customers\CustomerMaintenanceScheduleModel.cs" />
+    <Compile Include="Customers\CustomerPAMConfigurationModel.cs" />
+    <Compile Include="Customers\CustomerPayByCellModel.cs" />
+    <Compile Include="Customers\PAMConfigurationModel.cs" />
+    <Compile Include="Enforcement\EnforcementModel.cs" />
+    <Compile Include="FileUpload\FileUploadModel.cs" />
+    <Compile Include="GIS\GISModel.cs" />
+    <Compile Include="MaintenanceGroups\ListMaintenanceGroupModel.cs" />
+    <Compile Include="MaintenanceGroups\MaintenanceGroupActivateModel.cs" />
+    <Compile Include="MaintenanceGroups\MaintenanceGroupCustomerModel.cs" />
+    <Compile Include="MaintenanceGroups\MaintenanceGroupCustomersModel.cs" />
+    <Compile Include="MaintenanceGroups\MaintenanceGroupIdentificationModel.cs" />
+    <Compile Include="General\OriginalGridPositionAttribute.cs" />
+    <Compile Include="MaintenanceGroups\MaintenangeGroupCreateModel.cs" />
+    <Compile Include="News\Dashboard.cs" />
+    <Compile Include="News\DashboardRevenue.cs" />
+    <Compile Include="PayByCell\PayByCell.cs" />
+    <Compile Include="Reports\ReportsModels.cs" />
+    <Compile Include="Tariffs\HolidayRateModel.cs" />
+    <Compile Include="Tariffs\RateScheduleModel.cs" />
+    <Compile Include="Tariffs\ConfigProfileModel.cs" />
+    <Compile Include="Audit\AuditRecord.cs" />
+    <Compile Include="Collections\CollectionModels.cs" />
+    <Compile Include="Customers\CustomerActivateModel.cs" />
+    <Compile Include="Customers\CustomerAreasModel.cs" />
+    <Compile Include="Customers\CustomerEventCodesModel.cs" />
+    <Compile Include="Customers\PemsCity.cs" />
+    <Compile Include="Customers\Property.cs" />
+    <Compile Include="Customers\Customer.cs" />
+    <Compile Include="Customers\CustomerAssetsModel.cs" />
+    <Compile Include="Customers\CustomerGridsModel.cs" />
+    <Compile Include="Customers\CustomerIdentificationModel.cs" />
+    <Compile Include="Customers\CustomerLabelsModel.cs" />
+    <Compile Include="Customers\CustomerPaymentsModel.cs" />
+    <Compile Include="Customers\CustomerRulesModel.cs" />
+    <Compile Include="Customers\CustomerSettingsConstants.cs" />
+    <Compile Include="Customers\CustomerStatusModel.cs" />
+    <Compile Include="Customers\Location.cs" />
+    <Compile Include="Customers\Setting.cs" />
+    <Compile Include="Discounts\DiscountModels.cs" />
+    <Compile Include="Enumerations\Enumerations.cs" />
+    <Compile Include="Errors\ErrorItem.cs" />
+    <Compile Include="Events\EventCodesUploadModel.cs" />
+    <Compile Include="Events\EventCodesModel.cs" />
+    <Compile Include="Events\EventModels.cs" />
+    <Compile Include="General\GeneralModels.cs" />
+    <Compile Include="General\SelectListItemWrapper.cs" />
+    <Compile Include="Grids\GridModels.cs" />
+    <Compile Include="Help\HelpLinkModel.cs" />
+    <Compile Include="News\NewsItem.cs" />
+    <Compile Include="Occupancy\OccupancyDetailItem.cs" />
+    <Compile Include="Occupancy\OccupancyInquiryItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sessions\TabStrip.cs" />
+    <Compile Include="Tariffs\TariffRateModel.cs" />
+    <Compile Include="Technicians\Technician.cs" />
+    <Compile Include="Transactions\CustomerSensorTransactionModel.cs" />
+    <Compile Include="Transactions\CustomerTransactionModel.cs" />
+    <Compile Include="Transactions\CustomerTransactionMeterModel.cs" />
+    <Compile Include="Transactions\CustomerTransactionSensorModel.cs" />
+    <Compile Include="Transactions\RevenueAudit.cs" />
+    <Compile Include="Transactions\SensorTransactionModel.cs" />
+    <Compile Include="Transactions\TransactionDDLModel.cs" />
+    <Compile Include="Users\AccountModels.cs" />
+    <Compile Include="Users\CustomerRoleModel.cs" />
+    <Compile Include="Users\NoCommunication.cs" />
+    <Compile Include="Users\PasswordQuestion.cs" />
+    <Compile Include="Roles\RoleModels.cs" />
+    <Compile Include="Users\Setting.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Utilities\RightsMenusGroupsAndAppsModel.cs" />
+    <Compile Include="WebServices\FieldMaintenance\BaseAlarmResponse.cs" />
+    <Compile Include="WebServices\FieldMaintenance\CloseAlarmRequest.cs" />
+    <Compile Include="WebServices\FieldMaintenance\CloseAlarmResponse.cs" />
+    <Compile Include="WebServices\FieldMaintenance\CreateAlarmRequest.cs" />
+    <Compile Include="WebServices\FieldMaintenance\CreateAlarmResponse.cs" />
+    <Compile Include="WebServices\FieldMaintenance\FieldMaintenanceSchema.cs">
+      <DependentUpon>FieldMaintenanceSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="WorkOrders\Base\BaseCreateEventModel.cs" />
+    <Compile Include="WorkOrders\Base\BaseEventDetailsModel.cs" />
+    <Compile Include="WorkOrders\Base\BaseWorkOrderDetailsModel.cs" />
+    <Compile Include="WorkOrders\Base\BaseWorkOrderListItem.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherBulkUpdateModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherCreateEventModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherEventDetailsModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherPartUploadResultModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherWorkLoadListModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherWorkOrderDetailsModel.cs" />
+    <Compile Include="WorkOrders\Dispatcher\DispatcherWorkOrderListModel.cs" />
+    <Compile Include="WorkOrders\Technician\TechnicianCreateEventModel.cs" />
+    <Compile Include="WorkOrders\Technician\TechnicianEventDetailsModel.cs" />
+    <Compile Include="WorkOrders\Technician\TechnicianWorkOrderDetailsModel.cs" />
+    <Compile Include="WorkOrders\Technician\TechnicianWorkOrderListModel.cs" />
+    <Compile Include="WorkOrders\WorkOrderAsset.cs" />
+    <Compile Include="WorkOrders\WorkOrderEvent.cs" />
+    <Compile Include="WorkOrders\WorkOrderImage.cs" />
+    <Compile Include="WorkOrders\AvailablePart.cs" />
+    <Compile Include="WorkOrders\WorkOrderPart.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Duncan.PEMS.DataAccess\Duncan.PEMS.DataAccess.csproj">
+      <Project>{331e3202-9c03-4497-89f5-134694e84770}</Project>
+      <Name>Duncan.PEMS.DataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Duncan.PEMS.Entities.cd" />
+    <None Include="packages.config" />
+    <None Include="WebServices\FieldMaintenance\FieldMaintenanceSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="WebServices\SchemaGeneration.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

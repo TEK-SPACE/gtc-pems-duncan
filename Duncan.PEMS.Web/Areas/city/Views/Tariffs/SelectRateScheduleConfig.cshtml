@@ -1,0 +1,236 @@
+﻿@model Duncan.PEMS.Entities.Tariffs.RateScheduleConfigurationModel
+@using Duncan.PEMS.Entities.Tariffs
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Rate Schedule Configuration Imports");
+}
+
+@section Styles
+{
+    
+    <style type="text/css">
+        
+
+        .k-widget.k-window {
+            width: 500px;
+        }
+
+        .k-edit-form-container {
+            width: 490px !important;
+        }
+
+        .button-select-tariffs {
+            background: #33BAB1 !important;
+            color: #fff !important;
+            border: 1px solid #00A99D !important;
+            padding: .25em .5em !important;
+            font-size: 0.7em;
+            box-shadow: 0px 0px 3px 2px #f2f2f2;
+            display: inline-block;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            box-shadow: 0px 0px 3px 2px #d5d5d5;
+        }
+
+        .k-grid .k-grid-edit {
+            background: #33BAB1 !important;
+            color: #fff !important;
+            border: 1px solid #00A99D !important;
+            padding: .25em .5em !important;
+            font-size: 0.7em;
+            box-shadow: 0px 0px 3px 2px #f2f2f2;
+            display: inline-block;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            box-shadow: 0px 0px 3px 2px #d5d5d5;
+        }
+
+        .k-grid .k-grid-delete {
+            background: #33BAB1 !important;
+            color: #fff !important;
+            border: 1px solid #00A99D !important;
+            padding: .25em .5em !important;
+            font-size: 0.7em;
+            box-shadow: 0px 0px 3px 2px #f2f2f2;
+            display: inline-block;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            box-shadow: 0px 0px 3px 2px #d5d5d5;
+        }
+
+
+        .k-grid .k-grid-edit > span {
+            visibility: hidden;
+            width: 0;
+        }
+
+        .k-grid .k-grid-delete > span {
+            visibility: hidden;
+            width: 0;
+        }
+
+
+        span.k-numerictextbox {
+            width: 80px;
+        }
+
+        select {
+            width: 140px;
+        }
+    </style>
+
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/kendo");
+
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / 
+        <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Management")</a> / 
+        <a href="CreateRateScheduleConfig">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Create Rate Schedule Configuration")</a> / 
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Import Rate Schedule Configuration")</h1>
+}
+
+
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Rate Schedule Configurations")</div>
+        <div class="clear">
+            
+        @(Html.Kendo().Grid<RateScheduleConfigurationModel>()
+              .Name( "gridRSC" )
+              .Columns( columns =>
+                  {
+                      columns.Bound(m => m.Name).Title("Configuration Name");
+                      columns.Bound(m => m.Description).Title("Description");
+                      columns.Bound(m => m.RateScheduleCount).Title("Schedules");
+                      columns.Bound(m => m.DaysCovered).ClientTemplate(
+                            "<div class=\"dayContainer\">" +
+                            "<div class=\"activeDay#=DayOfWeek[0]#\">Sun</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[1]#\">Mon</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[2]#\">Tues</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[3]#\">Wed</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[4]#\">Thur</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[5]#\">Fri</div>" +
+                            "<div class=\"activeDay#=DayOfWeek[6]#\">Sat</div>" +
+                            "</div>"
+                          ).Title("Days Covered");
+                      columns.Bound(m => m.ConfiguredOnDisplay).Title("Configuration Date");
+                      columns.Bound(m => m.RateScheduleConfigurationIdDisplay).Width(100).ClientTemplate("#= CreateRateScheduleConfigReturnLink(CustomerId, RateScheduleConfigurationIdDisplay) #")
+                             .Title("").Width(80);
+                  } )
+              .Events( events => events.DataBound( "DisplayNoDataMessage" ) )
+              .DataSource( dataSource => dataSource
+                                             .Ajax()
+                                             .Read( read => read.Action( "GetRateScheduleConfigurationsForImport", "Tariffs",
+                                                                         new {customerId = Model.CustomerId} ).Type( HttpVerbs.Get ) )
+              )
+              .ClientDetailTemplateId( "templateRateSchedules" )
+              )
+
+        <script id="templateRateSchedules" type="text/kendo-tmpl">
+                @(Html.Kendo().Grid<RateScheduleModel>()
+                      .Name( "gridRSC#=RateScheduleConfigurationIdDisplay#" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( m => m.ScheduleNumber );
+                              columns.Bound( m => m.DayOfWeekName );
+                              columns.Bound( m => m.StartTime );
+                              columns.Bound( m => m.OperationModeName );
+                          } )
+          .Scrollable()
+          .HtmlAttributes(new { style = "height:430px;" })
+                      .Events( events => events.DataBound( "DisplayNoDataMessage" ) )
+                      .DataSource( dataSource => dataSource
+                                                     .Ajax()
+                                                     .Read( read => read.Action( "GetSessionRateSchedules", "Tariffs",
+                                                                                 new
+                                                                                     {
+                                                                                         customerId = Model.CustomerId,
+                                                                                         rateScheduleConfigurationId = "#=RateScheduleConfigurationIdDisplay#"
+                                                                                     } ).Type( HttpVerbs.Get ) )
+                      )
+                      .ClientDetailTemplateId( "templateRateScheduleTariffRates" )
+                      .ToClientTemplate()
+                      )
+        </script>
+
+        <script id="templateRateScheduleTariffRates" type="text/kendo-tmpl">
+                @(Html.Kendo().Grid<TariffRateModel>()
+                      .Name( "gridRSC#=RateScheduleConfigurationIdDisplay##=RateScheduleIdDisplay#" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( m => m.RateName );
+                              columns.Bound( m => m.RateDescription );
+                              columns.Bound( m => m.RateInCents );
+                              columns.Bound( m => m.PerTimeValue ).ClientTemplate( "\\#=CreateTimeSpanText(PerTimeValue, PerTimeUnitName)\\#" ).Title( "Per Time" );
+                              columns.Bound( m => m.MaxTimeValue ).ClientTemplate( "\\#=CreateTimeSpanText(MaxTimeValue, MaxTimeUnitName)\\#" ).Title( "Max Time" );
+                              columns.Bound( m => m.LinkedTariffRateName ).Title( "Linked Rate" );
+                          } )
+                      .Events( events => events.DataBound( "DisplayNoDataMessage" ) )
+                      .DataSource( dataSource => dataSource
+                                                     .Ajax()
+                                                     .Read( read => read.Action( "GetSessionTariffRates", "Tariffs",
+                                                                                 new
+                                                                                     {
+                                                                                         customerId = Model.CustomerId,
+                                                                                         tariffRateConfigurationId = "#=TariffRateConfigurationIdDisplay#"
+                                                                                     } ).Type( HttpVerbs.Get ) )
+                      )
+                      .ToClientTemplate()
+                      )
+        </script>
+
+    </div>
+            
+
+        <div class="customer_actions" style="float: left">
+                @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "CreateRateScheduleConfig", new { customerId = Model.CustomerId }, new { @class = "button previous" })
+        </div>
+
+
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+    });
+
+
+    function CreateRateScheduleConfigReturnLink(customerId, rateScheduleConfigurationId) {
+        // Create return link
+            var uri = '@Html.ActionLink("Select", "ImportRateScheduleConfig", "Tariffs", new { customerId = "#CustomerId#", rateScheduleConfigurationId = "#RateScheduleConfigurationId#" },new {@class = "button-select-tariffs" })';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#RateScheduleConfigurationId#', rateScheduleConfigurationId);
+            uri = uri.replace('#CustomerId#', customerId);
+            return uri;
+    }
+
+    function DisplayNoDataMessage(e) {
+        var grid = e.sender;
+        var gridHasData = grid.dataSource.data().length > 0;
+        if (!gridHasData) {
+            var columnCount = $(grid.thead.get(0)).children("tr").first().children("th").length;
+            $(grid.tbody.get(0)).append(
+            kendo.format("<tr class='custom-no-data-row'><td colspan='{0}'>No data to display.</td></tr>", columnCount)
+            );
+        }
+    }
+
+
+</script>

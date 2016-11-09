@@ -1,0 +1,90 @@
+﻿@model Duncan.PEMS.Entities.Events.EventCodesCustomerModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Event Codes Upload";
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes Upload" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Upload Event Codes" )</span></h1>
+}
+
+    @using (Html.BeginForm("UploadSubmit", "EventCodesUpload", FormMethod.Post))
+    {
+        
+        @Html.HiddenFor( m => m.CustomerId )
+        
+        <div class="clear">
+
+            <div class="two-column payment">
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer" )</div>
+                <div class="clear" style="padding-top: 5px; padding-bottom: 5px">
+                    @Html.DisplayFor( m => m.CustomerDisplayName, new {@class = "customer_text"} )
+                </div>
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Codes File to Upload" )</div>
+                <div class="clear">
+                    @(Html.Kendo().Upload()
+                          .Name("files")
+                          .Events(events => events
+                                                .Progress("onProgress")
+                                                .Select("onSelect")
+                          )
+                          )
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Example Files" )</div>
+                To download an example file or instructions, click on the appropriate links below.
+                <div style="width: 95%">
+                    <div style="float: left; padding-left: 80px">
+                        @Html.ActionLink("Example", "DownloadExample", "EventCodesUpload", new { customerId = Model.CustomerId }, null)
+                    </div>
+                    <div style="float: right; padding-right: 60px">
+                        @Html.ActionLink("Instructions", "DownloadInstructions", "EventCodesUpload", new { customerId = Model.CustomerId }, null)
+                    </div>
+                </div>
+                <div style="float: right; width: 5%"></div>
+            </div>
+        </div>
+        
+        
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button" value="SAVE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Upload")</button>
+                @Html.ActionLink( @HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "EditEventCodes", "Customers",
+                                  new {customerId = Model.CustomerId}, new {@class = "button previous", @type = "button"} )
+        </div>
+    }
+
+
+
+
+
+<script>
+    
+    function onSelect(e) {
+
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1236", "Only one file may be selected.");
+            e.preventDefault();
+        }
+    }
+
+    function onComplete(e) {
+        alert("Done.");
+    }
+
+    function onProgress(e) {
+        //kendoConsole.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+
+
+
+</script>

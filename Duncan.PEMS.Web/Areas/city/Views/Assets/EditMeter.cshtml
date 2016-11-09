@@ -1,0 +1,639 @@
+﻿
+@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _________________________________________________________________________________________________________
+ * 
+ * 01/15/2014       Sergey Ostrerov                 DPTXPEMS-8 - Can't create new TX meter through PEMS UI.
+ * 
+ * *****************************************************************************************************************************************************/ *@
+
+
+@model Duncan.PEMS.Entities.Assets.MeterEditModel
+@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+
+
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Meter");
+    
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset")</span></h1>
+}
+
+@{
+    var currCity = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentCity].ToString();
+    var assetIdStatus =String.Empty;
+    if(Model.isNewAsset == 1){
+        assetIdStatus = "New";
+    }
+    else{
+        assetIdStatus = "Exists";
+    }
+    Model.isNewAsset = 0;
+}
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+<div id="divAssetCreatedStatusMsg" style= "position:relative;  vertical-align: middle; text-align: left; width:auto; height:30px; font-size:14px; font-weight:bolder; color: #0033CC; background-color: #FFFFFF ;">@Html.AssetCreatedStatusMsg(ViewData.ModelState,Model, currCity,assetIdStatus)</div>
+
+<div class="customer_tab_content">
+
+    @using (Html.BeginForm("EditMeter", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "editMeter" }))
+    {
+        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(m => m.AreaId)
+        @Html.HiddenFor(m => m.AssetId)
+        if (Model.ClonedFromAsset != null)
+        {
+            @Html.HiddenFor(m => m.ClonedFromAsset.CustomerId)
+            @Html.HiddenFor(m => m.ClonedFromAsset.AreaId)
+            @Html.HiddenFor(m => m.ClonedFromAsset.AssetId)
+        }
+     //   @Html.HiddenFor(m => m.StatusId);
+        @Html.HiddenFor(m => m.StatusOperational);
+        @Html.HiddenFor(m => m.StatusOperationalId);
+
+<div class="activation_date">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Activation Date")@Html.Raw(": ")@Html.Tooltip("EditActivationDate")</div>
+    @(Html.Kendo().DatePickerFor(m => m.ActivationDate))
+    @Html.ValidationMessageFor(m => m.ActivationDate)
+</div>
+        
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Inventory Status"): 
+    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.State, "Value", "Text"), new { @class = "customer_text" })
+    </div>
+</div>
+
+        
+        
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Information")</div>
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type") </div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID") </div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street") </div>
+                    @Html.TextBoxFor(m => m.Street, new { @class = "customer_text", maxlength = 50 })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.Street)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area") </div>
+                    @Html.DropDownListFor(m => m.AreaListId, new SelectList(Model.Area, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.AreaListId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone") </div>
+                    @Html.DropDownListFor(m => m.ZoneId, new SelectList(Model.Zone, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.ZoneId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb") </div>
+                    @Html.DropDownListFor(m => m.SuburbId, new SelectList(Model.Suburb, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.SuburbId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Latitude") </div>
+                    @(Html.Kendo().NumericTextBox<double>().Name("Latitude").Min(-90.0).Max(90.0).Format("n4").Decimals(6).Value(Model.Latitude))      
+                    <span class="required_asterisk">*</span>              
+                    @Html.ValidationMessageFor(m => m.Latitude)
+                </div>    
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Longitude") </div>
+                    @(Html.Kendo().NumericTextBox<double>().Name("Longitude").Min(-180.0).Max(180.0).Format("n4").Decimals(6).Value(Model.Longitude)) 
+                    <span class="required_asterisk">*</span>                   
+                    @Html.ValidationMessageFor(m => m.Longitude)
+                </div>    
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone Number") </div>
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.PhoneNumber)
+                </div>
+            </div>
+            
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model") </div>
+                    @Html.DropDownListFor(m => m.AssetModelId, new SelectList(Model.AssetModel, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.AssetModelId)
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name") </div>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.Name)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Preventative Maintenance")@Html.Tooltip("LastPreventativeMaintenance") </div>
+                    @Html.DisplayFor(m => m.LastPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.LastPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Next Preventative Maintenance")@Html.Tooltip("NextPreventativeMaintenance") </div>
+                    @(Html.Kendo().DatePickerFor(m => m.NextPrevMaint))
+                    @Html.ValidationMessageFor(m => m.NextPrevMaint)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection Route")@Html.Tooltip("CollectionRoute") </div>
+                    @Html.DisplayFor(m => m.CollectionRoute, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.CollectionRoute)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Maintenance Route")@Html.Tooltip("MaintenanceRoute") </div>
+                    @Html.DropDownListFor(m => m.MaintenanceRouteId, new SelectList(Model.MaintenanceRoute, "Value", "Text"), new { @class = "customer_text" })
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Warranty Expiration") </div>
+                    @(Html.Kendo().DatePickerFor(m => m.WarrantyExpiration))
+                    @Html.HiddenFor(m => m.WarrantyExpiration)
+                </div>
+                @*<div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Mechanism ID") </div>
+                    @(Html.DisplayFor(m => m.MechanismId))
+                    @Html.HiddenFor(m => m.MechanismId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Mechanism Name") </div>
+                    @(Html.TextBoxFor(m => m.MechanismName))
+                    @Html.ValidationMessageFor(m => m.MechanismName)
+                </div>*@
+                <div class="clear" id="locid" >
+                    <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Location ID")</div>
+                    @Html.TextBoxFor(m => m.LocationName, new { @class = "customer_text", @id = "LocationName" })
+                    @Html.RequiredMarkFor(m => m.LocationName, new { @class = "required_asterisk" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.LocationName)
+                    <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+                </div>
+                <div class="clear" id="mechserilaID" >
+                    <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Mech Serial Number")</div>
+                    @Html.TextBoxFor(m => m.MechSerialNo, new { @class = "customer_text", @id = "MechSerialNo" })
+                    @Html.RequiredMarkFor(m => m.MechSerialNo, new { @class = "required_asterisk" })                   
+                    @Html.ValidationMessageFor(m => m.MechSerialNo)
+                    <span id="divValidNotifMechSerial" class="divValidNotificationHide"></span>
+                </div>               
+
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Number of Spaces") </div>
+                    @Html.DisplayFor(m => m.Spaces, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Spaces)&nbsp;
+                    <button type="submit" name="submitButton" class="button" value="SPACES"  onclick=" javascript: return OnEditSpaces(); ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Edit Spaces")</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Detail")</div>
+        <div class="clear">
+             <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Installed")</div>
+                @(Html.Kendo().DateTimePickerFor(m => m.Configuration.DateInstalled))
+                @Html.ValidationMessageFor(m => m.Configuration.DateInstalled)
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "MPV Version")@Html.Tooltip("MPVVersion")</div>
+                @Html.TextBoxFor(m => m.Configuration.MPVVersion, new { @class = "customer_text" })
+                @Html.ValidationMessageFor(m => m.Configuration.MPVVersion)
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Software Version")@Html.Tooltip("SoftwareVersion") </div>
+                @Html.TextBoxFor(m => m.Configuration.SoftwareVersion, new { @class = "customer_text" })
+                @Html.ValidationMessageFor(m => m.Configuration.SoftwareVersion)
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Firmware Version")@Html.Tooltip("FirmwareVersion") </div>
+                @Html.TextBoxFor(m => m.Configuration.FirmwareVersion, new { @class = "customer_text" })
+                @Html.ValidationMessageFor(m => m.Configuration.FirmwareVersion)
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Functional Status")</div>
+        <div class="clear">
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status")@Html.Raw(": ")@Html.Tooltip("OperationalStatus")</div>
+                    @*<span id="OperationalStatus_Div">@Html.DisplayFor(m => m.Status, new { @class = "customer_text" })</span>*@
+                    @Html.DropDownListFor(m => m.Status, new SelectList(Enum.GetValues(typeof(Duncan.PEMS.Entities.Enumerations.OperationalStatusType))))
+                    @Html.HiddenFor(m => m.Status)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status Date")@Html.Raw(": ")</div>
+                  
+                    <span id="OperationalStatusDate_Div">@Html.DisplayFor(m => m.StatusDateDisplay, new { @class = "customer_text" })</span>
+                    @Html.HiddenFor(m => m.StatusDate)&nbsp;
+                </div>
+            </div>
+
+        
+        
+        
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous", @id = "btnReturn" })
+            <button type="submit" id="btnCopyAgain" name="submitButton" value="COPY" style="visibility: hidden">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Copy")</button>
+        </div>
+
+                                                   if (Model.ClonedFromAsset != null && Model.Saved)
+                                                   {
+            @(Html.Kendo().Window()
+                  .Name("AskCopyOrReturnDialog")
+                  .Title(false)
+                  .Content(@<text>
+                                 <div id="AskCopyOrReturnDialogContent">
+                                     The Asset saved successfully.<br/><br/>
+                                     Do you want to create another copy or return to previous saved asset?
+                                 </div>
+                                 <div id="meterAddTimeDialogButtons" style="horiz-align: center">
+                                     <input type="button" class="button important" title="COPY" value="Copy" onclick=" javascript: CopyAgain(); return false; " />
+                                     @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "ViewMeter", "Assets",
+                                                       new { customerId = Model.ClonedFromAsset.CustomerId, areaId = Model.ClonedFromAsset.AreaId, assetId = Model.ClonedFromAsset.AssetId },
+                                                       new { @class = "button" })
+                                 </div>
+                             </text>)
+                  .Draggable().Width(300).Scrollable(false).Modal(true).Visible(false)
+                  )
+                                                   }
+    }
+</div>
+@(Html.Kendo().Window()
+      .Name("meterCopyDialog")
+      .Title(false)
+      .Content(@<text>
+                        <div>
+                            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Start")</div>
+                            <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999" 
+                                data-bind="value: StartBay" name="StartBay"  id="StartBay" value="1" />
+                        </div>    
+                        <div>
+                            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay End")</div>
+                            <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999" 
+                                 data-bind="value: EndBay" name="EndBay" id="EndBay"  value="1" />
+                        </div>                       
+                    
+                     <div  style="horiz-align: center">
+                         <input type="button" class="button important" title="SAVE" value="Save" onclick=" javascript: CopyMeter(); " />
+                         <input type="button" class="button previous" title="CANCEL" value="Cancel" onclick=" javascript: $('#meterCopyDialog').data('kendoWindow').close(); " />
+
+                     </div>
+                 </text>)
+      .Draggable().Width(300).Scrollable(false).Modal(true).Visible(false))
+<script type="text/javascript">
+
+    var canEditSpaces = @Html.Raw(ViewData.ModelState.IsValid ? "true" : "false");
+    var pageHasErrors = @Html.Raw(ViewData.ModelState.IsValid ? "false" : "true");
+
+
+    // Create a view-model for the page controls. Model holds variables and view-related methods
+    var viewModel = kendo.observable({
+        NextPrevMaintDate: new Date("@Html.Raw(Model.NextPrevMaint.ToString())"),
+        WarrantyExpirationDate: new Date("@Html.Raw(Model.WarrantyExpiration)"),
+        StartBay : 1,
+        EndBay : 1,
+    });
+
+    $(document).ready(function() {
+        var type = '@Model.Type';
+        if(type == "Single Space Meter")
+        {
+          
+            $("#locid").show();
+            $("#mechserilaID").show();
+             
+
+        }
+        else
+        {          
+            $("#locid").hide();
+            $("#mechserilaID").hide();       
+
+        }
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+        $('<input />').attr('type', 'hidden').attr('name', 'startBay').attr('value', 0).appendTo('#editMeter');
+        $('<input />').attr('type', 'hidden').attr('name', 'endBay').attr('value', 0).appendTo('#editMeter');
+        @if (Model.ClonedFromAsset != null && Model.Saved)
+        {
+            @Html.Raw("var popup = $(\"#AskCopyOrReturnDialog\").data(\"kendoWindow\");\n")
+            ;
+            @Html.Raw("popup.center();\n")
+            ;
+            @Html.Raw("popup.open();\n")
+            ;
+        }
+
+
+        // Attach change monitor to the editable fields.
+        $("#Street").change(OnFieldChange);
+        $("#AreaListId").change(OnFieldChange);
+        $("#ZoneId").change(OnFieldChange);
+        $("#SuburbId").change(OnFieldChange);
+        $("#Latitude").change(OnFieldChange);
+        $("#Longitude").change(OnFieldChange);
+        $("#AssetModelId").change(OnFieldChange);
+        $("#Name").change(OnFieldChange);
+        $("#NextPrevMaint").change(OnFieldChange);
+        $("#WarrantyExpiration").change(OnFieldChange);
+        $("#MaintenanceRouteId").change(OnFieldChange);
+        $("#Configuration_MPVVersion").change(OnFieldChange);
+        $("#Configuration_SoftwareVersion").change(OnFieldChange);
+        $("#Configuration_FirmwareVersion").change(OnFieldChange);
+
+
+        UpdateReturnButton();
+
+        // bind to StateId dropdown
+     //   $("#StateId").bind("change", OnStateChange);
+        $("#Status").bind("change", OnStatusChange);
+
+      
+       
+
+    });
+
+    function CopyAgain() {
+
+        $('#AskCopyOrReturnDialog').data('kendoWindow').close();
+        ShowCopyMeter();
+        //  $('#btnCopyAgain').trigger('click');
+    }
+
+
+    function ShowCopyMeter() {
+        viewModel.set("StartBay", 1);
+        viewModel.set("EndBay", 1);
+        var popup = $("#meterCopyDialog").data("kendoWindow");
+        popup.center();
+        popup.open();
+    }
+
+    function CopyMeter() {
+
+
+        var startBay = viewModel.StartBay;
+        var endBay = viewModel.EndBay;
+        //if (startBay < 1) {
+        //    alert("Start Bay has to be greater than 0.");
+        //}
+        //else if (endBay < 1) {
+        //    alert("End Bay has to be greater than 0.");
+        //}
+        //else
+        if (endBay < startBay) {
+            alert("End Bay cannot be greater than Start bay.");
+        }
+        else {
+            $('#meterCopyDialog').data('kendoWindow').close();
+
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', 'COPY').appendTo('#editMeter');
+            $('input[name=startBay]').val(startBay);
+            $('input[name=endBay]').val(endBay);
+            $('#editMeter').submit();
+        }
+    }
+
+    function OnFieldChange() {
+
+        canEditSpaces = false;
+
+    }
+
+
+    function OnEditSpaces() {
+
+        if (canEditSpaces) {
+            return true;
+        } else {
+            if (pageHasErrors) {
+                pemsPopupShowMessage("There are one or more errors on this page.  Please fix the errors and save the page before editing spaces.");
+            } else {
+                pemsPopupShowMessage("Data has been changed on this page.  Please save the data before editing spaces.");
+            }
+            return false;
+        }
+    }
+
+    function UpdateReturnButton() {
+
+        var stringified;
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            stringified = window.sessionStorage.getItem("returnToAssetURL");
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+        // Create the return URL
+        if (stringified) {
+
+            var parsed = JSON.parse(stringified);
+            if (parsed) {
+                if (parsed.url) {
+                    //we also have to add a hidden input cvariable here, so we can send them back to the create page if neccessary
+                    $('<input />').attr('type', 'hidden').attr('name', 'returnUrl').attr('value', parsed.url).appendTo('#editMeter');
+                    $("#btnReturn").attr("href", parsed.url);
+                }
+            }
+        }
+    }
+   
+
+    var originalStatusId = '@Model.StatusId';
+    var originalStatus = '@Model.Status';
+    var originalStatusDate = '@Model.StatusDateDisplay';
+    var originalStateId = '@Model.StateId';
+
+    function OnStatusChange(e) {
+        var statusDate = $("#ActivationDate").val();
+       
+        if (statusDate.length < 10) {           
+            statusDate = '@Model.ActivationDate';
+        }
+        $("#StatusDate").val(statusDate);      
+        $("#OperationalStatusDate_Div").text(statusDate);
+    }
+
+    function OnStateChange(e) {
+        // If State changes from Pending to Current and StatusId was '0' then change Status to Model.StatusOperational
+        @*if (originalStatusId != '@((int)OperationalStatusType.Inactive)' || originalStateId != '@((int)AssetStateType.Pending)') {
+            return;
+        }*@
+
+        var newStateId = $("#StateId").val();
+
+        // If newStateId = pending then restore original status values
+        if (newStateId == '@((int)AssetStateType.Pending)') {
+            //$("#Status").val(originalStatus);
+            //$("#StatusId").val(originalStatusId);
+            //$("#StatusDate").val(originalStatusDate);
+            //$("#OperationalStatus_Div").text(originalStatus);
+            //$("#OperationalStatusDate_Div").text(originalStatusDate);
+
+
+            var statusDate = $("#ActivationDate").val();
+            if (statusDate.length < 10) {
+                statusDate = '@Model.ActivationDate';
+            }
+
+            @*$("#Status").val('@Model.StatusInactive');
+            $("#StatusId").val('@Model.StatusInactiveId');*@
+            $("#StatusDate").val(statusDate);
+            @*$("#OperationalStatus_Div").text('@Model.StatusInactive');*@
+            $("#OperationalStatusDate_Div").text(statusDate);
+
+
+        } else {
+            var statusDate = $("#ActivationDate").val();
+            if (statusDate.length < 10) {
+                statusDate = '@Model.ActivationDate';
+            }
+
+            @*$("#Status").val('@Model.StatusOperational');
+            $("#StatusId").val('@Model.StatusOperationalId');*@
+            $("#StatusDate").val(statusDate);
+            @*$("#OperationalStatus_Div").text('@Model.StatusOperational');*@
+            $("#OperationalStatusDate_Div").text(statusDate);
+        }
+
+
+    }
+
+
+
+    //mechanism serial number unique key check for single space
+    $('#MechSerialNo').change(function(){
+        var serialNumber = $(this).val();
+        confirmCntr=0;
+        if(serialNumber != ''){
+            // Validate Serial number entered by user - existance in DB (ajax call)
+            $.ajax({
+                url: '@Url.Action("SingleSpaceSerialNumberExistanceMeter")',
+                data: {
+                    serialNumber: serialNumber,
+                    customerID:'@Model.CustomerId',
+                    MeterId: '@Model.AssetId'
+                },
+                type: 'GET',
+                contentType: 'application.json',
+                success: function (data) {
+                   
+
+                    if(data.indexOf('use') == '-1'){
+                        $('#divValidNotifMechSerial').html(data);
+                        $('#divValidNotifMechSerial').show();
+                        $('#divValidNotifMechSerial').removeClass('divValidNotificationVisible');
+                        $('#divValidNotifMechSerial').addClass('divValidNotificationVisibleValid');
+
+                    }
+                    else{
+                        if(data.indexOf('already') != '-1'){
+                            var r = confirm("Are you sure you want to reassign the same Serial number with the current asset ?");
+                            if (r == false) {
+                                $('#MechSerialNo').val('');
+                                $('#divValidNotifMechSerial').removeClass('divValidNotificationVisibleValid');
+                                $('#divValidNotifMechSerial').addClass('divValidNotificationVisible');
+
+                                $('#MechSerialNo').select();
+                                confirmCntr=0;
+                            }
+                        }
+                        else
+                        {
+                            $('#divValidNotifMechSerial').html(data);
+                            $('#divValidNotifMechSerial').show();
+                            $('#MechSerialNo').val('');
+                            $('#divValidNotifMechSerial').removeClass('divValidNotificationVisibleValid');
+                            $('#divValidNotifMechSerial').addClass('divValidNotificationVisible');
+
+                            $('#MechSerialNo').select();
+                            confirmCntr=0;
+                        }
+                    }
+                },
+                error: function(data) {
+                    var ggg=data.responseText;
+                }
+            });  // End Of  $.ajax({
+        }
+        else{
+
+            $('#divValidNotifMechSerial').html('');
+            $('#divValidNotifMechSerial').hide();
+            $(this).focus();
+        }
+    });  // End Of  $('#assetID').change(function(){
+
+
+
+    //location Nmae check for single space
+    $('#LocationName').change(function(){
+       
+        var custid ='@Model.CustomerId';
+        var meterid ='@Model.AssetId';
+        var LocationName = $(this).val();
+       
+        confirmCntr=0;
+        if(LocationName != ''){
+            // Validate Serial number entered by user - existance in DB (ajax call)
+            $.ajax({
+                url: '@Url.Action("LocationNameExistenceMeter")',
+                data: {
+                    locationname: LocationName,
+                    customerID:custid,
+                    MeterId: meterid
+                },
+                type: 'GET',
+                contentType: 'application.json',
+                success: function (data) {
+                    $('#divValidNotifLocation').html(data);
+                    $('#divValidNotifLocation').show();
+
+                    if(data.indexOf('use') == '-1'){
+                        $('#divValidNotifLocation').removeClass('divValidNotificationVisible');
+                        $('#divValidNotifLocation').addClass('divValidNotificationVisibleValid');
+
+                    }
+                    else{
+
+
+                        $('#LocationName').val('');
+                        $('#divValidNotifLocation').removeClass('divValidNotificationVisibleValid');
+                        $('#divValidNotifLocation').addClass('divValidNotificationVisible');
+                    }
+                },
+                error: function(data) {
+                    var ggg=data.responseText;
+                }
+            });  // End Of  $.ajax({
+        }
+        else{
+
+            $('#divValidNotifLocation').html('');
+            $('#divValidNotifLocation').hide();
+            $(this).focus();
+        }
+    });  // End Of  $('#assetID').change(function(){
+
+
+</script>

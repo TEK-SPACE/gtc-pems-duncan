@@ -1,0 +1,245 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@inherits WebViewPage<Duncan.PEMS.Entities.Discounts.AccountSchemeDetails>
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Scheme Details");
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .red {
+            background-color: crimson;
+        }
+    </style>
+}
+
+@section Scripts 
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+          
+        });
+
+        function ApproveApp() {
+            var notes = $("#anotes").val();
+            if (!notes) {
+                alert('Enter notes');
+                return false;
+            }
+            $('#ApproveDialog').data('kendoWindow').close();
+            $('<input />').attr('type', 'hidden').attr('name', 'userId').attr('value', '@Model.UserId').appendTo('#approveForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'userSchemeId').attr('value', '@Model.DiscountScheme.DiscountUserSchemeId').appendTo('#approveForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'notes').attr('value', notes).appendTo('#approveForm');
+            $('#approveForm').submit();
+            return false;
+        }
+        function ShowApproveModal() {
+            var popup = $("#ApproveDialog").data("kendoWindow");
+            popup.center();
+            popup.open();
+        }
+
+        function RejectApp() {
+            var notes = $("#rnotes").val();
+            if (!notes) {
+                alert('Enter notes');
+                return false;
+            }
+            $('#RejectDialog').data('kendoWindow').close();
+            $('<input />').attr('type', 'hidden').attr('name', 'userId').attr('value', '@Model.UserId').appendTo('#rejectForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'userSchemeId').attr('value', '@Model.DiscountScheme.DiscountUserSchemeId').appendTo('#rejectForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'notes').attr('value', notes).appendTo('#rejectForm');
+            $('#rejectForm').submit();
+            return false;
+        }
+        function ShowRejectModal() {
+            var popup = $("#RejectDialog").data("kendoWindow");
+            popup.center();
+            popup.open();
+        }
+
+    </script>
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Discount Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Scheme Details")</span></h1>
+}
+
+   @using (Html.BeginForm("ApplicationAction", "Discounts", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+   {
+   
+
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_@Model.AccountStatus.ToLower()">@Model.AccountStatus</span></div>@Model.AccountStatusChangeTimeDisplay
+    </div>
+
+         <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Client Information")</div>
+
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Name"): </div>
+            @Model.LastName
+            &nbsp;
+        </div>
+        <div  >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Name"): </div>
+            @Model.FirstName
+            &nbsp;
+        </div>
+        <div  >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Email Address"): </div>
+           @Model.Email
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone Number"): </div>
+            @Model.Phone   
+            &nbsp;
+        </div>
+     
+    </div>
+       <div class="two-column">
+           <div  >
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 1"): </div>
+               @Model.Address1 &nbsp;
+           </div>
+           <div >
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 2"): </div>
+               @Model.Address2    &nbsp;
+
+           </div>
+           <div >
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "City"): </div>
+               @Model.City  &nbsp;   
+           </div>
+           <div >
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "State") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Postal Code"): </div>
+               @Model.State / @Model.PostalCode  
+           </div>
+       </div>
+         <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Information")</div>
+       <div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Creation Date"): </div>
+               @Model.CreationDateDisplay
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Expiration Date"): </div>
+               @Model.AccountExpirationDateDisplay
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Expiration Date"): </div>
+               @Model.CreditCardExpirationDate
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Last 4"): </div>
+               @Model.CreditCardLast4Digits
+               &nbsp;
+           </div>
+       </div>
+<div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last User Access"): </div>
+               @Model.LastUserAccessDisplay
+               &nbsp;
+           </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Discount Used"): </div>
+        @Model.LastDiscountUsed
+        &nbsp;
+    </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Edited By"): </div>
+        @Model.LastEditiedByUserName
+        &nbsp;
+    </div>
+</div>
+       <div class="one-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"): </div>
+               @Model.Notes
+               &nbsp;
+           </div>
+       </div>    
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Discount Scheme Information")</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Scheme Name"): </div>
+            @Model.DiscountScheme.SchemeName
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Application Status"): </div>
+            @Model.DiscountScheme.ApplicationStatus
+        </div>
+         <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Application Status Date"): </div>
+          @Model.DiscountScheme.ApplicationStatusDisplay
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Application Date/Time"): </div>
+            @Model.DiscountScheme.ApplicationDateDisplay
+        </div>
+          <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Expiration Date/Time"): </div>
+            @Model.DiscountScheme.ExpirationDateDisplay
+        </div>
+    </div>
+       <div class="one-column">
+            <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Application Status Notes"): </div>
+           @Model.DiscountScheme.ApplicationStatusNote &nbsp;
+        </div>
+   </div>
+       <div class="customer_actions">
+           @if (Model.DiscountScheme.ApplicationStatusId == 1)
+           {
+              <button type="submit" name="submitButton" class="button important" onclick="ShowApproveModal(); return false;" value="Approve">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Approve")</button>
+              <button type="submit" name="submitButton" class="button " onclick="ShowRejectModal(); return false;" value="Reject">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Reject")</button>
+           }
+           @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Details", new { userId = @Model.UserId }, new { @class = "button previous" })
+       </div>
+   }
+
+@(Html.Kendo().Window()
+      .Name("ApproveDialog")
+      .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Approve Application").ToString())
+      .Content(@<text>
+                    @using (Html.BeginForm("ApproveApplication", "Discounts", FormMethod.Post, new { @class = "admin-form", @id = "approveForm" }))
+                    {
+    @Html.AntiForgeryToken()
+                        
+                        <center>
+                            @Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Enter notes")).ToString())<br/><br/>
+                            @Html.TextAreaFor(model => model.DiscountScheme.ApplicationStatusNote, new {id = "anotes", rows = "5"})<br/>
+                            <button type="submit"  class="button " onclick=" javascript: ApproveApp();return false; " value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Approve")</button>
+                        </center>
+                    }
+                </text>)
+      .Draggable().Scrollable(false).Modal(true).Visible(false)
+      )
+
+
+
+@(Html.Kendo().Window()
+      .Name("RejectDialog")
+      .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Reject Application").ToString())
+      .Content(@<text>
+                    @using (Html.BeginForm("RejectApplication", "Discounts", FormMethod.Post, new { @class = "admin-form", @id = "rejectForm" }))
+                    {
+    @Html.AntiForgeryToken()
+                        
+                        <center>
+                            @Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Enter notes")).ToString())<br/><br/>
+                            @Html.TextAreaFor(model => model.DiscountScheme.ApplicationStatusNote, new {id = "rnotes", rows = "5"})<br/>
+                            <button type="submit"  class="button " onclick=" javascript: RejectApp();return false; " value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Reject")</button>
+                        </center>
+                    }
+                </text>)
+      .Draggable().Scrollable(false).Modal(true).Visible(false)
+      )

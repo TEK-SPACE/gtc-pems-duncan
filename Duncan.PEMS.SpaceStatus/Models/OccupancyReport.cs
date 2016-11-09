@@ -1,0 +1,443 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+
+
+using OfficeOpenXml; // Namespace inside the open source EPPlus.dll from http://epplus.codeplex.com/
+using OfficeOpenXml.Style;
+
+using Duncan.PEMS.SpaceStatus.DataShapes;
+using Duncan.PEMS.SpaceStatus.DataMappers;
+using Duncan.PEMS.SpaceStatus.DataSuppliers;
+using Duncan.PEMS.SpaceStatus.UtilityClasses;
+
+namespace Duncan.PEMS.SpaceStatus.Models
+{
+    public class OccupancyReport : BaseSensorReport
+    {
+        public OccupancyReport(CustomerConfig customerCfg, SensorAndPaymentReportEngine.CommonReportParameters reportParams)
+            : base(customerCfg, reportParams)
+        {
+            _ReportName = "Occupancy Report";
+            numberOfHourlyCategories = 5;
+            
+            if (this._ReportParams.IncludeHourlyStatistics == false)
+                numberOfHourlyCategories = 0;
+        }
+
+        public void GetReportAsExcelSpreadsheet(List<int> listOfMeterIDs, MemoryStream ms, CustomerLogic result)
+        {
+            timeIsolation.IsolationType = SensorAndPaymentReportEngine.TimeIsolations.None;
+
+            // Start diagnostics timer
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
+            DateTime NowAtDestination = Convert.ToDateTime(this._CustomerConfig.DestinationTimeZoneDisplayName);// DateTime.Now;//Datetime.Now;//DateTime.Now;//Datetime.Now;
+
+            // Now gather and analyze data for the report
+            SensorAndPaymentReportEngine.RequiredDataElements requiredDataElements = new SensorAndPaymentReportEngine.RequiredDataElements();
+            requiredDataElements.NeedsSensorData = true;
+            requiredDataElements.NeedsPaymentData = false;
+            requiredDataElements.NeedsOverstayData = false;
+            requiredDataElements.NeedsEnforcementActionData = false;
+            this._ReportEngine = new SensorAndPaymentReportEngine(this._CustomerConfig, _ReportParams);
+            this._ReportEngine.GatherReportData(listOfMeterIDs, requiredDataElements, result);
+
+            OfficeOpenXml.ExcelWorksheet ws = null;
+
+            using (OfficeOpenXml.ExcelPackage pck = new OfficeOpenXml.ExcelPackage())
+            {
+                // Let's create a report coversheet and overall summary page, with hyperlinks to the other worksheets
+                // Create the worksheet
+                ws = pck.Workbook.Worksheets.Add("Summary");
+
+                // Render the standard report title lines
+                rowIdx = 1; // Excel uses 1-based indexes
+                colIdx = 1;
+                RenderCommonReportTitle(ws, this._ReportName);
+
+                // Render common report header for enforcement activity restriction filter, but only if its not for all activity
+                if (this._ReportParams.ActionTakenRestrictionFilter != SensorAndPaymentReportEngine.ReportableEnforcementActivity.AllActivity)
+                {
+                    rowIdx++;
+                    colIdx = 1;
+                    RenderCommonReportFilterHeader_ActionTakenRestrictions(ws);
+                }
+
+                // Render common report header for regulated hour restriction filter
+                rowIdx++;
+                colIdx = 1;
+                RenderCommonReportFilterHeader_RegulatedHourRestrictions(ws);
+
+                using (OfficeOpenXml.ExcelRange rng = ws.Cells[2, 1, rowIdx, numColumnsMergedForHeader])
+                {
+                    rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;                 //Set Pattern for the background to Solid
+                    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(207, 221, 237));  //Set color to lighter blue FromArgb(184, 204, 228)
+                }
+
+                rowIdx++;
+                colIdx = 1;
+                int hyperlinkstartRowIdx = rowIdx;
+
+                if (_ReportParams.IncludeMeterSummary == true)
+                    RenderWorksheetHyperlink(ws, "Meter Occupancy", "Meter Occupancy summary");
+                if (_ReportParams.IncludeSpaceSummary == true)
+                    RenderWorksheetHyperlink(ws, "Space Occupancy", "Space Occupancy summary");
+                if (_ReportParams.IncludeAreaSummary == true)
+                    RenderWorksheetHyperlink(ws, "Area Occupancy", "Area Occupancy summary");
+                if (_ReportParams.IncludeDailySummary == true)
+                    RenderWorksheetHyperlink(ws, "Daily Occupancy", "Daily Occupancy summary");
+                if (_ReportParams.IncludeMonthlySummary == true)
+                    RenderWorksheetHyperlink(ws, "Monthly Occupancy", "Monthly Occupancy summary");
+                if (_ReportParams.IncludeDetailRecords == true)
+                    RenderWorksheetHyperlink(ws, "Details", "Occupancy details");
+
+                rowIdx++;
+                rowIdx++;
+                colIdx = 1;
+
+                using (OfficeOpenXml.ExcelRange rng = ws.Cells[hyperlinkstartRowIdx, 1, rowIdx, numColumnsMergedForHeader])
+                {
+                    rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.White);
+                }
+
+
+                // Now start the report data summary header
+                RenderOverallReportSummary(ws);
+
+                //  --- END OF OVERALL SUMMARY WORKSHEET ---
+
+                // Should we include a worksheet with Meter aggregates?
+                if (_ReportParams.IncludeMeterSummary == true)
+                {
+                    RenderMeterSummaryWorksheet(pck, "Meter Occupancy");
+                }
+
+                // Should we include a worksheet with Space aggregates?
+                if (_ReportParams.IncludeSpaceSummary == true)
+                {
+                    RenderSpaceSummaryWorksheet(pck, "Space Occupancy");
+                }
+
+                // Should we include a worksheet with Area aggregates?
+                if (_ReportParams.IncludeAreaSummary == true)
+                {
+                    RenderAreaSummaryWorksheet(pck, "Area Occupancy");
+                }
+
+                // Should we include a worksheet with Daily aggregates?
+                if (_ReportParams.IncludeDailySummary == true)
+                {
+                    RenderDailySummaryWorksheet(pck, "Daily Occupancy"); 
+                }
+
+                // Should we include a worksheet with Monthly aggregates?
+                if (_ReportParams.IncludeDailySummary == true)
+                {
+                    RenderMonthlySummaryWorksheet(pck, "Monthly Occupancy");
+                }
+
+
+                // Should we include a Details worksheet?
+                if (_ReportParams.IncludeDetailRecords == true)
+                {
+                    // Create the worksheet
+                    ws = pck.Workbook.Worksheets.Add("Details");
+                    int detailColumnCount = 8;
+
+                    // Render the header row
+                    rowIdx = 1; // Excel uses 1-based indexes
+                    ws.SetValue(rowIdx, 1, "Space #");
+                    ws.SetValue(rowIdx, 2, "Meter #");
+                    ws.SetValue(rowIdx, 3, "Area #");
+                    ws.SetValue(rowIdx, 4, "Area");
+                    ws.SetValue(rowIdx, 5, "Event Start");
+                    ws.SetValue(rowIdx, 6, "Event End");
+                    ws.SetValue(rowIdx, 7, "Occupied?");
+                    ws.SetValue(rowIdx, 8, "Duration");
+
+                    // Format the header row
+                    using (OfficeOpenXml.ExcelRange rng = ws.Cells[1, 1, 1, detailColumnCount])
+                    {
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;                 //Set Pattern for the background to Solid
+                        rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                        rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    }
+
+                    // Increment the row index, which will now be the 1st row of our data
+                    rowIdx++;
+
+                    #region Populate data for each record
+
+                    foreach (SpaceAsset spaceAsset in this._ReportEngine.ReportDataModel.SpacesIncludedInReport)
+                    {
+                        List<SensorAndPaymentReportEngine.CommonSensorAndPaymentEvent> spaceRecs = this._ReportEngine.ReportDataModel.FindRecsForBayAndMeter(spaceAsset.SpaceID, spaceAsset.MeterID);
+                        foreach (SensorAndPaymentReportEngine.CommonSensorAndPaymentEvent nextEvent in spaceRecs)
+                        {
+                            // Don't detail this item if its a "dummy" event
+                            if (nextEvent.IsDummySensorEvent == true)
+                                continue;
+
+                            AreaAsset areaAsset = _ReportEngine.GetAreaAsset(spaceAsset.AreaID_PreferLibertyBeforeInternal);
+
+                            // Output row values for data
+                            ws.SetValue(rowIdx, 1, spaceAsset.SpaceID);
+                            ws.SetValue(rowIdx, 2, spaceAsset.MeterID);
+
+                            if (areaAsset != null)
+                            {
+                                ws.SetValue(rowIdx, 3, areaAsset.AreaID);
+                                ws.SetValue(rowIdx, 4, areaAsset.AreaName);
+                            }
+
+                            ws.SetValue(rowIdx, 5, nextEvent.SensorEvent_Start);
+                            ws.SetValue(rowIdx, 6, nextEvent.SensorEvent_End);
+
+                            if (nextEvent.SensorEvent_IsOccupied == true)
+                                ws.SetValue(rowIdx, 7, "Y");
+                            else
+                                ws.SetValue(rowIdx, 7, "N");
+
+                            ws.SetValue(rowIdx, 8, FormatTimeSpanAsHoursMinutesAndSeconds(nextEvent.SensorEvent_Duration));
+
+                            // Increment the row index, which will now be the next row of our data
+                            rowIdx++;
+
+                            // Is there a child "repeat" event also?
+                            if (nextEvent.RepeatSensorEvents != null)
+                            {
+                                foreach (SensorAndPaymentReportEngine.CommonSensorAndPaymentEvent repeatEvent in nextEvent.RepeatSensorEvents)
+                                {
+                                    ws.SetValue(rowIdx, 1, spaceAsset.SpaceID);
+                                    ws.SetValue(rowIdx, 2, spaceAsset.MeterID);
+
+                                    if (areaAsset != null)
+                                    {
+                                        ws.SetValue(rowIdx, 3, areaAsset.AreaID);
+                                        ws.SetValue(rowIdx, 4, areaAsset.AreaName);
+                                    }
+
+                                    ws.SetValue(rowIdx, 5, repeatEvent.SensorEvent_Start);
+                                    ws.SetValue(rowIdx, 6, repeatEvent.SensorEvent_End);
+
+                                    if (repeatEvent.SensorEvent_IsOccupied == true)
+                                        ws.SetValue(rowIdx, 7, "Y");
+                                    else
+                                        ws.SetValue(rowIdx, 7, "N");
+
+                                    ws.SetValue(rowIdx, 8, FormatTimeSpanAsHoursMinutesAndSeconds(repeatEvent.SensorEvent_Duration));
+
+                                    // Increment the row index, which will now be the next row of our data
+                                    rowIdx++;
+                                }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    // We will add autofilters to our headers so user can sort the columns easier
+                    using (OfficeOpenXml.ExcelRange rng = ws.Cells[1, 1, rowIdx, detailColumnCount])
+                    {
+                        rng.AutoFilter = true;
+                    }
+
+                    // Apply formatting to the columns as appropriate (Starting row is 2 (first row of data), and ending row is the current rowIdx value)
+
+                    ApplyNumberStyleToColumn(ws, 1, 2, rowIdx, "########0", ExcelHorizontalAlignment.Left);
+                    ApplyNumberStyleToColumn(ws, 2, 2, rowIdx, "########0", ExcelHorizontalAlignment.Left);
+                    ApplyNumberStyleToColumn(ws, 3, 2, rowIdx, "########0", ExcelHorizontalAlignment.Left);
+
+                    ApplyNumberStyleToColumn(ws, 5, 2, rowIdx, "yyyy-mm-dd hh:mm:ss tt", ExcelHorizontalAlignment.Right);
+                    ApplyNumberStyleToColumn(ws, 6, 2, rowIdx, "yyyy-mm-dd hh:mm:ss tt", ExcelHorizontalAlignment.Right);
+
+                    ApplyNumberStyleToColumn(ws, 7, 2, rowIdx, "@", ExcelHorizontalAlignment.Right); // String value, right-aligned
+                    ApplyNumberStyleToColumn(ws, 8, 2, rowIdx, "@", ExcelHorizontalAlignment.Right); // String value, right-aligned
+
+                    // And now lets size the columns
+                    for (int autoSizeColIdx = 1; autoSizeColIdx <= detailColumnCount; autoSizeColIdx++)
+                    {
+                        using (OfficeOpenXml.ExcelRange col = ws.Cells[1, autoSizeColIdx, rowIdx, autoSizeColIdx])
+                        {
+                            col.AutoFitColumns();
+                        }
+                    }
+                }
+
+
+                // All cells in spreadsheet are populated now, so render (save the file) to a memory stream 
+                byte[] bytes = pck.GetAsByteArray();
+                ms.Write(bytes, 0, bytes.Length);
+            }
+
+            // Stop diagnostics timer
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine(this._ReportName + " generation took: " + sw.Elapsed.ToString());
+        }
+
+        protected override void RenderCommonHeader(ExcelWorksheet ws, int startRowIdx, int startColIdx, ref int colIdx_HourlyCategory)
+        {
+            int overallSummaryHeaderRowIdx = startRowIdx;
+            int renderRowIdx = startRowIdx;
+            int renderColIdx = startColIdx;
+            int colIdx_1stCommonColumn = startColIdx;
+
+            renderColIdx = colIdx_1stCommonColumn;
+            ws.SetValue(renderRowIdx, renderColIdx, "Occupied Duration"); // Column 1
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, "Max Possible" + Environment.NewLine + "Occupied Duration"); // Column 2
+            ApplyWrapTextStyleToCell(ws, renderRowIdx, renderColIdx);
+            ws.Column(renderColIdx).Width = 20;
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, "Occupied %"); // Column 3
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, "Vehicle" + Environment.NewLine + "Arrivals"); // Column 4
+            ApplyWrapTextStyleToCell(ws, renderRowIdx, renderColIdx);
+            ws.Column(renderColIdx).Width = 12;
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, "Vehicle" + Environment.NewLine + "Departures"); // Column 5
+            ApplyWrapTextStyleToCell(ws, renderRowIdx, renderColIdx);
+            ws.Column(renderColIdx).Width = 12;
+
+            // Format current portion of the header row
+            using (OfficeOpenXml.ExcelRange rng = ws.Cells[renderRowIdx, colIdx_1stCommonColumn, renderRowIdx, renderColIdx])
+            {
+                rng.Style.Font.Bold = true;
+                rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));
+                rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+            }
+
+            if (this._ReportParams.IncludeHourlyStatistics == true)
+            {
+                renderColIdx++;
+                colIdx_HourlyCategory = renderColIdx; // Retain this column index as the known column index for hourly category
+                ws.SetValue(renderRowIdx, renderColIdx, "Hourly Category");  // Column 6
+                ws.Column(renderColIdx).Width = 24;
+
+                // Format hourly category portion of the header row
+                using (OfficeOpenXml.ExcelRange rng = ws.Cells[renderRowIdx, renderColIdx, renderRowIdx, renderColIdx])
+                {
+                    rng.Style.Font.Bold = true;
+                    rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.OliveDrab);
+                    rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    rng.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                }
+
+                renderColIdx++; // Column 7 is start of hourly items (Midnight hour)
+                DateTime tempHourlyTime = DateTime.Today;
+                DateTime tempHourlyTime2 = DateTime.Today.AddHours(1);
+                for (int hourlyIdx = 0; hourlyIdx < 24; hourlyIdx++)
+                {
+                    ws.SetValue(renderRowIdx, renderColIdx + hourlyIdx, tempHourlyTime.ToString("h ") + "-" + tempHourlyTime2.ToString(" h tt").ToLower());
+                    tempHourlyTime = tempHourlyTime.AddHours(1);
+                    tempHourlyTime2 = tempHourlyTime2.AddHours(1);
+                    ws.Column(renderColIdx + hourlyIdx).Width = 14;
+                }
+
+                // Format hourly portion of the header row
+                using (OfficeOpenXml.ExcelRange rng = ws.Cells[renderRowIdx, renderColIdx, renderRowIdx, renderColIdx + 23])
+                {
+                    rng.Style.Font.Bold = true;
+                    rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkSlateBlue);
+                    rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    rng.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                }
+            }
+        }
+
+        protected override void RenderCommonData(ExcelWorksheet ws, int startRowIdx, int startColIdx, ref int colIdx_HourlyCategory, GroupStats statsObj)
+        {
+            int colIdx_1stCommonColumn = startColIdx;
+            int renderColIdx = colIdx_1stCommonColumn;
+            int renderRowIdx = startRowIdx;
+
+            ws.SetValue(renderRowIdx, renderColIdx, FormatTimeSpanAsHoursMinutesAndSeconds(statsObj.TotalOccupancyTime));
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, FormatTimeSpanAsHoursMinutesAndSeconds(statsObj.MaximumPotentialOccupancyTime));
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, statsObj.PercentageOccupancy);
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, statsObj.ingress);
+
+            renderColIdx++;
+            ws.SetValue(renderRowIdx, renderColIdx, statsObj.egress);
+
+            ApplyNumberStyleToColumn(ws, colIdx_1stCommonColumn + 2, renderRowIdx, renderRowIdx, "###0.00", ExcelHorizontalAlignment.Right);
+            ApplyNumberStyleToColumn(ws, colIdx_1stCommonColumn + 3, renderRowIdx, renderRowIdx, "########0", ExcelHorizontalAlignment.Right);
+            ApplyNumberStyleToColumn(ws, colIdx_1stCommonColumn + 4, renderRowIdx, renderRowIdx, "########0", ExcelHorizontalAlignment.Right);
+
+            // And now lets autosize the columns
+            for (int autoSizeColIdx = colIdx_1stCommonColumn; autoSizeColIdx <= renderColIdx; autoSizeColIdx++)
+            {
+                using (OfficeOpenXml.ExcelRange col = ws.Cells[1, autoSizeColIdx, renderRowIdx, autoSizeColIdx])
+                {
+                    col.AutoFitColumns();
+                    col.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                }
+            }
+
+            // And now finally we must manually size the columns that have wrap text (autofit doesn't work nicely when we have wrap text)
+            ws.Column(colIdx_1stCommonColumn + 1).Width = 20;
+            ws.Column(colIdx_1stCommonColumn + 3).Width = 12;
+            ws.Column(colIdx_1stCommonColumn + 4).Width = 12;
+
+            if (this._ReportParams.IncludeHourlyStatistics == true)
+            {
+                // Now we will construct the hourly category column, followed by hour detail columns
+                ws.SetValue(renderRowIdx + 0, colIdx_HourlyCategory, "Occupied Duration");
+                ws.SetValue(renderRowIdx + 1, colIdx_HourlyCategory, "Max Possible Duration");
+                ws.SetValue(renderRowIdx + 2, colIdx_HourlyCategory, "% Occupied");
+                ws.SetValue(renderRowIdx + 3, colIdx_HourlyCategory, "Arrivals");
+                ws.SetValue(renderRowIdx + 4, colIdx_HourlyCategory, "Departures");
+
+                using (OfficeOpenXml.ExcelRange col = ws.Cells[renderRowIdx, colIdx_HourlyCategory, renderRowIdx + (numberOfHourlyCategories - 1), colIdx_HourlyCategory])
+                {
+                    col.Style.Font.Bold = true;
+                }
+
+                MergeCellRange(ws, renderRowIdx + 1, 1, renderRowIdx + (numberOfHourlyCategories - 1), colIdx_HourlyCategory - 1);
+            }
+        }
+
+        protected override void RenderCommonHourlyData(ExcelWorksheet ws, int startRowIdx, ref int colIdx_HourlyCategory, int hourIdx, GroupStats hourlyStats)
+        {
+            if (this._ReportParams.IncludeHourlyStatistics == true)
+            {
+                int renderRowIdx = startRowIdx;
+                int renderColIdx = colIdx_HourlyCategory + 1 + hourIdx;
+
+                // Output and format hourly data cells
+                ws.SetValue(renderRowIdx + 0, renderColIdx, FormatTimeSpanAsHoursMinutesAndSeconds(hourlyStats.TotalOccupancyTime));
+                ws.SetValue(renderRowIdx + 1, renderColIdx, FormatTimeSpanAsHoursMinutesAndSeconds(hourlyStats.MaximumPotentialOccupancyTime));
+
+                ws.SetValue(renderRowIdx + 2, renderColIdx, hourlyStats.PercentageOccupancy);
+                ApplyNumberStyleToCell(ws, renderRowIdx + 2, renderColIdx, "###0.00", ExcelHorizontalAlignment.Left);
+
+                ws.SetValue(renderRowIdx + 3, renderColIdx, hourlyStats.ingress);
+                ApplyNumberStyleToCell(ws, renderRowIdx + 3, renderColIdx, "########0", ExcelHorizontalAlignment.Left);
+
+                ws.SetValue(renderRowIdx + 4, renderColIdx, hourlyStats.egress);
+                ApplyNumberStyleToCell(ws, renderRowIdx + 4, renderColIdx, "########0", ExcelHorizontalAlignment.Left);
+            }
+        }
+    }
+
+}

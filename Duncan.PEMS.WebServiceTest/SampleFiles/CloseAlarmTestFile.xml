@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Data xmlns="http://www.duncansolutions.com/alarmworkorderv1">
+  <Request>
+    <ActiveAlarms TimeOfNotification="2014-02-15T16:22:00">
+      <ActiveAlarm cid="29" aid="16" mid="1001" EventUID="4324808" EventCode="0" />
+      <ActiveAlarm cid="29" aid="16" mid="1001" EventUID="4324805" EventCode="1" />
+    </ActiveAlarms>
+    <ActiveAlarms TimeOfNotification="2014-02-15T23:22:00">
+      <ActiveAlarm cid="29" aid="16" mid="1012" EventUID="4324806" EventCode="2" />
+      <ActiveAlarm cid="29" aid="16" mid="1012" EventUID="4324807" EventCode="3"/>
+    </ActiveAlarms>
+  </Request>
+</Data>

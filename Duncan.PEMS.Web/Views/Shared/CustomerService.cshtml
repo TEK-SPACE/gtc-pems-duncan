@@ -1,0 +1,22 @@
+﻿@model Duncan.PEMS.Entities.Users.CustomerSupportModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Duncan PEMS Customer Support");
+    ViewBag.BodyId = "login";
+    ViewBag.SubTitle = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Support");
+}
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <p style="font-weight: bold" class="error">@Model.Message</p>
+}
+
+<p>Having problems logging in?</p>
+<p>Contact your Customer Support personnel</p>
+
+
+@section PageHeader 
+{
+     <h1>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer Support" )</h1>
+    <a href="@Url.Action("Login", "Account")" class="button previous">Back To Login</a>
+}

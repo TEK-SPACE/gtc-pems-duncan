@@ -1,0 +1,282 @@
+/*
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+*/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+
+using OfficeOpenXml; // Namespace inside the open source EPPlus.dll from http://epplus.codeplex.com/
+using OfficeOpenXml.Style;
+
+
+using Duncan.PEMS.SpaceStatus.DataShapes;
+using Duncan.PEMS.SpaceStatus.DataSuppliers;
+using Duncan.PEMS.SpaceStatus.UtilityClasses;
+
+namespace Duncan.PEMS.SpaceStatus.Models
+{
+    /// <summary>
+    /// Summary description for VehSensingDataExport
+    /// </summary>
+    public class VehSensingDataExport
+    {
+        protected CustomerConfig _CustomerConfig = null;
+
+        public VehSensingDataExport(CustomerConfig customerCfg)
+        {
+            _CustomerConfig = customerCfg;
+        }
+
+        public void GetLatencyDataXLS(int PaymentCustomerId, List<int> listOfMeterIDs, DateTime StartTime, DateTime EndTime, MemoryStream ms)
+        {
+            SensingDatabaseSource Sensing = new SensingDatabaseSource(_CustomerConfig);
+            List<HistoricalSensingRecord> sensingData = Sensing.GetHistoricalVehicleSensingDataForMeters_StronglyTyped(_CustomerConfig.CustomerId, listOfMeterIDs, StartTime, EndTime, true);
+
+            DataSet dsSensingData = new DataSet();
+            DataTable dtVSData = new DataTable();
+            dtVSData.TableName = "All";
+            dtVSData.Columns.Add("MeterID", typeof(System.Int32));
+            dtVSData.Columns.Add("BayID", typeof(System.Int32));
+            dtVSData.Columns.Add("EventDateTime", typeof(System.DateTime));
+            dtVSData.Columns.Add("RecCreationDate", typeof(System.DateTime));
+            dtVSData.Columns.Add("LatencyAsSeconds", typeof(System.Int32));
+            dtVSData.Columns.Add("LatencyAsHMS", typeof(System.String));
+            dtVSData.Columns.Add("Occupied", typeof(System.Int32));
+            dsSensingData.Tables.Add(dtVSData);
+
+            Dictionary<string, VSLatency> sheetLatencies = new Dictionary<string, VSLatency>();
+
+            foreach (HistoricalSensingRecord nextVSData in sensingData)
+            {
+                DateTime RecCreationDate_ClientTimeZone = nextVSData.RecCreationDateTime;
+                
+                // DEBUG: Not really sure if the RecCreationDateTime is stored in client or server timezone...
+                /*RecCreationDate_ClientTimeZone = UtilityClasses.TimeZoneInfo.ConvertTimeZoneToTimeZone(RecCreationDate_ClientTimeZone, _CustomerConfig.ServerTimeZone, _CustomerConfig.CustomerTimeZone);*/
+                
+                TimeSpan latency = RecCreationDate_ClientTimeZone - nextVSData.DateTime;
+                VSLatency currSheetLatency = null;
+
+                // Get or create latency container for All spaces
+                if (sheetLatencies.ContainsKey("All"))
+                {
+                    currSheetLatency = sheetLatencies["All"];
+                }
+                else
+                {
+                    currSheetLatency = new VSLatency();
+                    sheetLatencies.Add("All", currSheetLatency);
+                }
+                // Add the latency to the list
+                currSheetLatency.LatenciesInSeconds.Add(Convert.ToInt32(Math.Abs(latency.TotalSeconds)));
+
+                // Add info to the "All" table
+                DataRow dr = dtVSData.NewRow();
+                dtVSData.Rows.Add(dr);
+                dr["MeterID"] = nextVSData.MeterMappingId;
+                dr["BayID"] = nextVSData.BayId;
+                dr["EventDateTime"] = nextVSData.DateTime;
+                dr["RecCreationDate"] = RecCreationDate_ClientTimeZone;
+                dr["LatencyAsSeconds"] = Convert.ToInt32(Math.Abs(latency.TotalSeconds));
+                dr["LatencyAsHMS"] = Math.Abs(latency.Hours).ToString().PadLeft(2, '0') +
+                    ":" + Math.Abs(latency.Minutes).ToString().PadLeft(2, '0') +
+                    ":" + Math.Abs(latency.Seconds).ToString().PadLeft(2, '0') +
+                    "." + Math.Abs(latency.Milliseconds).ToString();
+                dr["Occupied"] = Convert.ToInt32(nextVSData.IsOccupied);
+
+                // Then add info to a space-specific table
+                DataTable dtSpaceTable = null;
+                if (dsSensingData.Tables.IndexOf("Space" + nextVSData.BayId.ToString()) != -1)
+                {
+                    dtSpaceTable = dsSensingData.Tables["Space" + nextVSData.BayId.ToString()];
+                }
+                else
+                {
+                    dtSpaceTable = new DataTable();
+                    dtSpaceTable.TableName = "Space" + nextVSData.BayId.ToString();
+                    dtSpaceTable.Columns.Add("MeterID", typeof(System.Int32));
+                    dtSpaceTable.Columns.Add("BayID", typeof(System.Int32));
+                    dtSpaceTable.Columns.Add("EventDateTime", typeof(System.DateTime));
+                    dtSpaceTable.Columns.Add("RecCreationDate", typeof(System.DateTime));
+                    dtSpaceTable.Columns.Add("LatencyAsSeconds", typeof(System.Int32));
+                    dtSpaceTable.Columns.Add("LatencyAsHMS", typeof(System.String));
+                    dtSpaceTable.Columns.Add("Occupied", typeof(System.Int32));
+                    dsSensingData.Tables.Add(dtSpaceTable);
+                }
+
+                // Get or create latency container for current space
+                if (sheetLatencies.ContainsKey("Space" + nextVSData.BayId.ToString()))
+                {
+                    currSheetLatency = sheetLatencies["Space" + nextVSData.BayId.ToString()];
+                }
+                else
+                {
+                    currSheetLatency = new VSLatency();
+                    sheetLatencies.Add("Space" + nextVSData.BayId.ToString(), currSheetLatency);
+                }
+                // Add the latency to the list
+                currSheetLatency.LatenciesInSeconds.Add(Convert.ToInt32(Math.Abs(latency.TotalSeconds)));
+
+                dr = dtSpaceTable.NewRow();
+                dtSpaceTable.Rows.Add(dr);
+                dr["MeterID"] = nextVSData.MeterMappingId;
+                dr["BayID"] = nextVSData.BayId;
+                dr["EventDateTime"] = nextVSData.DateTime;
+                dr["RecCreationDate"] = RecCreationDate_ClientTimeZone;
+                dr["LatencyAsSeconds"] = Convert.ToInt32(Math.Abs(latency.TotalSeconds));
+                dr["LatencyAsHMS"] = Math.Abs(latency.Hours).ToString().PadLeft(2, '0') +
+                    ":" + Math.Abs(latency.Minutes).ToString().PadLeft(2, '0') +
+                    ":" + Math.Abs(latency.Seconds).ToString().PadLeft(2, '0') +
+                    "." + Math.Abs(latency.Milliseconds).ToString();
+                dr["Occupied"] = Convert.ToInt32(nextVSData.IsOccupied);
+            }
+            dsSensingData.AcceptChanges();
+
+            using (OfficeOpenXml.ExcelPackage pck = new OfficeOpenXml.ExcelPackage())
+            {
+                foreach (DataTable nextTable in dsSensingData.Tables)
+                {
+                    //Create the worksheet
+                    OfficeOpenXml.ExcelWorksheet ws = pck.Workbook.Worksheets.Add(nextTable.TableName);
+
+                    //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                    ws.Cells["A1"].LoadFromDataTable(nextTable, true);
+
+                    //Format the header for column 1-3
+                    using (OfficeOpenXml.ExcelRange rng = ws.Cells[1, 1, 1, nextTable.Columns.Count /*"A1:C1"*/])
+                    {
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;                 //Set Pattern for the background to Solid
+                        rng.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(79, 129, 189));  //Set color to dark blue
+                        rng.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    }
+
+                    //Example how to Format Column 1 as numeric 
+                    using (OfficeOpenXml.ExcelRange col = ws.Cells[2, 1, 2 + nextTable.Rows.Count, 1])
+                    {
+                        col.Style.Numberformat.Format = "########0";
+                        col.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+                    }
+
+                    using (OfficeOpenXml.ExcelRange col = ws.Cells[2, 2, 2 + nextTable.Rows.Count, 2])
+                    {
+                        col.Style.Numberformat.Format = "########0";
+                        col.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+                    }
+
+                    ws.Column(3).Width = 20;
+                    using (OfficeOpenXml.ExcelRange col = ws.Cells[2, 3, 2 + nextTable.Rows.Count, 3])
+                    {
+                        col.Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss";
+                        col.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+                    }
+
+                    ws.Column(4).Width = 20;
+                    using (OfficeOpenXml.ExcelRange col = ws.Cells[2, 4, 2 + nextTable.Rows.Count, 4])
+                    {
+                        col.Style.Numberformat.Format = "mm/dd/yyyy hh:mm:ss";
+                        col.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+                    }
+
+                    ws.Column(5).Width = 20;
+
+                    ws.Column(6).Width = 28;
+
+                    // Now lets add aggregate data at the end of the sheet
+                    if (sheetLatencies.ContainsKey(nextTable.TableName))
+                    {
+                        VSLatency currSheetLatenies = sheetLatencies[nextTable.TableName];
+                        if (currSheetLatenies != null)
+                        {
+                            int colCount = nextTable.Columns.Count;
+                            int rowCount = nextTable.Rows.Count;
+
+                            // Average Latency
+                            // Set cell value, then merge cells on same row
+                            string cellValue = "Average Latency:    " + currSheetLatenies.GetAverageLatency().ToString() + " seconds";
+                            ws.Cells[rowCount + 3, 1].Value = cellValue;
+                            ws.Cells[rowCount + 3, 1, rowCount + 3, colCount].Merge = true; //Merge columns start and end range
+                            ws.Cells[rowCount + 3, 1, rowCount + 3, colCount].Style.Font.Bold = true; //Font should be bold
+                            ws.Cells[rowCount + 3, 1, rowCount + 3, colCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left; // Aligmnet is center
+
+                            // Minimum Latency
+                            // Set cell value, then merge cells on same row
+                            cellValue = "Minimum Latency:    " + currSheetLatenies.GetMinLatency().ToString() + " seconds";
+                            ws.Cells[rowCount + 4, 1].Value = cellValue;
+                            ws.Cells[rowCount + 4, 1, rowCount + 4, colCount].Merge = true; //Merge columns start and end range
+                            ws.Cells[rowCount + 4, 1, rowCount + 4, colCount].Style.Font.Bold = true; //Font should be bold
+                            ws.Cells[rowCount + 4, 1, rowCount + 4, colCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left; // Aligmnet is center
+
+                            // Maximum Latency
+                            // Set cell value, then merge cells on same row
+                            cellValue = "Maximum Latency:    " + currSheetLatenies.GetMaxLatency().ToString() + " seconds";
+                            ws.Cells[rowCount + 5, 1].Value = cellValue;
+                            ws.Cells[rowCount + 5, 1, rowCount + 5, colCount].Merge = true; //Merge columns start and end range
+                            ws.Cells[rowCount + 5, 1, rowCount + 5, colCount].Style.Font.Bold = true; //Font should be bold
+                            ws.Cells[rowCount + 5, 1, rowCount + 5, colCount].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left; // Aligmnet is center
+                        }
+                    }
+                }
+
+                byte[] bytes = pck.GetAsByteArray();
+                ms.Write(bytes, 0, bytes.Length);
+            }
+
+            dsSensingData.Dispose();
+        }
+
+    }
+
+    public class VSLatency
+    {
+        public List<int> LatenciesInSeconds = new List<int>();
+
+        public int GetAverageLatency()
+        {
+            Int64 Accumulated = 0;
+            foreach (int nextVal in LatenciesInSeconds)
+            {
+                Accumulated += nextVal;
+            }
+
+            int result = Convert.ToInt32(Accumulated / Convert.ToInt64(LatenciesInSeconds.Count));
+            return result;
+        }
+
+        public int GetMinLatency()
+        {
+            int result = int.MaxValue;
+            foreach (int nextVal in LatenciesInSeconds)
+            {
+                if (nextVal < result)
+                    result = nextVal;
+            }
+            if (result == int.MaxValue)
+                result = 0;
+            return result;
+        }
+
+        public int GetMaxLatency()
+        {
+            int result = 0;
+            foreach (int nextVal in LatenciesInSeconds)
+            {
+                if (nextVal > result)
+                    result = nextVal;
+            }
+            return result;
+        }
+    }
+}

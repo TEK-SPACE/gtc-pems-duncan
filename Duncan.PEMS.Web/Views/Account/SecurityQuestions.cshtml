@@ -1,0 +1,40 @@
+﻿@model Duncan.PEMS.Entities.Users.SecurityQuestionsModel
+
+@{
+    ViewBag.Title = "Forgot Password Secuirty Questions";
+    ViewBag.BodyId = "login";
+    ViewBag.SubTitle = "Forgot Password - Security";
+}
+
+<p class="message-success">@ViewBag.StatusMessage</p>
+
+@using (Html.BeginForm("SecurityQuestions","Account", new { username = Model.UserName, failureCount = Model.FailureCount, questionID = Model.QuestionID }))
+{    @Html.AntiForgeryToken()
+    <p>Answer the security question and we will email you a link to reset your password.</p>
+  <div class="validationSum-containerMain">@Html.ValidationSummary()</div>
+    <fieldset id="forgot-password-security">
+        <ul>
+            <li>
+                <label for="UserName">@Html.DisplayTextFor(m => m.QuestionText)</label>
+                @Html.TextBoxFor(m => m.QuestionValue,  new { @class = "textBox" })
+            </li>
+            <li class="login-link">&nbsp;
+            </li>
+            <li>
+                <input type="submit" value="Submit" class="button">
+            </li>
+        </ul>
+    </fieldset>
+
+    <script>
+    
+        $(document).ready(function() {
+            $("#QuestionValue").val('');
+        });
+    </script>
+}
+@section PageHeader 
+{
+    <h1>Forgot Password - Security</h1>
+    <a href="@Url.Action("Login")" class="button previous">Back To Login</a>
+}

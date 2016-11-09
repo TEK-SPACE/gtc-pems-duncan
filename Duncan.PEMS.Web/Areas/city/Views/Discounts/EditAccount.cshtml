@@ -1,0 +1,320 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@inherits WebViewPage<Duncan.PEMS.Entities.Discounts.UserAccountDetails>
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Details");
+}
+
+@section Styles
+{
+    <style type="text/css">
+        
+        .field-validation-error {
+            width: 500px;
+        }
+        .validationSum-container { height: auto !important; }
+    </style>
+}
+
+@section Scripts 
+{
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+        });
+
+        function TerminateUser() {
+            var notes = $("#notes").val();
+            if (!notes) {
+                alert('Enter a reason for the termination.');
+                return false;
+            }
+            $('#TerminateDialog').data('kendoWindow').close();
+            $('<input />').attr('type', 'hidden').attr('name', 'userID').attr('value', '@Model.UserId').appendTo('#terminateForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'notes').attr('value', notes).appendTo('#terminateForm');
+            $('#terminateForm').submit();
+            return false;
+        }
+        
+        function ReactivateUser() {
+            var notes = $("#rnotes").val();
+            if (!notes) {
+                alert('Enter a reason for the activation.');
+                return false;
+            }
+            $('#ReactivateDialog').data('kendoWindow').close();
+            $('<input />').attr('type', 'hidden').attr('name', 'userID').attr('value', '@Model.UserId').appendTo('#reactivateForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'notes').attr('value', notes).appendTo('#reactivateForm');
+            $('#reactivateForm').submit();
+            return false;
+        }
+        function UnlockUser() {
+            var notes = $("#unotes").val();
+            if (!notes) {
+                alert('Enter a reason');
+                return false;
+            }
+            $('#UnlockDialog').data('kendoWindow').close();
+            $('<input />').attr('type', 'hidden').attr('name', 'userID').attr('value', '@Model.UserId').appendTo('#unlockForm');
+            $('<input />').attr('type', 'hidden').attr('name', 'notes').attr('value', notes).appendTo('#unlockForm');
+            $('#unlockForm').submit();
+            return false;
+        }
+
+
+        function ShowTerminateModel() {
+            var popup = $("#TerminateDialog").data("kendoWindow");
+            popup.center();
+            popup.open();
+        }
+        
+        function ShowReactivateModel() {
+            var popup = $("#ReactivateDialog").data("kendoWindow");
+            popup.center();
+            popup.open();
+        }
+        
+        function ShowUnlockModel() {
+            var popup = $("#UnlockDialog").data("kendoWindow");
+            popup.center();
+            popup.open();
+        }
+    </script>
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Discount Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Details")</span></h1>
+}
+
+@using (Html.BeginForm("EditAccount", "Discounts", FormMethod.Post, new {@class = "admin-form", @id = "actionForm"}))
+{
+   <div class="validationSum-container">@Html.HeaderMessage()</div>
+    @Html.AntiForgeryToken()
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_@Model.AccountStatus.ToLower()">@Model.AccountStatus</span></div>@Model.AccountStatusChangeTimeDisplay
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Client Information")</div>
+
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Name"): </div>
+            @Model.LastName
+            @Html.HiddenFor(model => model.UserId)
+            @Html.HiddenFor(model => model.LastName)
+            @Html.HiddenFor(model => model.AccountStatus)
+            @Html.HiddenFor(model => model.AccountStatusId)
+            @Html.HiddenFor(model => model.AccountStatusChangeTime)
+            @Html.HiddenFor(model => model.CustomerId)
+        </div>
+        <div  >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Name"): </div>
+            @Model.FirstName
+            @Html.HiddenFor(model => model.FirstName)
+        </div>
+        <div  >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Email Address"):@Html.RequiredMarkFor( m => m.Email, new {@class = "required_asterisk"} ) </div>
+            @Html.TextBoxFor(model => model.Email) @Html.ShowAllErrors("Email")
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone Number"):@Html.RequiredMarkFor( m => m.Phone, new {@class = "required_asterisk"} ) </div>
+            @Html.TextBoxFor(model => model.Phone)   @Html.ValidationMessageFor( m => m.Phone )
+            &nbsp;
+        </div>
+     
+    </div>
+    <div class="two-column">
+        <div  >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 1"):@Html.RequiredMarkFor( m => m.Address1, new {@class = "required_asterisk"} ) </div>
+            @Html.TextBoxFor(model => model.Address1)&nbsp;   @Html.ValidationMessageFor( m => m.Address1 )
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 2"): </div>
+            @Html.TextBoxFor(model => model.Address2)&nbsp;
+
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "City"):@Html.RequiredMarkFor( m => m.City, new {@class = "required_asterisk"} ) </div>
+            @Html.TextBoxFor(model => model.City)    @Html.ValidationMessageFor( m => m.City )
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "State")@Html.RequiredMarkFor( m => m.State, new {@class = "required_asterisk"} ) / @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Postal Code"):@Html.RequiredMarkFor( m => m.PostalCode, new {@class = "required_asterisk"} ) </div>
+            @Html.TextBoxFor(model => model.State) /  @Html.TextBoxFor(model => model.PostalCode)<br />
+               @Html.ValidationMessageFor( m => m.State )    @Html.ValidationMessageFor( m => m.PostalCode )
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Information")</div>
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Creation Date"): </div>
+            @Model.CreationDateDisplay
+            @Html.HiddenFor(model => model.CreationDate)
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Expiration Date"): </div>
+            @Model.AccountExpirationDateDisplay
+            @Html.HiddenFor(model => model.AccountExpirationDate)
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Expiration Date"): </div>
+            @Model.CreditCardExpirationDate
+            @Html.HiddenFor(model => model.CreditCardExpirationDate)
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Last 4"): </div>
+            @Model.CreditCardLast4Digits
+            @Html.HiddenFor(model => model.CreditCardLast4Digits)
+
+            &nbsp;
+        </div>
+    </div>
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last User Access"): </div>
+            @Model.LastUserAccessDisplay
+            @Html.HiddenFor(model => model.LastUserAccess)
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Discount Used"): </div>
+            @Model.LastDiscountUsed
+            @Html.HiddenFor(model => model.LastDiscountUsedName)
+            @Html.HiddenFor(model => model.LastDiscountUsedTime)
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Edited By"): </div>
+            @Model.LastEditiedByUserName
+            @Html.HiddenFor(model => model.LastEditiedByUserId)
+            @Html.HiddenFor(model => model.LastEditiedByUserName)
+
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="one-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"): </div>
+            @Model.Notes
+            @Html.HiddenFor(model => model.Notes)
+            &nbsp;
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Security Information")</div>
+
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Question 1"): </div>
+            @Model.SecurityQuestion1
+            @Html.HiddenFor(model => model.SecurityQuestion1)
+
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Answer 1"): </div>
+            @Model.SecurityAnswer1
+            @Html.HiddenFor(model => model.SecurityAnswer1)
+
+            &nbsp;
+        </div>
+    </div>
+    <div class="two-column">
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Question 2"): </div>
+            @Model.SecurityQuestion2
+            @Html.HiddenFor(model => model.SecurityQuestion2)
+
+            &nbsp;
+        </div>
+        <div >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Answer 2"): </div>
+            @Model.SecurityAnswer2
+            @Html.HiddenFor(model => model.SecurityAnswer2)
+            &nbsp;
+        </div>
+    </div>
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+        @if (Model.AccountStatusId != 0)
+        {
+//not terminated
+            <button type="submit" name="submitButton" class="button " onclick="ShowTerminateModel(); return false;" value="Terminate">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Terminate")</button>
+        }
+        @if (Model.AccountStatusId == 0)
+        {
+// termiated
+            <button type="submit" name="submitButton" class="button " onclick="ShowReactivateModel(); return false;" value="Activate">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Re-Activate")</button>
+        }
+        @if (Model.AccountStatusId == 2)
+        {
+// suspended
+            <button type="submit" name="submitButton" class="button " onclick="ShowUnlockModel(); return false;" value="Unlock">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Unlock")</button>
+        }
+        @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new {rtn = "true"}, new {@class = "button previous"})
+    </div>
+}
+
+
+
+@(Html.Kendo().Window()
+      .Name("TerminateDialog")
+      .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Terminate Account").ToString())
+      .Content(@<text>
+                    @using (Html.BeginForm("TerminateAccount", "Discounts", FormMethod.Post, new {@class = "admin-form", @id = "terminateForm"}))
+                    {
+    @Html.AntiForgeryToken()
+                        
+                        <center>
+                            @Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Enter the reason for the termination.")).ToString())<br/><br/>
+                            @Html.TextAreaFor(model => model.Notes, new {id = "notes", rows = "5"})<br/>
+                            <button type="submit"  class="button " onclick=" javascript: TerminateUser();return false; " value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+                        </center>
+                    }
+                </text>)
+      .Draggable().Scrollable(false).Modal(true).Visible(false)
+      )
+
+
+
+@(Html.Kendo().Window()
+      .Name("ReactivateDialog")
+      .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Reactivate Account").ToString())
+      .Content(@<text>
+                    @using (Html.BeginForm("ReactivateAccount", "Discounts", FormMethod.Post, new {@class = "admin-form", @id = "reactivateForm"}))
+                    {
+    @Html.AntiForgeryToken()
+                        
+                        <center>
+                            @Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Enter the reason for the re-activation.")).ToString())<br/><br/>
+                            @Html.TextAreaFor(model => model.Notes, new {id = "rnotes", rows = "5"})<br/>
+                            <button type="submit"  class="button " onclick=" javascript: ReactivateUser();return false; " value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+                        </center>
+                    }
+                </text>)
+      .Draggable().Scrollable(false).Modal(true).Visible(false)
+      )
+
+
+
+@(Html.Kendo().Window()
+      .Name("UnlockDialog")
+      .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Unlock Account").ToString())
+      .Content(@<text>
+                    @using (Html.BeginForm("ReactivateAccount", "Discounts", FormMethod.Post, new {@class = "admin-form", @id = "unlockForm"}))
+                    {
+    @Html.AntiForgeryToken()
+                        
+                        <center>
+                            @Html.Raw((HttpContext.Current.GetLocaleResource(ResourceTypes.StatusMessage, "Enter the reason.")).ToString())<br/><br/>
+                            @Html.TextAreaFor(model => model.Notes, new {id = "unotes", rows = "5"})<br/>
+                            <button type="submit"  class="button " onclick=" javascript: UnlockUser();return false; " value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+                        </center>
+                    }
+                </text>)
+      .Draggable().Scrollable(false).Modal(true).Visible(false)
+      )

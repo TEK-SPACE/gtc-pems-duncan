@@ -1,0 +1,379 @@
+﻿.hue-animated-bg {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: fixed;
+
+	background: url("../../images/spectrum.jpg") no-repeat 0px 0px; 
+	-webkit-background-size: 1920px 1200px;
+	-moz-background-size: 1920px 1200px;
+	-o-background-size: 1920px 1200px;
+	background-size: 1920px 1200px;
+}
+
+.dd-container {
+	width: 100%;
+}
+
+#dashboardsDiv {
+    margin:0px!important;
+}
+/* toolbar area */
+#ddDashboardCategoryId select {
+    min-width: 150px;
+}
+
+.dd-toolbar {
+	padding: 0;
+	width: 100%;
+	background-color: #fff;
+    z-index: 1000;
+}
+
+/* tiles area */
+
+.dd-tiles {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.dd-tile-tr {
+}
+
+.dd-tile-tr-addrow {
+	height: 24px;
+}
+
+.dd-tile-addrow-button {
+	cursor: pointer;
+	margin: 0 27px 0 27px;
+	height: 20px;
+}
+
+.dd-tile-addrow-button:hover,
+.dd-tile-addrow-button-hover {
+	border: 1px dashed #ddd;
+	background-color: #eee;
+	opacity: 0.5;
+}
+
+.dd-tile-addrow-button img {
+	display: none;
+}
+
+.dd-tile-addrow-button:hover img,
+.dd-tile-addrow-button-hover img {
+	display: inline;
+}
+
+.dd-tile-rowtable {
+	width: 100%;
+	border-collapse: collapse;
+	border: 0;
+}
+
+.dd-table-tiletable {
+	width: 100%;
+	border-collapse: collapse;
+	border: 0;
+}
+
+.dd-tile-td, .dd-tile-plus-td {
+	height: 450px;
+}
+
+.dd-tile-td {
+	width: 0px;
+}
+
+.dd-tile-plus-td {
+	cursor: pointer;
+	width: 24px;
+	min-width: 24px;
+	max-width: 24px;
+	position: relative;
+}
+
+.dd-tile-input-record-count {
+	border: 1px solid #ddd;
+	position: absolute;
+}
+
+.dd-tile-select-record-count {
+	border: 1px solid #ddd;
+}
+
+.dd-tile-button-move {
+	cursor: move !important;
+}
+
+.dd-tile-addtile-button {
+	cursor: pointer;
+	margin-left: 1px;
+	height: 99%;
+}
+
+.dd-tile-addtile-button img {
+	display: none;
+	position: relative;
+	top: 200px;
+	width: 24px;
+	left: -1px;
+}
+
+.dd-tile-addtile-button:hover,
+.dd-tile-addtile-button-hover {
+	border: 1px dashed #ddd;
+	background-color: #eee;
+	opacity: 0.5;
+}
+
+.dd-tile-addtile-button:hover img,
+.dd-tile-addtile-button-hover img {
+	display: inline;
+}
+
+/* tile content */
+
+.dd-tile {
+	height: 100%;
+	background-color: #fff;
+	border: 1px solid #ccc;
+}
+
+.dd-tile-drag-over {
+	outline: 2px dashed #666 !important;
+}
+
+.dd-tile-header {
+	white-space: nowrap;
+	height: 24px;
+	min-height: 24px;
+	border-bottom: 1px solid #ddd;
+	color: #666;
+	cursor: move;
+	background-color: #fff;
+}
+
+.dd-tile-header>table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.dd-tile-header-text {
+}
+
+.dd-tile-header-button, .dd-tile-header-button-right, .dd-tile-header-button-left {
+	width: 24px;
+	min-width: 24px;
+	cursor: pointer;
+	font-weight: normal;
+}
+
+.dd-tile-header-button:hover, .dd-tile-header-button-right:hover, .dd-tile-header-button-left:hover {
+	
+}
+
+.dd-tile-header-button > img {
+	height: 24px;
+}
+.dd-tile-header-button > img:hover {
+	background-color: #ddd;
+}
+
+/*.dd-tile-header-button-right {
+	border-left: 1px solid #ddd;
+}
+
+.dd-tile-header-button-left {
+	border-right: 1px solid #ddd;
+}*/
+
+.dd-tile-button-remove, .dd-tile-button-options, .dd-tile-button-select-part, .dd-tile-button-search, .dd-tile-button-move {
+}
+
+.dd-tile-body {
+	overflow-x: auto;
+	overflow-y: auto;
+	height: 425px;
+}
+
+.dd-tile-body-add-button-outer {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+.dd-tile-body-add-button {
+	position: absolute;
+	top: 35%;
+	width: 100%;
+	height: auto;
+}
+
+div.thumb-container img {
+	outline: 1px solid #ddd;
+	margin-top: 4px;
+}
+
+.reportPartIframe {
+	border: 1px solid #ddd;
+	overflow: auto;
+	width: 100%;
+	height: 450px;
+}
+
+
+/* menu */
+
+.dd-menu {
+	list-style-image: none;
+	list-style-position: inside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	margin-right: 50px;
+}
+
+.dd-menu-item {
+	float: left;
+	border-left: 1px solid #ddd;
+	background-color: transparent;
+	text-align: center;
+	cursor: pointer;
+	color: #000;
+	text-decoration: none;
+	display: inline-block;
+	position: relative;
+	padding: 4px 16px;
+	line-height: 26px;
+}
+
+.dd-menu-addbutton {
+	min-width: 20px;
+	width: 20px;
+}
+
+.dd-menu-item.active{
+	color: #000;
+    background: transparent url('../../images/small_triangle.png') no-repeat;
+    background-position: center bottom;
+}
+
+.dd-menu-item:hover{
+	color: #000;
+	text-decoration: none;
+	display: inline-block;
+	position: relative;
+	padding: 4px 16px;
+	line-height: 26px;
+	background-color: #eee;
+}
+
+.dd-menu-item-link {
+	text-decoration: none;
+}
+
+.dd-toolbar-group{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.dd-menu-addbutton {
+    border-right: 1px solid #ddd;
+}
+
+.dropdown-menu a {
+    color: #000;
+	text-decoration: none;
+    z-index:1000;
+}
+
+.dd-toolbar.fixed{
+	position: fixed;
+	top: 0px;
+	z-index: 1000;
+	border-bottom: 1px solid #eee;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+/* rotate */
+
+.flip-panel {
+	float: left;
+	width: 100%;
+	height: 100%;
+	position: relative;
+			
+	-webkit-perspective: 900px;
+	-moz-perspective: 900px;
+}
+
+.flip-panel .flip-front {
+		float: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 900;
+		width: inherit;
+		height: inherit;
+		border: 1px solid #ccc;
+		background: #fff;
+		text-align: center;
+
+		-webkit-transform: rotateX(0deg) rotateY(0deg);
+		-webkit-transform-style: preserve-3d;
+		-webkit-backface-visibility: hidden;
+
+		-moz-transform: rotateX(0deg) rotateY(0deg);
+		-moz-transform-style: preserve-3d;
+		-moz-backface-visibility: hidden;
+
+		-o-transition: all .4s ease-in-out;
+		-ms-transition: all .4s ease-in-out;
+		-moz-transition: all .4s ease-in-out;
+		-webkit-transition: all .4s ease-in-out;
+		transition: all .4s ease-in-out;
+	}
+	.flip-panel.flip .flip-front {
+		z-index: 900;
+		border-color: #eee;
+		background: #333;
+		-webkit-transform: rotateY(180deg);
+		-moz-transform: rotateY(180deg);
+	}
+		
+	.flip-panel .flip-back {
+		float: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 800;
+		width: inherit;
+		height: inherit;
+		border: 1px solid #ccc;
+		background: #333;
+		text-shadow: 1px  1px 1px rgba(0,0,0,0.6); 
+			
+		-webkit-transform: rotateY(-180deg);
+		-webkit-transform-style: preserve-3d;
+		-webkit-backface-visibility: hidden;
+
+		-moz-transform: rotateY(-180deg);
+		-moz-transform-style: preserve-3d;
+		-moz-backface-visibility: hidden;
+
+		-o-transition: all .4s ease-in-out;
+		-ms-transition: all .4s ease-in-out;
+		-moz-transition: all .4s ease-in-out;
+		-webkit-transition: all .4s ease-in-out;
+		transition: all .4s ease-in-out;
+	}
+		
+	.flip-panel.flip .flip-back {
+		z-index: 1000;
+		background: #80868d;
+		-webkit-transform: rotateX(0deg) rotateY(0deg);
+		-moz-transform: rotateX(0deg) rotateY(0deg);
+	}

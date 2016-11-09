@@ -1,0 +1,29 @@
+﻿@using Duncan.PEMS.Utilities
+@inherits WebViewPage<Duncan.PEMS.Entities.Assets.TariffConfigEditModel>
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Tariff Details" );
+}
+
+@section Styles
+{
+}
+
+@section Scripts 
+{
+    @Scripts.Render( "~/bundles/kendo" );
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+
+    </script>
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Asset Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Holiday Details" )</span></h1>
+}
+
+ <div class="customer_actions">
+            @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "TariffIndex", new {rtn = "true"}, new {@class = "button previous returnButton"} )
+        </div>

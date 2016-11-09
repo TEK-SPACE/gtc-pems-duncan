@@ -1,0 +1,115 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianEventDetailsModel
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Details" );
+}
+                     
+@section PageHeader 
+{
+      <h2>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Detail" ) </h2>
+      <a class="back" href='@Url.Action("WorkOrderDetails", "WorkOrders", new { workOrderId = @Model.WorkOrderEvent.WorkOrderId, selectedSort =ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Back" )</a>
+}
+
+@section Scripts 
+{
+}
+
+<style>
+           .k-window { width: 100%;}
+            .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+</style>
+
+<div id="content-inner">
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.WorkOrderId</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"):</div>
+        <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type"):</div>
+        <div class="customer_text">@Model.WorkOrderAsset.AssetType</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Subtype"):</div>
+        <div class="customer_text">@Model.WorkOrderAsset.AssetSubType</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Source"):</div>
+        <div class="customer_text">@Model.Source</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Code"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.EventCode</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Description"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.EventDesc</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Severity"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.SeverityDisplay</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.SLADueDisplay</div>
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Fault Reported Notes"):</div>
+        <div class="customer_text">@Model.WorkOrderEvent.Notes</div>
+    </div>
+    <div class="clear" id="image-upload">
+         @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Attached Images"):<br />
+            @{
+                if (Model.WorkOrderImages.Any())
+                {
+                    foreach (var workOrderImage in Model.WorkOrderImages)
+                    {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions
+                                                      .Close())
+                              .Content(@<text>
+                                             <img alt="" style="max-width: 100%" src="@workOrderImage.ImageSource"/>
+                                        </text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+
+                              )
+                        <a href="#" id='open_@workOrderImage.WorkOrderImageId' >WO# @workOrderImage.ImageName</a><br/>
+
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                               
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").open();
+                                    dialog.data("kendoWindow").center();
+                                });
+                            });
+                            
+                            $(document).on('click', ".k-overlay" , function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                   dialog.data("kendoWindow").close();
+                               });
+                        </script>
+                    }
+                }
+                else
+                {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+                }
+            }
+    </div>
+</div>

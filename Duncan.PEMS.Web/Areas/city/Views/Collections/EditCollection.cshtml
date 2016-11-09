@@ -1,0 +1,1122 @@
+﻿@using Duncan.PEMS.Entities.Collections
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.CollectionConfiguration
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Collection Configuraiton");
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> /  <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Collection Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Collection Route Configuration")</span></h1>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        var itemCount = @Model.Meters.Count.ToString();
+
+        var viewModel = kendo.observable({            
+            hideArea: true,
+            hideZone: true,
+            hideStreet: true,
+            hideSuburb: true,
+
+        });
+
+       
+        $(document).ready(function() {
+
+            $('#addMeters').click(function(e) {
+              
+                $('#meterAdditionErrors').empty();
+                e.preventDefault();
+                var currentMeters = $('#CurrentGrid').data('kendoGrid');
+                var currentMetersDs = currentMeters.dataSource;
+                var allData = currentMetersDs.data();
+                //get a list of all selected meters
+                $.each($('#CurrentGrid2 :checkbox:checked').closest('tr'), function() {                   
+                    
+                    var item = $("#CurrentGrid2").data("kendoGrid").dataItem($(this));
+                   
+                    if(typeof item != "undefined")                    {
+                        // Gets the full set of data from the data source
+                        // Output the results
+                        var addItem = true;
+                       
+                        $.each(allData, function(index, currentItem) {
+                            if (item.MeterId == currentItem.MeterId && item.AreaId == currentItem.AreaId) {
+                                addItem = false;
+                            }
+                        });
+
+                        //check to see if htey are part of this colleciton
+                        if (addItem) {
+                            currentMetersDs.add(item);
+                            itemCount++;
+                        } else
+                            $('#meterAdditionErrors').append('<span class="field-validation-error">Meter ' + item.MeterName + ' already exists in this collection</span>');
+
+                        //check to see if they are part of another colleciton . We are letting them add the meter, just adding the warning.
+                        if (item.CollectionName)
+                            $('#meterAdditionErrors').append('<span class="field-validation-error">Warning: Meter ' + item.MeterName + ' already exists in another collection: ' + item.CollectionName + '</span>');
+                    }
+                });
+
+                //uncheck all the selected items, so they dont keep being added (or tried to at least)
+                $.each($('#CurrentGrid2 :checkbox'), function() {
+                    $(this).attr('checked', false);
+                });
+                //update the title with the new count of items
+                var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+                $(tableHeaderCol).eq(1).find('a,span').text(itemCount);
+                return false;
+            });
+            kendo.bind($(document.body), viewModel);
+        });
+
+
+        function RemoveMeter(e) {
+            e.preventDefault();
+            var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+            $("#CurrentGrid").data("kendoGrid").dataSource.remove(dataItem);
+            $("#CurrentGrid").data("kendoGrid").refresh();
+            //update the title with the new count of items
+            itemCount--;
+            var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+            $(tableHeaderCol).eq(1).find('a,span').text(itemCount);
+
+        }
+
+        function SaveMeter() {
+
+            //check th activation date to make sure its today or greater.
+            var $activationDate = $("#ActivationDate").val();
+            var $activationDateParsed = kendo.parseDate($activationDate);
+            var $localTime = kendo.parseDate('@Model.LocalTime.Date');
+            if ($activationDateParsed < $localTime) {
+                alert("Activation Date cannot be in the past");
+                return;
+            }
+
+            var allData = $('#CurrentGrid').data('kendoGrid').dataSource.data();
+
+            //now get a list of all items in the current meters grid, save them, and then submit the form
+            var data = {};
+            $.each(allData, function(idx, currentItem) {
+                data["uns[" + idx + "]"] = currentItem.MeterId + "|" + currentItem.AreaId;
+            });
+            $.post('/Collections/SetMeters', data, OnMetersSet);
+        }
+
+
+        function OnMetersSet(data) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', 'Save').appendTo('#editMetersForm');
+            $('#editMetersForm').submit();
+        }
+
+        function meterNameFilter(element) {
+            var data = @Html.Raw(Json.Encode(@Model.AllMeters.Select(x => x.MeterName).Distinct().ToArray()));
+            element.kendoAutoComplete({
+                filter: "contains",
+                dataSource: data
+            });
+        }
+
+        function zoneIdFilter(element) {
+            var data = @Html.Raw(Json.Encode(@Model.AllMeters.Select(x => x.Zone).Distinct().ToArray()));
+            element.kendoAutoComplete({
+                filter: "contains",
+                dataSource: data
+            });
+        }
+
+        function areaIdFilter(element) {
+            var data = @Html.Raw(Json.Encode(@Model.AllMeters.Select(x => x.Area).Distinct().ToArray()));
+            element.kendoAutoComplete({
+                filter: "contains",
+                dataSource: data
+            });
+
+        }
+
+        function suburbFilter(element) {
+            var data = @Html.Raw(Json.Encode(@Model.AllMeters.Select(x => x.Suburb).Distinct().ToArray()));
+            element.kendoAutoComplete({
+                filter: "contains",
+                dataSource: data
+            });
+        }
+
+        function streetFilter(element) {
+            var data = @Html.Raw(Json.Encode(@Model.AllMeters.Select(x => x.Street).Distinct().ToArray()));
+            element.kendoAutoComplete({
+                filter: "contains",
+                dataSource: data
+            });
+        }
+
+        //******************
+        //MultiSelect - A user extension of KendoUI DropDownList widget.
+        (function ($) {
+
+            // shorten references to variables
+            var kendo_MS = window.kendo,
+                ui = kendo_MS.ui,
+                DropDownList_MS = ui.DropDownList,
+                keys = kendo_MS.keys,
+                SELECT = "select",
+                SELECTIONCHANGED = "selectionChanged",
+                SELECTED = "k-state-selected",
+                HIGHLIGHTED = "k-state-active",
+                CHECKBOX = "custom-check-item",
+                SELECTALLITEM = "custom-multiselect-selectAll-item",
+                MULTISELECTPOPUP = "custom-multiselect-popup",
+                EMPTYSELECTION = "custom-multiselect-summary-empty";
+
+
+
+
+            var lineTemplate = '<input type="checkbox" name="#= {1} #" value="#= {0} #" class="' + CHECKBOX + '" />' +
+                               '<span data-value=" #= {0} #"> #= {1} #</span>';
+
+
+
+            var MultiSelectBox = DropDownList_MS.extend({
+
+                init: function (element, options) {
+
+                    options.template = kendo_MS.template(kendo_MS.format(lineTemplate, options.dataValueField, options.dataTextField));
+
+                    // base call to widget initialization
+                    DropDownList_MS.fn.init.call(this, element, options);
+                },
+
+                options: {
+                    name: "MultiSelectBox",
+                    index: -1,  // ** to fix the issue relating to execution of dotnet service fetching officer names twice. made as -1 instead of 0;
+                    showSelectAll: true,
+                    preSummaryCount: 10,  // number of items to show before summarising
+                    emptySelectionLabel: "All"//"Please select..."  // what to show when no items are selected
+                },
+
+                events: [
+                    SELECTIONCHANGED
+                ],
+
+                refresh: function () {
+
+                    // base call
+                    DropDownList_MS.fn.refresh.call(this);
+
+                    this._updateSummary();
+
+                    $(this.popup.element).addClass(MULTISELECTPOPUP);
+                },
+
+
+                current: function (candidate) {
+                    return this._current;
+                },
+
+
+                open: function () {
+                    var that = this;
+
+                    this._removeSelectAllItem();
+
+                    this._addSelectAllItem();
+
+                    if (!that.ul[0].firstChild) {
+                        that._open = true;
+
+                        if (!that._request) {
+                            that.dataSource.fetch();
+                        }
+                    } else {
+                        that.popup.open();
+                        that._scroll(that._current);
+                    }
+                },
+
+
+                close: function () {
+
+                    this._removeSelectAllItem();
+
+                    this._current = null;
+                    this._highlightCurrent();
+
+                    this._raiseSelectionChanged();
+
+                    DropDownList_MS.fn.close.call(this);
+                },
+
+                _raiseSelectionChanged: function () {
+
+                    var currentValue = this.value();
+                    var currentValues = currentValue.length > 0 ? currentValue.split(",") : [];
+
+                    if (this._oldValue) {
+
+                        var hasChanged = !($(this._oldValue).not(currentValues).length == 0 && $(currentValues).not(this._oldValue).length == 0);
+
+                        if (hasChanged) {
+                            this.trigger(SELECTIONCHANGED, { newValue: currentValues, oldValue: this._oldValue });
+                        }
+                    }
+                    else if (currentValue.length > 0) {
+                        this.trigger(SELECTIONCHANGED, { newValue: currentValues, oldValue: this._oldValue });
+                    }
+
+                    this._oldValue = currentValues;
+                },
+
+
+                _addSelectAllItem: function () {
+
+                    if (!this.options.showSelectAll) return;
+
+                    var firstListItem = this.ul.children('li:first');
+
+                    if (firstListItem.length > 0) {
+                        this.selectAllListItem = $('<li tabindex="-1" role="option" unselectable="on" class="k-item ' + SELECTALLITEM + '"></li>').insertBefore(firstListItem);
+
+                        // fake a data object to use for the template binding below
+                        var selectAllData = {};
+                        selectAllData[this.options.dataValueField] = '*';
+                        selectAllData[this.options.dataTextField] = 'All';
+
+                        this.selectAllListItem.html(this.options.template(selectAllData));
+
+                        this._updateSelectAllItem();
+
+                        this._makeUnselectable(); // required for IE8
+                    }
+                },
+
+
+                _removeSelectAllItem: function () {
+
+                    if (this.selectAllListItem) {
+                        this.selectAllListItem.remove();
+                    }
+                    this.selectAllListItem = null;
+                },
+
+
+                _focus: function (li) {
+                    if (this.popup.visible() && li && this.trigger(SELECT, { item: li })) {
+                        this.close();
+                        return;
+                    }
+                    this.select(li);
+                },
+
+
+                _highlightCurrent: function () {
+
+                    $('li', this.ul).removeClass(HIGHLIGHTED);
+                    $(this._current).addClass(HIGHLIGHTED);
+                },
+
+
+                _keydown: function (e) {
+
+                    // currently ignore Home and End keys
+                    // can be added later
+                    if (e.keyCode == kendo_MS.keys.HOME ||
+                        e.keyCode == kendo_MS.keys.END) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    DropDownList_MS.fn._keydown.call(this, e);
+                },
+
+
+                _move: function (e) {
+                    var that = this,
+                        key = e.keyCode,
+                        ul = that.ul[0],
+                        down = key === keys.DOWN,
+                        pressed;
+
+
+                    if (key === keys.UP || down) {
+
+                        if (down) {
+
+                            if (!that.popup.visible()) {
+                                that.toggle(down);
+                            }
+                            if (!that._current) {
+                                that._current = ul.firstChild;
+                            } else {
+                                that._current = ($(that._current)[0].nextSibling || that._current);
+                            }
+
+                        } else {
+                            //up
+
+                            // only if anything is highlighted
+                            if (that._current) {
+                                that._current = ($(that._current)[0].previousSibling || ul.firstChild);
+                            }
+                        }
+
+
+                        if (that._current) {
+                            that._scroll(that._current);
+                        }
+
+                        that._highlightCurrent();
+
+                        e.preventDefault();
+                        pressed = true;
+
+                    } else {
+                        pressed = DropDownList_MS.fn._move.call(this, e);
+                    }
+
+                    return pressed;
+                },
+
+
+                selectAll: function () {
+                    //alert('ya');
+                    var unselectedItems = this._getUnselectedListItems();
+                    this._selectItems(unselectedItems);
+
+                    // todo: raise custom event
+                },
+
+                unselectAll: function () {
+
+                    var selectedItems = this._getSelectedListItems();
+                    this._selectItems(selectedItems);  // will invert the selection
+
+                    // todo: raise custom event
+                },
+
+
+                _selectItems: function (listItems) {
+                    var that = this;
+
+                    $.each(listItems, function (i, item) {
+                        var idx = ui.List.inArray(item, that.ul[0]);
+                        that.select(idx);  // select OR unselect
+                    });
+                },
+
+                _select: function (li) {
+                    var that = this,
+                         current = that._current,
+                         data = that._data(),
+                         value,
+                         text,
+                         idx;
+
+                    li = that._get(li);
+
+                    if (li && li[0]) {
+                        idx = ui.List.inArray(li[0], that.ul[0]);
+                        if (idx > -1) {
+
+                            if (li.hasClass(SELECTED)) {
+                                li.removeClass(SELECTED);
+                                that._uncheckItem(li);
+
+                                if (this.selectAllListItem && li[0] === this.selectAllListItem[0]) {
+                                    this.unselectAll();
+                                }
+                            } else {
+                                li.addClass(SELECTED);
+                                that._checkItem(li);
+
+                                if (this.selectAllListItem && li[0] === this.selectAllListItem[0]) {
+                                    this.selectAll();
+                                }
+                            }
+
+                            if (this._open) {
+                                that._current(li);
+                                that._highlightCurrent();
+                            }
+
+                            var selecteditems = this._getSelectedListItems();
+                            value = [];
+                            text = [];
+                            $.each(selecteditems, function (indx, item) {
+                                var obj = $(item).children("span").first();
+                                value.push(obj.attr("data-value"));
+                                text.push(obj.text());
+                            });
+
+                            that._updateSummary(text);
+
+                            that._updateSelectAllItem();
+
+                            that._accessor(value, idx);
+
+                            // todo: raise change event (add support for selectedIndex) if required
+                        }
+                    }
+
+                },
+
+                _getAllValueListItems: function () {
+                    if (this.selectAllListItem) {
+                        return this.ul.children("li").not(this.selectAllListItem[0]);
+                    } else {
+                        return this.ul.children("li");
+                    }
+                },
+
+                _getSelectedListItems: function () {
+                    return this._getAllValueListItems().filter("." + SELECTED);
+                },
+
+                _getUnselectedListItems: function () {
+                    return this._getAllValueListItems().filter(":not(." + SELECTED + ")");
+                },
+
+                _getSelectedItemsText: function () {
+
+                    var text = [];
+                    var selecteditems = this._getSelectedListItems();
+                    $.each(selecteditems, function (indx, item) {
+                        var obj = $(item).children("span").first();
+                        text.push(obj.text());
+                    });
+                    return text;
+                },
+
+                _updateSelectAllItem: function () {
+
+                    if (!this.selectAllListItem) return;
+
+                    // are all items selected?
+                    if (this._getAllValueListItems().length == this._getSelectedListItems().length) {
+                        //alert('yes')
+                        this._checkItem(this.selectAllListItem);
+                        this.selectAllListItem.addClass(SELECTED);
+                    }
+                    else {
+                        this._uncheckItem(this.selectAllListItem);
+                        this.selectAllListItem.removeClass(SELECTED);
+                    }
+                },
+
+                _updateSummary: function (itemsText) {
+
+                    if (!itemsText) {
+                        itemsText = this._getSelectedItemsText();
+                    }
+
+                    if (this._getAllValueListItems().length == this._getSelectedListItems().length) {
+                        this.text('All');
+                        return;
+                    }
+                    //** end of code
+                    if (itemsText.length == 0) {
+                        this._inputWrapper.addClass(EMPTYSELECTION);
+                        this.text(this.options.emptySelectionLabel);
+                        return;
+                    } else {
+                        this._inputWrapper.removeClass(EMPTYSELECTION);
+                    }
+
+                    if (itemsText.length <= this.options.preSummaryCount) {
+                        this.text(itemsText.join(", "));
+                    }
+                    else {
+                        this.text(itemsText.length + ' selected');
+                    }
+                },
+
+                _checkItem: function (itemContainer) {
+                    if (!itemContainer) return;
+                    itemContainer.children("input").attr("checked", "checked");
+                },
+
+                _uncheckItem: function (itemContainer) {
+                    if (!itemContainer) return;
+                    itemContainer.children("input").removeAttr("checked");
+                },
+
+                _isItemChecked: function (itemContainer) {
+                    return itemContainer.children("input:checked").length > 0;
+                },
+
+                value: function (value) {
+                    var that = this,
+                        idx,
+                        valuesList = [];
+
+                    if (value !== undefined) {
+
+                        if (!$.isArray(value)) {
+                            valuesList.push(value);
+                            this._oldValue = valuesList; // to allow for selectionChanged event
+                        }
+                        else {
+                            valuesList = value;
+                            this._oldValue = value; // to allow for selectionChanged event
+                        }
+
+                        // clear all selections first
+                        $(that.ul[0]).children("li").removeClass(SELECTED);
+                        $("input", that.ul[0]).removeAttr("checked");
+
+                        $.each(valuesList, function (indx, item) {
+                            if (item !== null) {
+                                item = item.toString();
+                            }
+
+                            that._valueCalled = true;
+
+                            if (item && that._valueOnFetch(item)) {
+                                return;
+                            }
+
+                            idx = that._index(item);
+
+                            if (idx > -1) {
+                                that.select(idx);
+                            }
+
+                        });
+
+                    }
+                    else {
+                        return that._accessor();
+                    }
+                }
+
+            });
+
+            ui.plugin(MultiSelectBox);
+
+        })(jQuery);
+
+
+
+        //******************
+        Area_timeInterval = window.setInterval(function () { multiSelectAreaDropDownFunc(); }, 1000);
+
+        function multiSelectAreaDropDownFunc() {
+
+            window.clearInterval(Area_timeInterval)
+
+            //** The below codes are for asset type selection
+            var Area_Multiselect = $('#AreaDropDown');
+
+            Area_Multiselect.kendoMultiSelectBox({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Collections/GetArea",
+                            dataType: 'json',
+                        },
+
+                        parameterMap: function (options, type) {
+                            if (type === 'read') {
+                                var CustomerId = '@ViewBag.CurrentCityID';
+                                return { customerid: CustomerId }
+                            }
+                        }
+
+                    }
+                },
+                emptySelectionLabel: "All",//"Please select...",
+
+
+            });
+
+        }
+
+
+        Zone_timeInterval = window.setInterval(function () { multiSelectZoneDropDownFunc(); }, 1000);
+
+        function multiSelectZoneDropDownFunc() {
+
+            window.clearInterval(Zone_timeInterval)
+
+            //** The below codes are for asset type selection
+            var Zone_Multiselect = $('#ZoneDropDown');
+
+            Zone_Multiselect.kendoMultiSelectBox({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Collections/GetZone",
+                            dataType: 'json',
+                        },
+
+                        parameterMap: function (options, type) {
+                            if (type === 'read') {
+                                var CustomerId = '@ViewBag.CurrentCityID';
+                                return { customerid: CustomerId }
+                            }
+                        }
+
+                    }
+                },
+                emptySelectionLabel: "All",//"Please select...",
+
+
+            });
+
+        }
+
+
+
+
+        Street_timeInterval = window.setInterval(function () { multiSelectStreetDropDownFunc(); }, 1000);
+
+        function multiSelectStreetDropDownFunc() {
+
+
+            window.clearInterval(Street_timeInterval)
+
+            //** The below codes are for asset type selection
+            var Street_Multiselect = $('#StreetDropDown');
+
+            Street_Multiselect.kendoMultiSelectBox({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Collections/GetStreet",
+                            dataType: 'json',
+                        },
+
+                        parameterMap: function (options, type) {
+                            if (type === 'read') {
+                                var CustomerId = '@ViewBag.CurrentCityID';
+                                return { customerid: CustomerId }
+                            }
+                        }
+
+                    }
+                },
+                emptySelectionLabel: "All",//"Please select...",
+
+
+            });
+
+        }
+
+        Suburb_timeInterval = window.setInterval(function () { multiSelectSuburbDropDownFunc(); }, 1000);
+
+        function multiSelectSuburbDropDownFunc() {
+
+
+            window.clearInterval(Suburb_timeInterval)
+
+            //** The below codes are for asset type selection
+            var Suburb_Multiselect = $('#SuburbDropDown');
+
+            Suburb_Multiselect.kendoMultiSelectBox({
+                dataTextField: "Text",
+                dataValueField: "Text",
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../Collections/GetSuburb",
+                            dataType: 'json',
+                        },
+
+                        parameterMap: function (options, type) {
+                            if (type === 'read') {
+                                var CustomerId = '@ViewBag.CurrentCityID';
+                                return { customerid: CustomerId }
+                            }
+                        }
+
+                    }
+                },
+                emptySelectionLabel: "All",//"Please select...",
+
+
+            });
+
+        }
+
+        function GetFilter()
+        {
+            var locationtype= $("#MethodDropDown").data("kendoDropDownList").text();
+            var locationvalue ="All";
+            if(locationtype == "Area")
+                locationvalue =$("#AreaDropDown").data("kendoDropDownList").text();
+            else if(locationtype == "Zone")
+                locationvalue =$("#ZoneDropDown").data("kendoDropDownList").text();
+            else if(locationtype == "Street")
+                locationvalue =$("#StreetDropDown").data("kendoDropDownList").text();
+            else if(locationtype == "Suburb")
+                locationvalue =$("#SuburbDropDown").data("kendoDropDownList").text();
+
+            return { locationtype: locationtype, locationvalue: locationvalue}
+
+        }
+
+        function GetGridMeters()
+        {
+            $("#CurrentGrid2").data("kendoGrid").dataSource.read();
+
+        }
+
+        function ReportDropDownChange() {
+           
+            switch ($("#MethodDropDown").data("kendoDropDownList").text()) {
+                case "Area":                  
+                    viewModel.set("hideArea", false);
+                    viewModel.set("hideZone", true);
+                    viewModel.set("hideStreet", true);
+                    viewModel.set("hideSuburb", true);
+                    
+                    break;
+                case "Zone":
+                    viewModel.set("hideArea", true);
+                    viewModel.set("hideZone", false);
+                    viewModel.set("hideStreet", true);
+                    viewModel.set("hideSuburb", true);
+                    break;
+                case "Street":
+                    viewModel.set("hideArea", true);
+                    viewModel.set("hideZone", true);
+                    viewModel.set("hideStreet", false);
+                    viewModel.set("hideSuburb", true);
+                    break;
+                case "Suburb":
+                    viewModel.set("hideArea", true);
+                    viewModel.set("hideZone", true);
+                    viewModel.set("hideStreet", true);
+                    viewModel.set("hideSuburb", false);
+                    break;
+                default:
+                    viewModel.set("hideArea", true);
+                    viewModel.set("hideZone", true);
+                    viewModel.set("hideStreet", true);
+                    viewModel.set("hideSuburb", true);
+                    break;
+
+                  
+            }
+        }
+        function CheckedAll(ele) {
+            if($(ele).is(':checked'))
+                $("#CurrentGrid2 tbody input:checkbox").attr("checked", true);
+            else
+                $("#CurrentGrid2 tbody input:checkbox").attr("checked", false);
+        }
+    </script>
+
+}
+
+@section Styles
+{
+    <style>
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker { background-color: transparent !important; }
+        .floatDivs {
+            float: left;
+        }
+    </style>
+
+
+}
+
+@using (Html.BeginForm("EditCollection", "Collections", FormMethod.Post, new { @class = "admin-form", @id = "editMetersForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection Status"):@Html.Tooltip("CollectionStatus") <span class="customer_status_state state_@Model.Status.ToLower()">@Model.Status</span></div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Detail")</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection ID"): </div>
+        @Html.DisplayFor(m => m.CollectionId, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CollectionId)
+        @Html.HiddenFor(model => model.CustomerId)
+        @Html.HiddenFor(model => model.LocalTime)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Created"): </div>
+        @Model.DateCreated.ToShortDateString()
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection Name"): </div>
+        @Html.DisplayFor(m => m.CollectionName, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CollectionName)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created By"): </div>
+        @Model.CreatedBy
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vendor Name"):@Html.Tooltip("VendorName") </div>
+        @(Html.Kendo().DropDownListFor(m => m.VendorId)
+              .DataTextField("Text")
+              .DataValueField("Value")
+              .BindTo(Model.VendorOptions))
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Edited On"): </div>
+        @Model.LastEditedOn.GetValueOrDefault().ToShortDateString()
+        &nbsp;
+    </div>
+    <div class="two-column" style="clear: left">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Activation Date"):@Html.Tooltip("ActivationDate") </div>
+        @(Html.Kendo().DatePickerFor(x => x.ActivationDate))
+        @Html.ShowAllErrors("ActivationDate")
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Edited By"): </div>
+        @Model.LastEditedBy
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Days Between Collections"): </div>
+        @(Html.Kendo().IntegerTextBoxFor(m => m.DaysBtwCollections).Min(0).Max(14))
+        @Html.ValidationMessageFor(x => x.DaysBtwCollections)
+
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Skip Public Holidays"): </div>
+
+        @Html.CheckBoxFor(m => m.SkipPublicHolidays)
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Skip Specific Days of Week"): </div>
+        <div style="padding-left: 200px">
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipSunday)     @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Sunday") </div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipMonday)     @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Monday") </div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipTuesday)   @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tuesday")</div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipWednesday) @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Wednesday")</div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipThursday)   @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Thursday") </div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipFriday)     @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Friday") </div>
+            <div class="collectionRouteDay">@Html.CheckBoxFor(m => m.SkipSaturday)   @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Saturday") </div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Information")</div>
+}
+
+
+
+<div class="two-column" >
+    <div class="filter-option">
+
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Method"): </div>
+        @(Html.Kendo().DropDownList()
+                      .Name("MethodDropDown")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .HtmlAttributes(new { style = "width:202px;font-size:16px;" })
+                              .Events(e => e.Change("ReportDropDownChange"))
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                              Text = "All",
+                              Value = "All"
+                          },
+                          new SelectListItem() {
+                              Text = "Area",
+                              Value = "Area"
+                          },
+                          new SelectListItem() {
+                              Text = "Zone",
+                              Value = "Zone"
+                          },
+                           new SelectListItem() {
+                              Text = "Street",
+                              Value = "Street"
+                          },
+                            new SelectListItem() {
+                              Text = "Suburb",
+                              Value = "Suburb"
+                          }
+                      })
+                              .Value("All")
+        )
+    </div>
+</div>
+<div class="two-column" data-bind="invisible: hideArea">
+    <div class="filter-option">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area"): </div>
+        @(Html.Kendo().DropDownListFor(a => a.Area)
+        .HtmlAttributes(new { @class = "filter-dropdown", style = "width:202px;font-size:16px;", id = "AreaDropDown", onchange = "" })
+                                     .Enable(true)
+
+
+        )
+
+
+    </div>
+</div>
+
+
+<div class="two-column" data-bind="invisible: hideZone">
+    <div class="filter-option">
+
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone"): </div>
+        @(Html.Kendo().DropDownListFor(a => a.Zone)
+                .HtmlAttributes(new { @class = "filter-dropdown", style = "width:202px;font-size:16px;", id = "ZoneDropDown", onchange = "" })
+                                     .Enable(true)
+
+
+        )
+
+
+    </div>
+</div>
+
+
+<div class="two-column" data-bind="invisible: hideStreet">
+    <div class="filter-option">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"): </div>
+        @(Html.Kendo().DropDownListFor(a => a.Street)
+                .HtmlAttributes(new { @class = "filter-dropdown", style = "width:202px;font-size:16px;", id = "StreetDropDown", onchange = "" })
+                                     .Enable(true)
+
+
+        )
+
+
+    </div>
+</div>
+
+<div class="two-column" data-bind="invisible: hideSuburb">
+    <div class="filter-option">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb"): </div>
+        @(Html.Kendo().DropDownListFor(a => a.Suburb)
+                        .HtmlAttributes(new { @class = "filter-dropdown", style = "width:202px;font-size:16px;", id = "SuburbDropDown", onchange = "" })
+                                     .Enable(true)
+
+
+        )
+
+
+    </div>
+</div>
+
+
+ <div class="filter-searchBox" style="margin-left: 0px; margin-bottom:1px;">
+    <input type="button" data-bind="click: Refresh" value="@HttpContext.GetGlobalResourceObject("Buttons", "Refresh")" id="btnSearch" class="filter-SearchButton" style="background-color: #33BAB1;" onclick="GetGridMeters()" />
+</div>
+<div style=" padding: 2px; clear: both; width: 100%" id="meterAdditionErrors">
+</div>
+<div id="grid" class="grid-content">
+
+    <div style=" padding: 5px;" class="floatDivs">
+        @(Html.Kendo().Grid<CollectionMeter>(Model.AllMeters)
+
+              .HtmlAttributes(new { @style = "max-height:5000px; height:500px; max-width:800px" })
+              .Name("CurrentGrid2")
+              .Columns(columns =>
+              {
+
+                  columns.Bound(p => p.MeterId).Sortable(false).Filterable(false).HeaderTemplate("<input type='checkbox' id='SelectAll' onclick='CheckedAll(this)' ></input>").ClientTemplate(@Html.CheckBox("cb_#= MeterId #", new { @id = "cb_#= MeterId #", value = "#= MeterId #|#= AreaId #" }).ToHtmlString()).Title(" ").Width(40);
+                      columns.Bound(p => p.MeterName).Filterable(fil => fil.UI("meterNameFilter")).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Meter Name").ToString());
+                      columns.Bound(p => p.Zone).Width(75).Filterable(fil => fil.UI("zoneIdFilter")).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Zone").ToString());
+                      columns.Bound(p => p.Area).Width(75).Filterable(fil => fil.UI("areaIdFilter")).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Area").ToString());
+                      columns.Bound(p => p.Suburb).Width(125).Filterable(fil => fil.UI("suburbFilter")).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Suburb").ToString());
+                      columns.Bound(p => p.Street).Width(125).Filterable(fil => fil.UI("streetFilter").Extra(true)).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Street").ToString());
+                      columns.Bound(p => p.CollectionName).Filterable(false).Width(175).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Collection Name").ToString());
+
+                  })
+                //do not make this a virtual scrolling table, otherwise it wont pick up the checked items that arent visible to the user
+              .Scrollable()
+              .Sortable()
+              .Resizable(resize => resize.Columns(true))
+              .Filterable(filterable => filterable.Extra(false).Messages(msg => msg.Info("")).Operators(operators => operators.ForString(str => str.Clear().Contains("Contains")).ForNumber(num => num.Clear().IsEqualTo("Equals"))))
+                .DataSource(dataSource => dataSource.Ajax().ServerOperation(false))
+                     // .DataSource(dataSource => dataSource
+                     //   .Ajax()
+                     //             .Read(read => read.Action("GetMetersForCollection", "Collections").Data("GetFilter"))
+                     //.PageSize(10000)
+
+                     //   )
+
+        )
+     
+        <button type="submit" name="submitButton" class="button" id="addMeters" value="Add">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add Meters")</button>
+
+    </div>
+    <div style=" padding: 5px; " class="floatDivs">
+        @(Html.Kendo().Grid(Model.Meters)
+              .HtmlAttributes(new { @style = "max-height:500px; height:500px; max-width:225px" })
+              .Name("CurrentGrid")
+              .Columns(columns =>
+                  {
+                      columns.Bound(p => p.MeterId).Visible(false);
+                      columns.Bound(p => p.AreaId).Visible(false);
+                      columns.Bound(p => p.MeterName).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Meter Name").ToString());
+                      columns.Command(command => command.Custom("x").Click("RemoveMeter")).Width(50).Title(@Model.Meters.Count.ToString());
+                  })
+              .Scrollable()
+              .Sortable()
+              .Resizable(resize => resize.Columns(true))
+              .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                                             .Model(model => model.Id(p => p.MeterId))
+              )
+        )
+        <div style="float: left;" class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" onclick="SaveMeter(); return false;" value="Save">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Collection", new { routeId = @Model.CollectionId, customerId = @Model.CustomerId }, new { @class = "button previous" })
+        </div>
+    </div>
+</div>
+

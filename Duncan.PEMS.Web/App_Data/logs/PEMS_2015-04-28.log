@@ -1,0 +1,64 @@
+2015-04-28 23:14:47.9311 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:14:58.0587 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2015-04-28 23:14:58.0587 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-04-28 23:14:58.0587 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:17:18.2247 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:17:20.0919 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2015-04-28 23:17:20.0919 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:17:20.0919 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:17:21.4509 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:17:23.2789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-04-28 23:17:23.2789 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:17:23.2789 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:17:28.0619 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:17:30.0289 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-04-28 23:17:30.0289 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:17:30.0289 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:18:58.4772 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:19:00.2373 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: CurrentLocation, A:GIS
+2015-04-28 23:19:00.2373 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-04-28 23:19:00.2373 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:19:16.1722 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:19:17.9592 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerNames, A:GIS
+2015-04-28 23:19:17.9592 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:19:17.9592 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:19:19.7533 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:19:21.5444 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerIDS, A:GIS
+2015-04-28 23:19:21.5444 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:19:21.5444 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:19:23.1484 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:19:24.9775 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:19:24.9775 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:19:24.9775 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:23:24.0662 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetOfficerCurrentLocationsALL | ERROR IN GetOfficerCurrentLocationsALL Method (GIS Reports - Officer Current Location)
+2015-04-28 23:29:20.6989 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:29:25.1812 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:29:25.1812 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:29:25.1812 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:30:30.7580 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetOfficerCurrentLocationsALL | ERROR IN GetOfficerCurrentLocationsALL Method (GIS Reports - Officer Current Location)
+2015-04-28 23:33:18.1168 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:33:19.8589 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:33:19.8589 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:33:19.8589 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:35:07.1290 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:35:09.3231 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:35:09.3231 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:35:09.3231 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:38:57.4282 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetOfficerCurrentLocationsALL | ERROR IN GetOfficerCurrentLocationsALL Method (GIS Reports - Officer Current Location)
+2015-04-28 23:48:07.5826 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:48:12.4459 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:48:12.4459 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:48:12.4459 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:52:36.0520 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:52:39.4052 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:52:39.4052 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:52:39.4052 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:53:14.4082 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:53:16.1163 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:53:16.1163 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:53:16.1163 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:53:23.7777 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-04-28 23:53:25.4808 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetOfficerCurrentLocations, A:GIS
+2015-04-28 23:53:25.4808 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-04-28 23:53:25.4808 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-04-28 23:53:55.9096 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetOfficerCurrentLocationsALL | ERROR IN GetOfficerCurrentLocationsALL Method (GIS Reports - Officer Current Location)

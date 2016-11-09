@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Users Management" );
+}
+
+@section ExportButtons 
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportToExcel", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportToCsv", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~"} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+<div class="grid-header">
+    <div style="float: left">
+        @Html.ActionLink( "Add User", "Create", "Users", null, new {@class = "button", @type = "button"} )
+    </div>
+    <div class="export-buttons" id="exportActions">
+        <div style="float: right; padding-right: 20px; padding-top: 10px">
+            @using (Html.BeginForm( "Action", "Users", FormMethod.Post, new {@class = "admin-form", @id = "actionForm"} ))
+            {
+                @:Action:
+                <select title="action" id="ddlAction"  class="filter-dropdown" style="width: auto" name="ddlActionValue">
+                    <option value="">Select</option>
+                    <option value="UpdateStatus">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Update Status" )</option>
+                    <option value="ChangeRole">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Change Role" )</option>
+                </select>
+            }
+        </div>
+    </div>
+</div>
+<div style="clear: both"></div>
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Users.ListUserModel>
+
+@(Html.Kendo().Grid( Model )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Name( "CurrentGrid" )
+      .Columns( columns =>
+                    {
+                        columns.Bound( p => p.Username ).Sortable( false ).ClientTemplate( @Html.CheckBox( "cb_#= Username #", new {@id = "cb_#= Username #", value = "#= Username #"} ).ToHtmlString() ).Title( "Action" ).Width( 50 ).Title( "" );
+                        columns.Bound( p => p.Username ).ClientTemplate( @Html.ActionLink( "#= Username #", "Details", "Users", new {userName = "#= Username #"},
+                                                                                           new {@onclick = "RowClick(this);"} ).ToHtmlString() ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Username" ).ToString() ).Width( 150 );
+                        columns.Bound( p => p.FirstName ).Width( 150 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "First Name" ).ToString() );
+                        columns.Bound( p => p.LastName ).Width( 150 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Last Name" ).ToString() );
+                        columns.Bound(p => p.CreationDate).Title("Created").ClientTemplate("#= CreationDateDisplay #").Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Creation Date").ToString());
+                        columns.Bound( p => p.Role ).Title( "Role" ).Width( 150 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Role Name" ).ToString() );
+                        columns.Bound( p => p.Status ).Width( 150 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Status" ).ToString() );
+                        columns.Bound( p => p.BadLoginCount ).Width( 150 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Bad Login Count" ).ToString() );
+                        columns.Bound(p => p.LastLoginDate).ClientTemplate("#= LastLoginDateDisplay #").Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Last Login Date").ToString());
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnDataBound" ) )
+      .Events( events => events.ColumnResize( "OnRowResized" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetUsers", "Users" ).Data( "additionalData" ).Type( HttpVerbs.Get ) )
+      ))
+
+@section Styles
+{
+    <style type="text/css">
+        #CurrentGrid { display: none; }
+
+        #exportButtons { display: none; }
+
+        #exportActions { display: none; }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+    </style>
+
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Inquiry" )</span></h1>
+}
+
+@section PageFilter 
+{      
+    <div class="two-column-wrapper">
+    <div class="two-column">
+            <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Username" )</span>
+                <input id="txtUsername" class="filter-input k-textbox" /></div>     
+        </div>
+    <div class="two-column">
+        <div class="filter-option">
+            <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" )</span>
+            <select title="Status" id="ddlStatus" class="filter-dropdown" data-role="dropdownlist">
+                <option value="All">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "All" )</option>
+                <option value="Active">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Active" )</option>
+                <option value="Locked Out">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Suspended" )</option>
+                <option value="Terminated">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Terminated" )</option>
+            </select>
+        </div>  
+    </div>
+    <div class="two-column">
+        <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Name" )</span>
+            <input id="txtFirstName" class="filter-input k-textbox" /></div>     
+    </div>
+    <div class="two-column">
+        <div class="filter-option"  id="roleDiv">
+            <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role Name" )@Html.Tooltip( "RoleName" )</span>
+            <select id="ddlRoleName" data-role="dropdownlist" class="filter-dropdown" data-bind="source: roles, value: role" data-option-label="All" data-text-field="Text" data-value-field="Value"></select>
+        </div>
+    </div>
+    <div class="two-column">
+        <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Name" )</span>
+            <input id="txtLastName" class="filter-input k-textbox" />
+        </div>  
+    </div>
+        </div>
+    <div class="filter-searchBox">
+        <input type="button" value="@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )" id="btnSearch" class="button important filter-SearchButton"  onclick=" LoadFreshGrid(); return false; " /></div>
+        
+    <script type="text/javascript">
+        
+        var viewModel = kendo.observable({
+            roles: [],
+            role: null,
+        });
+
+
+        //ON LOAD
+        $(document).ready(function() {
+            
+            // bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+            
+            LoadRoles();
+            LoadSorts();
+            $(window).bind('resize', function() {
+                //  $('#CurrentGrid').freezeGridColumn(1);
+            });
+            //hook up the actions here
+            $('#ddlAction').change(function() {
+                //only perform action on valid actions
+                var selectedValue = $("#ddlAction").val();
+
+                if (selectedValue == "") {
+
+                } else {
+
+                    var oneIsChecked = false;
+                    var data = {};
+
+                    var grid = $("#CurrentGrid").data("kendoGrid");
+                    // mvc model binder requires arrays to be in specific format
+                    grid.tbody
+                        .find(":checked")
+                        .each(function(idx) {
+                            data["uns[" + idx + "]"] = $(this).val();
+                            oneIsChecked = true;
+                        });
+
+                    //make sure they selected a valid value (not empty) and they have checked some boxes on the grid.
+                    if (oneIsChecked) {
+                        //save the IDs to session
+                        $.post('/shared/Users/SetActionableUsernames', data, OnUserNamesSet);
+
+                    } else {
+                        alert("No items have been selected.");
+                        $("#ddlAction").val("");
+                    }
+                }
+            });
+        });
+
+        function OnUserNamesSet(data) {
+            gridFilters.CurrentPage = $("#CurrentGrid").data("kendoGrid").dataSource.page();
+            $.post('/shared/Sessions/SaveUserFilters', gridFilters);
+            $('#actionForm').submit();
+        }
+
+        //ROLES
+
+        function LoadRoles() {
+            //get roles based on selected client
+            var $customerId = @ViewBag.CurrentCityId;
+            $.post('/shared/Users/GetRoles?cid=' + $customerId, OnRolesLoaded);
+        }
+
+        function OnRolesLoaded(data) {
+            viewModel.set('roles', data);
+        }
+
+        //SORTS 
+        var sorts = {};
+
+        function LoadSorts() {
+            $.post('/shared/Users/GetSavedSortValues?indexType=Roles', OnSortsLoaded);
+        }
+
+        function OnSortsLoaded(data) {
+             if (!isEmptyObject(data))   {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100  };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetUserFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+             if (!isEmptyObject(data))   {
+                gridFilters = data;
+                $("#ddlRoleName").val(gridFilters.RoleName);
+                $("#txtUsername").val(gridFilters.UserName);
+                $("#txtFirstName").val(gridFilters.FirstName);
+                $("#txtLastName").val(gridFilters.LastName);
+                $("#ddlStatus").val(gridFilters.Status);
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                 gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100  };
+            }
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .filter method will call the read automatically
+
+        function LoadGrid() {
+            LoadGridData();
+        }
+
+        function LoadFreshGrid() {
+            var currentPageSize = $("#CurrentGrid").data("kendoGrid").dataSource.pageSize();
+            // Ensure the page size is at least 100
+            if (currentPageSize < 100) {
+                currentPageSize = 100;
+            }
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": currentPageSize };
+            LoadGrid();
+        }
+
+        function LoadGridData() {
+            var $filter = new Array();
+
+            //user name
+            var $userName = $("#txtUsername").val();
+            if ($userName) {
+                gridFilters.UserName = $userName;
+                $filter.push({ field: "Username", operator: "contains", value: $userName });
+            }
+
+            //last name
+            var $lastName = $("#txtLastName").val();
+            if ($lastName) {
+                gridFilters.LastName = $lastName;
+                $filter.push({ field: "LastName", operator: "contains", value: $lastName });
+            }
+
+            //first name
+            var $firstName = $("#txtFirstName").val();
+            if ($firstName) {
+                gridFilters.FirstName = $firstName;
+                $filter.push({ field: "FirstName", operator: "contains", value: $firstName });
+            }
+
+            //status
+            var $status = $("#ddlStatus :selected").text();
+            if ($status != "All") {
+                gridFilters.Status = $status;
+                $filter.push({ field: "Status", operator: "contains", value: $status });
+            }
+
+            //roleId
+            var $roleName = $("#ddlRoleName :selected").text();
+            if ($roleName != "All") {
+                gridFilters.RoleName = $("#ddlRoleName").val();
+                $filter.push({ field: "Role", operator: "contains", value: $roleName });
+            }
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+
+        //ROW CLICK
+
+        function RowClick() {
+            // Get the grid
+            var grid = $("#CurrentGrid").data("kendoGrid")
+            //get the current page 
+            gridFilters.CurrentPage = grid.dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = grid.select().index();
+            // get the page size
+            gridFilters.PageSize = grid.dataSource.pageSize();
+            //save the filters
+            $.post('/shared/Sessions/SaveUserFilters', gridFilters);
+        }
+
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            applyFrozenColumns();
+            SetExportData();
+
+        }
+
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+            //if (set == 0) {
+            //    $(".k-grid-toolbar", "#CurrentGrid").append("<span class='exportButton'>Export: </span>");
+            //}
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+            $("#exportActions").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            //Additional Data
+            href = href.replace(/roleId=([^&]*)/, 'roleId=' + ($("#ddlRoleName").val() || 'All'));
+            return href;
+        }
+
+        //Freeze columns if you need to for this grid
+
+        function applyFrozenColumns() {
+            //   $('#CurrentGrid').freezeGridColumn(1);
+        }
+
+        function OnRowResized(e) {
+
+            //var th = $('#CurrentGrid .k-grid-header table th[data-field="' + e.column.field + '"][data-title="' + e.column.title + '"]');
+            //var index = $('#CurrentGrid .k-grid-header table th').index(th);
+            //$('#CurrentGrid').UpdateWidths(index, 1, e.newWidth, e.oldWidth);
+            //$('#CurrentGrid').freezeGridColumn(1);
+        }
+
+        //additional data sent to the action when the read method is called (when we apply a filter)
+
+        function additionalData() {
+            var roleId = $("#ddlRoleName").val();
+
+            return {
+                roleId: roleId
+            };
+        }
+
+    </script>
+}

@@ -1,0 +1,250 @@
+﻿
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Entities.FileUpload
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@model Duncan.PEMS.Entities.Customers.CustomerDemandZonesModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Customer Demand Zones");
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Edit")  / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Demand Zones")</span></h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+        }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Id"): </div>
+    <div class="customer_text" id="labelId1">@Html.DisplayFor(m => m.CustomerId)</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name"): </div>
+    <div class="customer_text">@Html.DisplayFor(m => m.DisplayName)</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_new">@Html.DisplayFor(m => m.Status.Status)</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor(m => m.Status.StatusDate)</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Identification").ToString(), "EditCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Assets").ToString(), "EditAssets", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Payments").ToString(), "EditPayments", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Rules").ToString(), "EditRules", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Labels").ToString(), "EditCustomLabels", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Grids").ToString(), "EditCustomGrids", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Event Codes").ToString(), "EditEventCodes", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Areas").ToString(), "EditAreas", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Maintenance Schedule").ToString(), "EditMaintenanceSchedule", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>*@
+    @if (Model.Status.StatusId == CustomerStatus.New)
+    {
+        <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Activate").ToString(), "ActivateCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    }
+</div>
+
+@using (Html.BeginForm("EditDemand", "Customers", FormMethod.Post, new { @class = "customer-form", @id = "createCustomerAreas" }))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+
+    <input id="NewAreas" name="NewAreas" type="hidden" value="" />
+    <input id="NewZones" name="NewZones" type="hidden" value="" />
+    <input id="NewCustomGroup1s" name="NewCustomGroup1s" type="hidden" value="" />
+    <input id="NewCustomGroup2s" name="NewCustomGroup2s" type="hidden" value="" />
+    <input id="NewCustomGroup3s" name="NewCustomGroup3s" type="hidden" value="" />
+
+    <div class="customer_tab_content">
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Demand Zones")</div>
+        @*Welcome to the Demand Zone selection screen.<br />
+            This screen is not completed yet and will be available in a future release.*@
+        <div style="padding-bottom:10px">
+            <button id="btnAdd" type="button" value="Add" class="button" onclick=" ShowAddOptions(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add Demand Zone")</button>
+            <div id="AddDiv" style="display:none">
+                @(Html.Kendo().DropDownList()
+                .Name("DemandZoneID")
+                .OptionLabel("Select")
+            .HtmlAttributes(new { style = "width: 280px; font-size: 16px" })
+                      .DataTextField("FileName")
+                    .DataValueField("FileType")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Customers/GetDemandZones");
+                                    });
+                                })
+                )
+
+                <button id="btnSave" type="button" value="Add" class="button" onclick=" AddNewDemandZone(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add")</button>
+            </div>
+        </div>
+    @(Html.Kendo().Grid(Model.DemandZones) // Bind the grid to the Model property of the view
+              .HtmlAttributes(new { style = "max-width: 1550px; height: 380px;" })
+                          .Name("DemandZonesGrid")
+                       .Editable(editable => editable.Mode(GridEditMode.InCell))
+                          .Columns(columns =>
+                              {
+                                  columns.Bound(p => p.DemandZoneId).ClientTemplate(@Html.ActionLink("#= DemandZoneId #", "EditDemand", "Customers", new
+                                  {
+                                      customerId = @Model.CustomerId,
+                                      DemandZoneId = "#= DemandZoneId #",
+
+                                  }, new { @onclick = "abc" }).ToHtmlString()).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Demand Zones").ToString());
+
+                                  columns.Bound(p => p.DemandZoneCustomerId).Width(35).Visible(false);
+                                  columns.Bound(p => p.DemandZoneId).Width(35).Visible(false);
+                                  columns.Bound(p => p.DemandZoneDesc).Width(250).Title("Demand Zone");
+                                  columns.Bound(p => p.IsDisplay).Width(250).Title("Is Display");
+
+                                  columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);
+                              })
+
+                      .Scrollable(scr => scr.Height(200))
+                      .DataSource(dataSource => dataSource
+                                     .Ajax()                                               
+                                     .ServerOperation(false)
+                                     .Model(model =>
+                 {
+                     model.Id(p => p.DemandZoneCustomerId);
+                     model.Field(p => p.DemandZoneId).Editable(false);
+                     model.Field(p => p.DemandZoneDesc).Editable(false);
+                     model.Field(p => p.IsDisplay).Editable(false);
+                 })
+
+
+                      )
+    )
+    @*</div>*@
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="CONTINUE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue")</button>
+        @*<button type="submit" name="submitButton" class="button" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>*@
+        <button type="submit" name="submitButton" class="button previous" value="RETURN">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+    </div>
+
+</div>
+}
+<script type="text/javascript">
+
+    var areasToAdd = new Array();
+    $(document).ready(function () {
+
+    });
+
+    function GetCustID() {
+        var CID = $('#labelId1').text();
+        return { customerId: CID }
+    }
+
+    function ShowAddOptions() {
+        $('#btnAdd').css('display', 'none');
+        $('#AddDiv').css('display', 'block');
+    }
+
+    function AddNewDemandZone() {
+        $.ajax({
+            url: '@Url.Action("AddNewDemandZone", "Customers", Request.RequestContext.RouteData.Values)',
+            type: 'POST',
+            traditional: true,
+            dataType: "json",
+            contentType: "application/json",
+            data: kendo.stringify({ CustID: $('#labelId1').text(), DemandZoneID: $("#DemandZoneID").val() }),
+            success: function (data) {
+                alert(data);
+                if (data == "Record saved successfully") {
+                    window.location.href = window.location.href;
+                    $('#AddDiv').css('display', 'none');
+                    $('#btnAdd').css('display', 'inline');
+                }
+            },
+            error: function (e) {
+                alert('error occured')
+            }
+        });
+
+    }
+
+    function OnRemoveArea(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        if (confirm('Are you sure you want to delete this demand zone for this selected customer?')) {
+            // Save it!
+            $.get('/Customers/RemoveDemandZoneCustomer', { customerId: dataItem.CustomerId, DemandZoneId: dataItem.DemandZoneId }, function (data) {
+                if (data.length != 0) {
+                    alert(data);
+                    if (data == "Asset with selected demand zone deleted")
+                        window.location.href = window.location.href;
+                }
+
+            });
+
+        }
+    }
+
+
+   
+</script>
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Modified by"): @Html.DisplayFor(m => m.Status.ModifiedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.ModifiedOn)
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created by"): @Html.DisplayFor(m => m.Status.CreatedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.CreatedOn)
+    </div>
+</div>

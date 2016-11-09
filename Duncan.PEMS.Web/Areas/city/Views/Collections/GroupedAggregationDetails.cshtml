@@ -1,0 +1,364 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.AggregationDetails
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Aggregation Details" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /   <a href="Aggregation">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a>   / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Route Aggregation Details" )</span></h1>
+}
+
+@section Scripts 
+{
+    <script type="text/javascript">
+       
+        
+        $(document).ready(function() {
+            
+            $(window).bind('resize', function() {
+                $('#CurrentGrid').freezeGridColumn(2);
+            });
+          });
+        
+        
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  set column titles
+            if (set == 0) {
+                LoadGrid();
+            }
+            SetGridStyles();
+        }
+
+        function SetGridStyles() {
+
+            $("tr", "#CurrentGrid").each(function(idx, elem) {
+                var diffFlag = $(":nth-child(11)", elem).html();
+                //don't color code historic alarms!
+                if (diffFlag == "true") {
+                    $(":nth-child(1)", elem).addClass('k-red');
+                    $(":nth-child(2)", elem).addClass('k-red');
+                    $(":nth-child(3)", elem).addClass('k-red');
+                }
+            });
+        }
+
+        function LoadGrid() {
+            //Get the grid data out of the DB and load it
+            var $currentCid = @ViewBag.CurrentCityId;
+            $.post('/Collections/GetGridData?cid=' + $currentCid + '&cont=Collections&act=GetAggMeters', OnGridDataLoaded);
+        }
+
+        var hasBeenOrdered = false;
+        function OnGridDataLoaded(data) {
+            if (!isEmptyObject(data) &&  !hasBeenOrdered){
+                //update the grid titles
+                LoadGridTitles(data);
+            }
+        }
+
+        function LoadGridTitles(data) {
+            //load all the titles for the grid here
+            var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+            for (var i = 0; i < data.length; i++) {
+                $(tableHeaderCol).eq(i).find('a,span').text(data[i].Title);
+            }
+
+            //once that is complete, load the grid order
+            LoadGridOrder(data);
+        }
+
+        function LoadGridOrder(data) {
+            //update the grid orders here
+            //data is sorted by original position name, so the logic is as follows
+            //create an array of expected positions. this is what we will use to get the value at a specified index
+            hasBeenOrdered = true;
+            var postionArray = [];
+            var hiddenCount = 0;
+            for (var h = 0; h < data.length; h++) {
+                postionArray.push(data[h].Position);
+                if (data[h].IsHidden)
+                    hiddenCount = hiddenCount + 1;
+            }
+            var grid = $("#CurrentGrid").data("kendoGrid");
+          
+            //foreach item in data
+            for (var currentIndex = 0; currentIndex < data.length; currentIndex++) {
+                var actualIndex = jQuery.inArray(currentIndex, postionArray);
+                    
+                //check to see if the original and new posisiton is different (if it is the same, do nothing)
+                if (currentIndex != actualIndex) {
+                    //if different, find the index of the original position item  that has the same value of the current position of the loop (i)
+                    //once you have the index, you wil need to reporder the columns with index of the original with the current position of hte loop
+                    grid.reorderColumn(currentIndex, grid.columns[actualIndex]);
+                    grid.reorderColumn(actualIndex, grid.columns[currentIndex + 1]);
+                            
+                    //update the position array to reflect the change
+                    postionArray[actualIndex] = postionArray[currentIndex];
+                    postionArray[currentIndex] = currentIndex;
+                }
+            }
+            if (hiddenCount > 0)
+                $('#CurrentGrid').hideLastColumns(hiddenCount);
+            applyFrozenColumns();
+        }
+        
+        function applyFrozenColumns() {
+            $('#CurrentGrid').freezeGridColumn(2);
+        }
+        
+        function OnRowResized(e) {
+            var th = $('#CurrentGrid .k-grid-header table th[data-field="' + e.column.field + '"][data-title="' + e.column.title + '"]');
+            var index = $('#CurrentGrid .k-grid-header table th').index(th);
+            $('#CurrentGrid').UpdateWidths(index, 2, e.newWidth, e.oldWidth);
+            $('#CurrentGrid').freezeGridColumn(2);
+        }
+    </script>
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()       
+    
+    <div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Route Aggregation Detail" )</div>
+
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Date" ): </div>
+        @Model.DateTime.Value.ToShortDateString()
+        @Html.HiddenFor( model => model.DateTime )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Route ID" ): </div>
+        @Html.DisplayFor( m => m.RouteId, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.RouteId )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Route Name" ): </div>
+        @Html.DisplayFor( m => m.RouteName, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.RouteName )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Vendor ID" ) : @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Name" ): </div>
+        @Html.DisplayFor( m => m.VendorId, new {@class = "customer_text"} ) : @Html.DisplayFor( m => m.VendorName, new {@class = "customer_text"} ) 
+        @Html.HiddenFor( model => model.VendorId )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meters to Collect" ): </div>
+        @Html.DisplayFor( m => m.MetersToCollect, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.MetersToCollect )
+        &nbsp;
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Summary Information" )</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Cash Collected" ): </div>
+        @Html.DisplayFor( m => m.TotalCashCollected, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalCashCollected )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Meters Not Collected" ): </div>
+        @Html.DisplayFor( m => m.TotalMetersNotCollected, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalMetersNotCollected )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Meters Collected" ): </div>
+        @Html.DisplayFor( m => m.TotalMetersCollected, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalMetersCollected )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Unscheduled Meters Collected" ): </div>
+        @Html.DisplayFor( m => m.TotalUnscheduledMeterCollected, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalUnscheduledMeterCollected )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        &nbsp;</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Reported by Meter" ): </div>
+        @Html.DisplayFor( m => m.TotalReportedByMeter, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalReportedByMeter )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Reported by Meter" ): </div>
+        @Html.DisplayFor( m => m.AverageReportedByMeter, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageReportedByMeter )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Reported by Chip" ): </div>
+        @Html.DisplayFor( m => m.TotalReportedByChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalReportedByChip )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Reported by Chip" ): </div>
+        @Html.DisplayFor( m => m.AverageReportedByChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageReportedByChip )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Reported by Vendor" ): </div>
+        @Html.DisplayFor( m => m.TotalReportedByVendor, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalReportedByVendor )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Reported by Vendor" ): </div>
+        @Html.DisplayFor( m => m.AverageReportedByVendor, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageReportedByVendor )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        &nbsp;</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Difference Meter-to-Chip" ): </div>
+        @Html.DisplayFor( m => m.TotalDifferenceMeterToChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalDifferenceMeterToChip )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Difference Meter-to-Chip" ): </div>
+        @Html.DisplayFor( m => m.AverageDifferenceMeterToChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageDifferenceMeterToChip )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Difference Meter-to-Vendor" ): </div>
+        @Html.DisplayFor( m => m.TotalDifferenceMeterToVendor, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalDifferenceMeterToVendor )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Difference Meter-to-Vendor" ): </div>
+        @Html.DisplayFor( m => m.AverageDifferenceMeterToVendor, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageDifferenceMeterToVendor )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Difference Vendor-to-Chip" ): </div>
+        @Html.DisplayFor( m => m.TotalDifferenceVendorToChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.TotalDifferenceVendorToChip )
+        &nbsp;
+    </div>
+
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Average Difference Vendor-to-Chip" ): </div>
+        @Html.DisplayFor( m => m.AverageDifferenceVendorToChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.AverageDifferenceVendorToChip )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        &nbsp;</div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Maximum Amount by Meter" ): </div>
+        @Html.DisplayFor( m => m.MaxAmtCollectedMeter, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.MaxAmtCollectedMeter )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Maximum Amount by Vendor" ): </div>
+        @Html.DisplayFor( m => m.MaxAmtCollectedVendor, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.MaxAmtCollectedVendor )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Maximum Amount by Chip" ): </div>
+        @Html.DisplayFor( m => m.MaxAmtCollectedChip, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.MaxAmtCollectedChip )
+        &nbsp;
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Information" )</div>
+    
+       <div style="padding-left: 10px; ">   <a style="text-decoration: none" href="@Url.Action( "ExportAggMetersToExcel", new {routeId = @Model.RouteId, customerId = @Model.CustomerId, dateTimeTicks = Model.DateTime.Value.Ticks} )">
+            <img src='/images/export-excel.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportAggMetersToCsv", new {routeId = @Model.RouteId, customerId = @Model.CustomerId, dateTimeTicks = Model.DateTime.Value.Ticks})">
+            <img src='/images/export-csv.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportAggMetersToPdf",new {routeId = @Model.RouteId, customerId = @Model.CustomerId, dateTimeTicks = Model.DateTime.Value.Ticks})">
+            <img src='/images/export-pdf.png' height="20"/>
+        </a>
+    </div>
+    
+    @(Html.Kendo().Grid( Model.Meters )
+          .Name( "CurrentGrid" )
+          .Columns( columns =>
+                        {
+                            columns.Bound( p => p.MeterId ).ClientTemplate( @Html.ActionLink( "#= MeterId #", "MeterDetails", "Collections", new
+                                                                                                                                                 {
+                                                                                                                                                     meterId = "#= MeterId #",
+                                                                                                                                                     customerId = "#= CustomerId #",
+                                                                                                                                                     dateTimeTicks = "#= DateTimeTicks #",
+                                                                                                                                                     collectionDateTimeTicks = "#= CollectionDateTimeTicks #",
+                                                                                                                                                     areaId = "#= AreaId #",
+                                                                                                                                                     collectionRunId = "#= CollectionRunId #",
+                                                                                                                                                     
+                                                                                                                                                 },
+                                                                                              new {} ).ToHtmlString() ).Width( 75 );
+                            columns.Bound( p => p.MeterName ).Width( 125 );
+                            columns.Bound(p => p.DateTime).ClientTemplate("#= DateTimeDisplay  #").Width(125);
+                            columns.Bound( p => p.Area ).Width( 75 );
+                            columns.Bound(p => p.Zone).Width(75);
+                            columns.Bound( p => p.Suburb ).Width( 125 );
+                            columns.Bound( p => p.Street ).Width( 175 );
+                            columns.Bound( p => p.AmtMeter ).Width( 125 ).Format( "{0:c}" );
+                            columns.Bound( p => p.AmtVendor ).Width( 125 ).Format( "{0:c}" );
+                            columns.Bound( p => p.AmtChip ).Width( 125 ).Format( "{0:c}" );
+                            columns.Bound( p => p.DifferenceFlag ).Width( 100 ).Hidden( true );
+                        } )
+          .Scrollable()
+          .Sortable()
+          .Resizable( resize => resize.Columns( true ) )
+          .Events( events => events.DataBound( "OnDataBound" ) )
+            .Events( events => events.ColumnResize( "OnRowResized" ) )
+          .DataSource( dataSource => dataSource
+                                         .Ajax()
+                                         .ServerOperation( false )
+          )
+          )
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button previous" value="Cancel">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+}
+@section Styles
+{
+    <style type="text/css">
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker { background-color: transparent !important; }
+
+        .k-grid-content {
+            height: auto !important;
+            max-height: 300px !important;
+        }
+
+        .k-red, .k-red a { color: crimson !important; }
+
+        .customer_text_label { width: 245px !important; }
+    </style>
+}

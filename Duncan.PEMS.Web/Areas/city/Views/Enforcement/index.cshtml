@@ -1,0 +1,2201 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Enforcement.EnforcementModel
+
+
+@{
+    ViewBag.Title = "Enforcement Management";
+}
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!-- file upload -->
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+
+    <script id="rowTemplate" type="text/x-kendo-tmpl">
+        <tr>
+            <td><a href="${ IssueNo_final }" target="_blank">${ IssueNo_final }</a></td>
+        </tr>
+    </script>
+
+    <script type="text/javascript">
+
+        //** for file upload
+        function addExtensionClass(extension) {
+            switch (extension) {
+                case '.jpg':
+                case '.img':
+                case '.png':
+                case '.gif':
+                    return "img-file";
+                case '.doc':
+                case '.docx':
+                    return "doc-file";
+                case '.xls':
+                case '.xlsx':
+                    return "xls-file";
+                case '.pdf':
+                    return "pdf-file";
+                case '.zip':
+                case '.rar':
+                    return "zip-file";
+                default:
+                    return "default-file";
+            }
+        }
+
+        var timeInterval;
+        var spinner;
+        var isLicenseState = false;
+        var isLicenseType = false;
+        var isClass = false;
+        var isCode = false;
+        var isViolationDesc = false;
+        var isType = false;
+        var isStatus = false;
+        var isAgency = false;
+        var isBeat = false;
+        var isOfficerID = false;
+        var isOfficerName = false;
+
+        // Define default date-picker dates
+        var startD = new Date();
+
+        startD.setDate(new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]').getDate());
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+
+        var endD = new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate());
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+
+        var viewModel = kendo.observable({
+            startDate: startD,
+            endDate: endD,
+            licensePlateIs: "",
+            issueNoPrefix: "",
+            issueNumber_final: "",
+            issueNumber_To: "",
+            issueNumberSuffix: "",
+
+            EnforcementLicenseStateassets: [],
+            EnforcementLicenseStateasset: "",
+
+            CitationSearches: [],
+            CitationSearch: "Single",
+
+            EnforcementVehLicNoassets: [],
+            EnforcementVehLicNoasset: "",
+            licenseTypes: [],
+            licenseType: "",
+            ViolationSelector: "Class",
+            CitationRangeSelector: "Single",
+
+            agencys: [],
+            agency: "",
+            Beats: [],
+            Beat: "",
+
+            street: "",
+
+            meterIds: [],
+            meterId: "",
+
+            vehicleVIN: "",
+            StatusA: [],
+            parkingStatus: "",
+            officeIds: [],
+            officeId: "",
+
+
+            classesa: [],
+            classes: "",
+            codes: [],
+            code: "",
+            OfficerNames: [],
+            OfficerName: "",
+
+
+            types: [],
+            parkingType: "",
+            vioDescs: [],
+            vioDesc: ""
+
+        });
+
+
+
+        var onSelect = function (e) {
+
+            //get the input and UL list
+            var input = document.getElementById('fup');
+            var list = document.getElementById('fileList');
+
+            //empty list for now...
+            while (list.hasChildNodes()) {
+                list.removeChild(ul.firstChild);
+            }
+
+            $.each(e.files, function (index, value) {
+                if (value.extension != ".jpg") {
+                    e.preventDefault();
+                    alert("Please upload jpg image files");
+                }
+            });
+
+            //for every file...
+            for (var x = 0; x < input.files.length; x++) {
+                //add to list
+                var li = document.createElement('li');
+                li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name;
+                alert('app' + input.files[x].name);
+
+                //list.insertBefore(li, list.firstChild);
+
+            }
+            // alert('dsds' + input.files.length);
+
+        };
+
+
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 50 };
+        var sorts = {};
+
+        $(document).ready(function () {
+
+
+            //*********************
+            var myStartDateTime = $("#startDateTime").kendoDateTimePicker().data("kendoDateTimePicker");
+            var startD = new Date();
+            startD.setDate(new Date().getDate());
+            startD.setHours(0);
+            startD.setMinutes(0);
+            startD.setSeconds(0);
+            myStartDateTime.value(startD);
+            $("#startDateTime").css('width', '209px');
+
+            var myEndDateTime = $("#endDateTime").kendoDateTimePicker().data("kendoDateTimePicker");
+            $("#endDateTime").css('width', '209px');
+            var endD = new Date();
+            endD.setDate(endD.getDate());
+            endD.setHours(23);
+            endD.setMinutes(59);
+            endD.setSeconds(59);
+            myEndDateTime.value(endD);
+
+            //**Save in viewmodel objects:
+            viewModel.set('startDate', $('#startDateTime').val());
+            viewModel.set('endDate', $('#endDateTime').val());
+
+            //*********************
+
+            kendo.bind($(document.body), viewModel);
+            $("#vioCode").css('display', 'none');
+            $("#rangeSearch").css('display', 'none');
+            //showProgressBar(true);
+
+
+            // when the view state changes, cache it
+            viewModel.bind("change", function (e) {
+                SaveViewState();
+            });
+
+            // if returning from details page, load cached page state (filters, grid state, etc)
+            if (getParameterByName('rtn') == 'true') {
+
+
+                LoadViewState();
+                vioSelChange();
+                citationSearchChange();
+
+                //** time interval to invoke datasource of kendo grid after the grid is ready;
+                timeInterval = window.setInterval(function () { multiSelectAssetTypeDropDownFunc(); }, 1000);
+
+
+            } else {
+
+                // Since not pulling filter values from cache, get them from server
+                GetDynamicFilterValues();
+
+            }
+
+            $(window).bind('resize', function () {
+                switch (viewModel.gridType) {
+                    case 'Functional Status':
+                        applyFrozenColumns(3);
+                        break;
+                    default:
+                        applyFrozenColumns(2);
+                }
+            });
+
+
+        });
+
+        function UpdateGridState() {
+            /// Update the grid state object with grid's current state
+            var currentGrid = $("#grdCustomerDetails").data("kendoGrid");
+
+            gridFilters.CurrentPage = currentGrid.dataSource.page();
+            gridFilters.SelectedRow = currentGrid.select().index();
+            gridFilters.sorts = JSON.stringify(currentGrid.dataSource._sort);
+            gridFilters.pageSize = currentGrid.dataSource.pageSize();
+
+        }
+
+        function multiSelectAssetTypeDropDownFunc() {
+            window.clearInterval(timeInterval)
+            $("#grdCustomerDetails").css("display", "inline");
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.read();
+
+        }
+
+
+        function SaveViewState() {
+
+            /// Save filters view state to local storage, with fallback to
+            /// server if HTML5 local storage not supported (IE7)
+
+            // serialize viewstate
+            var json = viewModel.toJSON();
+            var stringified = JSON.stringify(json);
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                window.sessionStorage.setItem("enforcementViewState", stringified);
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+        }
+
+        function executeExportToExcel() {
+            $.ajax({
+                url: '@Url.Action("ExportToExcel", "Enforcement")',
+                data: GetAllFilterData(),
+                type: 'GET',
+                success: function (data) {
+                    //alert('success');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //alert("Error: " + textStatus);
+                }
+            });
+        }
+
+
+        function LoadViewState() {
+            /// Load filter view state if found in session
+            var stringified;
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("enforcementViewState");
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+
+            // reconstruct the view model from the cache
+            if (stringified) {
+                var parsed = JSON.parse(stringified);
+                if (parsed) {
+
+                    if (!parsed.licenseTypes) {
+                        GetDynamicFilterValues();
+                    }
+
+                    $('#citationRange').val(parsed.CitationSearch);
+
+                    $('#autocompleteIssueNoPfx').val(parsed.issueNoPrefix);
+                    $("#autocompleteIssueNo").val(parsed.issueNumber_final);
+                    $("#toAutocompleteIssueNo").val(parsed.issueNumber_To);
+
+                    $('#autocompleteIssueNoSfx').val(parsed.issueNumberSuffix);
+                    $('#autocompleteVehVIN').val(parsed.vehicleVIN);
+                    $('#autocompleteVehLicNo').val(parsed.EnforcementVehLicNoasset);
+                    $('#autocompleteStreet').val(parsed.street);
+                    $('#autocompleteMeterID').val(parsed.meterId);
+
+                    if (parsed.EnforcementLicenseStateassets) {
+                        viewModel.set('EnforcementLicenseStateassets', parsed.EnforcementLicenseStateassets);
+                    }
+                    viewModel.set('EnforcementLicenseStateasset', parsed.EnforcementLicenseStateasset);
+
+
+
+
+
+                    if (parsed.licenseTypes) {
+                        viewModel.set('licenseTypes', parsed.licenseTypes);
+                    }
+
+                    viewModel.set('licenseType', parsed.licenseType);
+
+
+                    if (parsed.agencys) {
+                        viewModel.set('agencys', parsed.agencys);
+                    }
+                    viewModel.set('agency', parsed.agency);
+                    if (parsed.Beats) {
+                        viewModel.set('Beats', parsed.Beats);
+                    }
+                    viewModel.set('Beat', parsed.Beat);
+
+                    if (parsed.StatusA) {
+                        viewModel.set('StatusA', parsed.StatusA);
+                    }
+
+                    viewModel.set('parkingStatus', parsed.parkingStatus);
+                    if (parsed.officeIds) {
+                        viewModel.set('officeIds', parsed.officeIds);
+                    }
+
+                    viewModel.set('officeId', parsed.officeId);
+                    viewModel.set('ViolationSelector', parsed.ViolationSelector);
+                    if (parsed.classesa) {
+                        viewModel.set('classesa', parsed.classesa);
+                    }
+                    viewModel.set('classes', parsed.classes);
+                    if (parsed.codes) {
+                        viewModel.set('codes', parsed.codes);
+                    }
+                    viewModel.set('code', parsed.code);
+
+                    if (parsed.OfficerNames) {
+                        viewModel.set('OfficerNames', parsed.OfficerNames);
+                    }
+                    viewModel.set('OfficerName', parsed.OfficerName);
+
+                    if (parsed.types) {
+                        viewModel.set('types', parsed.types);
+                    }
+                    viewModel.set('parkingType', parsed.parkingType);
+
+                    if (parsed.vioDescs) {
+                        viewModel.set('vioDescs', parsed.vioDescs);
+                    }
+                    viewModel.set('vioDesc', parsed.vioDesc);
+
+
+                    // first, restore dynamic filter/dropdown values
+                    if (parsed.startDate) {
+                        $('#startDateTime').val(parsed.startDate);
+                    }
+                    if (parsed.endDate) {
+                        $('#endDateTime').val(parsed.endDate);
+                    }
+
+                }
+            } else {
+                // No view state stored in cache, so get dynamic filter values from server
+                //console.log('no view state found, defaults will be used');
+                GetDynamicFilterValues();
+            }
+
+            showProgressBar(false);
+        }
+        function GetDynamicFilterValues() {
+
+         @*   var url = '@Url.Action("GetFilterValues")';
+            $.post(url, function (data) {
+                viewModel.set("EnforcementLicenseStateassets", data.EnforcementLicenseStateassets);
+                viewModel.set("licenseTypes", data.licenseTypes);
+                viewModel.set("agencys", data.agencys);
+                viewModel.set("Beats", data.Beats);
+                viewModel.set("officeIds", data.officeIds);
+                viewModel.set("StatusA", data.StatusA);
+                viewModel.set("types", data.types);
+
+
+                viewModel.set("classesa", data.classesa);
+                viewModel.set("codes", data.codes);
+                viewModel.set("OfficerNames", data.OfficerNames);
+
+                viewModel.set("vioDescs", data.vioDescs);
+
+                showProgressBar(false);
+
+            });*@
+        }
+
+
+        function citationSearchChange() {
+
+            var value = $("#citationRange").val();
+            if (value == "1") {
+                viewModel.set('CitationRangeSelector', 'Single');
+                $("#rangeSearch").css('display', 'none');
+            } else {
+                viewModel.set('CitationRangeSelector', 'Range');
+                $("#rangeSearch").css('display', 'inline');
+            }
+            //**Store the citation search
+            // viewModel.set('CitationSearch', $('#citationRange').val());
+        }
+
+        function vioSelChange() {
+
+            var value = $("#vioSelector").val();
+
+            if (value == "1") {
+                $("#vioClass").css('display', 'inline');
+                $("#vioCode").css('display', 'none');
+            } else {
+                $("#vioClass").css('display', 'none');
+                $("#vioCode").css('clear', 'both');
+                $("#vioCode").css('display', 'inline');
+
+            }
+        }
+
+
+
+
+        function LoadFreshGrid() {
+
+            //if (isLicenseState == false || isLicenseType == false || isClass == false || isCode == false || isAgency == false || isBeat == false || isOfficerID == false || isViolationDesc == false || isOfficerName == false) {
+            //    alert('The Enforcement AI Inquiry filters are being processed. Please wait until processing is completed.')
+            //    return false
+            //}
+
+            showProgressBar(false); //** Display Progress bar animation till the server returns response;
+
+            var $startDate = viewModel.startDate;
+
+            //Test to see if the start date is not empty, and if it is a valid date
+            if (!Date.parse($startDate)) {
+                alert("Start Date Must Be A Valid Date");
+                return;
+            }
+            var $endDate = viewModel.endDate;
+
+            //Test to see if the end date is not empty and if it is a valid date
+            if (!Date.parse($endDate)) {
+                alert('End Date Must Be A Valid Date');
+                return;
+            }
+
+
+            //Test to see if start date is less than end date
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($startDate) > Date.parse($endDate)) {
+                    alert('End Date Must Be Greater Than Start Date');
+                    return;
+                }
+            }
+
+            if ($('#citationRange').val() == 2) {
+                var start = "";
+                var end = "";
+                start = $("#autocompleteIssueNo").val();
+                end = $("#toAutocompleteIssueNo").val();
+                if (start > end) {
+                    alert('The Citation Number cannot be greater than the "to" Number.');
+                    return false;
+                }
+                if (start == "" && end != "") {
+                    alert('Please enter the Citation Number.');
+                    return false;
+                }
+
+                if (start != "" && end == "") {
+                    alert('Please enter the to Number.');
+                    return false;
+                }
+
+            }
+
+
+
+            var CustomerId = '@ViewBag.CurrentCityID';
+            invokeDataSource(50) //** set the default no. of records as 50
+
+        }
+
+
+        function invokeDataSource(maxCount) {
+
+            //** The below line needs to be uncommented after fetching service
+            showProgressBar(true); //** Display Progress bar animation till the server returns response;
+
+            //** The below 4 lines of grid are commented temporarily.
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+
+            grid.dataSource.pageSize(maxCount);
+            grid.dataSource.groupable(false);
+
+            var dsSort = [];
+            dsSort.push({ field: "IssueDateTime_final", dir: "desc" });
+
+            //grid.dataSource.read({sort:dsSort});
+            grid.dataSource.read();
+
+        }
+
+        function GetAllFilterData() {
+
+            var LicensePlate = String($("#autocompleteVehLicNo").val()).trim();
+            var VIN = String($("#autocompleteVehVIN").val()).trim();
+            var Prefix = String($("#autocompleteIssueNoPfx").val()).trim();
+            var Suffix = String($("#autocompleteIssueNoSfx").val()).trim();
+            var MeterNo = String($("#autocompleteMeterID").val()).trim();
+
+
+            //** Citation Search
+            var citSearchVal = $("#citationRange").val();
+            if (citSearchVal == 1) {
+                //** Single Search
+                viewModel.set('CitationSearch', '1');
+                startIssueNo = String($("#autocompleteIssueNo").val()).trim();
+                if (Number(startIssueNo) < 0) {
+                    alert('Negative values not allowed in Citation Number.');
+                    return false;
+                }
+                endIssueNo = String($("#autocompleteIssueNo").val()).trim();
+                viewModel.set('issueNumber_final', startIssueNo);
+            } else {
+                //** Range Search
+                startIssueNo = String($("#autocompleteIssueNo").val()).trim();
+                endIssueNo = String($("#toAutocompleteIssueNo").val()).trim();
+                viewModel.set('CitationSearch', '2');
+                viewModel.set('issueNumber_final', startIssueNo);
+                viewModel.set('issueNumber_To', endIssueNo);
+
+            }
+
+            //**License State validation
+
+            var getTxtFromLicenseState = $("#autocompleteVehLicState").data("kendoDropDownList").text()
+            if (getTxtFromLicenseState == "All") {
+                LicenseState = "";
+            }
+            else {
+                LicenseState = String($("#autocompleteVehLicState").data("kendoDropDownList").text()).trim();
+            }
+
+            //**License Type validation
+            var getTxtFromLicenseType = $("#autocompleteLicenseType").data("kendoDropDownList").text()
+            if (getTxtFromLicenseType == "All") {
+                LicenseType = "";
+            }
+            else {
+                LicenseType = String($("#autocompleteLicenseType").data("kendoDropDownList").text()).trim();
+            }
+
+
+            //**Class validation
+            //var getTxtFromClass = $("#classDropDown").data("kendoDropDownList").text()
+            //if (getTxtFromClass == "All") {
+            //    Class = "";
+            //}
+            //else {
+            //    Class = String($("#classDropDown").data("kendoDropDownList").text()).trim();
+            //}
+
+
+            //**Code validation
+            var getTxtFromCode = $("#code_AutoComplete").data("kendoDropDownList").text()
+            if (getTxtFromCode == "All") {
+                Code = "";
+            }
+            else {
+                Code = String($("#code_AutoComplete").data("kendoDropDownList").text()).trim();
+            }
+
+            //** Check if vioselector is class or code, then take value accordingly
+            //var value = $("#vioSelector").val();
+            //if (value == "1") {
+            //    //** Class  is selected
+            //    Code = "";
+            //} else {
+            //    //** Code  is selected
+            //    Class = "";
+            //}
+
+            //**AGency validation
+            var getTxtFromAgency = $("#autocompleteAgency").data("kendoDropDownList").text()
+            if (getTxtFromAgency == "All") {
+                Agency = "";
+            }
+            else {
+                Agency = String($("#autocompleteAgency").data("kendoDropDownList").text()).trim();
+            }
+
+
+
+            //**Beat validation
+            var getTxtFromBeat = $("#autocompleteBeat").data("kendoDropDownList").text()
+            if (getTxtFromBeat == "All") {
+                Beat = "";
+            }
+            else {
+                Beat = String($("#autocompleteBeat").data("kendoDropDownList").text()).trim();
+            }
+
+            //**OfficerID validation
+
+            var getTxtFromOffID = $("#autocompleteOfficerID").data("kendoDropDownList").text()
+            if (getTxtFromOffID == "All") {
+                OfficerID = "";
+            }
+            else {
+                OfficerID = String($("#autocompleteOfficerID").data("kendoDropDownList").text()).trim();
+            }
+
+            //**OfficerName validation
+
+            var getTxtFromOffID = $("#officerName_AutoComplete").data("kendoDropDownList").text()
+            if (getTxtFromOffID == "All") {
+                OfficerName = "";
+            }
+            else {
+                OfficerName = String($("#officerName_AutoComplete").data("kendoDropDownList").text()).trim();
+            }
+
+
+            //**Violation Desc validation
+            var getTxtFromVioDesc = $("#vioDesc_AutoComplete").data("kendoDropDownList").text()
+            if (getTxtFromVioDesc == "All") {
+                VioDesc = "";
+            }
+            else {
+                VioDesc = String($("#vioDesc_AutoComplete").data("kendoDropDownList").text()).trim();
+            }
+
+            //**Status validation
+            var getTxtFromStatus = $("#statusDropDown").data("kendoDropDownList").text()
+            if (getTxtFromStatus == "All") {
+                status = "";
+            }
+            else {
+                status = String($("#statusDropDown").data("kendoDropDownList").text()).trim();
+            }
+
+            //**Type validation
+            //var getTxtFromType = $("#type_DD").data("kendoDropDownList").text()
+            //if (getTxtFromType == "All") {
+            //    types = "";
+            //}
+            //else {
+            //    types = String($("#type_DD").data("kendoDropDownList").text()).trim();
+            //}
+
+            //**start and end dates
+
+            var finalStart = $('#startDateTime').val();
+            var finalEnd = $('#endDateTime').val();
+            viewModel.set('startDate', $('#startDateTime').val());
+            viewModel.set('endDate', $('#endDateTime').val());
+
+            var page = 1;
+            var pageSize = "~";
+            var filter = "~";
+            var sort = "~";
+
+            return {
+                startDate: finalStart,
+                endDate: finalEnd,
+                licensePlate: LicensePlate,
+                licenseState: LicenseState,
+                licenseType: LicenseType,
+                vin: VIN,
+                //classes: Class,
+                classes: "",
+                prefix: Prefix,
+                startCitationNo: startIssueNo,
+                endCitationNo: endIssueNo,
+                suffix: Suffix,
+                code: Code,
+                officerName: OfficerName,
+                agency: Agency,
+                beat: Beat,
+                meterNo: MeterNo,
+                officerID: OfficerID,
+                vioDesc: VioDesc,
+                parkingStatus: status,
+                // parkingType: types,
+                parkingType: "",
+                PageIs: page,
+                PageSizeIs: pageSize,
+                FilterIs: filter,
+                SortIs: sort
+            }
+        }
+
+        //function GetAllFilterData() {
+
+        //    var LicensePlate = String($("#autocompleteVehLicNo").val()).trim();
+        //    viewModel.set('licensePlateIs', $('#autocompleteVehLicNo').val().trim());
+
+        //    var VIN = String($("#autocompleteVehVIN").val()).trim();
+        //    viewModel.set('vehicleVIN', $('#autocompleteVehVIN').val().trim());
+
+        //    var Prefix = String($("#autocompleteIssueNoPfx").val()).trim();
+        //    viewModel.set('issueNoPrefix', $('#autocompleteIssueNoPfx').val().trim());
+
+        //    var Suffix = String($("#autocompleteIssueNoSfx").val()).trim();
+        //    viewModel.set('issueNumberSuffix', $('#autocompleteIssueNoSfx').val().trim());
+
+        //    var MeterNo = String($("#autocompleteMeterID").val()).trim();
+        //    viewModel.set('meterId', $('#autocompleteMeterID').val().trim());
+
+        //    //** Citation Search
+        //    var citSearchVal = $("#citationRange").val();
+        //    if (citSearchVal == 1) {
+        //        //** Single Search
+        //        viewModel.set('CitationSearch', '1');
+        //        startIssueNo = String($("#autocompleteIssueNo").val()).trim();
+        //        if (Number(startIssueNo) < 0) {
+        //            alert('Negative values not allowed in Citation Number.');
+        //            return false;
+        //        }
+        //        endIssueNo = String($("#autocompleteIssueNo").val()).trim();
+        //        viewModel.set('issueNumber_final', startIssueNo);
+        //        viewModel.set('issueNumber_To', startIssueNo);
+        //    } else {
+        //        //** Range Search
+        //        startIssueNo = String($("#autocompleteIssueNo").val()).trim();
+        //        endIssueNo = String($("#toAutocompleteIssueNo").val()).trim();
+        //        viewModel.set('CitationSearch', '2');
+        //        viewModel.set('issueNumber_final', startIssueNo);
+        //        viewModel.set('issueNumber_To', endIssueNo);
+
+        //    }
+
+        //    //**License State validation
+        //    var getTxtFromLicenseState = $("#autocompleteVehLicState").data("kendoDropDownList").text()
+        //    if (getTxtFromLicenseState == "All") {
+        //        LicenseState = "";
+        //        viewModel.set('EnforcementLicenseStateasset', LicenseState);
+        //    }
+        //    else {
+        //        LicenseState = String($("#autocompleteVehLicState").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('EnforcementLicenseStateasset', LicenseState);
+        //    }
+
+        //    //**License Type validation
+        //    var getTxtFromLicenseType = $("#autocompleteLicenseType").data("kendoDropDownList").text()
+        //    if (getTxtFromLicenseType == "All") {
+        //        LicenseType = "";
+        //        viewModel.set('licenseType', LicenseType);
+        //    }
+        //    else {
+        //        LicenseType = String($("#autocompleteLicenseType").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('licenseType', LicenseType);
+        //    }
+
+
+        //    //**Class validation
+        //    var getTxtFromClass = $("#classDropDown").data("kendoDropDownList").text()
+        //    if (getTxtFromClass == "All") {
+        //        Class = "";
+        //        viewModel.set('classes', Class);
+        //    }
+        //    else {
+        //        Class = String($("#classDropDown").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('classes', Class);
+        //    }
+
+
+        //    //**Code validation
+        //    var getTxtFromCode = $("#code_AutoComplete").data("kendoDropDownList").text()
+        //    if (getTxtFromCode == "All") {
+        //        Code = "";
+        //        viewModel.set('code', Code);
+        //    }
+        //    else {
+        //        Code = String($("#code_AutoComplete").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('code', Code);
+        //    }
+
+        //    //** Check if vioselector is class or code, then take value accordingly
+        //    var value = $("#vioSelector").val();
+        //    if (value == "1") {
+        //        //** Class  is selected
+        //        Code = "";
+        //        viewModel.set('code', Code);
+        //    } else {
+        //        //** Code  is selected
+        //        Class = "";
+        //        viewModel.set('classes', Class);
+        //    }
+
+        //    //**AGency validation
+        //    var getTxtFromAgency = $("#autocompleteAgency").data("kendoDropDownList").text()
+        //    if (getTxtFromAgency == "All") {
+        //        Agency = "";
+        //        viewModel.set('agency', Agency);
+        //    }
+        //    else {
+        //        Agency = String($("#autocompleteAgency").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('agency', Agency);
+        //    }
+
+
+
+        //    //**Beat validation
+        //    var getTxtFromBeat = $("#autocompleteBeat").data("kendoDropDownList").text()
+        //    if (getTxtFromBeat == "All") {
+        //        Beat = "";
+        //        viewModel.set('Beat', Beat);
+        //    }
+        //    else {
+        //        Beat = String($("#autocompleteBeat").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('Beat', Beat);
+        //    }
+
+        //    //**OfficerID validation
+
+        //    var getTxtFromOffID = $("#autocompleteOfficerID").data("kendoDropDownList").text()
+        //    if (getTxtFromOffID == "All") {
+        //        OfficerID = "";
+        //        viewModel.set('officeId', OfficerID);
+        //    }
+        //    else {
+        //        OfficerID = String($("#autocompleteOfficerID").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('officeId', OfficerID);
+        //    }
+
+        //    //**OfficerName validation
+
+        //    var getTxtFromOffID = $("#officerName_AutoComplete").data("kendoDropDownList").text()
+        //    if (getTxtFromOffID == "All") {
+        //        OfficerName = "";
+        //        viewModel.set('OfficerName', OfficerName);
+
+        //    }
+        //    else {
+        //        OfficerName = String($("#officerName_AutoComplete").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('OfficerName', OfficerName);
+        //    }
+
+
+        //    //**Violation Desc validation
+        //    var getTxtFromVioDesc = $("#vioDesc_AutoComplete").data("kendoDropDownList").text()
+        //    if (getTxtFromVioDesc == "All") {
+        //        VioDesc = "";
+        //        viewModel.set('vioDesc', VioDesc);
+        //    }
+        //    else {
+        //        VioDesc = String($("#vioDesc_AutoComplete").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('vioDesc', VioDesc);
+        //    }
+
+        //    //**Status validation
+        //    var getTxtFromStatus = $("#statusDropDown").data("kendoDropDownList").text()
+        //    if (getTxtFromStatus == "All") {
+        //        status = "";
+        //        viewModel.set('parkingStatus', status);
+        //    }
+        //    else {
+        //        status = String($("#statusDropDown").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('parkingStatus', status);
+        //    }
+
+        //    //**Type validation
+        //    var getTxtFromType = $("#type_DD").data("kendoDropDownList").text()
+        //    if (getTxtFromType == "All") {
+        //        types = "";
+        //        viewModel.set('parkingType', types);
+        //    }
+        //    else {
+        //        types = String($("#type_DD").data("kendoDropDownList").text()).trim();
+        //        viewModel.set('parkingType', types);
+        //    }
+
+        //    //**start and end dates
+
+        //    var finalStart = $('#startDateTime').val();
+        //    var finalEnd = $('#endDateTime').val();
+        //    viewModel.set('startDate', $('#startDateTime').val());
+        //    viewModel.set('endDate', $('#endDateTime').val());
+
+        //    var page = 1;
+        //    var pageSize = "~";
+        //    var filter = "~";
+        //    var sort = "~";
+
+        //    return {
+        //        startDate: finalStart,
+        //        endDate: finalEnd,
+        //        licensePlate: LicensePlate,
+        //        licenseState: LicenseState,
+        //        licenseType: LicenseType,
+        //        vin: VIN,
+        //        classes: Class,
+        //        prefix: Prefix,
+        //        startCitationNo: startIssueNo,
+        //        endCitationNo: endIssueNo,
+        //        suffix: Suffix,
+        //        code: Code,
+        //        officerName: OfficerName,
+        //        agency: Agency,
+        //        beat: Beat,
+        //        meterNo: MeterNo,
+        //        officerID: OfficerID,
+        //        vioDesc: VioDesc,
+        //        parkingStatus: status,
+        //        parkingType: types,
+        //        PageIs: page,
+        //        PageSizeIs: pageSize,
+        //        FilterIs: filter,
+        //        SortIs: sort
+        //    }
+        //}
+
+        function onFileSelect(e) {
+
+            //** Find the grid row index so that the changes can be applied
+            var grid = $('#grdCustomerDetails').data("kendoGrid");
+            var selectedRow = grid.select();
+            var selectedRowIndex = selectedRow.index();
+
+
+            //** store js value in model property
+            var firstItem = $('#grdCustomerDetails').data().kendoGrid.dataSource.data()[selectedRowIndex];
+            var getFileNames = firstItem.get('Beat');
+            getFileNames += getFileInfo(e) + "<br>";
+            firstItem.set('Beat', getFileNames);
+
+        }
+
+        function getFileInfo(e) {
+            return $.map(e.files, function (file) {
+                var info = file.name;
+
+                // File size is not available in all browsers
+                if (file.size > 0) {
+                    info += " (" + Math.ceil(file.size / 1024) + " KB)";
+                }
+                return info;
+            }).join(", ");
+        }
+
+        function onDataBound_LicenseState() {
+            isLicenseState = true;
+            var result = $("#autocompleteVehLicState").data().kendoDropDownList.dataSource.data();
+            viewModel.set("EnforcementLicenseStateassets", result);
+        }
+
+
+
+        function onDataBound_LicenseType() {
+            isLicenseType = true;
+            var result = $("#autocompleteLicenseType").data().kendoDropDownList.dataSource.data();
+            viewModel.set("licenseTypes", result);
+
+        }
+
+        function onDataBound_Class() {
+            isClass = true;
+        }
+
+        function onDataBound_Status() {
+            isStatus = true;
+            var result = $("#statusDropDown").data().kendoDropDownList.dataSource.data();
+            viewModel.set("StatusA", result);
+        }
+
+        
+
+        function onDataBound_Code() {
+            isCode = true;
+            var result = $("#code_AutoComplete").data().kendoDropDownList.dataSource.data();
+            viewModel.set("codes", result);
+        }
+
+        function onDataBound_Agency() {
+            isAgency = true;
+            var result = $("#autocompleteAgency").data().kendoDropDownList.dataSource.data();
+            viewModel.set("agencys", result);
+        }
+
+        function onDataBound_Beat() {
+            isBeat = true;
+            var result = $("#autocompleteBeat").data().kendoDropDownList.dataSource.data();
+            viewModel.set("Beats", result);
+
+        }
+
+        function onDataBound_OfficerID() {
+            isOfficerID = true;
+            var result = $("#autocompleteOfficerID").data().kendoDropDownList.dataSource.data();
+            viewModel.set("officeIds", result);
+        }
+
+        function onDataBound_OfficerName() {
+            isOfficerName = true;
+            var result = $("#officerName_AutoComplete").data().kendoDropDownList.dataSource.data();
+            viewModel.set("OfficerNames", result);
+        }
+
+
+        function onDataBound_ViolationDesc() {
+            isViolationDesc = true;
+            var result = $("#vioDesc_AutoComplete").data().kendoDropDownList.dataSource.data();
+            viewModel.set("vioDescs", data.vioDescs);
+        }
+
+        function onDataBound_IssueNoPrefix() {
+            viewModel.set('issueNoPrefix', $('#autocompleteIssueNoPfx').val());
+        }
+
+        function onDataBound_IssueNoSuffix() {
+            viewModel.set('issueNumberSuffix', $('#autocompleteIssueNoSfx').val());
+        }
+
+        function onDataBound_IssueNo() {
+            viewModel.set('issueNumber_final', $('#autocompleteIssueNo').val());
+        }
+
+        function onDataBound_ToNumber() {
+            viewModel.set('issueNumber_To', $('#toAutocompleteIssueNo').val());
+        }
+
+
+
+        function onDataBound_VehVIN() {
+            viewModel.set('vehicleVIN', $('#autocompleteVehVIN').val());
+        }
+
+        function onDataBound_VehLicNo() {
+            viewModel.set('EnforcementVehLicNoasset', $('#autocompleteVehLicNo').val());
+        }
+
+        function onDataBound_Street() {
+            viewModel.set('street', $('#autocompleteStreet').val());
+        }
+
+        function onDataBound_MeterID() {
+            viewModel.set('meterId', $('#autocompleteMeterID').val());
+        }
+
+
+        function resizeGrid() {
+            var gridElement = $("#grdCustomerDetails");
+            gridElement.data("kendoGrid").resize();
+        }
+
+        function onDataBound(arg) {
+
+            var result = $("#grdCustomerDetails").data().kendoGrid.dataSource.data()
+            showProgressBar(false); //** Hide Progress bar animation after the server response;
+
+            //**First clear the Grid
+            $('#DivCustomerDetails').css('display', 'none');
+
+            //$("#grdCustomerDetails").find(".k-pager-wrap").insertBefore(".k-grid-header");
+            window.setTimeout(function () { resizeGrid(); }, 1);
+
+            //** Check the states of 'Show Map' and 'Show Grid' buttons
+
+            //** Display the Grid part
+            $("#DivCustomerDetails").show();
+            $('#DivCustomerDetails').css('display', 'inline');
+
+
+
+            $(".filesPP").each(function () {
+                eval($(this).children("script").last().html());
+            });
+
+
+            if (result.length == 0) {
+                alert('No Data.');
+                $('#DivCustomerDetails').css('height', 400);
+                return;
+            }
+
+
+
+
+
+            $("#exportButtons").css("display", "inline");
+            UpdateGridState();
+            UpdateExportLinks();
+
+        }
+
+        function UpdateExportLinks() {
+            /// Update the href for the export buttons
+            var grid = $('#grdCustomerDetails').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            $("#exportButtons").css("display", "inline");
+            $("#exportActions").css("display", "block");
+        }
+
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort);
+
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            var $StartDate = viewModel.get('startDate');
+            href = href.replace(/startDate=([^&]*)/, 'startDate=' + ($StartDate));
+
+            var $EndDate = viewModel.get('endDate');
+            href = href.replace(/endDate=([^&]*)/, 'endDate=' + ($EndDate));
+
+            var $licensePlate = viewModel.get('licensePlateIs');
+            href = href.replace(/licensePlate=([^&]*)/, 'licensePlate=' + ($licensePlate));
+
+            var $licenseState = viewModel.get('EnforcementLicenseStateasset');
+            href = href.replace(/licenseState=([^&]*)/, 'licenseState=' + ($licenseState));
+
+            var $licenseType = viewModel.get('licenseType');
+            href = href.replace(/licenseType=([^&]*)/, 'licenseType=' + ($licenseType));
+
+            var $vin = viewModel.get('vehicleVIN');
+            href = href.replace(/vin=([^&]*)/, 'vin=' + ($vin));
+
+            var $classes = viewModel.get('classes');
+            href = href.replace(/classes=([^&]*)/, 'classes=' + ($classes));
+
+            var $prefix = viewModel.get('issueNoPrefix');
+            href = href.replace(/prefix=([^&]*)/, 'prefix=' + ($prefix));
+
+            var $startCitationNo = viewModel.get('issueNumber_final');
+            href = href.replace(/startCitationNo=([^&]*)/, 'startCitationNo=' + ($startCitationNo));
+
+            var $endCitationNo = viewModel.get('issueNumber_To');
+            href = href.replace(/endCitationNo=([^&]*)/, 'endCitationNo=' + ($endCitationNo));
+
+            var $suffix = viewModel.get('issueNumberSuffix');
+            href = href.replace(/suffix=([^&]*)/, 'suffix=' + ($suffix));
+
+            var $code = viewModel.get('code');
+            href = href.replace(/code=([^&]*)/, 'code=' + ($code));
+
+            var $officerName = viewModel.get('OfficerName');
+            href = href.replace(/officerName=([^&]*)/, 'officerName=' + ($officerName));
+
+            var $agency = viewModel.get('agency');
+            href = href.replace(/agency=([^&]*)/, 'agency=' + ($agency));
+
+            var $beat = viewModel.get('Beat');
+            href = href.replace(/beat=([^&]*)/, 'beat=' + ($beat));
+
+            var $meterNo = viewModel.get('meterId');
+            href = href.replace(/meterNo=([^&]*)/, 'meterNo=' + ($meterNo));
+
+            var $officerID = viewModel.get('officeId');
+            href = href.replace(/officerID=([^&]*)/, 'officerID=' + ($officerID));
+
+            var $vioDesc = viewModel.get('vioDesc');
+            href = href.replace(/vioDesc=([^&]*)/, 'vioDesc=' + ($vioDesc));
+
+            var $parkingStatus = viewModel.get('parkingStatus');
+            href = href.replace(/parkingStatus=([^&]*)/, 'parkingStatus=' + ($parkingStatus));
+
+            var $parkingType = viewModel.get('parkingType');
+            href = href.replace(/parkingType=([^&]*)/, 'parkingType=' + ($parkingType));
+
+            return href;
+        }
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '380px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+
+    </script>
+}
+
+
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            margin-right: 5px;
+            overflow: auto;
+        }
+
+        /*#grdCustomerDetails .k-grid-content
+        {
+            min-height: 600px;
+        }*/
+
+
+
+        #grdCustomerDetails {
+            border-width: 0;
+            height: 100%;
+            width: 100%;
+            min-height: 500px;
+        }
+
+        #DivCustomerDetails {
+            display: none;
+            border-width: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+
+
+        .filter-SearchButton:hover {
+            background: #ccc !important;
+            text-decoration: none !important;
+        }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-autocomplete {
+            width: 169px;
+        }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker {
+            background-color: transparent !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+
+        /* SQUARED THREE */
+        /*.squaredThree {
+            width: 18px;
+            margin: 20px;
+            position: relative;
+        }
+
+            .squaredThree label {
+                cursor: pointer;
+                position: absolute;
+                width: 17px;
+                height: 17px;
+                top: 0;
+                border-radius: 4px;
+                -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                background: -webkit-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -moz-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -o-linear-gradient(top, #222 0%, #45484d 100%);
+                background: -ms-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: linear-gradient(top, #222 0%, #45484d 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#45484d',GradientType=0 );
+            }
+
+                .squaredThree label:after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+                    filter: alpha(opacity=0);
+                    opacity: 0;
+                    content: '';
+                    position: absolute;
+                    width: 7px;
+                    height: 3px;
+                    background: transparent;
+                    top: 4px;
+                    left: 4px;
+                    border: 2px solid #000000;
+                    border-top: none;
+                    border-right: none;
+                    -webkit-transform: rotate(-45deg);
+                    -moz-transform: rotate(-45deg);
+                    -o-transform: rotate(-45deg);
+                    -ms-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+                }
+
+                .squaredThree label:hover::after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+                    filter: alpha(opacity=30);
+                    opacity: 0.3;
+                }
+
+            .squaredThree input[type=checkbox]:checked + label:after {
+                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+                filter: alpha(opacity=100);
+                opacity: 1;
+            }*/
+    </style>
+}
+
+@section PageHeader
+{
+    <h1>Enforcement Management / <span>AI Inquiry</span></h1>
+}
+
+@section PageFilter
+{
+    <div class="one-column" style="display:inline-block;">
+        <div class="filter-option">
+            <label class="filter-label">Citation Date:</label>
+
+            @(Html.Kendo().DateTimePicker()
+                                .Name("startDateTime")
+                                .HtmlAttributes(new { style = "width:225px;font-size:16px;" })
+                                .Events(e =>
+                                    {
+                                        e.Change("onStartDateChange");
+                                    })
+            )
+            <script>
+                function onStartDateChange() {
+                    viewModel.set('startDate', $('#startDateTime').val());
+                }
+            </script>
+
+            <span>to</span>
+
+            @(Html.Kendo().DateTimePicker()
+                                                    .Name("endDateTime")
+                                                    .HtmlAttributes(new { style = "width:225px;font-size:16px;" })
+                                                    .Events(e =>
+                                                    {
+                                                        e.Change("onEndDateChange");
+                                                    })
+            )
+            <script>
+                function onEndDateChange() {
+                    viewModel.set('endDate', $('#endDateTime').val());
+                }
+            </script>
+
+            <span class="required_asterisk">*</span>
+        </div>
+    </div>
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+        <div class="filter-option">
+            <label class="filter-label">Citation Search</label>
+            <select id="citationRange" style="width:169px;font-size:16px;" data-bind=" value: CitationSearch"></select>
+            <script>
+                var data = [
+                              { Value: "1", Text: "Single" },
+                              { Value: "2", Text: "Range" }
+                ];
+                $("#citationRange").kendoDropDownList({
+
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: data,
+                    change: citationSearchChange()
+
+                });
+
+                $("#citationRange").kendoDropDownList();
+                var dropdownlist = $("#citationRange").data("kendoDropDownList");
+                dropdownlist.bind("change", citationSearchChange);
+            </script>
+
+        </div>
+
+
+
+
+        <div class="filter-option" style="float:left;">
+            <label class="filter-label">Citation Number</label>
+            <input id="autocompleteIssueNo" maxlength=10 onkeypress="return numbersonly(this, event)">
+            <script>
+
+                $("#autocompleteIssueNo").kendoAutoComplete({
+                    filter: "contains",
+                    minLength: 1,
+                    dataTextField: "IssueNo_final",
+                    close: onDataBound_IssueNo,
+                    dataSource: {
+                        serverFiltering: false,
+                        transport: {
+                            read: {
+                                url: '../EnforcementIssueNumber/Enforcement',
+                                parameterMap: function (options, type) {
+                                    if (type === 'read') {
+                                        return {
+                                            citIssueNumberIs: $("#autocompleteIssueNo").val()
+                                        };
+                                    }
+                                }
+                            },
+                        }
+                    }
+                });
+
+                function numbersonly(myfield, e, dec) {
+                    var key;
+                    var keychar;
+
+                    if (window.event)
+                        key = window.event.keyCode;
+                    else if (e)
+                        key = e.which;
+                    else
+                        return true;
+                    keychar = String.fromCharCode(key);
+
+                    // control keys
+                    if ((key == null) || (key == 0) || (key == 8) ||
+                        (key == 9) || (key == 13) || (key == 27))
+                        return true;
+
+                        // numbers
+                    else if ((("0123456789").indexOf(keychar) > -1))
+                        return true;
+
+                        // decimal point jump
+                    else if (dec && (keychar == ".")) {
+                        myfield.form.elements[dec].focus();
+                        return false;
+                    }
+                    else
+                        return false;
+                }
+
+
+            </script>
+        </div>
+
+        <div class="filter-option" id="rangeSearch">
+            <label class="filter-label" style="width:144px;text-align:center;margin-left:-25px;">to</label>
+            <input id="toAutocompleteIssueNo" maxlength=10 onkeypress="return numbersonly(this, event)">
+            <script>
+                $("#toAutocompleteIssueNo").kendoAutoComplete({
+                    filter: "contains",
+                    minLength: 1,
+                    dataTextField: "IssueNo_final",
+                    close: onDataBound_ToNumber,
+                    dataSource: {
+                        serverFiltering: false,
+                        transport: {
+                            read: {
+                                url: '../EnforcementIssueNumber/Enforcement',
+                                parameterMap: function (options, type) {
+                                    if (type === 'read') {
+                                        return {
+                                            citIssueNumberIs: $("#toAutocompleteIssueNo").val()
+                                        };
+                                    }
+                                }
+                            },
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+
+        <div class="filter-option">
+            <label class="filter-label">Officer Name</label>
+             @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new { @class = "filter-dropdown", style = "width:169px;", id = "officerName_AutoComplete" })
+                       .OptionLabel("All")
+                                .DataTextField("OfficerName")
+                                .DataValueField("OfficerName")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_OfficerName")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementOfficerNames", "Enforcement");
+                                                
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Prefix</label>
+
+            @(Html.Kendo().AutoComplete()
+              .Name("autocompleteIssueNoPfx")
+              .DataTextField("IssueNoPfx")
+              .Filter("contains")
+              .Events(e =>
+                {
+                    e.Close("onDataBound_IssueNoPrefix");
+                })
+              .MinLength(1)
+              .HtmlAttributes(new { style = "width:169px" })
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("EnforcementIssueNumberPrefix", "Enforcement")
+                          .Data("onAdditionalData");
+                  })
+
+                  .ServerFiltering(true);
+              })
+            )
+            <script>
+                function onAdditionalData() {
+                    return {
+                        prefixIs: $("#autocompleteIssueNoPfx").val()
+                    };
+                }
+            </script>
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Meter Number</label>
+            @(Html.Kendo().AutoComplete()
+                      .Name("autocompleteMeterID")
+                      .DataTextField("MeterID")
+                      .Filter("contains")
+                      .Events(e =>
+                        {
+                            e.Close("onDataBound_MeterID");
+                        })
+                      .MinLength(1)
+                      .HtmlAttributes(new { style = "width:169px" })
+                      .DataSource(source =>
+                      {
+                          source.Read(read =>
+                          {
+                              read.Action("EnforcementMeterId", "Enforcement")
+                                  .Data("onAdditionalData_MeterID");
+                          })
+
+                          .ServerFiltering(false);
+                      })
+            )
+
+            <script>
+                function onAdditionalData_MeterID() {
+                    return {
+                        meterIDIs: $("#autocompleteMeterID").val()
+                    };
+                }
+            </script>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+
+        <div class="filter-option">
+            <label class="filter-label">Officer ID</label>
+
+               @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "autocompleteOfficerID", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("OfficerID")
+                                .DataValueField("OfficerID")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_OfficerID")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementOfficerId", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Suffix</label>
+            @(Html.Kendo().AutoComplete()
+              .Name("autocompleteIssueNoSfx")
+              .DataTextField("IssueNoSfx")
+              .Filter("contains")
+              .Events(e =>
+                {
+                    e.Close("onDataBound_IssueNoSuffix");
+                })
+              .MinLength(1)
+              .HtmlAttributes(new { style = "width:169px" })
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("EnforcementIssueNumberSuffix", "Enforcement")
+                          .Data("onAdditionalData_suffix");
+                  })
+
+                  .ServerFiltering(false);
+              })
+            )
+            <script>
+                function onAdditionalData_suffix() {
+                    return {
+                        suffixIs: $("#autocompleteIssueNoSfx").val()
+                    };
+                }
+            </script>
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Beat</label>
+               @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "autocompleteBeat", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("Beat")
+                                .DataValueField("Beat")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_Beat")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementBeat", "Enforcement");
+
+                                            });
+                                        })
+        )
+
+        </div>
+
+    </div>
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+
+        <div class="filter-option">
+            <label class="filter-label">License Plate</label>
+            @(Html.Kendo().AutoComplete()
+              .Name("autocompleteVehLicNo")
+              .DataTextField("VehLicNo")
+              .Filter("contains")
+              .Events(e =>
+                {
+                    e.Close("onDataBound_VehLicNo");
+                })
+              .MinLength(1)
+              .HtmlAttributes(new { style = "width:169px;" })
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("EnforcementVehLicNo", "Enforcement")
+                          .Data("onAdditionalData_vehLicNo");
+                  })
+
+                  .ServerFiltering(false);
+              })
+            )
+            <script>
+                function onAdditionalData_vehLicNo() {
+                    return {
+                        vehLICNoIs: $("#autocompleteVehLicNo").val()
+                    };
+                }
+            </script>
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Violation Desc</label>
+             @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "vioDesc_AutoComplete", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("ViolationDescription")
+                                .DataValueField("ViolationDescription")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_ViolationDesc")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementVioDesc", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Agency</label>
+
+
+         
+              @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "autocompleteAgency", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("Agency")
+                                .DataValueField("Agency")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_Agency")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementAgency", "Enforcement");
+
+                                            });
+                                        })
+        )
+
+        </div>
+    </div>
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+
+        <div class="filter-option">
+            <label class="filter-label">License State</label>
+              @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new { @class = "filter-dropdown", style = "width:169px;", id = "autocompleteVehLicState" })
+                       .OptionLabel("All")
+                                .DataTextField("VehLicState")
+                                .DataValueField("VehLicState")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_LicenseState")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementLicenseState", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Status</label>
+         
+             @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "statusDropDown", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("Status")
+                                .DataValueField("Status")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_Status")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementStatus", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        @*<div class="filter-option">
+            <label class="filter-label">Class</label>
+
+            <select id="classDropDown" style="width:169px;font-size:16px;" data-bind="source: classesa, value: classes"></select>
+            <script>
+                $("#classDropDown").kendoDropDownList({
+
+                    dataTextField: "Class",
+                    dataValueField: "Class",
+                    optionLabel: "All",
+                    dataBound: onDataBound_Class()
+                });
+            </script>
+        </div>*@
+
+    </div>
+
+    <div class="three-column-wrapper" style="display:inline-block;">
+        <div class="filter-option">
+            <label class="filter-label">License Type</label>
+            @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "autocompleteLicenseType", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("LicenseType")
+                                .DataValueField("LicenseType")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_LicenseType")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("EnforcementLicenseType", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option">
+            <label class="filter-label">Code</label>
+              @(Html.Kendo().DropDownListFor(a => a.VehLicState).HtmlAttributes(new {  id = "code_AutoComplete", @class = "filter-dropdown", style = "width:169px;" })
+                       .OptionLabel("All")
+                                .DataTextField("Code")
+                                .DataValueField("Code")
+                                .AutoBind(false)
+                                 .Events(e => e
+                                    .DataBound("onDataBound_Code")
+                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                
+                                                read.Action("EnforcementCode", "Enforcement");
+
+                                            });
+                                        })
+        )
+        </div>
+
+        <div class="filter-option" style="visibility:hidden;">
+            <label class="filter-label"></label>
+            <select id="scode_AutoComplete" style="width:169px;font-size:16px;" data-bind="source: codes, value: code"></select>
+            @* <script>
+                    $("#code_AutoComplete").kendoDropDownList({
+
+                        dataTextField: "Code",
+                        dataValueField: "Code",
+                        optionLabel: "Please select...",
+                        dataBound: onDataBound_Code()
+                    });
+                </script>*@
+        </div>
+    </div>
+
+    <div class="three-column-wrapper">
+        <div class="filter-option">
+            <label class="filter-label">VIN</label>
+            @(Html.Kendo().AutoComplete()
+              .Name("autocompleteVehVIN")
+              .DataTextField("VehVIN")
+              .Filter("contains")
+              .Events(e =>
+                {
+                    e.Close("onDataBound_VehVIN");
+                })
+              .MinLength(1)
+              .HtmlAttributes(new { style = "width:169px;padding-left:-8px;" })
+              .DataSource(source =>
+              {
+                  source.Read(read =>
+                  {
+                      read.Action("EnforcementVehicleVIN", "Enforcement")
+                          .Data("onAdditionalData_vehVIN");
+                  })
+
+                  .ServerFiltering(false);
+              })
+            )
+            <script>
+                function onAdditionalData_vehVIN() {
+                    return {
+                        vehVINIs: $("#autocompleteVehVIN").val()
+                    };
+                }
+            </script>
+        </div>
+
+       @* <div class="filter-option">
+            <label class="filter-label">Type</label>
+            <select id="type_DD" style="width:169px;font-size:16px;" data-bind="source: types, value: parkingType"></select>
+            <script>
+                $("#type_DD").kendoDropDownList({
+
+                    dataTextField: "Type",
+                    dataValueField: "Type",
+                    optionLabel: "All",
+                    dataBound: onDataBound_Code()
+                });
+            </script>
+        </div>*@
+
+        <div class="filter-option">
+        </div>
+
+    </div>
+
+
+    <div class="filter-searchBox">
+        <div style="float: left">
+            <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+        </div>
+        <div id="ReturnButtonDiv" style="float: right; display: none">
+            <a id="btnReturn" class="button previous filter-ReturnButton" href="@Url.Action("Index", "Assets", new {rtn = "true"})">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString()
+            </a>
+        </div>
+
+    </div>
+
+
+}
+
+
+@section ExportButtons
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action("ExportToExcel", "Enforcement", new { page = 1, pageSize = "~", filter = "~", sort = "~",  startDate= "~",  endDate= "~",  licensePlate= "~",  licenseState= "~",  licenseType= "~",  vin= "~",  classes= "~",  prefix= "~",  startCitationNo= "~",  endCitationNo= "~",  suffix= "~",  code= "~",  officerName= "~",  agency= "~",  beat= "~",  meterNo= "~",  officerID= "~",  vioDesc= "~",  parkingStatus= "~",  parkingType="~"})">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action("ExportToCsv", new { page = 1, pageSize = "~", filter = "~", sort = "~",  startDate= "~",  endDate= "~",  licensePlate= "~",  licenseState= "~",  licenseType= "~",  vin= "~",  classes= "~",  prefix= "~",  startCitationNo= "~",  endCitationNo= "~",  suffix= "~",  code= "~",  officerName= "~",  agency= "~",  beat= "~",  meterNo= "~",  officerID= "~",  vioDesc= "~",  parkingStatus= "~",  parkingType="~"})">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action("ExportToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~",  startDate= "~",  endDate= "~",  licensePlate= "~",  licenseState= "~",  licenseType= "~",  vin= "~",  classes= "~",  prefix= "~",  startCitationNo= "~",  endCitationNo= "~",  suffix= "~",  code= "~",  officerName= "~",  agency= "~",  beat= "~",  meterNo= "~",  officerID= "~",  vioDesc= "~",  parkingStatus= "~",  parkingType="~"})">
+            <img src='/images/export-pdf.png' />
+        </a>
+        @* <a id="exportExcel" class="exportButton"  onclick="executeExportToExcel();">
+                <img src='/images/export-excel.png' />
+            </a>
+            <a id="exportCSV" class="exportButton">
+                <img src='/images/export-csv.png' />
+            </a>
+            <a id="exportPDF" class="exportButton">
+                <img src='/images/export-pdf.png' />
+            </a>*@
+    </div>
+}
+
+@*<div class="grid-header" style="margin-left:-40px">
+
+    </div>*@
+
+<div id="DivCustomerDetails">
+
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.EnforcementModel>()
+        .Name("grdCustomerDetails")
+        .Columns(col =>
+        {
+            col.Bound(a => a.IssueDateTime_final).Title("Issue Date and Time").Width("230px").ClientTemplate(@Html.ActionLink("#= IssueDateTime_final #", "EnforcementCitationDetails", "Enforcement", new
+            {
+                citationID = "#= IssueNo #",
+            },
+                                                                                new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(170);
+            col.Bound(a => a.IssueNoWithPfxSfx).Title("Citation Number").Width("150px").ClientTemplate(@Html.ActionLink("#= IssueNoWithPfxSfx #", "EnforcementCitationDetails", "Enforcement", new
+            {
+                citationID = "#= IssueNo #",
+            },
+                                                                    new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(100);
+
+
+            col.Bound(a => a.OfficerName).Title("Officer Name").Width("90px");
+            col.Bound(a => a.OfficerID).Title("Officer ID").Width("100px");
+            col.Bound(a => a.Status).Title("Status").Width("110px");
+        }
+            )
+               .Navigatable()
+               .Sortable(sortable => sortable.SortMode(GridSortMode.MultipleColumn))
+                .AutoBind(false)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                        .Read(read => read.Action("GetEnforcementsummary", "Enforcement").Data("GetAllFilterData"))
+                    //  .Sort(sort => sort.Add("IssueDateTime_final").Descending()) // <-- initial sort expression
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+
+
+<br />
+<div id="container">
+    <p style="height:40px;width:100%;visibility:hidden;">empty text</p>
+</div>
+
+
+

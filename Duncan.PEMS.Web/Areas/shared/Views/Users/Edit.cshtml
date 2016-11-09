@@ -1,0 +1,274 @@
+﻿
+@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        ___________________________________________________________________
+ * 
+ * 01/27/2014           Sergey Ostrerov            DPTXPEMS-239: User Management > Edit user > Detail and Update Screens. 
+ *                                                 Customer Roles button does not show up.
+ *                                                 Added logic to show up button for Administrators role. 
+ * ***********************************************************************************************************************/ *@
+
+@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Users.ProfileModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit User" );
+}
+
+<script type="text/javascript">
+    function SaveClick() {
+        var $secondaryIdType = $("#SecondaryIDType").val();
+        var $secondaryIdValue = $("#SecondaryIDValue").val();
+        //if one of them has a value but not both, then display that to the user
+        if (($secondaryIdType && $secondaryIdValue) || (!$secondaryIdType && !$secondaryIdValue)) {
+            return true;
+        } else {
+            alert('@HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "Both Secondary Id fields either have to have values or be empty." )');
+            return false;
+        }
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_@Model.Status.ToLower()">@Model.Status</span></div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Identification" )</div>
+
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Username" ): </div>
+            @Html.DisplayFor( m => m.Username, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Username )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Name" ): </div>
+            @Html.TextBoxFor( m => m.FirstName, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.FirstName, new {@class = "required_asterisk"} )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Middle Initial" ): </div>
+            @Html.TextBoxFor( m => m.MiddleInitial, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Name" ): </div>
+            @Html.TextBoxFor( m => m.LastName, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.LastName, new {@class = "required_asterisk"} )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Phone Number" ): </div>
+            @Html.TextBoxFor( m => m.PhoneNumber, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Email Address" ): </div>
+            @Html.TextBoxFor( m => m.EmailAddress, new {@class = "customer_text"} )
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): </div>
+            @Html.DropDownListFor( x => x.Status, Model.StatusOptions )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Organization Name" ): </div>
+            @Html.TextBoxFor( m => m.OrganizationName, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Type" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDType, new {@class = "customer_text"} )&nbsp;
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Value" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDValue, new {@class = "customer_text"} )&nbsp;
+        </div>
+       @if (ViewData[Constants.ViewData.CurrentCityType].ToString() == CustomerProfileType.MaintenanceGroup.ToString() || ViewBag.IsMaintenanceGroupCustomer == true)
+       {
+           if (Model.IsTechnician)
+           {
+               <div>
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Is Technician"): </div>
+                   <div class="customer_text"> @Model.IsTechnician.ToString() &nbsp;</div>
+               </div>
+           }
+           else
+           {
+               <div>
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Is a Technician"): </div>
+                   @Html.CheckBoxFor(m => m.IsTechnician, new {@class = "customer_text"})
+               </div>
+           }
+       }
+           
+        @Html.HiddenFor( m => m.IsTechnician ) 
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role" ): </div>
+            @Html.DropDownListFor( m => m.Role, Model.Groups.Select( c => new SelectListItem {Text = c.Text, Value = c.Value} ) )
+            @Html.RequiredMarkFor( m => m.Role, new {@class = "required_asterisk"} )
+        </div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Security Questions" )</div>
+
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Question 1" ): </div>
+            @Html.DisplayFor( m => m.Question1.Question, new {@class = "customer_text"} )
+            @Html.HiddenFor( m => m.Question1.Question )&nbsp;
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Answer 1" ): </div>
+            @Html.DisplayFor( m => m.Question1.Answer, new {@class = "customer_text"} )
+            @Html.HiddenFor( m => m.Question1.Answer )&nbsp;
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Question 2" ): </div>
+            @Html.DisplayFor( m => m.Question2.Question, new {@class = "customer_text"} )
+            @Html.HiddenFor( m => m.Question2.Question )&nbsp;
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Answer 2" ): </div>
+            @Html.DisplayFor( m => m.Question2.Answer, new {@class = "customer_text"} )
+            @Html.HiddenFor( m => m.Question2.Answer )&nbsp;
+        </div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Statistics" )</div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Creation Date" ): </div>
+            <div class="customer_text">
+                @{
+                    if ( Model.CreationDate == DateTime.MinValue )
+                    {
+                        @:N/A
+                    }
+                    else
+                    {
+                        @Model.CreationDate.ToString( "d" )
+                    }
+                }
+            </div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Login Date" ): </div>
+            <div class="customer_text">
+                @{
+                    if ( Model.LastLoginDate == DateTime.MinValue )
+                    {
+                        @:N/A
+                    }
+                    else
+                    {
+                        @Model.LastLoginDate.ToString( "d" )
+                    }
+                }
+            </div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Login Failure" ): </div>
+            <div class="customer_text">
+                @{
+                    if ( Model.LastLoginFailure == DateTime.MinValue )
+                    {
+                        @:N/A
+                    }
+                    else
+                    {
+                        @Model.LastLoginFailure.ToString( "d" )
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bad Login Count" ): </div>
+            <div class="customer_text">@Html.DisplayFor( m => m.BadLoginCount, new {@class = "customer_text"} )</div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Password Expiration" ): </div>
+            <div class="customer_text">
+                @{
+                    if ( Model.PasswordExipration == DateTime.MinValue )
+                    {
+                        @:N/A
+                    }
+                    else
+                    {
+                        @Model.PasswordExipration.ToString( "d" )
+                    }
+                }
+            </div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Password Change Date" ): </div>
+            <div class="customer_text">
+                @{
+                    if ( Model.LastPasswordChangeDate == DateTime.MinValue )
+                    {
+                        @:N/A
+                    }
+                    else
+                    {
+                        @Model.LastPasswordChangeDate.ToString( "d" )
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Additional Actions" )</div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "New Password" ):
+            </div>
+            @Html.PasswordFor( m => m.Password.NewPassword )<br />
+            @Html.ValidationMessageFor( m => m.Password.NewPassword )
+        </div>
+        <div>
+            <div class="customer_text_label">
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Confirm Password" ):
+            </div>
+            @Html.PasswordFor( m => m.Password.ConfirmPassword )
+            <button type="submit" class="button" value="Change Password" name="submitButton">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Change Password" )</button><br />
+            @Html.ValidationMessageFor( m => m.Password.ConfirmPassword )
+            @Html.ShowAllErrors( "Password" )
+        </div>
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label"></div>
+            <button type="submit" name="submitButton" class="button" value="Unlock User">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Unlock User" )</button>
+        </div>
+    </div>
+
+    <div style="clear: both">&nbsp;</div>
+    <div class="button-Container">
+        <button type="submit" name="submitButton" class="button important" onclick=" return SaveClick(); " value="Save">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+        @if (ViewData[Constants.ViewData.CurrentCityType].ToString() == CustomerProfileType.Admin.ToString())
+        {
+            <button type="submit" class="button " name="submitButton" value="Customer Roles">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Customer Roles" )</button>
+        }
+        <button type="submit" name="submitButton" class="button previous" value="Cancel">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit User" )</span></h1>
+}

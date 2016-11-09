@@ -1,0 +1,632 @@
+﻿@model Duncan.PEMS.Entities.Customers.CustomerPAMConfigurationModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "PAM Configuration");
+}
+
+
+@section PageHeader
+{
+   <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAM Configuration")</h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .areas-existing-grid {
+            float: left;
+            width: 55% !important;
+        }
+
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+
+        .filter-option, .filter-searchBox {
+            float: left;
+            margin-left: 0px;
+            margin-bottom: 5px;
+        }
+
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+        }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+@*@using (Html.BeginForm("PAMConfiguration", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "createCustomerAreas" }))*@
+@using (Html.BeginForm("PAMConfigBulkUploadSubmit", "AssetsUpload", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+
+    <!-- Hidden form fields for form save.  These will contain new fields for associated form areas. -->
+    <input id="NewAreas" name="NewAreas" type="hidden" value="" />
+    <input id="NewZones" name="NewZones" type="hidden" value="" />
+    <input id="NewCustomGroup1s" name="NewCustomGroup1s" type="hidden" value="" />
+    <input id="NewCustomGroup2s" name="NewCustomGroup2s" type="hidden" value="" />
+    <input id="NewCustomGroup3s" name="NewCustomGroup3s" type="hidden" value="" />
+
+ 
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "PAM Active Customer")</div>
+
+        <div class="three-column-wrapper" style="display:block;">
+            <div class="three-column" style="padding-bottom:10px">
+                <input type="checkbox" id="ChkCustomerId" name="ChkCustomerId" data-bind="checked: CustomerId">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Used PAM")
+            </div>
+
+            <div class="three-column">
+                <input type="checkbox" id="ChkExpTimeByPAM" name="ChkExpTimeByPAM" data-bind="checked: ExpTimeByPAM">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return Expiry Time")
+            </div>
+
+            <div class="three-column">
+                <input type="checkbox" id="ChkResetImin" name="ChkResetImin" data-bind="checked: ResetImin">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Reset Min")
+            </div>
+       </div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Create PAM Cluster")</div>
+      <div id="DivSelectMeterType" class="clear" style="padding-bottom:20px">
+      <div class="filter-option">
+                @(Html.Kendo().DropDownList()
+              .Name("MeterType")
+              .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })
+                       .BindTo(new List<SelectListItem>() {
+                        new SelectListItem() {
+                              Text = "Single Space Meter",
+                              Value = "1" 
+                          },
+                          //new SelectListItem() {
+                          //   Text = "Multi Space Meter",
+                          //    Value = "0"
+                          //}
+                      })
+                      .Value("-1")
+                )
+
+            </div>
+
+    <div style="display: block;">
+   
+        <button type="button" name="Select" class="button areas-new-button" onclick="ShowUploadDiv();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "BULK UPLOAD")</button>
+     
+         <button type="button" name="AddButton" class="button areas-new-button" onclick="AddGridRow();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Individual Meter to cluster")</button>
+
+    </div>
+          </div>
+    <div id="DivIndividualMeterToCluster" class="clear" style="padding-bottom:20px;display:none">
+        <div>
+            <div class="three-column">
+                @*<div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter ID")@Html.Raw(": ")</div>*@
+                <span class="filter-label" style="padding-right: 20px;">Meter ID:</span>
+                 @(Html.Kendo().DropDownList()
+                .Name("MeterIDList")
+                .OptionLabel("Select Meter ID")
+                .HtmlAttributes(new { style = "width: 200px; font-size: 16px;padding-bottom:10px;padding-top:5px" })
+    .DataTextField("MeterId")
+    .DataValueField("MeterId")
+
+                                         .SelectedIndex(0)
+                .DataSource(source =>
+                {
+                    source.Read(read =>
+                    {
+                        read.Url("../Assets/MeterIDListforSSM").Data("GetAllFilterData");
+                    });
+                })
+
+                )
+            </div>
+            </div>
+
+        <div class="three-column">
+            <span class="filter-label" style="padding-right: 20px;">Description:</span>
+            <input id="TextDescription" type="text" maxlength="50" style="width: 200px;margin-top:5px" />
+        </div>
+        <div class="three-column">
+            <div class="clear" style="float:left">
+                <button id="save" type="button" name="Button2" class=" button" value="SAVE" onclick="SaveAll()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+                <button id="update" type="button" name="Button1" class=" button" value="UPDATE" onclick="UpdateSelected()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "UPDATE")</button>
+                <button type="button" name="Button3" class=" button" value="CANCEL" onclick="Cancel()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Cancel")</button>
+            </div>
+         </div>
+    </div>
+    
+     <div id="UploadDiv" class="clear" style="padding-bottom:2px;display:none;" >
+        <table style="width:100%">
+            <tr>
+                <td>
+                     @*<div style="width:40%">*@
+                         @(Html.Kendo().Upload()
+                          .Name("files")
+                          .Multiple(false)
+
+                          .Events(events => events
+                                                .Progress("onProgress")
+                                                .Select("onSelect")
+                                                .Remove("onRemove"))
+                            )
+
+                            <button type="submit" name="submitButton" id="btnSubmit" class="button" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Upload")</button>
+                            <button type="button" name="HIde" class="button" onclick="HideUploadDiv();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+                        @*</div>*@
+                </td>
+                <td style="float:right;margin-right:100px">
+                    To download an example file or instructions, click on the appropriate links below.<br />
+                    @Html.ActionLink("Example", "DownloadPAMUploadExample", "AssetsUpload", new { customerId = Model.CustomerId }, new { @class = "customerValidateLink" }) <br />
+
+                    @Html.ActionLink("Instructions", "DownloadPAMUploadInstruction", "AssetsUpload", new { customerId = Model.CustomerId }, new { @class = "customerValidateLink" })
+                </td>
+            </tr>
+           
+        </table>
+
+</div>
+    @*<div id="UploadDiv" class="clear" style="padding-bottom:10px;display:none;width:40%" >
+        @(Html.Kendo().Upload()
+                          .Name("files")
+                          .Multiple(false)
+
+                          .Events(events => events
+                                                .Progress("onProgress")
+                                                .Select("onSelect")
+                                                .Remove("onRemove"))
+        )
+
+        <button type="submit" name="submitButton" id="btnSubmit" class="button" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Upload")</button>
+        <button type="button" name="HIde" class="button" onclick="HideUploadDiv();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+
+    </div>*@
+            <div id="DivCustomerDetails" class="grid-content" style="margin-left:0px; margin-top:8px; ">
+
+                @(Html.Kendo().Grid<Duncan.PEMS.Entities.Customers.PAMClusters>()
+
+.Name("grdDetailsPAMMeters")
+        .Columns(col =>
+        {            
+            col.Bound(a => a.MeterId).Title("Meter ID").Width("100px");
+            col.Bound(a => a.Description).Title("Description").Width("100px");         
+            col.Command(command =>
+            {
+                command.Edit();
+            }).Width("80px").Title("Edit");
+            col.Command(command =>
+            {
+                command.Destroy().Text("Remove");
+            }).Width("30px").Title("Remove");
+
+
+        }
+            )
+
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(true)
+        //  .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+        .Editable(editable => editable.Mode(GridEditMode.InLine))
+        .Reorderable(reoder => reoder.Columns(true))
+        .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                 .Model(model =>
+                 {
+                     model.Id(a => a.Clusterid);
+                     model.Field(a => a.Clusterid).Editable(false);
+                     model.Field(a => a.MeterId).Editable(false);
+                     model.Field(a => a.Description).Editable(true);
+                     model.Field(a => a.Hostedbaystart).Editable(false);
+
+                 })
+
+ .Create(create => create.Action("AddPAMClusterMeter", "Assets").Data("GetClusterFilterData").Type(HttpVerbs.Post))
+.Update(update => update.Action("AddPAMClusterMeter", "Assets").Data("GetClusterFilterData").Type(HttpVerbs.Post))
+.Destroy(destroy => destroy.Action("DeletePAMClusterMeter", "Assets").Data("GetAllFilterData").Type(HttpVerbs.Post))
+.Read(read => read.Action("GetPAMClusterMeter", "Assets").Data("GetAllFilterData"))
+.Events(e => e.RequestEnd("onRequestEndGridCluster"))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(false))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                )
+
+            </div>
+  
+      
+
+}
+
+@section Scripts
+{
+}
+
+@Scripts.Render("~/bundles/kendo")
+
+
+
+<script type="text/javascript" src="/scripts/spin.min.js"></script>
+<script type="text/javascript">
+    var spinner;
+    var viewModel = kendo.observable({
+        CustomerId: @Html.Raw(Model.PAMActiveCust.CustomerIDPAM).ToString().ToLower(),
+
+        ExpTimeByPAM: @Html.Raw(Model.PAMActiveCust.ExpTimeByPAM).ToString().ToLower(),
+        ResetImin: @Html.Raw(Model.PAMActiveCust.ResetImin).ToString().ToLower(),
+
+
+    });
+
+    $(document).ready(function() {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+        $("#files").parent().css({width:150})
+        $('#btnSubmit').attr('disabled', true).attr('readonly', true);       
+        $("#files").closest(".k-upload").find("span").text("Select File To Upload");
+        $('#update').css('display', 'none');
+       
+        $('#btnSubmit').addClass("disabledButton");
+     
+
+    });
+
+    function onRequestEndGridCluster (e) {
+
+        if (e.type == "create" || e.type == "update" || e.type == "destroy") {
+            showProgressBar(true)
+            var gridCluster = $("#grdDetailsPAMMeters").data("kendoGrid");
+
+
+            gridCluster.dataSource.read();
+        }
+        if (e.type == "read")
+        {
+            showProgressBar(false)
+        }
+    }
+
+
+    function GetAllFilterData() {
+       
+        var CustomerId = '@Model.CustomerId';
+
+        return {
+            CustomerId: CustomerId,
+        }
+    }
+
+   
+    function GetClusterFilterData(e) {
+        var metergroup;
+        $.ajax({
+            url: '@Url.Action("GetGroupID")',
+            data: { customerId: '@Model.CustomerId',MeterId: e.MeterId},
+            type: 'POST',
+            success: function (GID) {
+                meterGroup=GID;
+                if (meterGroup==1)
+                {
+                    if(parseInt(e.Hostedbaystart) > parseInt(e.Hostedbayend) )
+                    {
+                        alert(e.Hostedbaystart +" - "+ e.Hostedbayend +" BayRangeEnd should greater than BayRangeStart");
+                        return false;
+
+                    }
+
+                    var grid = $("#grdDetailsPAMMeters").data("kendoGrid");
+
+
+                    var result = grid.dataSource.data();
+ 
+                }
+            }
+        });
+        var CustomerId = '@Model.CustomerId';
+
+        return {
+            CustomerId: CustomerId
+        }
+    }
+
+    function AddGridRow()
+    {
+        $('#DivIndividualMeterToCluster').css('display', 'block');
+        $('#DivSelectMeterType').css('display', 'none');
+    }
+
+    function ShowUploadDiv()
+    {
+        $('#UploadDiv').css('display', 'block');
+        $('#DivSelectMeterType').css('display', 'none');
+
+    }
+    function HideUploadDiv()
+    {
+        $('#UploadDiv').css('display', 'none');
+        $('#DivSelectMeterType').css('display', 'block');
+
+    }
+
+
+   
+
+    function PAMActive()
+    {
+        var pamCustactive = false;
+        if($('#ChkCustomerId').attr('checked'))
+            pamCustactive= true;
+        var ChkExpTimeByPAM = false;
+        if($('#ChkExpTimeByPAM').attr('checked'))
+            ChkExpTimeByPAM= true;
+        var ChkResetImin = false;
+        if($('#ChkResetImin').attr('checked'))
+            ChkResetImin= true;
+
+        $.ajax({
+            url: '@Url.Action("SetPAMActive")',
+            data: { customerId: '@Model.CustomerId', pamCustactive: pamCustactive,ChkExpTimeByPAM: ChkExpTimeByPAM, ChkResetImin: ChkResetImin },
+            type: 'POST',
+            success: function (data) {  
+            },
+           
+        });
+    }
+
+
+
+
+    function SaveAll()
+
+    {
+        var MeterId = $("#MeterIDList").val();
+        if (MeterId == "Select Meter ID" || MeterId =="") {
+            alert("Select Meter ID");
+            return;
+        }
+
+        var TextDescription =$("#TextDescription").val();   
+        var gridrow =  { Clusterid: MeterId, MeterId: MeterId, Description: TextDescription} ;
+        var grid = $("#grdDetailsPAMMeters").data("kendoGrid");
+        grid.dataSource.insert(gridrow).set("dirty", true);
+
+        PAMActive();
+        var gridCluster = $("#grdDetailsPAMMeters").data("kendoGrid");
+        if($('#ChkCustomerId').attr('checked'))
+        {
+            gridCluster.saveChanges();
+
+        }
+        $('#DivIndividualMeterToCluster').css('display', 'none');
+        $('#DivSelectMeterType').css('display', 'block');
+        var dropdownlist = $("#MeterIDList").data("kendoDropDownList")
+        dropdownlist.enable(true) 
+        dropdownlist.value(-1);
+        $('#TextDescription').val("");
+       
+        // grid.dataSource.read();
+        //  gridCluster.dataSource.read();
+        // Clusterdropdown.dataSource.read();
+    }
+
+    function Cancel()
+    {
+        $('#DivIndividualMeterToCluster').css('display', 'none');
+        $('#DivSelectMeterType').css('display', 'block');
+        var dropdownlist = $("#MeterIDList").data("kendoDropDownList")
+        dropdownlist.enable(true) 
+        dropdownlist.value(-1);
+        $('#TextDescription').val("");
+    }
+
+    function onSelect(e) {
+
+
+        if (!/\.csv$/i.test(e.files[0].extension)) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"", "Please upload csv file only.");
+            $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+            $('#btnSubmit').addClass("disabledButton");
+            e.preventDefault();
+
+        }
+        else {
+          
+            $('#btnSubmit').attr('disabled', false).attr('readonly', false);
+            $('#btnSubmit').removeClass("disabledButton");
+           
+        }
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"", "Only one file may be selected.");
+            $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+            $('#btnSubmit').addClass("disabledButton");
+            e.preventDefault();
+        }
+       
+    }
+
+
+    function onRemove() {
+        $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+        $('#btnSubmit').addClass("disabledButton");
+    }
+    function onComplete(e) {
+        alert("Done.");
+    }
+
+    function onProgress(e) {
+        //kendoConsole.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+    function showProgressBar(visisbility) {
+
+        if (visisbility == false) {
+            if (spinner != null || spinner != undefined) {
+                spinner.stop() //** hide the PB
+            }
+        } else {
+            //** Create spinner and display PB
+            var opts = {
+                lines: 13, // The number of lines to draw
+                length: 0, // The length of each line
+                width: 5, // The line thickness
+                radius: 15, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 48, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: '#000', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: '450px', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
+            };
+            spinner = new Spinner(opts).spin(document.body);
+        }
+
+    }
+</script>
+
+
+
+
+
+
+ @*function OnEditGrid(e) {
+        //var grid = $('#grdDetailsPAMMeters').data('kendoGrid');
+        //grid.editRow($('#grdDetailsPAMMeters tr:has(td):eq(1)'));
+        //alert(21)
+
+
+        $('#DivIndividualMeterToCluster').css('display', 'block');
+        $('#DivSelectMeterType').css('display', 'none');
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        $('#TextDescription').val(dataItem.Description);
+        $("#MeterIDList").data('kendoDropDownList').value(dataItem.MeterId);
+        var dropdownlist = $("#MeterIDList").data("kendoDropDownList")
+        dropdownlist.enable(false)
+        //Hide unhide save update button
+        $('#save').css('display', 'none');
+        $('#update').css('display', 'block');
+      function AddClusterGridRow()
+    {
+
+
+        //var myIndex = 2;
+        //var TextDescription =$("#TextDescription").val();
+
+        //var myGridData = $('#grdDetailsPAMMeters').data('kendoGrid').dataSource.data();
+
+
+        //$.each(myGridData, function(index, row)
+        //{
+        //    var data = $('#grdDetailsPAMMeters').data('kendoGrid').dataSource.data()[index];
+        //    if(index == myIndex)
+        //    {
+        //        //var myMetID = data.get('MeterID');
+        //        //data.set('MeterID') =  myMeterIDNewVal;
+        //        var previous = data.get('Description')
+        //        alert('previous:'+previous)
+        //        alert(TextDescription)
+        //        data.set('Description', TextDescription);
+
+        //        var later = data.get('Description')
+        //        alert('later:'+later)
+        //        myGridData[changedIndex].dirty = true;
+        //        $('#grdDetailsPAMMeters').data('kendoGrid').dataSource.sync();
+        //      //  break
+        //    }
+
+        //});
+
+
+
+
+        var MeterId = $("#MeterIDList").val();
+        if (MeterId == "Select MeterID") {
+            alert("Select MeterID");
+            return;
+        }
+
+
+        var TextDescription =$("#TextDescription").val();
+        var gridrow =  { Clusterid: MeterId, MeterId: MeterId, Description: TextDescription} ;
+        var grid = $("#grdDetailsPAMMeters").data("kendoGrid");
+        grid.dataSource.insert(gridrow).set("dirty", true);
+    }
+
+    }*@

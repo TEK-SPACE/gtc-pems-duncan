@@ -1,0 +1,234 @@
+@using Duncan.PEMS.Utilities
+@inherits WebViewPage<Duncan.PEMS.Entities.Transactions.CustomerTransactionSensorModel>
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Sensor Details" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Transaction Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Sensor Transaction Details" )</span></h1>
+}
+
+<div class="grid cf">
+    <div class="validation-summary-valid">
+        @Html.ValidationSummary()
+    </div>
+
+    @if ( Model != null )
+    {
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Sensor Information" )</div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Sensor ID / Name" ):</div>
+                <div class="customer_text">
+                    @FormatHelper.FormatValue( Model.SensorId )
+                    
+                    @if ( !String.IsNullOrEmpty( Model.SensorName ) )
+                    {
+                        Html.Raw( "/" );
+                    }
+    
+                    @FormatHelper.FormatValue( Model.SensorName )
+                </div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter ID / Name" ):</div>
+                <div class="customer_text">
+                    @FormatHelper.FormatValue( Model.MeterId )
+                    
+                    @if ( !String.IsNullOrEmpty( Model.MeterName ) )
+                    {
+                        Html.Raw( "/" );
+                    }
+    
+                    @FormatHelper.FormatValue( Model.MeterName )
+                </div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Gateway ID / Name" ):</div>
+                <div class="customer_text">
+                    @FormatHelper.FormatValue( Model.GatewayId )
+                    
+                    @if ( !String.IsNullOrEmpty( Model.GatewayName ) )
+                    {
+                        Html.Raw( "/" );
+                    }
+    
+                    @FormatHelper.FormatValue( Model.GatewayName )
+                </div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Demand Area" ):@Html.Tooltip( "DemandArea" )</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.DemandType )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude / Longitude" ):</div>
+                @Html.DisplayForLatLong( m => m.Latitude, new {@class = "customer_text"} ) / @Html.DisplayForLatLong( m => m.Longitude, new {@class = "customer_text"} )
+            </div>
+        </div>
+
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.Area )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.Zone )</div>
+            </div>
+
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.Suburb )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.Street )</div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Detail" )</div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction ID" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.TransactionId )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Date/Time" ):</div>
+                <div class="customer_text">@FormatHelper.FormatDateTime( Model.TransactionDateTime, true ) 
+                    @if ( Model.Peak )
+                    {
+                        Html.Raw( " (" + HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Peak" ) + ")" );
+                    }
+                </div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Arrival Time" ):@Html.Tooltip( "ArrivalTime" )</div>
+                <div class="customer_text">@FormatHelper.FormatDateTime( Model.ArrivalDateTime, true )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Departure Time" ):@Html.Tooltip( "DepartureTime" )</div>
+                <div class="customer_text">@FormatHelper.FormatDateTime( Model.DepartureDateTime, true )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zero Out Time" ):</div>
+                <div class="customer_text">@FormatHelper.FormatDateTime( Model.DepartureDateTime, true )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Amount Paid" ):</div>
+                <div class="customer_text">@FormatHelper.FormatCurrency( Model.TotalAmountInCent )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Number of Payments" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.TotalNumberOfPayments )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Time Paid" ):@Html.Tooltip( "TotalTimePaid" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.TotalTimePaidMinutes )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Occupied Time" ):@Html.Tooltip( "Duration" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.TotalOccupiedMinutes )</div>
+            </div>
+        </div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Remaining Paid Time" ):@Html.Tooltip( "RemainingPaidTime" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.RemaingPaidTimeMinutes )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Free Parking Minutes" ):@Html.Tooltip( "FreeParkingMinutes" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.FreeParkingTimeMinutes )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Grace Period Minutes" ):@Html.Tooltip( "GracePeriodMinutes" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.GracePeriodMinutes )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Violation Minutes" ):@Html.Tooltip( "ViolationMinutes" )</div>
+                <div class="customer_text">@FormatHelper.FormatTimeFromMinutes( Model.ViolationMinutes )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Occupancy Status" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.OccupancyStatus )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Non Compliance Status" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.NonComplianceStatus )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Operational Status" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.OperationalStatus )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Discount Scheme Used" ):</div>
+                <div class="customer_text">@FormatHelper.FormatBoolean( Model.DiscountSchemaUsed )</div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Payment Detail" )</div>
+        <table id="payment-detail-table">
+            <thead>
+                <tr>
+                    <td style="border-top: none; border-left: none;"></td>
+                    <td>
+                        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Payment" )
+                    </td>
+                    <td>
+                        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Payment" )
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Payment Time" )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.FirstTxPaymentTime )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.LastTxPaymentTime )</td>
+                </tr>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Start Time" )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.FirstTxStartTime )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.LastTxStartTime )</td>
+                </tr>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Expire Time" )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.FirstTxExpiryTime )</td>
+                    <td>@FormatHelper.FormatDateTime( Model.LastTxExpiryTime )</td>
+                </tr>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Amount" )</td>
+                    <td>@FormatHelper.FormatCurrency( Model.FirstTxAmountInCent )</td>
+                    <td>@FormatHelper.FormatCurrency( Model.LastTxAmountInCent )</td>
+                </tr>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Purchased" )</td>
+                    <td>@FormatHelper.FormatTimeFromMinutes( Model.FirstTxTimePaidMinute )</td>
+                    <td>@FormatHelper.FormatTimeFromMinutes( Model.LastTxTimePaidMinute )</td>
+                </tr>
+                <tr>
+                    <td>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Payment Method" )</td>
+                    <td>@FormatHelper.FormatValue( Model.FirstTxPaymentMethod )</td>
+                    <td>@FormatHelper.FormatValue( Model.LastTxPaymentMethod )</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+
+    <div class="customer_actions">
+        @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button refresh"} )
+    </div>
+</div>
+
+<style type="text/css">
+    #payment-detail-table {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #payment-detail-table th, #payment-detail-table td {
+        border: 1px solid gray;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+</style>

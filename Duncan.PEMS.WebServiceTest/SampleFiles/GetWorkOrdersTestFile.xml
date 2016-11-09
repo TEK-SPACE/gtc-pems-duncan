@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid XML Studio 1.0.8.0 (http://www.liquid-technologies.com) -->
+<Data xmlns="http://www.duncansolutions.com/alarmworkorderv1">
+  <Request>
+    <ActiveAlarms>
+      <ActiveAlarm cid="29" aid="16" mid="1001"
+                   EventUID="5678"
+                   EventCode="0" EventSource="0"
+                 TimeOfOccurrance="2014-02-06T14:22:00"
+                   TimeOfNotification="2014-02-06T15:22:00"
+                   SLADue="2014-03-06T07:53:00.000"
+                   Notes="GWONote 1" />
+      <ActiveAlarm cid="29" aid="16" mid="1012"
+                   EventUID="5679"
+                   EventCode="1" EventSource="0"
+                  TimeOfOccurrance="2014-02-07T14:23:00"
+                   TimeOfNotification="2014-02-07T15:24:00"
+                 SLADue="2014-03-06T08:53:00.000"
+                   Notes="GWONote 2" />
+      <ActiveAlarm cid="29" aid="16" mid="1023"
+                   EventUID="5680"
+                   EventCode="2" EventSource="0"
+                   TimeOfOccurrance="2014-02-08T15:22:00"
+                     TimeOfNotification="2014-02-09T16:22:00"
+                  SLADue="2014-03-06T09:53:00.000"
+                   Notes="GWONote 3" />
+      <ActiveAlarm cid="29" aid="16" mid="1034"
+                   EventUID="5681"
+                   EventCode="3" EventSource="0"
+                   TimeOfOccurrance="2014-02-10T17:22:00"
+                  TimeOfNotification="2014-02-10T18:25:00"
+                 SLADue="2014-03-06T10:53:00.000"
+                   Notes="GWONote 4" />
+    </ActiveAlarms>
+  </Request>
+</Data>

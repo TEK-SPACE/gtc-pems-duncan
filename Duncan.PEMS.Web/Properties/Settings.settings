@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Duncan.PEMS.Web.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Duncan_PEMS_Web_AutoIssueSvc_AutoISSUEHostService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://aidev.duncan-usa.com/ReinoWebServices/US_DEMO_AAutoISSUEHost/AutoISSUEHostService.asmx</Value>
+    </Setting>
+    <Setting Name="Duncan_PEMS_Web_AutoIssueSvcNewOrleans_AutoISSUEHostService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://aipro05.duncan-usa.com/ReinoWebServices/New%20OrleansAutoISSUEHost/AutoISSUEHostService.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,196 @@
+﻿@model Duncan.PEMS.Entities.Events.EventCodeEditModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Event Code" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Manage Customer" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Configuration Inquiry" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Event Configuration" )</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+
+@using (Html.BeginForm( "Create", "EventCodes", FormMethod.Post, new {@class = "customer-form", @id = "createEventCode"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.AlarmTypeId )
+    @Html.HiddenFor(m => m.ApplySLA)
+
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Code Details" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.CustomerDisplayName, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Code" )@Html.Raw( ": " )</div>
+            @(Html.Kendo().NumericTextBox<int>().Name( "Id" ).Min( -1 ).Format("n0").Decimals(0).Value(Model.Id).HtmlAttributes(new { style = "width: 80px" })) Note: -1 will cause value to be auto-generated.
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Long Description" )@Html.Raw( ": " )</div>
+            @Html.TextBoxFor( m => m.DescVerbose, new {@class = "customer_text"} )
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Abbreviated Description" )@Html.Raw( ": " )</div>
+            @Html.TextBoxFor( m => m.DescAbbrev, new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.DescAbbrev )
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Type" )@Html.Raw( ": " )</div>
+            @Html.DropDownListFor( m => m.TypeId, new SelectList( Model.Type, "Value", "Text" ), new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.Type )
+        </div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Source" )@Html.Raw( ": " )</div>
+            @Html.DropDownListFor( m => m.SourceId, new SelectList( Model.Source, "Value", "Text" ), new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.Source )
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Category" )@Html.Raw( ": " )</div>
+            @Html.DropDownListFor( m => m.CategoryId, new SelectList( Model.Category, "Value", "Text" ), new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.Category )
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" )@Html.Raw( ": " )</div>
+            @Html.DropDownListFor( m => m.AssetTypeId, new SelectList( Model.AssetType, "Value", "Text" ), new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.AssetType )
+        </div>    
+
+        <div id="DefaultSLADiv">
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "SLA Duration" )@Html.Raw( ": " )</div>
+                @(Html.Kendo().NumericTextBox<int>().Name( "SLAMinutes" ).Min( 0 ).Max( 1440 ).Format("n0").Decimals(0).Value( Model.SLAMinutes ).HtmlAttributes(new { style = "width: 80px" })) Minutes  
+                <span class="required_asterisk">*</span>
+                @Html.ValidationMessageFor( m => m.SLAMinutes )
+            </div>    
+        </div>    
+
+        <div id="AlarmTierDiv">
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Is Alarm" )@Html.Raw( ": " )</div>
+                @Html.CheckBoxFor( m => m.IsAlarm, new {@class = "checkbox"} )
+                <span class="required_asterisk">*</span>
+                @Html.ValidationMessageFor( m => m.IsAlarm )
+            </div>    
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Severity" )@Html.Raw( ": " )</div>
+            @Html.DropDownListFor( m => m.AlarmTierId, new SelectList( Model.AlarmTier, "Value", "Text" ), new {@class = "customer_text"} )
+            <span class="required_asterisk">*</span>
+            @Html.ValidationMessageFor( m => m.AlarmTier )
+        </div>    
+    
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="SAVE">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+            @if ( Model.FromDetailsPage )
+            {
+                @Html.ActionLink( @HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Details", "EventCodes",
+                                  new {customerId = Model.CustomerId, eventSourceId = Model.SourceId, eventCodeId = Model.Id},
+                                  new {@class = "button previous", @type = "button"} )
+            }
+            else
+            {
+                @Html.ActionLink( @HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "EditEventCodes", "Customers",
+                                  new {customerId = Model.CustomerId}, new {@class = "button previous", @type = "button"} )
+            }
+        </div>
+
+}
+
+
+
+
+
+
+
+<script type="text/javascript">
+    var currAssetTypeID;
+    $(document).ready(function() {
+        currAssetTypeID =@Model.AssetTypeId
+        $("#TypeId").change(OnTypeChanged);
+        $("#AssetTypeId").change(OnAssetTypeChanged);
+        
+
+        // Show or hide AlarmTierDiv
+        if ($("#TypeId").val() == "@Model.AlarmTypeId") {
+            $("#AlarmTierDiv").show();
+        } else {
+            $("#AlarmTierDiv").hide();
+        }
+        
+        // Hide/show SLA element
+        OnActionGetDefaultSLA($("#AssetTypeId").val());
+        
+        $("#SLAMinutes").width(50);
+    });
+
+    function OnTypeChanged(data, textStatus, jqXHR) {
+
+        if ($(this).val() == "@Model.AlarmTypeId") {
+            $("#AlarmTierDiv").show();
+        } else {
+            $("#AlarmTierDiv").hide();
+        }
+    }
+
+    function OnAssetTypeChanged(data, textStatus, jqXHR) {
+        OnActionGetDefaultSLA($(this).val());
+    }
+
+
+    function OnActionGetDefaultSLA(meterGroupId) {
+        var slaVal = 0;
+        // Make AJAX call to get default SLA
+        $.ajax({
+            url: '@Url.Action( "GetAssetTypeSLA" )',
+            data: { customerId: '@Model.CustomerId', meterGroupId: meterGroupId, currSlaMinutes: slaVal, currAssetTypeID: currAssetTypeID },
+            type: 'POST',
+            success: OnActionGetDefaultSLASuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", data.responseText);
+            },
+        });
+    }
+
+
+    function OnActionGetDefaultSLASuccess(data, textStatus, jqXHR) {
+
+        var defaultSLA = data.DefaultSLA;
+        
+        var numerictextbox = $("#SLAMinutes").data("kendoNumericTextBox");
+
+        if (defaultSLA > 0) {
+            $("#DefaultSLADiv").show();
+            $('#ApplySLA').val(true);
+            numerictextbox.value(defaultSLA);
+        } else {
+            $("#DefaultSLADiv").hide();
+            $('#ApplySLA').val(false);
+            numerictextbox.value("");
+        }
+    }
+
+</script>

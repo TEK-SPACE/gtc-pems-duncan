@@ -1,0 +1,17 @@
+﻿@model Duncan.PEMS.Entities.Users.LoginRedirectModel
+
+@{
+    ViewBag.Title = "Pems Confirmation Success";
+    ViewBag.BodyId = "login";
+    ViewBag.SubTitle = @Html.DisplayTextFor(m => m.SubTitle);
+}
+
+
+@section PageHeader 
+{
+    <h1>@Html.DisplayTextFor(m => m.SubTitle)</h1>
+    <a href="@Url.Action("Login", "Account")" class="button previous">Back To Login</a>
+}
+
+
+<p>@Html.DisplayTextFor(m => m.Message)</p>

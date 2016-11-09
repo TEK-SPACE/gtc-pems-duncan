@@ -1,0 +1,368 @@
+﻿@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Entities.WorkOrders
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherWorkOrderDetailsModel
+@{
+    ViewBag.Title = "Work Order Details";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Details")</span></h1>
+}
+
+   @using (Html.BeginForm("WorkOrderDetail", "WorkOrders", FormMethod.Post, new { @class = "admin-form", @id = "woDetailsForm" }))
+   {
+         @Html.HiddenFor(model => model.WorkOrderId)
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Information")</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order ID"): </div>
+            @Html.DisplayFor(m => m.WorkOrderId, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.WorkOrderId)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Status"): </div>
+            @Html.DisplayFor(m => m.Status, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Status)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created Date"): </div>
+            @Html.DisplayFor(m => m.CreationDateDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.CreationDate)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Priority"): </div>
+            @Html.DisplayFor(m => m.PriorityDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Priority)
+            @Html.HiddenFor(model => model.PriorityDisplay)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"): </div>
+            @Html.DisplayFor(m => m.DeadlineDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Deadline)&nbsp;
+        </div>
+         <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+            <div class="customer_text long_text">    @Html.DisplayFor(m => m.Notes, new { @class = "customer_text" })
+                @Html.HiddenFor(model => model.Notes)&nbsp;</div>
+        </div>
+    </div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type"): </div>
+            @Html.DisplayFor(m => m.WorkOrderAsset.AssetType, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.WorkOrderAsset.AssetType)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"): </div>
+            @Html.DisplayFor(m => m.WorkOrderAsset.AssetId, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.WorkOrderAsset.AssetId)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area"): </div>
+            @Html.DisplayFor(m => m.AreaId2Display, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.AreaId2Display)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"): </div>
+            @Html.DisplayFor(m => m.Location, new { @class = "customer_text" }) 
+            @Html.HiddenFor(model => model.Location)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cross Street"): </div>
+            @Html.DisplayFor(m => m.CrossStreet, new { @class = "customer_text" }) 
+            @Html.HiddenFor(model => model.CrossStreet)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone"):</div>
+            <div class="customer_text ">    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                @Html.HiddenFor(model => model.Zone)&nbsp;</div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Images")</div>
+    <div class="one-column" style="max-width: 300px">
+          @{
+       if (Model.WorkOrderImages.Any())
+       {
+           foreach (var workOrderImage in Model.WorkOrderImages)
+           {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions.Close())
+                              .Content(@<text><img alt="" src="@workOrderImage.ImageSource"/></text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+                              )
+                        <a href="#" style="text-decoration: underline" id='open_@workOrderImage.WorkOrderImageId' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#") @workOrderImage.ImageName</a><br/>
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                               
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").center();
+                                    dialog.data("kendoWindow").open();
+                                });
+                            });
+                            $(document).on('click', ".k-overlay" , function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                dialog.data("kendoWindow").close();
+                            });
+                        </script>
+           }
+       }
+       else
+       {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+       }
+          }
+         </div> 
+       <div class="customer_actions" style="float: left; clear: none !important">
+           Do you have images to upload?<br/>
+           <a class="button" id="get-images" href="#" onclick="LoadFileUpload()"></a> <br/> <a class="button important" onclick="Submit('SaveImages');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Save Images")</a>
+           <input name="files" id="files" type="file" /> 
+       </div>
+    <div class="clear"></div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Event Summary")</div>
+    <div>
+        @if (Model.WorkOrderEvents.Any())
+        {
+        @(Html.Kendo().Grid<WorkOrderEvent>(Model.WorkOrderEvents)
+
+                      .Name("EventsGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(p => p.EventId).ClientTemplate(@Html.ActionLink("#= EventId #", "EventDetail", "WorkOrders", new { eventId = "#= WorkOrderEventId #", workOrderId = "#= WorkOrderId #" }, null).ToHtmlString()).Width(100);
+                          columns.Bound(p => p.EventDateTime).Width(175).ClientTemplate("#= EventDateTimeDisplay  #").Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Creation Date").ToString());
+                          columns.Bound(p => p.SLADue).Width(175).ClientTemplate("#= SLADueDisplay  #").Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Deadline").ToString());
+                          columns.Bound(p => p.Severity).Width(100).ClientTemplate("#= SeverityDisplay  #").Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Priority").ToString());
+                          columns.Bound(p => p.EventCode).Width(110).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Alarm Code").ToString());
+                          columns.Bound(p => p.EventDesc).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Alarm Description").ToString());
+                          //columns.Bound(p => p.Notes).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Notes").ToString());
+
+                      })
+                                      //do not make this a virtual scrolling table, otherwise it wont pick up the checked items that arent visible to the user
+                      .Scrollable()
+                      .Sortable()
+                      .Resizable(resize => resize.Columns(true))
+                      .DataSource(dataSource => dataSource.Ajax().ServerOperation(false))
+
+                      )
+        }
+        else
+        {
+        <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "None")</div>
+        }
+        <br/>
+    </div>
+    <div class="clear"></div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Parts")</div>
+       <div>
+             @if (Model.WorkOrderParts.Any())
+             {
+             <div class="clear" id="event-detail">
+             <table cellpadding="0" cellspacing="0" width="100%" style="text-align:center">
+                     <tr>
+                         <td class="event-detail-header ">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Part ID")</td>
+                         <td class="event-detail-header qty">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Part Name")</td>
+                         <td class="event-detail-header qty">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Part Description")</td>
+                         <td class="event-detail-header qty">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Quantity")</td>
+                         <td class="event-detail-header qty">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Part Cost")</td>
+                         <td class="event-detail-header qty">@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Notes")</td>
+                     </tr>
+                      @{
+                 bool even = false;
+                 foreach (var part in Model.WorkOrderParts)
+                 {
+                     string classname = even ? "even" : "";
+                            <tr class="event-detail-row @classname">
+                                <td ><div >@part.PartId</div></td>
+                                <td class="qty"><div >@part.PartName</div></td>
+                                <td class="qty"><div >@part.PartDesc</div></td>
+                                  <td class="qty"><input name="partId_@part.WorkOrderPartId" value="@part.Quantity" class="customer_text short-text-box" type="text"></td>
+                                <td class="qty"><div >@part.CostInCentsDisplay</div></td>
+                                <td class="qty"><div >@part.Notes</div></td>
+                            </tr>
+                     even = !even;
+                 }
+                 string classname2 = even ? "even" : "";
+                          <tr class="event-detail-row @classname2">
+                                <td colspan="3">&nbsp;</td>
+                                <td ><a class="button important" onclick="return Submit('UpdateQuantities');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Update")</a> </td>
+                                <td colspan="2">&nbsp;</td>
+                            </tr>
+                }
+        </table>
+           </div>
+             }
+             else
+             {
+                        <div class="customer_text_label"> @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None") </div><br/><hr/>
+             }
+       </div>
+             if (Model.AvailableParts.Any())
+             {
+            <div class="customer_actions " >
+                <div style="float: left;  clear:both">
+                    <div style="width: 50px;float: left;"> Part:</div>
+                @(Html.Kendo().DropDownListFor(x => x.SelectedPart)
+                      .HtmlAttributes(new { style = "width:300px; padding-top:5px; clear:both" })
+                      .Name("SelectedPart")
+                      .SelectedIndex(0)
+                      .BindTo(new SelectList(Model.AvailableParts, "PartIdentifier", "PartDesc"))
+                      ) </div> 
+                  <div style="float: left;">
+                     <a style="float: left; margin-left: 5px;" class="button" onclick="Submit('AddPart');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Add Part")</a>
+                </div>
+                <div style="float: left;  clear:both">
+                 <div style="width: 50px;float: left;"> Notes:</div>
+                    @Html.TextAreaFor(m => m.PartNote, new { @class = "customer_text_area ", rows = "2", @style = "width:294px" })
+                </div> 
+            </div>   
+             }
+             else
+             {
+               <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "No Available Parts for this Asset.")</div>
+             }
+    <div class="clear" style="padding-top:5px "></div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Technician Detail")</div>
+       if (Model.Technician.TechnicianID > 0)
+       {
+           <div class="two-column">
+               <div class="detailRow">
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Technician"):</div>
+                   @Html.DisplayFor(m => m.Technician.TechnicianDisplay, new {@class = "customer_text"})
+                   @Html.HiddenFor(model => model.Technician.TechnicianID)
+               </div>
+           </div>
+           <div class="two-column">
+               <div class="detailRow">
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Assigned WO's"):</div>
+                   <div class="customer_text">    @Html.DisplayFor(m => m.Technician.TechnicianAssignedWorkOrderCount, new {@class = "customer_text"})
+                       @Html.HiddenFor(model => model.Technician.TechnicianAssignedWorkOrderCount)&nbsp;</div>
+               </div>
+           </div>
+           <div class="customer_actions">
+               <button type="submit" name="submitButton" class="button important" value="Unassign">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Unassign")</button>
+                  @if (Model.StatusId == (int)WorkOrderStatus.Open || Model.StatusId == (int)WorkOrderStatus.Rejected)
+               {
+                   if (Model.CloseWorkOrderEvents && Model.WorkOrderEvents.Any())
+                   {
+                       <a class="button important" href='@Url.Action("ResolveEvents", "WorkOrders", new {workOrderId = @Model.WorkOrderId})'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve Events")</a>
+                   }
+                   else
+                   {
+                       <a class="button important" href='@Url.Action("ResolveWorkOrder", "WorkOrders", new {workOrderId = @Model.WorkOrderId})'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve")</a>
+                   }
+               }
+               @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Work Load"), "WorkLoad", new {techId = Model.Technician.TechnicianID}, new {@class = "button"})
+               @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return"), "Index", new {rtn = "true"}, new {@class = "button previous returnButton"})
+           </div>
+       }
+       else
+       {
+           <div class="two-column">
+               <div class="detailRow">
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Technician"):</div>
+                   @(Html.Kendo().DropDownListFor(x => x.SelectedTechnicianId)
+                         .SelectedIndex(0)
+                         .BindTo(new SelectList(Model.AvailableTechnicians, "TechnicianID", "TechnicianDisplay"))
+                         )
+               </div>
+           </div>
+           <div class="customer_actions">
+               <button type="submit" name="submitButton" class="button important" value="Assign">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Assign")</button>
+               @if (Model.StatusId == (int) WorkOrderStatus.Open || Model.StatusId == (int) WorkOrderStatus.Rejected)
+               {
+                  if (Model.CloseWorkOrderEvents && Model.WorkOrderEvents.Any())
+                   {
+                       <a class="button important" href='@Url.Action("ResolveEvents", "WorkOrders", new {workOrderId = @Model.WorkOrderId})'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve Events")</a>
+                   }
+                   else
+                   {
+                       <a class="button important" href='@Url.Action("ResolveWorkOrder", "WorkOrders", new {workOrderId = @Model.WorkOrderId})'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve")</a>
+                   }
+               }
+               @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Work Load"), "WorkLoad", null, new {@class = "button"})
+               @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return"), "Index", new {rtn = "true"}, new {@class = "button previous returnButton"})
+           </div>
+       }
+   }
+    <script>
+
+        $(document).ready(function() {
+            $("#files").kendoUpload({
+                select: onSelect,
+                remove: onRemove
+            });
+        });
+
+        function LoadFileUpload() {
+            $("#files").click();
+        }
+
+        var totalFiles = @Model.WorkOrderImages.Count();
+        var onSelect = function(e) {
+            var selectedFiles = e.files.length;
+            //only 3 per work order
+            if (totalFiles + selectedFiles > 3) {
+                alert("3 images allowed");
+                e.preventDefault();
+            } else {
+                totalFiles += selectedFiles;
+            }
+
+            $.each(e.files, function(index, value) {
+                var extension = value.extension.trim().toLowerCase();
+                //only images
+                if (extension != ".png"
+                    && extension != ".jpeg"
+                    && extension != ".jpg") {
+                    e.preventDefault();
+                    alert("Image Files Only");
+                }
+            });
+        };
+
+        function onRemove(e) {
+            var selectedFiles = e.files.length;
+            totalFiles = totalFiles - selectedFiles;
+        }
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#woDetailsForm');
+            $('#woDetailsForm').submit();
+        }
+    </script>
+<style>
+    .k-grid-content {
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .k-window
+    {
+        max-width: 100% !important;
+         }
+
+     .k-upload-button {
+            visibility: hidden;
+         height: 1px;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+       .parts span{
+            width: auto !important;
+            float: left !important;
+        }
+
+</style>

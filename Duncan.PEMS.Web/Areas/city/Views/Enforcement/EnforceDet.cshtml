@@ -1,0 +1,913 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Enforcement.EnforcementModel
+
+@{
+    ViewBag.Title = "Enforcement Management";
+}
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+    <style type="text/css">
+        .customer_tab_content_section1 {
+            background: #456E97;
+            color: #fff;
+            padding: 0 0 1px 10px;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            clear: both;
+            border-radius: 5px;
+            height: 20px;
+        }
+
+        @@media print {
+
+            body, html, #wrapper, div {
+                width: auto;
+                height: auto;
+                overflow: visible !important;
+            }
+
+            .two-column {
+                float: left;
+                width: 50%;
+            }
+
+            .k-grid {
+                border-top-width: 0;
+            }
+
+            .k-grid, .k-grid-content {
+                height: auto !important;
+            }
+
+            .k-grid-content {
+                overflow: visible !important;
+            }
+
+            div.k-grid table {
+                table-layout: auto;
+                width: 100% !important;
+            }
+
+            .k-grid .k-grid-header th {
+                border-top: 1px solid;
+            }
+
+            .k-grid-toolbar, .k-grid-pager > .k-link {
+                display: none;
+            }
+
+            .customer_tab_content_section {
+                background: #456E97 !important;
+                -webkit-print-color-adjust: exact;
+                color: #fff !important;
+                padding: 0 0 1px 10px;
+                margin-bottom: 0.5em;
+                font-weight: bold;
+                clear: both;
+                border-radius: 5px;
+            }
+
+                .customer_tab_content_section div {
+                    display: inline-block;
+                }
+
+            .two-column .customer_tab_content_section {
+                margin-right: 20px;
+            }
+
+
+
+            img {
+                /*height:500px;*/
+                display: block;
+                width: auto !important;
+                height: auto !important;
+                top: 130px;
+                left: -125px;
+                position: absolute;
+            }
+
+
+            /*.k-tabstrip {
+                border-top-width: 0;
+            }
+
+            .k-tabstrip .k-content {
+                display: block;
+            }
+
+            .k-tabstrip, .k-content {
+                height: auto !important;
+            }
+
+            .k-tabstrip, .k-content {
+                width: auto !important;
+            }
+
+            .k-content {
+                overflow: visible !important;
+            }*/
+
+        }
+
+
+
+        #ticketImage {
+            height: auto;
+        }
+
+        .k-tabstrip-items {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+
+
+
+        #mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9000;
+            background-color: gray;
+            display: none;
+        }
+
+        #boxes .window {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 510px;
+            height: 300px;
+            display: none;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        #boxes #dialog {
+            width: 434px;
+            height: 300px;
+            padding: 0px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        .k-upload .k-upload-action {
+            display: none;
+        }
+
+        .k-upload-selected {
+            display: none;
+        }
+    </style>
+}
+
+@section PageHeader
+{
+    <h1>Enforcement Management / <span>Enforcement Details</span></h1>
+}
+@section Scripts
+{
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="/scripts/spin.min.js"></script>
+    @Scripts.Render("~/bundles/kendo")
+
+    <script type="text/javascript">
+
+
+
+        function showimage(id) {
+
+            $("#searchResults")[0].innerHTML = "<div> <img src= '/Enforcement/NoteAttachment?ParkNoteId=" + id + "' width='360' height='200' /> <input type='button' class='button'  onclick='Hidediv();' value='Close'  /></div>";
+            document.getElementById("searchResults").style.visibility = 'visible';
+            document.getElementById("searchResults").style.position = 'relative';
+        }
+
+        function showvideo(id) {
+
+            $("#searchResults")[0].innerHTML = "<div> <video controls src= '/Enforcement/NoteAttachment?ParkNoteId=" + id + "' width='360' height='200'  > </video> <input type='button' class='button'  onclick='Hidediv();' value='Close'  /></div>";
+            document.getElementById("searchResults").style.visibility = 'visible';
+            document.getElementById("searchResults").style.position = 'relative';
+        }
+        function Hidediv() {
+            $("#searchResults")[0].innerHTML = "";
+            document.getElementById("searchResults").style.visibility = 'hidden';
+            document.getElementById("searchResults").style.position = 'absolute';
+        }
+
+        function printTab() {
+            var tabStripElement = $('#myTabstrip'),
+                printableContent = '',
+                win = window.open('', '', 'width=800, height=500'),
+                doc = win.document.open();
+
+            var htmlStart =
+                    '<!DOCTYPE html>' +
+                    '<html>' +
+                    '<head>' +
+                    '<meta charset="utf-8" />' +
+                    '<title>Enforcement Details/title>' +
+                    '<style>' +
+                    'html { font: 11pt sans-serif; }' +
+                    '.k-tabstrip { border-top-width: 0; }' +
+                    '.k-tabstrip .k-content {display: block;}' +
+                    '.k-tabstrip, .k-content { height: auto !important; }' +
+                     '.k-tabstrip, .k-content { width: auto !important; }' +
+                    '.k-content { overflow: visible !important; }' +
+                    //'div.k-grid table { table-layout: auto; width: 100% !important; }' +
+                    //'.k-tabstrip .k-tabstrip-header th { border-top: 1px solid; }' +
+                    //'.k-grid-toolbar, .k-grid-pager > .k-link { display: none; }' +
+                    '</style>' +
+                    '</head>' +
+                    '<body>';
+
+            var htmlEnd =
+                    '</body>' +
+                    '</html>';
+
+            var tabStripHeader = tabStripElement.children('.k-content');
+            //if (tabStripHeader[0]) {
+            //    var thead = tabStripHeader.find('thead').clone().addClass('k-tabstrip-header');
+            //    printableContent = tabStripElement
+            //        .clone()
+            //            .children('.k-tabstrip-header').remove()
+            //        .end()
+            //            .children('.k-tabstrip-content')
+            //                .find('table')
+            //                    .first()
+            //                        .children('tbody').before(thead)
+            //                    .end()
+            //                .end()
+            //            .end()
+            //        .end()[0].outerHTML;
+            //} else {
+            //    printableContent = tabStripElement.clone()[0].outerHTML;
+            //}
+            printableContent = tabStripElement.clone()[0].outerHTML;
+            doc.write($('#ticketImage'));
+
+            doc.close();
+            win.print();
+        }
+
+        function onFileAdd() {
+
+            //reset all the upload things!
+            $(".k-upload-files").remove();
+            $(".k-upload-status").remove();
+            $(".k-upload.k-header").addClass("k-upload-empty");
+            $(".k-upload-button").removeClass("k-state-focused");
+
+            $('#notememo').val('');
+
+
+            var maskHeight = $(document).height();
+            var maskWidth = $(window).width();
+
+            //Set heigth and width to mask to fill up the whole screen
+            $('#mask').css({ 'width': maskWidth, 'height': maskHeight });
+
+            //transition effect
+            $('#mask').fadeIn(1000);
+            $('#mask').fadeTo("slow", 0.8);
+
+            //Get the window height and width
+            var winH = $(window).height();
+            var winW = $(window).width();
+
+            //Set the popup window to center
+            $('#dialog').css('top', winH / 2 - $('#dialog').height() / 2);
+            $('#dialog').css('left', winW / 2 - $('#dialog').width() / 2);
+            $('#dialog').fadeIn(2000);
+            $('#dialog').css({ 'height': '300px' });
+        }
+        function Closebtn() {
+            $('#mask').hide();
+            $('.window').hide();
+        }
+        function resumeOnUpload() {
+            $('#dialog').css({ 'height': '330px' });
+
+        }
+
+        function onUpload(e) {
+            e.data = {
+
+                FileComment: $("#notememo").val(),
+                CitationID: '@ViewData["cno"]',
+            };
+        }
+
+
+        function save() {
+
+            $(".k-upload-selected").click()
+
+        }
+        function onSuccess(e) {
+
+            var elements = e.response.status.split("####");
+
+            var i = 0;
+            var hrmlMSG = "";
+            while (i < elements.length) {
+                if (elements[i].indexOf("ERROR") >= 0) {
+                    alert(elements[i]);
+                }
+                i++;
+            }
+            Closebtn();
+            $("#grdEnforcementManagementNotes").data("kendoGrid").dataSource.read();
+
+        }
+
+        function REINSTATE() {
+            $.ajax({
+                url: '@Url.Action("SetREINSTATE")',
+                //data: { CitationID: '@ViewData["cno"]' },
+                data: { CitationID: '@Model.myCitationID' },
+                type: 'POST',
+                success: function (data) {
+                    if (data == -1) {
+                        alert("Already Active status")
+                    }
+                    else if (data == 0) {
+                        alert("Unable to change status")
+                    }
+                    else {
+                        alert("Status changed to Active")
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Error: " + textStatus);
+                }
+            });
+
+        }
+        function VOID() {
+            $.ajax({
+                url: '@Url.Action("SetVOID", "Enforcement")',
+                //data: { CitationID: '@ViewData["cno"]'},
+                data: { CitationID: '@Model.myCitationID' },
+                type: 'POST',
+                success: function (data) {
+                    if (data == -1) {
+                        alert("Already Void status")
+                    }
+                    else if (data == 0) {
+                        alert("Unable to change status")
+                    }
+                    else {
+                        alert("Status changed to Void")
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Error: " + textStatus + " " + errorThrown);
+                }
+            });
+        }
+    </script>
+}
+
+<div id="forecast">
+    @(Html.Kendo().TabStrip()
+          .Name("myTabstrip")
+          .Items(tabstrip =>
+          {
+              tabstrip.Add().Text("Parking Record")
+                  .Selected(true)
+                  .Content(@<text>
+                    <div id="parkingRecord" style="height:550px;overflow:scroll;">
+                        <div id="divCitations">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Citations")</div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Citation number"):</b></div>
+                                    <div class="customer_text">@Model.IssueNo </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Issue Date"):</b></div>
+                                    <div class="customer_text">@Model.IssueDateTime  </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Unit Serial No"):</b></div>
+                                    <div class="customer_text">@Model.UnitSerial </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Agency"):</b></div>
+                                    <div class="customer_text">@Model.Agency </div>
+                                </div>
+                            </div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Beat"):</b></div>
+                                    <div class="customer_text">@Model.Beat </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Officer Name"):</b></div>
+                                    <div class="customer_text">@Model.OfficerName </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Officer ID"):</b></div>
+                                    <div class="customer_text">@Model.OfficerID </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divVehicle">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vehicle")</div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "License Plate"):</b></div>
+                                    <div class="customer_text">@Model.VehLicNo </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "License State"):</b></div>
+                                    <div class="customer_text">@Model.VehLicState </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Expiration Date"):</b></div>
+                                    <div class="customer_text">@Model.VehLicExpDate  </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "License Type"):</b></div>
+                                    <div class="customer_text">@Model.VEHLICTYPE </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Make"):</b></div>
+                                    <div class="customer_text">@Model.VehMake </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Model"):</b></div>
+                                    <div class="customer_text">@Model.VehModel </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Body Style"):</b></div>
+                                    <div class="customer_text">@Model.VehBodyStyle </div>
+                                </div>
+                            </div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "VIN"):</b></div>
+                                    <div class="customer_text">@Model.VehVIN </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "VIN 8"):</b></div>
+                                    <div class="customer_text">@Model.VehVIN4 </div>
+                                </div>
+
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Check Digit"):</b></div>
+                                    <div class="customer_text">@Model.VEHCHECKDIGIT </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Primary Color"):</b></div>
+                                    <div class="customer_text">@Model.VehColor1 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Second Color"):</b></div>
+                                    <div class="customer_text">@Model.VehColor2 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b> @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Permit")</b>:</div>
+                                    <div class="customer_text">@Model.PermitNo </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divViolation">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Violation")</div>
+                            @*<div class="two-column">
+                                    <div class="detailRow">
+                                        <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Violation Code"):</b></div>
+                                        <div class="customer_text">@Model.VioCode</div>
+                                    </div>
+                                    <div class="detailRow">
+                                        <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Violation Description"):</b></div>
+                                        <div class="customer_text">@Model.VioDescription1</div>
+                                    </div>
+                                    <div class="detailRow">
+                                        <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Fine"):</b></div>
+                                        <div class="customer_text">@Model.VioFine</div>
+                                    </div>
+                                </div>
+                                <div class="two-column">
+                                    <div class="detailRow">
+                                        <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Late Penalty"):</b></div>
+                                        <div class="customer_text">@Model.VioLateFee1</div>
+                                    </div>
+                                    <div class="detailRow">
+                                        <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Second Late Penalty"):</b></div>
+                                        <div class="customer_text">@Model.VioLateFee2</div>
+                                    </div>
+                                </div>*@
+
+                            @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.EnforcementModel>()
+
+                .Name("grdEnforcementManagementViolation")
+        .Columns(col =>
+        {
+            col.Bound(a => a.VioCode).Title("Violation Code").Width("130px");
+            col.Bound(a => a.VioDescription1).Title("Violation Description").Width("130px");
+            col.Bound(a => a.VioFine).Title("Fine").Width("130px");
+            col.Bound(a => a.VioLateFee1).Title("First Late Penalty").Width("130px");
+            col.Bound(a => a.VioLateFee2).Title("Second Late Penalty").Width("130px");
+
+
+        }
+            )
+
+                         .Scrollable()
+                       .Navigatable()
+                        .Sortable()
+                        .AutoBind(true)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                        .DataSource(dataSource => dataSource
+                .Ajax()
+                                                .Read(read => read.Action("GetEnforcementViolation", "Enforcement", new { CitationID = @ViewData["cno"] }))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                            )
+
+
+                        </div>
+                        <div id="divlocation">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Location")</div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Block"):</b></div>
+                                    <div class="customer_text">@Model.LocBlock </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"):</b></div>
+                                    <div class="customer_text">@Model.LocStreet </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Description"):</b></div>
+                                    <div class="customer_text">@Model.LocDescriptor </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Direction"):</b></div>
+                                    <div class="customer_text">@Model.LocDirection </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Side"):</b></div>
+                                    <div class="customer_text">@Model.LOCSIDEOFSTREET </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb"):</b></div>
+                                    <div class="customer_text">@Model.LocSuburb </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Lot"):</b></div>
+                                    <div class="customer_text">@Model.LocLot </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Cross Street"):</b></div>
+                                    <div class="customer_text">@Model.LocCrossStreet1 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Second Cross Street"):</b></div>
+                                    <div class="customer_text">@Model.LocCrossStreet2 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "City"):</b></div>
+                                    <div class="customer_text">@Model.LocCity </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "State"):</b></div>
+                                    <div class="customer_text">@Model.LocState </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zip"):</b></div>
+                                    <div class="customer_text">@Model.LOCZIP </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Number"):</b></div>
+                                    <div class="customer_text">@Model.MeterNo </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Bay No."):</b></div>
+                                    <div class="customer_text">@Model.MeterBayNo </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="divRemarks">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Remarks")</div>
+                            <div class="two-column">
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Remark1"):</b></div>
+                                    <div class="customer_text">@Model.Remark1 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Remark2"):</b></div>
+                                    <div class="customer_text">@Model.Remark2 </div>
+                                </div>
+                                <div class="detailRow">
+                                    <div class="customer_text_label"><b>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Remark3"):</b></div>
+                                    <div class="customer_text">@Model.Remark3 </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </text>);
+
+              tabstrip.Add().Text("Notes")
+                  .Content(@<text>
+                    <div id="DivNotesDetails">
+                        <div style=" width: 100%;margin-left:379px; visibility:hidden; position:absolute" id="searchResults">
+                        </div>
+
+                        @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.NoteModel>()
+
+        .Name("grdEnforcementManagementNotes")
+        .Columns(col =>
+        {
+            col.Bound(a => a.NoteDateTime).Title("Added On / By").Width("130px").ClientTemplate("<span> #= kendo.toString(kendo.parseDate(NoteDateTime), 'MMM/dd/yyyy hh:mm:ss') # </span>");
+            col.Bound(a => a.NotesMemo).Title("Notes").Width("130px");
+            col.Bound(a => a.MultimediaNoteDataType).Title("Attachment Type").Width("130px").ClientTemplate("#if(MultimediaNoteDataType != 'mmPicture'){#" +
+                       "<img src='/Images/Menu/audiopalyer.jpg' onclick='showvideo(" + "#= ParkNoteId #" + ")' target='_new' alt='Audio' width='75' height='59' title='Click to Play' style='cursor:pointer' />" +
+                       "#} else {#" +
+                       "<img src='" + Url.Action("NoteAttachment", "Enforcement", new { ParkNoteId = "#= ParkNoteId #" }) + "' onclick='showimage(#= ParkNoteId #)' target='_new' alt='img' width='75' height='59' title='Click to View' style='cursor:pointer' />" +
+                       "# } #");
+            col.Bound(a => a.CustomerName).Title("Added By").Width("130px");
+        }
+    )
+
+    .Scrollable()
+    .Navigatable()
+    .Sortable()
+    .AutoBind(true)
+    .Pageable(x =>
+    {
+        x.Enabled(true);
+        x.PreviousNext(true);
+        x.PageSizes(true);
+        x.Info(true);
+        x.Input(true);
+        x.Numeric(true);
+        x.Refresh(false);
+    })
+
+    .Filterable()
+    .Reorderable(reoder => reoder.Columns(true))
+    .Selectable(selectable => selectable
+    .Mode(GridSelectionMode.Single))
+
+    .DataSource(dataSource => dataSource
+    .Ajax()
+            .Read(read => read.Action("GetNotes", "Enforcement", new { CitationID = @ViewData["cno"] }))
+    .PageSize(50)
+    )
+    .Resizable(resize => resize.Columns(true))
+    .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                        )
+                        <button id="btnAdd" type="button" value="ADD NOTE" class="button" onclick=" onFileAdd(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "ADD NOTE")</button>
+                    </div>
+
+                </text>);
+
+              tabstrip.Add().Text("Record History")
+                  .Content(@<text>
+                    @*<div style="height:550px;overflow:scroll;">*@
+                    <div style="height:250px;overflow:scroll;">
+                        <div id="divRecordHistory">
+                            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Audit Status History")</div>
+
+                            @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.EnforcementModel>()
+                            .HtmlAttributes(new { style = "height:250px;" })
+        .Name("grdEnforcementManagementAuditStatus")
+        .Columns(col =>
+        {
+            col.Bound(a => a.StatusDateTime).Title("Date/Time").Width("130px").ClientTemplate("<span> #= kendo.toString(kendo.parseDate(StatusDateTime), 'MMM/dd/yyyy hh:mm:ss') # </span>");
+            col.Bound(a => a.StatusValue).Title("Status").Width("130px");
+            col.Bound(a => a.OfficerName).Title("User Name").Width("130px");
+            col.Bound(a => a.OfficerID).Title("User ID").Width("130px");
+            col.Bound(a => a.StatusReason).Title("Reason").Width("130px");
+
+
+        }
+            )
+
+                         .Scrollable()
+                       .Navigatable()
+                        .Sortable()
+                        .AutoBind(true)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                        .DataSource(dataSource => dataSource
+                .Ajax()
+                                                .Read(read => read.Action("GetEnforcementRecordHistory", "Enforcement", new { CitationID = @ViewData["cno"] }))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                            )
+
+                            @*<div style="width:100px;height:20px;"></div>*@
+                            @* <div class="customer_tab_content_section" style="visibility:hidden;">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Audit Export History")</div>*@
+
+                            @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.EnforcementModel>()
+
+        .Name("grdEnforcementManagementAuditExport").HtmlAttributes(new { style = "visibility:hidden;height:0px;" })
+        .Columns(col =>
+        {
+            col.Bound(a => a.ExportDateTime).Title("Export Date / Time").Width("130px").ClientTemplate("<span> #= kendo.toString(kendo.parseDate(ExportDateTime), 'MMM/dd/yyyy hh:mm:ss') # </span>");
+            col.Bound(a => a.ExportId).Title("Export Number").Width("130px");
+            col.Bound(a => a.ExportType).Title("Export Type").Width("130px");
+            col.Bound(a => a.Count).Title("Count").Width("130px");
+
+        }
+            )
+
+                         .Scrollable()
+                       .Navigatable()
+                        .Sortable()
+                        .AutoBind(true)
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .Read(read => read.Action("GetEnforcementExportHistory", "Enforcement", new { CitationID = @ViewData["cno"] }))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                            )
+                        </div>
+                    </div>
+                </text>);
+
+              tabstrip.Add().Text("Citation")
+                  .Content(@<text>
+                    <div style="height:550px;overflow:scroll;">
+                        @*<div style="height:750px;overflow:scroll;">   *@
+                        <div id="divCitationView">
+                            <img id="ticketImage" style="text-align:center;vertical-align:middle;margin-left:20%; height : 700px; width:auto;" src='@Url.Action("CitationImage", "Enforcement", new { id = @ViewData["citationUnqKey"], structure = "Parking" }) ' />
+                        </div>
+                    </div>
+                </text>);
+          })
+    )
+</div>
+<div id="btnAction">
+    <div style="float: left; padding-left: 10px">
+        @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous returnButton" })
+    </div>
+    <div style="float: left; padding-left: 10px">
+        @*<button onclick="printTab();" class = "button">PRINT</button>*@
+        <button onclick="javascript:window.print();" class="button">PRINT</button>
+    </div>
+
+
+
+    <div style="float: left; padding-left: 10px">
+
+        <button id="btnRE-INSTATE" type="button" value="REINSTATE" class="button" onclick=" REINSTATE(); ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "RE-INSTATE")</button>
+
+    </div>
+    <div style="float: left; padding-left: 10px">
+        <button id="btnVOID" type="button" value="VOID" class="button" onclick=" VOID();  ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "VOID")</button>
+
+    </div>
+
+</div>
+
+<div id="boxes">
+    <div id="dialog" class="window">
+
+        <div style="background: #25679b; height: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Enforcement Management / Add Note")</div>
+
+            <div class="filter-option" style=" padding-top: 3px;">
+                <label class=" filter-label">Note:</label>
+            </div>
+            <div class="two-column-wrapper">
+
+                <div class=" two-column" style=" padding-top: 3px; padding-left: 20px; width: 455px;">
+                    <textarea id="notememo" class="k-textbox" rows="8" cols="80" maxlength="500" style="width: 393px; font-size: 14px; overflow:auto;resize:none;"></textarea>
+
+                </div>
+            </div>
+            <div class="two-column-wrapper">
+
+
+                <div style="float: left; padding-left: 22px">
+                    Attachment:
+                </div>
+                <div style="float: left; padding-left: 4px; width:330px;">
+
+                    @(Html.Kendo().Upload()
+            .Name("files")
+                    .Async(a => a
+                        .Save("Submit", "Enforcement")
+
+                        .AutoUpload(false)
+                    )
+                    .Multiple(false)
+            .ShowFileList(true)
+                    .Messages(m => m.Select("Import"))
+        .Events(c => c
+              .Select("resumeOnUpload")
+          )
+                   .Events(c => c
+                .Upload("onUpload")
+                )
+                         .Events(events => events
+
+                       .Success("onSuccess")
+
+                       )
+                    )
+                </div>
+
+                <div id="btnAction2" class="two-column-wrapper">
+                    <div class=" two-column" style=" padding-top: 3px; padding-left: 20px; width: 455px;">
+                        <button id="btnsave" type="button" value="Return" class="button" onclick=" save(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+
+                        <button id="btnclose" type="button" value="Return" class="button" onclick=" Closebtn(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="mask">
+</div>
+
+
+
+
+
+
+
+
+
+

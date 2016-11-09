@@ -1,0 +1,296 @@
+﻿@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _________________________________________________________________________________________________________
+ * 
+ * 01/31/2014           Sergey Ostrerov            DPTXPEMS - 45 - Allow 1-9 value for Bay Number field while adding space on Add Space dialog box. 
+ *                                                                 Updated Latitude/Longitude, Demand Status validation.  
+*****************************************************************************************************************************************************/ *@
+
+@model Duncan.PEMS.Entities.Assets.MeterSpacesModel
+@using Duncan.PEMS.Entities.Assets
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit Meter Spaces" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Inquiry" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Edit Asset" )</span></h1>
+}
+
+
+@section Styles
+{
+    <style type="text/css">
+        .k-widget.k-window {
+            width: 500px;
+        }
+
+        .k-edit-form-container {
+            width: 490px !important;
+        }
+
+.button-add-spaces  {
+	background: #456E97 !important;
+	color: #fff !important;
+	border: 1px solid #174A7D !important;
+	padding: .25em .5em !important;
+	font-size: 0.9em;
+	box-shadow: 0px 0px 3px 2px #f2f2f2;
+	display: inline-block;
+	border-radius: 3px;
+	cursor: pointer;
+	position: relative;
+	z-index: 1;
+	margin-top: 5px;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-family: "futura-pt-n4","futura-pt",Arial,sans-serif;
+	box-shadow: 0px 0px 3px 2px #d5d5d5;
+    float: right;
+}
+
+
+    .button-add-spaces > span {
+        visibility: hidden;
+        width: 0;
+    }
+
+
+    span.k-numerictextbox {
+        width: 80px;
+    }
+
+    </style>
+}
+
+
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+@using (Html.BeginForm( "EditMeterToSpaceMapping", "Assets", FormMethod.Post, new {@class = "customer-form", @id = "editMeter"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.AreaId )
+    @Html.HiddenFor( m => m.Street )
+
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter to Space Association" )</div>
+    <div class="clear">
+        <div class="two-column payment">
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.Type, new {@class = "customer_text"} )
+                @Html.HiddenFor( m => m.Type )&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset ID" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.AssetId, new {@class = "customer_text"} )
+                @Html.HiddenFor( m => m.AssetId )&nbsp;
+            </div>
+        </div>
+        <div class="two-column payment">
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Model" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.AssetModel, new {@class = "customer_text"} )
+                @Html.HiddenFor( m => m.AssetModel )&nbsp;
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Name" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.Name, new {@class = "customer_text"} )
+                @Html.HiddenFor( m => m.Name )&nbsp;
+            </div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Parking Spaces" )</div>
+    <div style="clear: both"></div>
+    <div id="spacesList">
+    
+        @(Html.Kendo().Grid<SpaceListModel>( ) // Bind the grid to the Model property of the view
+              .Name( "SpacesGrid" )
+              .Columns( columns =>
+                  {
+                      columns.Bound( p => p.BayNumber ).ClientTemplate(
+                          "# if(OperationalStatus == 0) { #" +
+                          "<img src='" + Url.Content( "~/Images/status-inactive.gif" ) + "' alt='Inactive' />" +
+                          "# } else if(OperationalStatus == 1 || OperationalStatus == 3) { #" +
+                          "<img src='" + Url.Content( "~/Images/status-operational.gif" ) + "' alt='Operational' />" +
+                          "# } else { #" +
+                          "<img src='" + Url.Content("~/Images/status-nonoperational.gif") + "' alt='Non-Operational' />" +
+                          "# } #  " +
+                          "# if(State == 1) { #" +
+                          "C" +
+                          "# } else if(State == 2) { #" +
+                          "P" +
+                          "# } else { #" +
+                          "H" +
+                          "# } #" 
+                          ).Title( "Status" );
+                    columns.Bound( p => p.BayNumber ).Title( "Bay" );
+                    columns.Bound( p => p.BayName );
+                    columns.Bound( p => p.SensorId );
+                    columns.Bound( p => p.DemandStatus );
+                    columns.Bound( p => p.Latitude );
+                    columns.Bound( p => p.Longitude );
+                    columns.Bound( p => p.Street );
+                    columns.Command(command => { command.Edit(); command.Destroy(); }).Width(190);
+                } )
+                 .Pageable()
+              .Editable(editable => editable.Mode( GridEditMode.PopUp ).TemplateName("SpaceTemplate"  ))
+              .ToolBar(toolbar => toolbar.Create().Text("Add Space").HtmlAttributes( new {@class = "button-add-spaces"} ))
+              .Events( e => e.Edit( "OnEdit" ).Save( "OnSave" ))
+                    .AutoBind( true )
+                .Resizable(resize => resize.Columns( true ))
+              .DataSource( datasource => datasource
+                .Ajax()            
+                
+                .Events(events => events.Error("AssetsErrorHandler"))
+                .Create(create => create.Action("MeterSpacesCreate", "Assets"))
+                .Read(read => read.Action("MeterSpacesRead", "Assets").Type( HttpVerbs.Get ))
+                .Update(update => update.Action("MeterSpacesUpdate", "Assets"))
+                .Destroy(update => update.Action("MeterSpacesDestroy", "Assets"))
+                .ServerOperation(true)
+                .Model(model =>
+                {
+                    model.Id(p => p.BayNumber);
+                    model.Field(p => p.Name);
+                })
+              )
+       )
+    
+    </div>
+
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="SAVE">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+        @Html.ActionLink( "Return", "EditMeter", "Assets", new {customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetId, parentAssetId = 0}, new {@class = "button previous", @type = "button"} )
+    </div>
+}
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+        // Attach listener to "Add Spaces" button.
+        $("a.button-add-spaces").click(CanAddSpace);
+
+    });
+
+
+
+    //**************************************************************
+    // Add/edit meter spaces
+    //**************************************************************
+
+
+    function OnEdit(e) {
+
+        if (e.model.isNew()) {
+
+            // Set the popup window title.
+            e.container.data("kendoWindow").title('Add Space');
+            // Set the save button title.
+            $(".k-window .k-grid-update").html("<span class=\"k-icon k-update\"></span>Save");
+            
+            e.model.CustomerId = $("#CustomerId").val();
+            e.model.MeterId = $("#AssetId").val();
+            e.model.MeterAreaId = $("#AreaId").val();
+            e.model.Street = $("#Street").val();
+        }
+        else {
+            // Set the popup window title.
+            e.container.data("kendoWindow").title('Edit Space');
+        }
+
+    }
+    
+    function OnSave(e) {
+
+        // Set the model's DemandStatusId
+        if(e.model.DemandStatusId != $("#DemandStatusId").val()) {
+            e.model.DemandStatusId = $("#DemandStatusId").val();
+            e.model.DemandStatus = $("#DemandStatusId option:selected").text();
+            $("#DemandStatus").val(e.model.DemandStatus);
+
+            e.model.dirty = true;
+        }
+
+        e.model.BayNumber = $("#BayNumber").val();
+    }
+
+    function AssetsErrorHandler(e) {
+        if (e.errors) {
+            var message = "";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += "<br/>" + this;
+                    });
+                }
+            });
+
+
+            var grid = $("#SpacesGrid").data("kendoGrid");
+            grid.one("dataBinding", function (e) {
+                e.preventDefault(); 
+            });
+
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", message);
+        }
+    }
+
+
+    function CanAddSpace(e) {
+        
+        // If this is a multi-space meter, return 'true'.
+        if ("@Model.TypeId" == "@( (int)Duncan.PEMS.Entities.Enumerations.MeterGroups.MultiSpaceMeter )") {
+            return true;
+        }
+
+        // Determine if there is an operational pending parking space.
+        var operationalPendingSpace = false;
+        var pendingBayNumber = "";
+
+        // Walk the kendo grid datasource.
+        // Gets the data source from the grid.
+        var dataSource = $("#SpacesGrid").data("kendoGrid").dataSource.data();
+        
+        for (var i = 0; i < dataSource.length; i++) {
+            var dataitem = dataSource[i];
+            if (dataitem.OperationalStatus > 0 && dataitem.State == 2) {
+                operationalPendingSpace = true;
+                pendingBayNumber = dataitem.BayNumber;
+            }
+        }
+
+        if (operationalPendingSpace) {
+
+            var message = "There is a pending operational space already assigned to this meter.  To add a new pending space,";
+            message += " delete parking space with bay number " + pendingBayNumber + " first, then add new space.";
+
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", message);
+        }
+
+        return !operationalPendingSpace;
+
+    }
+
+
+
+</script>
+

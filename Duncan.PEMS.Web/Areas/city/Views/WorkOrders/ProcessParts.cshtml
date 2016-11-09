@@ -1,0 +1,75 @@
+﻿@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherPartUploadResultModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Part Upload Results";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Parts Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Part Upload Results" ) </h1>
+}
+
+            @(Html.Kendo().Grid(Model.Results)
+              .Name("BulkSettingResultsLogGrid")
+              .HtmlAttributes( new {style = "max-width: 1693px; height: 170px;"} )
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Log").HtmlAttributes(new { style = "text-align:left" }).HeaderHtmlAttributes(new { style = "text-align:left" });
+              })
+              .Scrollable()
+            )
+            @(Html.Kendo().Grid(Model.Errors)
+              .Name("BulkSettingResultsErrorGrid")
+              .HtmlAttributes( new {style = "max-width: 1693px; height: 300px;"} )
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Errors / Warnings").HtmlAttributes(new { style = "text-align:left" }).HeaderHtmlAttributes(new { style = "text-align:left" });
+              })
+              .Scrollable()
+            )
+        
+<div class="customer_actions">
+            @Html.ActionLink( (string) ( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ) ?? "Return" ), "PartsImport", "WorkOrders", null, new {@class = "button previous"} )
+</div>
+
+<script>
+    
+    function onSelect(e) {
+
+        var grid = $("#BulkSettingResultsLogGrid");
+        
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+        grid = $("#BulkSettingResultsErrorGrid");
+
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+
+
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+            '@ViewData[Constants.ViewData.CurrentArea]',
+                '@ViewData[Constants.ViewData.CurrentController]',
+                '@ViewData[Constants.ViewData.CurrentAction]',
+                "2234", "Only one file may be selected.");
+            e.preventDefault();
+        }
+    }
+
+    function onComplete(e) {
+        alert("Done.");
+    }
+
+    function onProgress(e) {
+        //kendoConsole.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+
+</script>

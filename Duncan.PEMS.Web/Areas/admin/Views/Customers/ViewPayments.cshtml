@@ -1,0 +1,412 @@
+﻿@* /******************* CHANGE LOG *****************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _____________________________________________________________________________________
+ * 
+ * 02/20/2014           Sergey Ostrerov            DPTXPEMS - 251 Payment Gateway Configuration page is missing 'Access Code' field
+ * ************************************************************************************************************************************/ *@
+
+@model Duncan.PEMS.Entities.Customers.CustomerPaymentsModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "View Customer Payments" );
+}
+
+@section PageHeader 
+{
+<h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer View") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Payments")</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.CustomerId )</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_new">@Html.DisplayFor( m => m.Status.Status )</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor( m => m.Status.StatusDate )</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink( "Identification", "ViewCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Assets", "ViewAssets", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink( "Payments", "ViewPayments", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Rules", "ViewRules", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Custom Labels", "ViewCustomLabels", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Custom Grids", "ViewCustomGrids", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( "Event Codes", "ViewEventCodes", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Areas" ).ToString(), "ViewAreas", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Maintenance Schedule" ).ToString(), "ViewMaintenanceSchedule", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+</div>
+
+        <div class="clear">
+        <div class="two-column payment">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Smart Card Gateway Configuration" )</div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Gateway" )@Html.Raw( ": " )</div>
+                @Html.DropDownListFor( m => m.SmartCardGateway.GatewayId, new SelectList( Model.SmartCardGateway.Gateway, "Value", "Text" ),
+                                        new {@class = "customer_text", onchange = "smartCardChanged();", disabled="disabled"} )
+            </div>
+            <div id="SmartCardGateway_VSignPartner_List" style="display: none;">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "VsignPartner" )@Html.Raw( ": " )</div>
+                @Html.DropDownListFor( m => m.SmartCardGateway.VsignPartnerId, new SelectList( Model.SmartCardGateway.VsignPartner, "Value", "Text" ), new {@class = "customer_text", disabled="disabled"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Description" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.SmartCardGateway.Description, new {@class = "text-box single-line"} )
+            </div>
+            <div id="SmartCardGateway_VSignPartner_Chk"  style="display: none;">
+                <div>
+                    @Html.CheckBoxFor( m => m.SmartCardGateway.ReAuthorize, new {@class = "checkbox", disabled="disabled"} )
+                    <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Re-Authorize" )</div>
+                </div>
+                <div>
+                    @Html.CheckBoxFor( m => m.SmartCardGateway.DelayedProcessing, new {@class = "checkbox", disabled="disabled"} )
+                    <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Delayed Processing" )</div>
+                </div>
+            </div>
+            <div>
+                @Html.CheckBoxFor( m => m.SmartCardGateway.CardPresent, new {@class = "checkbox", disabled="disabled"} )
+                <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Card Present" )</div>
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Merchant Name" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.SmartCardGateway.MerchantName, new {@class = "customer_text"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Name" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.SmartCardGateway.UserName, new {@class = "customer_text"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Password" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.SmartCardGateway.Password, new {@class = "customer_text"} )
+            </div>
+        </div>
+
+        <div class="two-column payment">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Payment Gateway &amp; Payment Type Configuration" )</div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Credit Card Gateway" )@Html.Raw( ": " )</div>
+                @Html.DropDownListFor( m => m.PaymentGateway.GatewayId, new SelectList( Model.PaymentGateway.Gateway, "Value", "Text" ),
+                                        new {@class = "customer_text", onchange = "gatewayChanged();", disabled="disabled"} )
+            </div>
+            <div id="PaymentGateway_VSignPartner_List"  style="display: none;">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "VsignPartner" )@Html.Raw( ": " )</div>
+                @Html.DropDownListFor( m => m.PaymentGateway.VsignPartnerId, new SelectList( Model.PaymentGateway.VsignPartner, "Value", "Text" ), new {@class = "customer_text", disabled="disabled"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Description" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.PaymentGateway.Description, new {@class = "text-box single-line"} )
+            </div>
+            <div id="PaymentGateway_VSignPartner_Chk"  style="display: none;">
+                <div>
+                    @Html.CheckBoxFor( m => m.PaymentGateway.ReAuthorize, new {@class = "checkbox", disabled="disabled"} )
+                    <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Re-Authorize" )</div>
+                </div>
+                <div>
+                    @Html.CheckBoxFor( m => m.PaymentGateway.DelayedProcessing, new {@class = "checkbox", disabled="disabled"} )
+                    <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Delayed Processing" )</div>
+                </div>
+            </div>
+            <div>
+                @Html.CheckBoxFor( m => m.PaymentGateway.CardPresent, new {@class = "checkbox", disabled="disabled"} )
+                <div>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Card Present" )</div>
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Merchant Name" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.PaymentGateway.MerchantName, new {@class = "customer_text"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "AccessCode" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.PaymentGateway.AccessCode, new {@class = "customer_text"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Name" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.PaymentGateway.UserName, new {@class = "customer_text"} )
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Password" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.PaymentGateway.Password, new {@class = "customer_text"} )
+            </div>
+        </div>
+        </div>
+
+
+    <div class="clear"> 
+        <div class="two-column payment">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Credit/Debit" )</div>
+            <div  class="checkbox">
+                @Html.CheckBoxFor( m => m.CreditDebit.Credit, new {@class = "checkbox", onchange = "creditDebitChanged();", disabled="disabled"} )
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Credit" )
+            </div>
+            <div  class="checkbox">
+                @Html.CheckBoxFor( m => m.CreditDebit.Debit, new {@class = "checkbox", onchange = "creditDebitChanged();", disabled="disabled"} )
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Debit" )
+            </div>
+            <div id="CreditDebit_Cards" class="add-remove-box">
+                @foreach (var card in @Model.CreditDebit.Cards)
+                {
+                    @Html.Raw( "<div class=\"add-remove-box-row\">" )
+                    @Html.Raw( card.Text )
+                    @Html.CheckBox( Duncan.PEMS.Entities.Customers.CustomerPaymentsCreditDebitModel.CardLabelsPrefix
+                                    + Model.Separator + card.Value, card.Selected, new {@class = "checkbox", disabled="disabled"} )
+                    @Html.Raw( "</div>" )
+                }
+            </div>
+
+            
+            <div class="form-sub-heading">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Hash Configuration" )</div>
+            <div class="short-text-box">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "# of First Digits (1-6)" ):</div>
+                &nbsp;@Model.CreditDebit.HashFirst
+            </div>
+            <div class="short-text-box">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "# of Last Digits (1-4)" ):</div>
+                &nbsp;@Model.CreditDebit.HashLast
+            </div>
+            <div class="form-sub-heading">Processing</div>
+            <div class="short-text-box">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time in seconds gap to roll up transactions" ):</div>
+                <div>
+                &nbsp;@Model.CreditDebit.SecondsGap
+                </div>
+            </div>
+            <div class="short-text-box">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Days to wait for credit card transactions to be reconciled" ):</div>
+                &nbsp;@Model.CreditDebit.DaysToWaitToReconcile
+            </div>
+        </div>
+
+            <div class="two-column">
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "EMV/Pay By Phone" )</div>
+            
+                <div  class="checkbox">
+                    @Html.CheckBoxFor( m => m.EmvPhone.Emv, new {@class = "checkbox", disabled="disabled"} )
+                    @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "EMV" )
+                </div>
+
+                <div  class="checkbox">
+                    @Html.CheckBoxFor( m => m.EmvPhone.PayByPhone, new {@class = "checkbox", disabled="disabled"} )
+                    @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Pay By Phone" )
+                </div>
+
+            <div class="customer_tab_content_section">Coin Types</div>
+            
+                @{
+                    var count = 1;
+                }
+
+            @Html.Raw("<div id=\"coin_div\">")
+                
+                <div  class="clear coin_header">
+                    <div class="customer_text_label coin_header_name">Name</div>
+                    <div class="customer_text_label coin_header_value">Value</div>
+                    <div class="customer_text_label coin_header_enabled">Enabled</div>
+                </div>
+                
+
+                @foreach (var coin in Model.Coins.Coins)
+                {
+                        if ( count%2 == 0 )
+                        {
+                            @Html.Raw( "<div class=\"coin_div_row\">" )
+                        }
+                        else
+                        {
+                            @Html.Raw( "<div class=\"coin_div_row odd\">" )
+                        }
+                        <div  class="clear">
+                        <div class="customer_text_label coin_name">@coin.Name</div>
+                        <div class="customer_text_label coin_value">@coin.DenominationValue</div>
+                        @Html.CheckBox(Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinPrefix
+                            + Model.Separator + Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinCheck
+                            + Model.Separator + @coin.Id, @coin.Enabled, new { @class = "checkbox", disabled="disabled" })
+                        </div>
+                    @Html.Raw("</div>")
+                    count++;
+                }
+            @Html.Raw("</div>")
+
+            <div id="coin_select_country">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Coin Country") </div>
+                    @Html.DropDownListFor(m => m.Coins.CoinCountryId, new SelectList(Model.Coins.CoinCountry, "Value", "Text"), new { @class = "customer_text" })
+                    @Html.RequiredMarkFor(m => m.Coins.CoinCountryId, new { @class = "required_asterisk" })
+                    @Html.ValidationMessageFor(m => m.Coins.CoinCountryId)
+                    <input id="coin_country_select_button" class="button" type="submit" value="Set Coin Country" onclick="SelectCoinCountry(); return false;">
+            </div>
+            
+        </div>
+
+        <div class="customer_actions">
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue").ToString(), "ViewRules", "Customers", new {customerId = Model.CustomerId}, new { @class = "button important", @type = "button" })
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", "Customers", new {rtn = "true"}, new { @class = "button previous", @type = "button" })
+        </div>
+
+    </div>
+                    
+
+<script type="text/javascript">
+
+    // Create a view-model for the page controls. Model holds variables and view-related methods
+    var viewModel = kendo.observable({
+        
+    });
+
+    $(document).ready(function() {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+
+        smartCardChanged();
+        gatewayChanged();
+        creditDebitChanged();
+        
+
+
+
+            
+        @if ( Model.Coins.HasCoinsSelected )
+        {
+            @Html.Raw( "$(\"#coin_select_country\").hide();\n" )
+        }
+        else
+        {
+            @Html.Raw( "$(\"#coin_div\").hide();\n" )
+        }
+
+
+    });
+
+    
+    function smartCardChanged() {
+
+        if ($("#SmartCardGateway_GatewayId").val() == "0") {
+            $("#SmartCardGateway_VSignPartner_List").show();
+            $("#SmartCardGateway_VSignPartner_Chk").show();
+        } else {
+            $("#SmartCardGateway_VSignPartner_List").hide();
+            $("#SmartCardGateway_VSignPartner_Chk").hide();
+        }
+
+    }
+
+    ;
+
+    function gatewayChanged() {
+
+        if ($("#PaymentGateway_GatewayId").val() == "0") {
+            $("#PaymentGateway_VSignPartner_List").show();
+            $("#PaymentGateway_VSignPartner_Chk").show();
+        } else {
+            $("#PaymentGateway_VSignPartner_List").hide();
+            $("#PaymentGateway_VSignPartner_Chk").hide();
+        }
+
+    }
+
+    ;
+
+    function creditDebitChanged() {
+
+        if ($("#CreditDebit_Credit").is(':checked') || $("#CreditDebit_Debit").is(':checked')) {
+            $("#CreditDebit_Cards").find('*').removeAttr("disabled");
+        } else {
+            $("#CreditDebit_Cards").find('*').attr("disabled", "true");
+        }
+    }
+
+    ;
+
+
+    function SelectCoinCountry() {
+
+        var coinCountryId = $("#Coins_CoinCountryId").val();
+
+        $.ajax({
+            url: '@Url.Action( "SetCoinDenominationSource" )',
+                data: { customerId: '@Model.CustomerId', coinCountryId: coinCountryId },
+                type: 'POST',
+                success: SelectCoinCountrySuccess,
+                error: function (data) {
+                    pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", data.responseText);
+                },
+            });
+        }
+
+
+
+        function SelectCoinCountrySuccess(data, textStatus, jqXHR) {
+            if (data.Success == 'True') {
+
+
+                var divContent = "";
+                var coinTextPrefix = "@Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinPrefix"
+                    + "@Model.Separator"+ "@Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinText"
+                    + "@Model.Separator";
+
+                var coinCheckPrefix = "@Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinPrefix"
+                    + "@Model.Separator" + "@Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel.CoinCheck"
+                    + "@Model.Separator";
+
+                $.each(data.Coins, function (i, item) {
+                    
+                    if (i % 2 == 0) {
+                        divContent += "<div class=\"coin_div_row\">\n";
+                    } else {
+                        divContent += "<div class=\"coin_div_row odd\">\n";
+                    }
+                    divContent += "<div class=\"clear\">";
+                    divContent += "<input id=\"" + coinTextPrefix + item.Id + "\" class=\"customer_text_label coin_name\" type=\"text\" value=\"" + item.Name + "\" name=\"" + coinTextPrefix + item.Id + "\">";
+                    divContent += "<div class=\"customer_text_label coin_value\">" + item.DenominationValue +  "</div>";
+                    divContent += "<input id=\"" + coinCheckPrefix + item.Id + "\" class=\"checkbox\" type=\"checkbox\" value=\"true\" name=\"" + coinCheckPrefix + item.Id + "\">";
+                    divContent += "<input type=\"hidden\" value=\"false\" name=\"" + coinCheckPrefix + item.Id + "\">";
+                    divContent += "</div>";
+                    divContent += "</div>";
+                });
+
+                $("#coin_div").html(divContent);
+
+                $("#coin_select_country").hide();
+                $("#coin_div").show();
+
+            } else {
+                pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", data.Description);
+            }
+        }
+
+
+
+
+
+
+</script>
+
+
+
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        Last Modified by: @Html.DisplayFor( m => m.Status.ModifiedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.ModifiedOn )
+    </div>
+    <div class="customer_created_by">
+        Created by: @Html.DisplayFor( m => m.Status.CreatedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.CreatedOn )
+    </div>
+</div>

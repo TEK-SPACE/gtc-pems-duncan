@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0 MvcSiteMapSchema.xsd"
+            enableLocalization="true">
+
+  <mvcSiteMapNode title="Landing" controller="Home" action="Landing" area="Shared">
+    <mvcSiteMapNode title="Login" controller="Account" action="Login" area="Shared"/>
+    <mvcSiteMapNode title="Forgot Password" controller="Account" action="ForgotPassword" area="Shared"/>
+    <mvcSiteMapNode title="Forgot Username" controller="Account" action="ForgotUsername" area="Shared" />
+    <mvcSiteMapNode title="Reset Password" controller="Account" action="ResetPassword" area="Shared" />
+    <mvcSiteMapNode title="Security Questions" controller="Account" action="SecurityQuestions" area="Shared" />
+    <mvcSiteMapNode title="Terms" controller="Account" action="Terms" area="Shared" />
+    <!--<mvcSiteMapNode title="Customer Service" controller="Account" action="Terms" />-->
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

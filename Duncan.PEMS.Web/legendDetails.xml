@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LegendPanel imagePath="Duncan.PEMS.Web/Images">
+  <Inventory_Layer title="Asset Types">
+    <Item>
+      <LegendLabel>Single Space Meter</LegendLabel>
+      <LegendImage>ssm_high_demand.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Multiple Space Meter</LegendLabel>
+      <LegendImage>msm_high_demand.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Sensor</LegendLabel>
+      <LegendImage>sensor_high_demand.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Gateway</LegendLabel>
+      <LegendImage>gateway_high_demand.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Parking Space</LegendLabel>
+      <LegendImage>space_high_demand.png</LegendImage>
+    </Item>
+  </Inventory_Layer>
+  <AssetColorCodes title="Asset Color Codes">
+    <Item>
+      <LegendLabel>High</LegendLabel>
+      <LegendImage>assetColorCode_High.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Low</LegendLabel>
+      <LegendImage>assetColorCode_Low.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Med/High</LegendLabel>
+      <LegendImage>assetColorCode_medium_high.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Low/Med</LegendLabel>
+      <LegendImage>assetColorCode_Low_Medium.png</LegendImage>
+    </Item>
+  </AssetColorCodes>
+  <HighDemandBays_Layer title="High Demand Bays">
+    <Item>
+      <LegendLabel>Occupied</LegendLabel>
+      <LegendImage>Occupied.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Vacant</LegendLabel>
+      <LegendImage>vacant.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Compliant</LegendLabel>
+      <LegendImage>Compliant.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Non-Compliant</LegendLabel>
+      <LegendImage>Non_Compliant.png</LegendImage>
+    </Item>
+  </HighDemandBays_Layer>
+  <Polygons title="Polygons">
+    <Item>
+      <LegendLabel>Area</LegendLabel>
+      <LegendImage>areaPolygon.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Zone</LegendLabel>
+      <LegendImage>zonePolygon.png</LegendImage>
+    </Item>
+  </Polygons>
+  <OperationalStatus_Layer title="Asset Operational Status">
+    <Item>
+      <LegendLabel>Inactive</LegendLabel>
+      <LegendImage>Inactive.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Operational</LegendLabel>
+      <LegendImage>Operational.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Non-Operational with Alarm</LegendLabel>
+      <LegendImage>Non_Operational_With_Alarm.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Operational with Alarm</LegendLabel>
+      <LegendImage>Operational_With_Alarm.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Non-Operational/Special Event</LegendLabel>
+      <LegendImage>Non_Operational_With_Special_Event.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Non-Operational/Work Zone</LegendLabel>
+      <LegendImage>Non_Operational_With_Work_Zone.png</LegendImage>
+    </Item>
+    <Item>
+      <LegendLabel>Non-Operational/Maintenance</LegendLabel>
+      <LegendImage>Non_Operational_With_Maintenance.png</LegendImage>
+    </Item>
+  </OperationalStatus_Layer>
+  <OfficerLoc title="Officer">
+    <Item>
+      <LegendLabel>Officer</LegendLabel>
+      <LegendImage>officerIcon.png</LegendImage>
+    </Item>
+  </OfficerLoc>
+</LegendPanel>

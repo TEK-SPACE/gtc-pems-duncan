@@ -1,0 +1,106 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Tariffs.HolidayRateModel
+
+@{
+    Layout = null;
+}
+
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.DayOfWeek )
+    @Html.HiddenFor( m => m.DayOfWeekName )
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Holiday Name" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @Html.EditorFor(m => m.HolidayName, new {@class = "k-edit-field"} )
+    </div>
+    <div class = "required_asterisk"  style="float: left">*</div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Holiday Date" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @(Html.Kendo().DatePickerFor(m => m.HolidayDateTime)
+              .HtmlAttributes(new { style = "width:150px" })
+              .Events(events => events.Change("OnDateChange"))
+              ) 
+    </div>
+    <div class = "required_asterisk"  style="float: left">*</div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Schedule Day of Week" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        <div id="ddlDaysOfWeek" class = "k-edit-field"></div>
+    </div>
+</div>    
+
+
+
+<br/>
+<br/>
+<br/>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+
+        SelectRateScheduleDaysOfWeek();
+
+    });
+
+
+    function SelectRateScheduleDaysOfWeek() {
+
+        $.ajax({
+            url: '@Url.Action( "GetSessionRateScheduleValidDayOfWeek", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val(), holidayDate: $("#HolidayDateTime").val() },
+            type: 'POST',
+            success: SelectRateScheduleDaysOfWeekSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+
+
+    function SelectRateScheduleDaysOfWeekSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'DaysOfWeekList' name = 'DaysOfWeekList' onchange = 'OnDaysOfWeekChange();'>";
+        var dayOfWeek = $("#DayOfWeek").val();
+
+        $.each(data.list, function (i, item) {
+            divContent += "<option value = \"" + item.Value + "\"";
+            if (item.Value == dayOfWeek) {
+                divContent += " selected";
+                $("#DayOfWeek").val(item.Value);
+                $("#DayOfWeekName").val(item.Text);
+            }
+            divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlDaysOfWeek").html(divContent);
+
+    }
+
+
+    function OnDaysOfWeekChange(e) {
+
+        $("#DayOfWeek").val($("#DaysOfWeekList option:selected").val());
+        $("#DayOfWeekName").val($("#DaysOfWeekList option:selected").text());
+    }
+
+
+
+
+</script>

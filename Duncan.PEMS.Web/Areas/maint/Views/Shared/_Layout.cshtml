@@ -1,0 +1,61 @@
+﻿
+@using Duncan.PEMS.Business.Globalization
+@using Duncan.PEMS.Utilities
+
+<!doctype html>
+<!--[if IE 7]><html lang="en" class="ie7"><![endif]-->
+<!--[if IE 8]><html lang="en" class="ie8"><![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>@ViewBag.Title</title>
+
+        <link type="text/css" media="all" rel="stylesheet" href="/css/mobilemain.css" />
+        @Styles.Render( "~/css/Kendo" )
+    @RenderSection( "Styles", required: false )
+
+    @Scripts.Render( "~/bundles/jquery" )
+    @Scripts.Render( "~/bundles/jquery-plugins" )
+    @Scripts.Render( "~/bundles/kendo" )
+    @Scripts.Render( "~/bundles/common" )
+    
+    @GlobalizationManager.SetKendoCulture( ViewData[Constants.ViewData.CurrentLocale].ToString() )
+    @GlobalizationManager.Force24HourClock( (bool) ViewData[Constants.ViewData.CurrentTimeFormatIs24] )
+    
+    @RenderSection( "Scripts", required: false )
+        <script type="text/javascript" src="//use.typekit.net/hmq2dup.js"></script>
+        <script type="text/javascript">try { Typekit.load(); } catch (e) { }</script>
+        <!--[if lt IE 9]>
+            <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+<body>
+<div class="wrapper">
+  <header id="header">
+  <div id="logo"></div>
+<div id="header-right">
+  <div id="timestamp">@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]</div>
+  <div id="header-links">
+  <ul>
+    <li id="help"> @{ Html.RenderAction( "GetLink", "Help", new{Area = "Shared",currentController = ViewData[Constants.ViewData.CurrentController],currentArea = ViewData[Constants.ViewData.CurrentArea],currentAction = ViewData[Constants.ViewData.CurrentAction],currentLocale = ViewData[Constants.ViewData.CurrentLocale]} ); }</li>
+    <li id="home"><a href="/" id="home" title="Home"></a></li>
+    <li id="account">(@ViewData[Constants.ViewData.CurrentUser])  @{ Html.RenderAction("MobileLogOut", "Account", new { Area = "Shared" }); } </li>
+  </ul>
+    </div>
+  </div>
+  </header>
+  <div id="client">
+      <h1>@ViewData[Constants.ViewData.CurrentCity]</h1>
+       @RenderSection("PageHeader", required: false)
+  </div>
+    <div id="content">
+         @RenderBody()
+    </div>
+  <footer id="footer">
+  <div id="footer-logo"></div>
+  </footer>
+</div>
+</body>
+</html>
+

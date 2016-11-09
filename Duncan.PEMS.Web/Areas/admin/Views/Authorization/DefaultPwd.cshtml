@@ -1,0 +1,64 @@
+﻿@model Duncan.PEMS.Entities.Customers.AdminCustomerIdentificationModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit Admin" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit" )</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.CustomerId )</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+
+
+@using (Html.BeginForm( "DefaultPwd", "Authorization", FormMethod.Post, new {@class = "customer-form", @id = "editAdminIdentification"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+
+    <div class="customer_tab_content">
+    
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Settings" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Default Password" )@Html.Raw( ": " )</div>
+            @Html.TextBoxFor( m => m.DefaultPassword, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.DefaultPassword, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.DefaultPassword )
+        </div>    
+
+    
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button" value="SAVE" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", "Home", null, new { @class = "button previous", @type = "button" })
+        </div>
+
+    </div>
+}
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Modified by" ): @Html.DisplayFor( m => m.Status.ModifiedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.ModifiedOn )
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created by" ): @Html.DisplayFor( m => m.Status.CreatedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.CreatedOn )
+    </div>
+</div>

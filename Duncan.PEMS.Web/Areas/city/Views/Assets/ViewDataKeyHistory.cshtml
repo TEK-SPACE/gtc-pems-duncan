@@ -1,0 +1,619 @@
+﻿@using Duncan.PEMS.Entities.Assets
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Assets.AssetHistoryModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "DataKey History" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Asset Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Asset History" )</span></h1>
+}
+
+//todo - GTC: DataKey Work
+//todo add any remaining fields to allow filtering for datakey history
+@section ExportButtons 
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportDataKeyHistoryToExcel", 
+            new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetIdDisplay, startDateTicks = 0, endDateTicks = 0} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportDataKeyHistoryToCsv", 
+            new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetIdDisplay, startDateTicks = 0, endDateTicks = 0} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportDataKeyHistoryToPdf", 
+            new {page = 1, pageSize = "~", filter = "~", sort = "~", customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetIdDisplay, startDateTicks = 0, endDateTicks = 0} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+//todo - GTC: DataKey Work
+//todo - add datakeyname (when that db field is added), etc for data keys
+
+@section Styles
+{
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+         .filter-SearchButton:hover {
+                background: #ccc!important;
+	            text-decoration: none!important;
+        }
+
+        .filter-searchbox {
+            margin-bottom: 0px !important;
+        }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+        #exportActions {
+            display: none;
+        }
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        .filter-dropdown {
+            height: 24px;
+        }
+
+        #locTypeDiv {
+            display: none;
+        }
+
+        :nth-child(2n).two-column {
+            clear: none !important;
+        }
+    </style>
+}
+
+@section PageFilter 
+{      
+    <div class="two-column-wrapper">
+    <div class="two-column">
+        <div class="filter-option">
+            <div class="two-inputs">
+                <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Date Range" ):</span>
+                <input id="dpCreatedStart" data-role="datepicker" style="width: 130px" data-bind="value: startDate" />
+            </div>
+            <div class="two-inputs">
+                <span class="to">to</span>
+                <input id="dpCreatedEnd" data-role="datepicker" style="width: 130px" data-bind="value: endDate" />
+            </div>
+        </div>
+    </div>
+    <div class="two-column">
+        <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Name" ):</span>
+            <input id="txtUserName" class="filter-input k-textbox" data-bind="value: userName" />
+        </div>
+        <div class="filter-option"><span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Reason for Change" ):</span>
+            <select id="ddlReasonsForChange" style="font-size: 14px; height: 26px" data-role="dropdownlist" class="filter-dropdown" 
+                    data-text-field="Text"
+                    data-value-field="Value" data-bind="source: reasonsForChange, value: reasonForChange" data-option-label="All"></select>
+        </div>
+    </div>
+    <div class="filter-searchBox">
+        <div style="float: left">
+            <input type="button" value="@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )" id="btnSearch" class="button important filter-SearchButton"  onclick=" LoadFreshGrid(); return false; " />
+        </div>
+        <div id="ReturnButtonDiv" style="float: right">
+            <a id="btnReturn" class="button previous filter-ReturnButton" href="@Url.Action( "ViewDataKey", "Assets", 
+                new {customerId = Model.CustomerId, areaId = Model.AreaId, assetId = Model.AssetId} )">
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString()
+            </a>
+        </div>
+    </div>
+    </div>
+}
+        
+@section Scripts
+{
+        
+
+    <script type="text/javascript">
+        
+        var viewModel = kendo.observable({
+            startDate: null,
+            endDate: null,
+            userName: null,
+            reasonsForChange: [],
+            reasonForChange: null,
+        });
+
+
+        $(document).ready(function() {
+
+            kendo.bind($(document.body), viewModel);
+            viewModel.set("location", "Select a type");
+ 
+            //$(window).bind('resize', function() {
+            //    $('#CurrentGrid').freezeGridColumn(3);
+            //});
+            
+            // If 'returnUrl' exists in session (from a previous page), remove it 
+            if (window.sessionStorage.returnUrl) {
+                // remove the saved returnUrl from session
+                window.sessionStorage.removeItem("returnUrl");
+            }
+            
+            // Start loading data            
+            LoadReasonsForChangeTypes();
+        });
+
+        // Asset Types
+        function LoadReasonsForChangeTypes() {
+            //start with Alarm Status
+            $.post('/Assets/GetReasonsForChangeTypes', OnReasonsForChangeTypesLoaded);
+        }
+
+        function OnReasonsForChangeTypesLoaded(data) {
+            viewModel.set("reasonsForChange", data.list);
+            LoadSorts();
+        }
+
+
+
+        //SORTS - default this to time of complaint descending
+        var sorts = {};
+
+        function LoadSorts() {
+            $.post('/Assets/GetSavedSortValues?indexType=AssetHistory', OnSortsLoaded);
+        }
+
+        function OnSortsLoaded(data) {
+            if (!isEmptyObject(data)) {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+
+        function OnRowResized(e) {
+            var th = $('#CurrentGrid .k-grid-header table th[data-field="' + e.column.field + '"][data-title="' + e.column.title + '"]');
+            var index = $('#CurrentGrid .k-grid-header table th').index(th);
+            $('#CurrentGrid').UpdateWidths(index, 3, e.newWidth, e.oldWidth);
+            $('#CurrentGrid').freezeGridColumn(3);
+        }
+
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetDataKeyHistoryFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+
+            if (!isEmptyObject(data) && getParameterByName('rtn') == 'true') {
+                gridFilters = data;
+                
+                $("#ddlReasonsForChange").data("kendoDropDownList").select(function(dataItem) {return dataItem.Text ===  gridFilters.ReasonForChange;});
+                $("#txtUserName").val(gridFilters.UserName);
+                
+                // don't want to create a new Date if null because will default to 1970
+                if (gridFilters.StartDate) {
+                    viewModel.set('startDate', new Date(gridFilters.StartDate));
+                }
+                if (gridFilters.EndDate) {
+                    viewModel.set('endDate', new Date(gridFilters.EndDate));
+                }
+               
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+            }
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .filter method will call the read automatically
+
+        function LoadGrid() {
+            //Get the grid data out of the DB and load it
+            $.post('/Assets/GetGridData?cid=' + @ViewBag.CurrentCityId + '&cont=Assets&act=GetItemsDataKeyHistory', OnGridDataLoaded);
+        }
+
+        function LoadFreshGrid() {
+
+            var currentPageSize = $("#CurrentGrid").data("kendoGrid").dataSource.pageSize();
+            
+            // Ensure the page size is at least 100
+            if (currentPageSize < 100) {
+                currentPageSize = 100;
+            }
+
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": currentPageSize };
+            LoadGrid();
+        }
+        var hasBeenOrdered = false;
+        function OnGridDataLoaded(data) {
+            if (!isEmptyObject(data) &&  !hasBeenOrdered){
+                //update the grid titles
+                LoadGridTitles(data);
+
+            } else {
+                //if there is no grid data for this in the DB, jsut load the grid as usual
+                LoadGridData();
+            }
+        }
+
+        function LoadGridTitles(data) {
+            //load all the titles for the grid here
+            var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+            for (var i = 0; i < data.length; i++) {
+                $(tableHeaderCol).eq(i).find('a,span').text(data[i].Title);
+            }
+
+            //once that is complete, load the grid order
+            LoadGridOrder(data);
+        }
+
+        function LoadGridOrder(data) {
+            //update the grid orders here
+            //data is sorted by original position name, so the logic is as follows
+            //create an array of expected positions. this is what we will use to get the value at a specified index
+            hasBeenOrdered = true;
+            var postionArray = [];
+            var hiddenCount = 0;
+            for (var h = 0; h < data.length; h++) {
+                postionArray.push(data[h].Position);
+                if (data[h].IsHidden)
+                    hiddenCount = hiddenCount + 1;
+            }
+            var grid = $("#CurrentGrid").data("kendoGrid");
+            //foreach item in data
+            for (var currentIndex = 0; currentIndex < data.length; currentIndex++) {
+                var actualIndex = jQuery.inArray(currentIndex, postionArray);
+
+                //check to see if the original and new posisiton is different (if it is the same, do nothing)
+                if (currentIndex != actualIndex) {
+                    //if different, find the index of the original position item  that has the same value of the current position of the loop (i)
+                    //once you have the index, you wil need to reporder the columns with index of the original with the current position of hte loop
+                    grid.reorderColumn(currentIndex, grid.columns[actualIndex]);
+                    grid.reorderColumn(actualIndex, grid.columns[currentIndex + 1]);
+
+                    //update the position array to reflect the change
+                    postionArray[actualIndex] = postionArray[currentIndex];
+                    postionArray[currentIndex] = currentIndex;
+                }
+            }
+            if (hiddenCount > 0)
+                $('#CurrentGrid').hideLastColumns(hiddenCount);
+            //then load the data for the grid
+            LoadGridData();
+        }
+
+        function LoadGridData() {
+            var $startDate = viewModel.startDate;
+            //Test to see if the start date is not empty, and if it is a valid date
+            if ($startDate && !Date.parse($startDate)) {
+                alert("Start Date Must Be A Valid Date");
+                return;
+            }
+            var $endDate = viewModel.endDate;
+
+            //Test to see if the end date is not empty and if it is a valid date
+            if ($endDate && !Date.parse($endDate)) {
+                alert("End Date Must Be A Valid Date");
+                return;
+            }
+            
+            //Test to see if start date is less than end date
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($startDate) > Date.parse($endDate)) {
+                    alert("End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+
+            var $filter = new Array();
+
+            // User Name
+            var $userName = $("#txtUserName").val();
+            if ($userName) {
+                gridFilters.userName = $userName;
+                $filter.push({ field: "LastUpdatedBy", operator: "contains", value: $userName });
+            }
+
+
+            // Change Reason
+            var $reasonForChange =  $("#ddlReasonsForChange").data("kendoDropDownList").text();
+            
+            if ($reasonForChange && $reasonForChange != "Any") {
+                gridFilters.ReasonForChange = $reasonForChange;
+                $filter.push({ field: "LastUpdatedReasonDisplay", operator: "equals", value: $reasonForChange });
+            }
+
+            //Additional Data not plugged into filters but send in addtional data method, still need these to be loaded on reentry to the page
+
+            // Date Range
+            var startDate = viewModel.startDate;
+            var endDate = viewModel.endDate;
+            if (startDate) {
+                gridFilters.DateRangeFrom = startDate;
+                $filter.push({ field: "StartDate", operator: "gte", value: startDate });
+            }
+            if (endDate) {
+                endDate.setHours(23, 59, 59, 999); // set to end of day
+                gridFilters.DateRangeTo = endDate;
+                $filter.push({ field: "EndDate", operator: "lte", value: endDate });
+            }
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+
+        //ROW CLICK
+
+        function RowClick() {
+
+            var grid = $("#CurrentGrid").data("kendoGrid");
+
+            //get the current page 
+            gridFilters.CurrentPage = grid.dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = grid.select().index();
+
+            gridFilters.PageSize = grid.dataSource.pageSize();
+
+            //save the filters
+            $.post('/shared/Sessions/SaveAssetHistoryFilters', gridFilters);
+        }
+
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            applyFrozenColumns();
+            SetExportData();
+            SetGridStyles();
+        }
+
+        function SetGridStyles() {
+
+            $("tr", "#CurrentGrid").each(function(idx, elem) {
+                var timeUntilRemaining = $(":nth-child(11)", elem).html();
+                var assetStatus = $(":nth-child(10)", elem).html();
+                //don't color code historic alarms!
+                if (assetStatus == "Open") {
+                    if (timeUntilRemaining < 120 && timeUntilRemaining > 0)
+                        $(":nth-child(11)", elem).addClass('k-yellow');
+
+                    if (timeUntilRemaining < 1)
+                        $(":nth-child(11)", elem).addClass('k-red');
+                }
+            });
+        }
+
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            // Date Range
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+
+            if (Date.parse($startDate)) {
+                var newStartDate = new Date($startDate);
+                href = href.replace(/startDateTicks=([^&]*)/, 'startDateTicks=' + ((newStartDate.getTime() * 10000) + 621355968000000000));
+            }
+
+            if (Date.parse($endDate)) {
+                $endDate.setHours(23, 59, 59, 999); // set to end of day
+                var newEndDate = new Date($endDate);
+                href = href.replace(/endDateTicks=([^&]*)/, 'endDateTicks=' + ((newEndDate.getTime() * 10000) + 621355968000000000));
+            }
+
+            return href;
+        }
+
+        //Freeze columns if you need to for this grid
+
+        function applyFrozenColumns() {
+            $('#CurrentGrid').freezeGridColumn(3);
+        }
+
+        // Additional data sent to the action when the read method is called (when we apply a filter)
+
+        function additionalData() {
+
+            var startTicks = 0;
+            var endTicks = 0;
+
+            // Date Range
+            var $startDate = viewModel.startDate;
+            var $endDate = viewModel.endDate;
+
+            if (Date.parse($startDate)) {
+                var newStartDate = new Date($startDate);
+                startTicks = ((newStartDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            if (Date.parse($endDate)) {
+                $endDate.setHours(23, 59, 59, 999); // set to end of day
+                var newEndDate = new Date($endDate);
+                endTicks = ((newEndDate.getTime() * 10000) + 621355968000000000);
+            }
+
+            return {
+                customerId: '@Model.CustomerId',
+                areaId: '@Model.AreaId',
+                assetId: '@Model.AssetId',
+                startDateTicks: startTicks,
+                endDateTicks: endTicks
+            };
+        }
+        
+    </script>
+}
+       
+        
+        
+
+<div class="customer_tab_content">
+        
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Information" )</div>
+    
+    
+    
+        <div class="clear">
+            <div class="two-column payment">
+
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Name")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Name, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Name)&nbsp;
+                </div>
+            </div>
+
+        </div>
+    
+    
+    
+
+    
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "History" )</div>
+
+@(Html.Kendo().Grid<DataKeyViewModel>( )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Name( "CurrentGrid" )
+      .Columns( columns =>
+          {
+              columns.Bound(p => p.AuditId).ClientTemplate("#= CreateDetailLink(CustomerId, AreaId, AssetIdDisplay, AuditIdDisplay) #").Width(100);
+              columns.Bound(p => p.RecordDateDisplay).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Activation Date").ToString());
+              columns.Bound(p => p.RecordSuperceededDateDisplay).Title(HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Deactivation Date" ).ToString());
+              columns.Bound( p => p.ConfigurationName ).Title( HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Configuration Name" ).ToString());
+              columns.Bound(p => p.LastUpdatedBy).Title(HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "User Name" ).ToString());
+              columns.Bound(p => p.LastUpdatedReasonDisplay).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Reason").ToString());
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnDataBound" ) )
+      .Events( events => events.ColumnResize( "OnRowResized" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetItemsDataKeyHistory", "Assets" ).Data( "additionalData" ).Type( HttpVerbs.Get ) )
+      ))
+
+        
+
+</div>
+    
+
+
+<script type="text/javascript">
+
+    function CreateDetailLink(CustomerId, AreaId, AssetIdDisplay, AuditIdDisplay) {
+        /// Create a Details link. if AuditIdDisplay == 0, return empty string
+
+        if (AuditIdDisplay > 0) {
+            var uri = '@Html.ActionLink( HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Details").ToString(), "ViewDataKeyHistoryDetail", "Assets", 
+                    new
+                        {
+                          customerId = "#CustomerId#",
+                          areaId = "#AreaId#",
+                          assetId = "#AssetIdDisplay#",
+                          auditId = "#AuditIdDisplay#"
+                        }, 
+                    new {@onclick = "RowClick(this);"} )';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#CustomerId#', CustomerId);
+            uri = uri.replace('#AreaId#', AreaId);
+            uri = uri.replace('#AssetIdDisplay#', AssetIdDisplay);
+            uri = uri.replace('#AuditIdDisplay#', AuditIdDisplay);
+
+            return uri;
+
+        } else {
+            return "";
+        }
+    }
+
+</script>
+

@@ -1,0 +1,1796 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Duncan.PEMS.Entities.Alarms.AlarmModel" Collapsed="true">
+    <Position X="67.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AjEYACQIJkEARBgEwBgKAAgAIAgTAFgAIAKAAQAECEQ=</HashCode>
+      <FileName>Alarms\Alarm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.TimeType" Collapsed="true">
+    <Position X="60.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Alarms\Alarm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.AlarmDDLModel" Collapsed="true">
+    <Position X="64" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>Alarms\AlarmDDLModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.AlarmListItemModel" Collapsed="true">
+    <Position X="65.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAAAAAAQAgEyBgAAABgAAACABAAAAIAAQAAAUQ=</HashCode>
+      <FileName>Alarms\AlarmListItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.SpAlarmModel" Collapsed="true">
+    <Position X="69.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkBAADAoCAEIQIgAgBoAAAwAEEACAEAAIAAQgSBAAAQ=</HashCode>
+      <FileName>Alarms\AlarmModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.ListAlarmModel" Collapsed="true">
+    <Position X="60.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAQCAIAAUgQggAwBoAAAgAAAACAFAAIAIAAQAEAEQ=</HashCode>
+      <FileName>Alarms\AlarmModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.AlarmTechnicianModel" Collapsed="true">
+    <Position X="69.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAIAAAAAAAACAAAAAAAAQ=</HashCode>
+      <FileName>Alarms\AlarmTechnician.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Alarms.AssetStateModel" Collapsed="true">
+    <Position X="76.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Alarms\AssetStateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetTypeDDLModel" Collapsed="true">
+    <Position X="60.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetStatusEditModel" Collapsed="true">
+    <Position X="78" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAMABAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetIdentifier">
+    <Position X="25" Y="15.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAABAAIAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetBaseModel">
+    <Position X="16" Y="18.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AQAAgSAHCHgAAAgAAJAIAAwDQAALAAAhgQJADVAAACU=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetEditBaseModel">
+    <Position X="38.5" Y="18.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AwAAACBOQFCAAAgAABCIIAQAgAAAAAAhoQIADVAAAAQ=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetListItemModel" Collapsed="true">
+    <Position X="74.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetMassUpdateBaseModel">
+    <Position X="17.75" Y="33.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>IAAAACAAQASAAAAAAAAgAAAAAAAAEBAAAAAABAiAAIA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetConfigurationModel">
+    <Position X="24.25" Y="18.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgQAAAAAAAgAAAAAAACAACAAAAAAAEBBAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetConfigurationEditModel" Collapsed="true">
+    <Position X="72.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAgAAQAAACAAJAAEAEAhAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetAlarmConfigModel" Collapsed="true">
+    <Position X="71" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAIgAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetHistoryModel">
+    <Position X="2.75" Y="18.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAgAQIAAAAAAAA=</HashCode>
+      <FileName>Assets\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.ConfigurationAssetListModel">
+    <Position X="31" Y="53" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAgQAAAAAAggAAEAAoAAAACAQAAAAAAAAAA=</HashCode>
+      <FileName>Assets\AssetListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.FunctionalStatusAssetListModel">
+    <Position X="34.5" Y="53" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BQAAAAAAAAAAEAAAgAgAAAAAAkAAAAAAAAAAAAAEAIA=</HashCode>
+      <FileName>Assets\AssetListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.OccupancyAssetListModel">
+    <Position X="38" Y="53" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAIAAAAgAAAAAAQAAQAAQEBII=</HashCode>
+      <FileName>Assets\AssetListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SummaryAssetListModel">
+    <Position X="41.75" Y="53" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAgAAFgGAAACAgAAAAAAAAIAAQAEAAA=</HashCode>
+      <FileName>Assets\AssetListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetListModel">
+    <Position X="35.75" Y="41.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>BQAAAAgCCFoQUQgAgFguIAEGAsEAAhSAYQIQASUFBJI=</HashCode>
+      <FileName>Assets\AssetListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetTypeModel" Collapsed="true">
+    <Position X="62.25" Y="1.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\AssetTypesModel.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAIAAQAAAAAAAAAAQBAAAAAAAA=</HashCode>
+      <FileName>Assets\AssetTypesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetTypesModel" Collapsed="true">
+    <Position X="64" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAACCABAAAABAAAAAAAAAAAAE=</HashCode>
+      <FileName>Assets\AssetTypesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetsUploadResultsModel" Collapsed="true">
+    <Position X="58.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAIAAAAACAAAABAIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\AssetTypesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadGatewayModel" Collapsed="true">
+    <Position X="71" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgACAAAAAGAAAAgAABAoEAQAAAABAACAAAoABQAEBQA=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadSensorModel" Collapsed="true">
+    <Position X="74.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgAiAAgAAGCACAgQABAoEAQAAAABAACAAAoAhSAEEQA=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadSingleSpaceMeterModel" Collapsed="true">
+    <Position X="76.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgACAAAAAGAAAAgAABAoUAQAAAABAAKAAAoABSAEAQA=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadMultiSpaceMeterModel" Collapsed="true">
+    <Position X="72.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgACAAAAAGAAAAgAABAoUAQAAAABAACAQAoABSAEAQI=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadCashboxModel" Collapsed="true">
+    <Position X="67.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgACAIAAACAAAAAABAABABBAAAARAAAAAAIAAQAEAQA=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.UploadSpaceModel" Collapsed="true">
+    <Position X="78" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAGCAAgAAIAAIEAAAAAABAAIAAAAAJAAEEAA=</HashCode>
+      <FileName>Assets\AssetUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.CashboxHistoryViewModel">
+    <Position X="5.25" Y="32.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CashboxModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.CashboxViewModel">
+    <Position X="5.25" Y="28.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgEAAAAAAAAAAAAAAAIAAAAAAAgQCAABAAIABACAAAA=</HashCode>
+      <FileName>Assets\CashboxModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.CashboxEditModel">
+    <Position X="35" Y="26.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAACAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CashboxModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.CashboxMassEditModel">
+    <Position X="13.5" Y="38" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgAIAAAAAACAAAAAAAIAAAAAAAAAAAAAAAAAABAAAAQ=</HashCode>
+      <FileName>Assets\CashboxModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.GatewayViewModel">
+    <Position X="8.25" Y="28.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\GatewayModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.GatewayConfigurationModel">
+    <Position X="28.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\GatewayModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.GatewayEditModel">
+    <Position X="38.75" Y="26.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Assets\GatewayModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.GatewayMassEditModel">
+    <Position X="17.25" Y="38" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAACAACAAAgAABCAIAAAAAAAAAABgAIAAVAAAAQ=</HashCode>
+      <FileName>Assets\GatewayModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.GatewayHistoryModel" Collapsed="true">
+    <Position X="62.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\GatewayModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.MeterViewModel">
+    <Position X="19.75" Y="28.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAAAAAAgAAAAAAEQAAAAAgAAAABgAQAAAAAQAQ=</HashCode>
+      <FileName>Assets\MeterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.MeterEditModel">
+    <Position X="42.5" Y="26.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAACAAAAAAAAAQAAAAAgAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Assets\MeterModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.MeterSpacesModel">
+    <Position X="23.75" Y="28.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Assets\MeterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.MeterMassEditModel">
+    <Position X="21.5" Y="38" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAACAACAAAgAABCAIAAAAAAAAAABgAIAAVAAAAQ=</HashCode>
+      <FileName>Assets\MeterModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.MeterHistoryModel" Collapsed="true">
+    <Position X="58.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\MeterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorViewModel">
+    <Position X="27" Y="28.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAgAAAAgAAAAAAAABgAAAAAAQABQ=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorConfigurationModel">
+    <Position X="20.75" Y="22.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorConfigurationEditModel">
+    <Position X="24" Y="22.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAAAACAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorEditModel">
+    <Position X="31" Y="26.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAACAAAAQAAAAAAAAAAAAAAIAgAAAAAAQAAA=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorMassEditModel">
+    <Position X="9.25" Y="38" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAACAACAAAgAABCAIAAAAAAAAAABgAIAAVAAAAQ=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SensorHistoryModel" Collapsed="true">
+    <Position X="72.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\SensorModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SimpleSpaceModel" Collapsed="true">
+    <Position X="58.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAhAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceListModel">
+    <Position X="12.25" Y="28.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAQiAgAAAIgAEAAgAAAAAAAIAAEAAAAAEIAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceViewModel">
+    <Position X="16" Y="28.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAgAAEAAAEAAAAAAAAAAIBgAAAAAAAQAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceStatusModel" Collapsed="true">
+    <Position X="67.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAQAAAACEEBAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceConfigurationModel" Collapsed="true">
+    <Position X="64" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gChBAAQAAAwAAACQAAAAAAAAAAIAAAAgEAAAgAABBAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceConfigurationEditModel" Collapsed="true">
+    <Position X="62.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAQAAQAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceEditModel">
+    <Position X="46.25" Y="26.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAiAAgAAAAAEAAAAAABAAAIAgAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceMassEditModel">
+    <Position X="25.75" Y="38" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAASAAyAAAgAADAEIQAAAAAAAAAhAAIAAQAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.SpaceHistoryModel" Collapsed="true">
+    <Position X="65.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetVersionViewModel" Collapsed="true">
+    <Position X="72.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAgBAAEACAAAA=</HashCode>
+      <FileName>Assets\VersionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetVersionSetModel" Collapsed="true">
+    <Position X="71" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\VersionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetVersionModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="69.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAgAAAAAAAAQAAAAAAAQAAAAAAQAAAQABAAAAAIA=</HashCode>
+      <FileName>Assets\VersionModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetVersionFileTypeModel" Collapsed="true">
+    <Position X="65.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAAAgAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\VersionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Assets.AssetVersionGroupModel" Collapsed="true">
+    <Position X="67.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\VersionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Audit.AuditRecord" Collapsed="true">
+    <Position X="74.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCABAAAAAAAAAAAgAAAAAAAACAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Audit\AuditRecord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.CollectionListModel" Collapsed="true">
+    <Position X="62.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAMBgAAAAAAAAAIAAAIAQAgAAAAABAEAAAAAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.ConfigDDLModel" Collapsed="true">
+    <Position X="64" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.StatusDDLModel" Collapsed="true">
+    <Position X="71" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.VendorDDLModel" Collapsed="true">
+    <Position X="62.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.AggregationListModel" Collapsed="true">
+    <Position X="62.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAIAAAEBAACAAIAAAgAAAAAAAAkABQAgBAAAAAIAAo=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.CollectionConfiguration" Collapsed="true">
+    <Position X="60.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BEAgQDBMADAAAAAIAEAAAIAAFEEAABARiAAEAAAIAAE=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.AggregationMeterDetails">
+    <Position X="0.5" Y="38.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IIAIAAAYiEIgiHMgwAgNAAAIAEACARQAAIAAAAAAQAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.AggregationDetails" Collapsed="true">
+    <Position X="60.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>NAAIAAAABAAAAQgghAQQAAAAAABIgBQBgBAAACIoAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.CollectionMeter">
+    <Position X="2.25" Y="34.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAACCAAAAAgAIBACAAgAAAAAABAAIAIAAQAAAAI=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.AggregationMeter">
+    <Position X="3.75" Y="38.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAUAAAAAACAAIAAAIAAAEAIAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Collections.MeterAdditionStatus" Collapsed="true">
+    <Position X="78" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAwAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Collections\CollectionModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerModel" Collapsed="true">
+    <Position X="64" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAABAAAAAAAAgAAgAAAAAAIAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.ListCustomerModel" Collapsed="true">
+    <Position X="62.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAEAAggAAAEAgAAAAQAAAICAAAQIIAABAAAAAE=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerBaseModel">
+    <Position X="29.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAEAAAAAAAAAAAAAAAAAAAAABAAAAAAAAgAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerArea" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="71" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAQAAAAAAAQAAAAAABAAAAAACAAAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerZone" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="71" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQAAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerCustomGroup" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="58.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAQAAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerActivateIssue" Collapsed="true">
+    <Position X="69.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Customers\CustomerActivateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerActivateModel">
+    <Position X="26.75" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerActivateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerAreasModel">
+    <Position X="34.5" Y="3" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAABCAAAAAAAAAACAACAgBAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerAreasModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerAssetsModel">
+    <Position X="38.5" Y="3" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAACAAAAAAABAAAQAAAAAABAEAAIAAIIAAAA=</HashCode>
+      <FileName>Customers\CustomerAssetsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerAssetGroupModel" Collapsed="true">
+    <Position X="72.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABEAAAAAAAAAAAAQCAAAAAAAAAAAAIAAAAAAAE=</HashCode>
+      <FileName>Customers\CustomerAssetsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerAssetTypeModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAEAACAAAAAgAAAAAAgAAAAAIAiAAIgACQAAAE=</HashCode>
+      <FileName>Customers\CustomerAssetsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerAssetModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="74.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAACAAAAAgAAEAAAgAAAAAAgiAAAAACQAAAA=</HashCode>
+      <FileName>Customers\CustomerAssetsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerEventCodesModel">
+    <Position X="42.75" Y="3" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerEventCodesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerGridsModel">
+    <Position X="54.75" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAIAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerGridsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerIdentificationModel">
+    <Position X="3" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAQECQAAAgCkAIQACACBAAAAgAAAAAAACQAAA=</HashCode>
+      <FileName>Customers\CustomerIdentificationModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerContactModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="78" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAACAAAAAAAAAQACAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Customers\CustomerIdentificationModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerLocalizationModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="62.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAKAAAAAAABAAAAAAgAIAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Customers\CustomerIdentificationModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.AdminCustomerIdentificationModel">
+    <Position X="15" Y="3" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerIdentificationModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerLabelsModel">
+    <Position X="18.5" Y="3" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAwAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerLabelsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerLabel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="60.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAQAAAUAAAAAAAAAAQAACAAAAQAAAAAAgAA=</HashCode>
+      <FileName>Customers\CustomerLabelsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerMaintenanceScheduleModel">
+    <Position X="23" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEgAAAAAAAAAAAAAAAAQAAgAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerMaintenanceScheduleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.DayOfWeek" Collapsed="true">
+    <Position X="72.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAIAAgAAAEAIAAAAAABIA=</HashCode>
+      <FileName>Customers\CustomerMaintenanceScheduleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsModel">
+    <Position X="30.25" Y="3" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAiAAAAAAAIACAAAAAAAABAAAAAAAAAEAAA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinsModel" Collapsed="true">
+    <Position X="69.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAABAAgAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsCoinModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="67.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAIwAAgAQAAQAAAACAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsCardModel" Collapsed="true">
+    <Position X="65.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAEAAAAEgAAAAAQAAIAAQAAYAAAACAQAAAAAAAAA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsCreditDebitModel" Collapsed="true">
+    <Position X="71" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACIAAAAAAAAAAAAAAAIAAAAABAAAAAAAIQAAAA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerPaymentsEmvModel" Collapsed="true">
+    <Position X="72.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Customers\CustomerPaymentsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerRulesModel">
+    <Position X="45.75" Y="3" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAACAASAAIAkAAAIAAAAAABAAAAAAAAAACAA=</HashCode>
+      <FileName>Customers\CustomerRulesModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerRulesDiscountSchemaModel" Collapsed="true">
+    <Position X="78" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAAIAAAAAAAAQAQAABAEAAAQAAIAAAAAA=</HashCode>
+      <FileName>Customers\CustomerRulesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerRulesOperationalTimeModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="58.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAABIBCAAgAEBAIAAIAAAAIgIAIAAAAAAAQAACA=</HashCode>
+      <FileName>Customers\CustomerRulesModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerSettingsConstants" Collapsed="true">
+    <Position X="60.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAQAAAIAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Customers\CustomerSettingsConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.CustomerStatusModel" Collapsed="true">
+    <Position X="62.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAFMABAAAAAAAAAACAAAAAACAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Customers\CustomerStatusModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.Location" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="67.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAACAAAAIIAAEAAAAAAIAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Customers\Location.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.PemsCity" Collapsed="true">
+    <Position X="72.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgACEAAEAEAAAAAEEggAAAAAIAFAAAAQAQAACAAAAAA=</HashCode>
+      <FileName>Customers\PemsCity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.Property" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="74.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACRAAAIAAAAAQAAAAQAAAgAAAAAAAAAACgAEAAAAA=</HashCode>
+      <FileName>Customers\Property.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.PropertyGroupItem" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Customers\Property.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Customers.Setting" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACBAAAAAAAAAQAAAAAIAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Customers\Setting.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Discounts.UserAccountBase">
+    <Position X="44" Y="41.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>QCAgAEhCACAFCAQKIAAkAAgAAwAAEAEACAAAJAAACgg=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Discounts.UserAccountDetails">
+    <Position X="40.75" Y="48.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>EAAAAEAAAIAAAAAAAEAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Discounts.UserAccountListModel">
+    <Position X="44.75" Y="48.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAABAAAgAA=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Discounts.UserDiscountScheme" Collapsed="true">
+    <Position X="60.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAFAAAAAAIAQAEAAAAAAAAgAIEISCA=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Discounts.AccountSchemeDetails">
+    <Position X="47.25" Y="48.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Errors.ErrorItem" Collapsed="true">
+    <Position X="78" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAQCAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Errors\ErrorItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventCodesCustomerModel">
+    <Position X="40.25" Y="7.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAEAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventCodesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventCodesViewModel">
+    <Position X="36.75" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventCodesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventCodeViewModel">
+    <Position X="40.25" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAACgQCAAgAAQgAAAAAAgABAAAAAAAAgAQAACAEAKAA=</HashCode>
+      <FileName>Events\EventCodesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventCodeEditModel">
+    <Position X="42.75" Y="9.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>EAACgQCAAgCASgAAAAQAgABAAAAAAAAoAQAACAEAKAA=</HashCode>
+      <FileName>Events\EventCodesModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventCodesUploadResultsModel" Collapsed="true">
+    <Position X="58.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAIAAAAACAAAABAIAAAAAAAAAAA=</HashCode>
+      <FileName>Events\EventCodesModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.UploadEventCodesModel" Collapsed="true">
+    <Position X="69.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAgAAAAAQAAAQAABAAAEIQAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Events\EventCodesUploadModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventModel">
+    <Position X="41.5" Y="30.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAKAAAIQAoAABgAAAQAEwAAAAQAIAIQAQAEAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.SummaryEventModel">
+    <Position X="32.25" Y="36.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgQAoAABgAAAAAAQAAAAAAAAIQAQAEAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.DiagnosticsEventModel">
+    <Position X="35" Y="36.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAoAwBAAAAAAgAAAAAAAAQIwAQAkAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.AlarmsEventModel">
+    <Position X="38.25" Y="36.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIgAAQAIAQAoAAABAAQAiAEAAAACAAAAHAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.ConnectionEventModel">
+    <Position X="41.25" Y="36.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAIAAAgAAAAAKAAgAAGAAEAACAAEAAI=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.TransactionEventModel">
+    <Position X="44" Y="36.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAEAAgAQgIAACgQAACIAAgCAAACAAAAAAACAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.CollectionCommEventModel">
+    <Position X="47.5" Y="36.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAIACAwAAACAAAAAABAAAAAgAAAEAAA=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.CollectionCBREventModel">
+    <Position X="50.5" Y="36.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAABAAoAAAIACAgACBAAAQAAABAAAIAAAAAEABg=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Events.EventDetails" Collapsed="true">
+    <Position X="60.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAgoAEAEQAhAABgIAAAAIwAAAAAIAAIUAQEAACY=</HashCode>
+      <FileName>Events\EventModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.TSD" Collapsed="true">
+    <Position X="65.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAGAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>General\GeneralModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.TimeTypeDDL" Collapsed="true">
+    <Position X="62.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>General\GeneralModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.StringIdTextDDLModel" Collapsed="true">
+    <Position X="72.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>General\GeneralModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.MenuModel" Collapsed="true">
+    <Position X="76.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAEAAAgAAAAAAAACAAAAAAAQAACAgAAEAAAAA=</HashCode>
+      <FileName>General\GeneralModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.OriginalGridPositionAttribute" Collapsed="true">
+    <Position X="69.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>General\OriginalGridPositionAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.General.SelectListItemWrapper" Collapsed="true">
+    <Position X="71" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAIAAAAQACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>General\SelectListItemWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Grids.GridTemplateSet" Collapsed="true">
+    <Position X="69.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Grids\GridModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Grids.GridTemplate" Collapsed="true">
+    <Position X="67.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAQAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAY=</HashCode>
+      <FileName>Grids\GridModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Grids.GridColumns" Collapsed="true">
+    <Position X="64" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Grids\GridModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Grids.GridData" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="65.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEQgAAAAAAAAAAAAAAAAAAAAgAAAEEA=</HashCode>
+      <FileName>Grids\GridModels.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Help.HelpLinkModel" Collapsed="true">
+    <Position X="71" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAiAAAAA=</HashCode>
+      <FileName>Help\HelpLinkModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.ListMaintenanceGroupModel" Collapsed="true">
+    <Position X="64" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAEAAgAAAAEAgAAAAQAAAACAAAQIIAAAAAAAAE=</HashCode>
+      <FileName>MaintenanceGroups\ListMaintenanceGroupModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenanceGroupActivateIssue" Collapsed="true">
+    <Position X="71" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupActivateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenanceGroupActivateModel">
+    <Position X="50.75" Y="3" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupActivateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenanceGroupCustomerModel" Collapsed="true">
+    <Position X="72.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupCustomerModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenanceGroupCustomersModel">
+    <Position X="6.75" Y="3" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAICAAAAAAAAAAAAAAAAAABAACAAAAAAAABA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupCustomersModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenanceGroupIdentificationModel">
+    <Position X="11.25" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAACAAAAgCAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenanceGroupIdentificationModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.MaintenanceGroups.MaintenangeGroupCreateModel" Collapsed="true">
+    <Position X="74.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACEAAABAAAAAAAAgAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MaintenanceGroups\MaintenangeGroupCreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.News.NewsItem" Collapsed="true">
+    <Position X="60.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>News\NewsItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Occupancy.OccupancyDetailItem" Collapsed="true">
+    <Position X="65.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAMRAJAEIAgIgBYhEIAAgAAAAADAIAQQIwCwgUQSA=</HashCode>
+      <FileName>Occupancy\OccupancyDetailItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Occupancy.OccupancyDDL" Collapsed="true">
+    <Position X="62.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Occupancy\OccupancyInquiryItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Occupancy.OccupancyDDLString" Collapsed="true">
+    <Position X="64" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Occupancy\OccupancyInquiryItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Occupancy.OccupancyInquiryItem" Collapsed="true">
+    <Position X="67.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBAMAAIAAAIQgoAIhgEEA0AEgAAAAMIQAIQASAUAAA=</HashCode>
+      <FileName>Occupancy\OccupancyInquiryItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Reports.ReportsListViewModel" Collapsed="true">
+    <Position X="64" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAACAAABAAAAAAAAAACAA=</HashCode>
+      <FileName>Reports\ReportsModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Reports.ReportViewModel" Collapsed="true">
+    <Position X="65.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Reports\ReportsModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Reports.ReportLinkModel" Collapsed="true">
+    <Position X="62.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAgAAIAAAAAAAQAQAAACIAAAIAEAAAAAAA=</HashCode>
+      <FileName>Reports\ReportsModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Reports.ReportErrorModel" Collapsed="true">
+    <Position X="60.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAQAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Reports\ReportsModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Reports.IzendaAdHocModel" Collapsed="true">
+    <Position X="76.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Reports\ReportsModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Roles.ListRoleModel" Collapsed="true">
+    <Position X="65.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAYAQAAAAgAAAAAAAAAAQAAAABAAAAAAEAAAQAA=</HashCode>
+      <FileName>Roles\RoleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Roles.EditRoleModel" Collapsed="true">
+    <Position X="76.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAACAAAAAAAAAAAQAAAABAAAAAAEAAAQAA=</HashCode>
+      <FileName>Roles\RoleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Roles.CreateRoleModel" Collapsed="true">
+    <Position X="67.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAACAAAAAAAAAAAQAAAABAAAAAAEAAAQAA=</HashCode>
+      <FileName>Roles\RoleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Roles.CopyRoleModel" Collapsed="true">
+    <Position X="65.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAAQAA=</HashCode>
+      <FileName>Roles\RoleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Roles.AuthorizationItem" Collapsed="true">
+    <Position X="76.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAUACAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Roles\RoleModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.TabStrip" Collapsed="true">
+    <Position X="74.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.CollectionFilters">
+    <Position X="8.75" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAEAAAQAAAgAAAACAgAAAAAAAAAABAAAAAAEAI=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.AggregationFilters">
+    <Position X="11.5" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAgAABIAAAgAAAAQAAAAhDAAARAAAAI=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.CustomerFilters">
+    <Position X="14.25" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.MaintenanceGroupFilters">
+    <Position X="17" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.AlarmFilters">
+    <Position X="19.75" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAACAIAAQAQAEAgAoAAAAAEgACAAAAJAAAABAAAEQ=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.TariffFilters">
+    <Position X="22.5" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.AssetHistoryFilters">
+    <Position X="25.25" Y="9.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAgAAAAAAAAAQAAAEAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.DiscountSummaryFilters">
+    <Position X="28.25" Y="9.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>MAAAAEAAACAAAAAAAAAAAAAAAAAAAAAAAAQAAEAAAgg=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.RoleFilters">
+    <Position X="31" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.UserFilters">
+    <Position X="33.5" Y="9.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAAAAAAAAAAAAAAAAAAAAAAAAAQAAEAAAAAg=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.SortValue" Collapsed="true">
+    <Position X="60.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Sessions.FilterBase">
+    <Position X="21" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAEAAAAAI=</HashCode>
+      <FileName>Sessions\TabStrip.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.ConfigProfileModel">
+    <Position X="32.5" Y="12.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAVQAAAiACAQBBQAAAAQAAQACIBCACCEEAAgDAAE=</HashCode>
+      <FileName>Tariffs\ConfigProfileModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.ConfigProfileSpaceViewModel">
+    <Position X="33" Y="20.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAACAEEAAABAAAAAEAAAAgACBQAAEAAQCAAAAAAAA=</HashCode>
+      <FileName>Tariffs\ConfigProfileModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.HolidayRateConfigurationModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="72.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAQigAAAggQAAAIQAAAACQBAAAAAABAEAAAE=</HashCode>
+      <FileName>Tariffs\HolidayRateModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.HolidayRateModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="74.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgBAMAAAgAiAAAUAAQAAAAAAAAAiIBAAKICEAAQCQAE=</HashCode>
+      <FileName>Tariffs\HolidayRateModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.HolidayRateScheduleModel">
+    <Position X="0.5" Y="29.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgBAAAAAAAAAAAAAAQAAAAAAAAAAIAAACAAAAAACAAA=</HashCode>
+      <FileName>Tariffs\HolidayRateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.RateScheduleConfigurationModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="78" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAABAEQigAAAgggIAAIQAAAAiIBAAAAAEBAECAAE=</HashCode>
+      <FileName>Tariffs\RateScheduleModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.RateScheduleModel">
+    <Position X="0.5" Y="21.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAEAMAAAAAiAAISAAAgAIAAgIAQCIBAEoISEQASCAAE=</HashCode>
+      <FileName>Tariffs\RateScheduleModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.TariffRateConfigurationModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQigAAQghQAAAIQAAAACABAAAAAABAEBAAE=</HashCode>
+      <FileName>Tariffs\TariffRateModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.TariffRateModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="78" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAMCAEAAiiAASGIAAJAAGgEAACABgEIICAACAAAEE=</HashCode>
+      <FileName>Tariffs\TariffRateModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Tariffs.TariffRateModelUtility" Collapsed="true">
+    <Position X="58.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQBAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Tariffs\TariffRateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.CustomerTransactionMeterModel" Collapsed="true">
+    <Position X="65.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YFAAKAAAAEAEBAgAEDAIEAgIABgEQBMCAQYGEREAAAI=</HashCode>
+      <FileName>Transactions\CustomerTransactionMeterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.AcquirerResponse" Collapsed="true">
+    <Position X="58.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAIAAAABAAAAAAAQQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transactions\CustomerTransactionMeterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.CustomerTransactionModel" Collapsed="true">
+    <Position X="67.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAABKAAAIQgoEAzgAAAQAAgAAARUAMAIQAQICABA=</HashCode>
+      <FileName>Transactions\CustomerTransactionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.CustomerTransactionSensorModel" Collapsed="true">
+    <Position X="69.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>NAAAMAIBAEgGAQiAQTIIAEgAAIAAQAAqQAcUgQCMBBI=</HashCode>
+      <FileName>Transactions\CustomerTransactionSensorModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.SensorTransactionModel" Collapsed="true">
+    <Position X="74.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAACAAAAAAIAAgAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Transactions\SensorTransactionModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Transactions.TransactionDDLModel" Collapsed="true">
+    <Position X="64" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Transactions\TransactionDDLModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.SecurityQuestionsModel" Collapsed="true">
+    <Position X="69.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAEAAAAAAAAgAAgAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.CustomerSupportModel" Collapsed="true">
+    <Position X="64" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.LoginRedirectModel" Collapsed="true">
+    <Position X="69.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.NewPasswordModel">
+    <Position X="1.75" Y="8.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.ChangePasswordModel">
+    <Position X="0.5" Y="10.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.ResetPasswordModel">
+    <Position X="3.25" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAABAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.BulkUpdateModel" Collapsed="true">
+    <Position X="78" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAEAAAQAAAAAAAAEAAAAAAAAAAAAAAQAAAAAAAAQ=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.UserModel">
+    <Position X="6.5" Y="14.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAEAIAAAAAAEQAAQAEAAEAAAACAAAABAgAAAAo=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.ProfileModel">
+    <Position X="5.5" Y="22.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAABAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.UserStatsModel">
+    <Position X="6.75" Y="18.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>QACAAAAQAAgAAAAAAAQAAAAAAAAAAAEkhAAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.ListUserModel">
+    <Position X="8.75" Y="22.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.CheckBoxItem" Collapsed="true">
+    <Position X="58.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAI=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.DropDownModel" Collapsed="true">
+    <Position X="74.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.LandingDropDownModel" Collapsed="true">
+    <Position X="58.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.LandingDropDownItem" Collapsed="true">
+    <Position X="78" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.CustomerRoleModel" Collapsed="true">
+    <Position X="76.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\CustomerRoleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.CustomerRole" Collapsed="true">
+    <Position X="74.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Users\CustomerRoleModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.PasswordQuestion" Collapsed="true">
+    <Position X="71" Y="7.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Entities.Users.PasswordQuestion.QuestionState" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Users\PasswordQuestion.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAAAgAAAAA=</HashCode>
+      <FileName>Users\PasswordQuestion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.Setting" Collapsed="true">
+    <Position X="78" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Users\Setting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Users.User" Collapsed="true">
+    <Position X="58.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAACAAAIAAAQgQAAAAAAAAAAAAAAAAIAAAAAg=</HashCode>
+      <FileName>Users\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Utilities.RightsMenusGroupsAndAppsModel" Collapsed="true">
+    <Position X="67.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAQAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\RightsMenusGroupsAndAppsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.Utilities.RbacCustomerListModel" Collapsed="true">
+    <Position X="58.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\RightsMenusGroupsAndAppsModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Entities.WorkOrders.WorkOrderListModel" Collapsed="true">
+    <Position X="64" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>WorkOrders\WorkOrderListModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Duncan.PEMS.Entities.Assets.TariffStatus" Collapsed="true">
+    <Position X="76.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\SpaceModel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Customers.CustomerStatus" Collapsed="true">
+    <Position X="58.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Customer.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Discounts.DiscountExpirationType" Collapsed="true">
+    <Position X="60.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAgA=</HashCode>
+      <FileName>Discounts\DiscountModels.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.CashBoxLocationType" Collapsed="true">
+    <Position X="69.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAgAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.AssetStateType" Collapsed="true">
+    <Position X="65.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAABIAAAACA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.AssetAreaId" Collapsed="true">
+    <Position X="58.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAAgAAAAAAAEAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.AssetClass" Collapsed="true">
+    <Position X="60.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgACAAAQAAAAAAAAAAIAAAAAAAAAAAgAAAAAAAEBA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.TargetServiceDesignations" Collapsed="true">
+    <Position X="72.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAABAAACQEAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.MeterGroups" Collapsed="true">
+    <Position X="64" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgACAAAQAgAAAAAAAAIAAgAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.VersionGroupType" Collapsed="true">
+    <Position X="78" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAACAAAAAAgAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.OperationalStatusType" Collapsed="true">
+    <Position X="65.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAKAAAAQAAAAAAAAgAAAAAgAAEAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.CollectionRouteResult" Collapsed="true">
+    <Position X="72.75" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAhAgAAAAAAgAAAAAAAAAI=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.CashBoxCoinDenomination" Collapsed="true">
+    <Position X="67.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAABAAAIACAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.AssetListGridType" Collapsed="true">
+    <Position X="62.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEAAAAAAAAAAAEAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.ConfigStatus" Collapsed="true">
+    <Position X="74.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.ReportCategory" Collapsed="true">
+    <Position X="67.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgEAAAQAABAAAAAQAAAAAAQAAAAAAAQAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.TariffStateType" Collapsed="true">
+    <Position X="74.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAACAAAAAAAAAAAAAAAABIAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.AssetPendingReasonType" Collapsed="true">
+    <Position X="64" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAEAAAAAAACAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.SpaceTypeType" Collapsed="true">
+    <Position X="71" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAQAAACA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.CustomerProfileType" Collapsed="true">
+    <Position X="78" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.ReportViewerType" Collapsed="true">
+    <Position X="69.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAIAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Enumerations.MembershipEvent" Collapsed="true">
+    <Position X="62.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAIAQAAAAAAA=</HashCode>
+      <FileName>Enumerations\Enumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Users.ChangeType" Collapsed="true">
+    <Position X="71" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Duncan.PEMS.Entities.Users.CustomerLoginType" Collapsed="true">
+    <Position X="76.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Users\AccountModels.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

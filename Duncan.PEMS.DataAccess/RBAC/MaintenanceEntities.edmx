@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MaintenanceModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="MaintenanceModelStoreContainer">
+          <EntitySet Name="Parts" EntityType="MaintenanceModel.Store.Parts" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrderEvent" EntityType="MaintenanceModel.Store.WorkOrderEvent" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrderImage" EntityType="MaintenanceModel.Store.WorkOrderImage" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrderPart" EntityType="MaintenanceModel.Store.WorkOrderPart" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrders" EntityType="MaintenanceModel.Store.WorkOrders" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrdersAudit" EntityType="MaintenanceModel.Store.WorkOrdersAudit" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkOrderStatus" EntityType="MaintenanceModel.Store.WorkOrderStatus" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_WorkOrderEvent_WorkOrders" Association="MaintenanceModel.Store.FK_WorkOrderEvent_WorkOrders">
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+            <End Role="WorkOrderEvent" EntitySet="WorkOrderEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderImage_WorkOrders" Association="MaintenanceModel.Store.FK_WorkOrderImage_WorkOrders">
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+            <End Role="WorkOrderImage" EntitySet="WorkOrderImage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderPart_Parts" Association="MaintenanceModel.Store.FK_WorkOrderPart_Parts">
+            <End Role="Parts" EntitySet="Parts" />
+            <End Role="WorkOrderPart" EntitySet="WorkOrderPart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderPart_WorkOrders" Association="MaintenanceModel.Store.FK_WorkOrderPart_WorkOrders">
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+            <End Role="WorkOrderPart" EntitySet="WorkOrderPart" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrders_WorkOrderStatus" Association="MaintenanceModel.Store.FK_WorkOrders_WorkOrderStatus">
+            <End Role="WorkOrderStatus" EntitySet="WorkOrderStatus" />
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrdersAudit_WorkOrders" Association="MaintenanceModel.Store.FK_WorkOrdersAudit_WorkOrders">
+            <End Role="WorkOrders" EntitySet="WorkOrders" />
+            <End Role="WorkOrdersAudit" EntitySet="WorkOrdersAudit" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Parts">
+          <Key>
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="PartId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PartName" Type="varchar" MaxLength="500" />
+          <Property Name="MeterGroup" Type="int" Nullable="false" />
+          <Property Name="Category" Type="int" Nullable="false" />
+          <Property Name="PartDesc" Type="varchar" MaxLength="500" />
+          <Property Name="CostInCents" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkOrderEvent">
+          <Key>
+            <PropertyRef Name="WorkOrderEventId" />
+          </Key>
+          <Property Name="WorkOrderEventId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="bigint" Nullable="false" />
+          <Property Name="EventId" Type="bigint" Nullable="false" />
+          <Property Name="EventCode" Type="int" Nullable="false" />
+          <Property Name="EventDateTime" Type="datetime" Nullable="false" />
+          <Property Name="SLADue" Type="datetime" Nullable="false" />
+          <Property Name="EventDesc" Type="varchar" MaxLength="50" />
+          <Property Name="AlarmTier" Type="int" Nullable="false" />
+          <Property Name="Notes" Type="varchar" MaxLength="2000" />
+          <Property Name="Automated" Type="bit" Nullable="false" />
+          <Property Name="Vandalism" Type="bit" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkOrderImage">
+          <Key>
+            <PropertyRef Name="WorkOrderImageId" />
+          </Key>
+          <Property Name="WorkOrderImageId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="bigint" Nullable="false" />
+          <Property Name="ImageData" Type="image" Nullable="false" />
+          <Property Name="DateTaken" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkOrderPart">
+          <Key>
+            <PropertyRef Name="WorkOrderPartId" />
+          </Key>
+          <Property Name="WorkOrderPartId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="bigint" Nullable="false" />
+          <Property Name="PartId" Type="bigint" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="Notes" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="WorkOrders">
+          <Key>
+            <PropertyRef Name="WorkOrderId" />
+          </Key>
+          <Property Name="WorkOrderId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ReportingUserId" Type="int" />
+          <Property Name="MeterGroup" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="AreaId" Type="int" Nullable="false" />
+          <Property Name="MeterId" Type="int" Nullable="false" />
+          <Property Name="Location" Type="varchar" MaxLength="500" />
+          <Property Name="ParkingSpaceId" Type="bigint" />
+          <Property Name="Notes" Type="varchar" MaxLength="2000" />
+          <Property Name="ZoneId" Type="int" />
+          <Property Name="HighestSeverity" Type="int" Nullable="false" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+          <Property Name="SLADue" Type="datetime" Nullable="false" />
+          <Property Name="WorkOrderStatusId" Type="int" Nullable="false" />
+          <Property Name="TechnicianId" Type="int" />
+          <Property Name="AssignedDate" Type="datetime" />
+          <Property Name="CompletedDate" Type="datetime" />
+          <Property Name="CreatedById" Type="int" />
+          <Property Name="CrossStreet" Type="varchar" MaxLength="2000" />
+          <Property Name="ResolutionCode" Type="int" />
+          <Property Name="ResolutionDesc" Type="varchar" MaxLength="2000" />
+          <Property Name="AssignmentState" Type="int" />
+          <Property Name="Mechanism" Type="int" />
+        </EntityType>
+        <EntityType Name="WorkOrdersAudit">
+          <Key>
+            <PropertyRef Name="WorkOrderAuditId" />
+          </Key>
+          <Property Name="WorkOrderAuditId" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AuditDateTime" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="WorkOrderId" Type="bigint" Nullable="false" />
+          <Property Name="ReportingUserId" Type="int" />
+          <Property Name="MeterGroup" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="AreaId" Type="int" Nullable="false" />
+          <Property Name="MeterId" Type="int" Nullable="false" />
+          <Property Name="Location" Type="varchar" MaxLength="500" />
+          <Property Name="ParkingSpaceId" Type="bigint" />
+          <Property Name="Notes" Type="varchar" MaxLength="2000" />
+          <Property Name="ZoneId" Type="int" />
+          <Property Name="HighestSeverity" Type="int" Nullable="false" />
+          <Property Name="CreateDateTime" Type="datetime" Nullable="false" />
+          <Property Name="SLADue" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="TechnicianId" Type="int" />
+          <Property Name="AssignedDate" Type="datetime" />
+          <Property Name="CompletedDate" Type="datetime" />
+          <Property Name="CreatedById" Type="int" />
+          <Property Name="CrossStreet" Type="varchar" MaxLength="2000" />
+          <Property Name="ResolutionCode" Type="int" />
+          <Property Name="ResolutionDesc" Type="varchar" MaxLength="2000" />
+          <Property Name="AssignmentState" Type="int" />
+          <Property Name="Mechanism" Type="int" />
+        </EntityType>
+        <EntityType Name="WorkOrderStatus">
+          <Key>
+            <PropertyRef Name="WorkOrderStatusId" />
+          </Key>
+          <Property Name="WorkOrderStatusId" Type="int" Nullable="false" />
+          <Property Name="WorkOrderStatusDesc" Type="varchar" Nullable="false" MaxLength="500" />
+        </EntityType>
+        <Association Name="FK_WorkOrderEvent_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.Store.WorkOrders" Multiplicity="1" />
+          <End Role="WorkOrderEvent" Type="MaintenanceModel.Store.WorkOrderEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderEvent">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderImage_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.Store.WorkOrders" Multiplicity="1" />
+          <End Role="WorkOrderImage" Type="MaintenanceModel.Store.WorkOrderImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderImage">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderPart_Parts">
+          <End Role="Parts" Type="MaintenanceModel.Store.Parts" Multiplicity="1" />
+          <End Role="WorkOrderPart" Type="MaintenanceModel.Store.WorkOrderPart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parts">
+              <PropertyRef Name="PartId" />
+            </Principal>
+            <Dependent Role="WorkOrderPart">
+              <PropertyRef Name="PartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderPart_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.Store.WorkOrders" Multiplicity="1" />
+          <End Role="WorkOrderPart" Type="MaintenanceModel.Store.WorkOrderPart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderPart">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrders_WorkOrderStatus">
+          <End Role="WorkOrderStatus" Type="MaintenanceModel.Store.WorkOrderStatus" Multiplicity="1" />
+          <End Role="WorkOrders" Type="MaintenanceModel.Store.WorkOrders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderStatus">
+              <PropertyRef Name="WorkOrderStatusId" />
+            </Principal>
+            <Dependent Role="WorkOrders">
+              <PropertyRef Name="WorkOrderStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrdersAudit_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.Store.WorkOrders" Multiplicity="1" />
+          <End Role="WorkOrdersAudit" Type="MaintenanceModel.Store.WorkOrdersAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrdersAudit">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MaintenanceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MaintenanceEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="FMParts" EntityType="MaintenanceModel.FMPart" />
+          <EntitySet Name="FMWorkOrderEvents" EntityType="MaintenanceModel.FMWorkOrderEvent" />
+          <EntitySet Name="FMWorkOrderImages" EntityType="MaintenanceModel.FMWorkOrderImage" />
+          <EntitySet Name="FMWorkOrderParts" EntityType="MaintenanceModel.FMWorkOrderPart" />
+          <EntitySet Name="FMWorkOrders" EntityType="MaintenanceModel.FMWorkOrder" />
+          <EntitySet Name="FMWorkOrdersAudits" EntityType="MaintenanceModel.FMWorkOrdersAudit" />
+          <EntitySet Name="FMWorkOrderStatus" EntityType="MaintenanceModel.FMWorkOrderStatu" />
+          <AssociationSet Name="FK_WorkOrderPart_Parts" Association="MaintenanceModel.FK_WorkOrderPart_Parts">
+            <End Role="Parts" EntitySet="FMParts" />
+            <End Role="WorkOrderPart" EntitySet="FMWorkOrderParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderEvent_WorkOrders" Association="MaintenanceModel.FK_WorkOrderEvent_WorkOrders">
+            <End Role="WorkOrders" EntitySet="FMWorkOrders" />
+            <End Role="WorkOrderEvent" EntitySet="FMWorkOrderEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderImage_WorkOrders" Association="MaintenanceModel.FK_WorkOrderImage_WorkOrders">
+            <End Role="WorkOrders" EntitySet="FMWorkOrders" />
+            <End Role="WorkOrderImage" EntitySet="FMWorkOrderImages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrderPart_WorkOrders" Association="MaintenanceModel.FK_WorkOrderPart_WorkOrders">
+            <End Role="WorkOrders" EntitySet="FMWorkOrders" />
+            <End Role="WorkOrderPart" EntitySet="FMWorkOrderParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrders_WorkOrderStatus" Association="MaintenanceModel.FK_WorkOrders_WorkOrderStatus">
+            <End Role="WorkOrderStatus" EntitySet="FMWorkOrderStatus" />
+            <End Role="WorkOrders" EntitySet="FMWorkOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkOrdersAudit_WorkOrders" Association="MaintenanceModel.FK_WorkOrdersAudit_WorkOrders">
+            <End Role="WorkOrders" EntitySet="FMWorkOrders" />
+            <End Role="WorkOrdersAudit" EntitySet="FMWorkOrdersAudits" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="FMPart">
+          <Key>
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="PartId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="PartName" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="MeterGroup" Type="Int32" Nullable="false" />
+          <Property Name="Category" Type="Int32" Nullable="false" />
+          <Property Name="PartDesc" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="CostInCents" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="WorkOrderParts" Relationship="MaintenanceModel.FK_WorkOrderPart_Parts" FromRole="Parts" ToRole="WorkOrderPart" />
+        </EntityType>
+        <EntityType Name="FMWorkOrderEvent">
+          <Key>
+            <PropertyRef Name="WorkOrderEventId" />
+          </Key>
+          <Property Name="WorkOrderEventId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="Int64" Nullable="false" />
+          <Property Name="EventId" Type="Int64" Nullable="false" />
+          <Property Name="EventCode" Type="Int32" Nullable="false" />
+          <Property Name="EventDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SLADue" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EventDesc" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="AlarmTier" Type="Int32" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="Automated" Type="Boolean" Nullable="false" />
+          <Property Name="Vandalism" Type="Boolean" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="WorkOrder" Relationship="MaintenanceModel.FK_WorkOrderEvent_WorkOrders" FromRole="WorkOrderEvent" ToRole="WorkOrders" />
+        </EntityType>
+        <EntityType Name="FMWorkOrderImage">
+          <Key>
+            <PropertyRef Name="WorkOrderImageId" />
+          </Key>
+          <Property Name="WorkOrderImageId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="Int64" Nullable="false" />
+          <Property Name="ImageData" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="DateTaken" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="WorkOrder" Relationship="MaintenanceModel.FK_WorkOrderImage_WorkOrders" FromRole="WorkOrderImage" ToRole="WorkOrders" />
+        </EntityType>
+        <EntityType Name="FMWorkOrderPart">
+          <Key>
+            <PropertyRef Name="WorkOrderPartId" />
+          </Key>
+          <Property Name="WorkOrderPartId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkOrderId" Type="Int64" Nullable="false" />
+          <Property Name="PartId" Type="Int64" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Notes" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Part" Relationship="MaintenanceModel.FK_WorkOrderPart_Parts" FromRole="WorkOrderPart" ToRole="Parts" />
+          <NavigationProperty Name="WorkOrder" Relationship="MaintenanceModel.FK_WorkOrderPart_WorkOrders" FromRole="WorkOrderPart" ToRole="WorkOrders" />
+        </EntityType>
+        <EntityType Name="FMWorkOrder">
+          <Key>
+            <PropertyRef Name="WorkOrderId" />
+          </Key>
+          <Property Name="WorkOrderId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ReportingUserId" Type="Int32" />
+          <Property Name="MeterGroup" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="AreaId" Type="Int32" Nullable="false" />
+          <Property Name="MeterId" Type="Int32" Nullable="false" />
+          <Property Name="Location" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="ParkingSpaceId" Type="Int64" />
+          <Property Name="Notes" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="ZoneId" Type="Int32" />
+          <Property Name="HighestSeverity" Type="Int32" Nullable="false" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SLADue" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="WorkOrderStatusId" Type="Int32" Nullable="false" />
+          <Property Name="TechnicianId" Type="Int32" />
+          <Property Name="AssignedDate" Type="DateTime" Precision="3" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedById" Type="Int32" />
+          <Property Name="CrossStreet" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="ResolutionCode" Type="Int32" />
+          <Property Name="ResolutionDesc" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="AssignmentState" Type="Int32" />
+          <Property Name="Mechanism" Type="Int32" />
+          <NavigationProperty Name="WorkOrderEvents" Relationship="MaintenanceModel.FK_WorkOrderEvent_WorkOrders" FromRole="WorkOrders" ToRole="WorkOrderEvent" />
+          <NavigationProperty Name="WorkOrderImages" Relationship="MaintenanceModel.FK_WorkOrderImage_WorkOrders" FromRole="WorkOrders" ToRole="WorkOrderImage" />
+          <NavigationProperty Name="WorkOrderParts" Relationship="MaintenanceModel.FK_WorkOrderPart_WorkOrders" FromRole="WorkOrders" ToRole="WorkOrderPart" />
+          <NavigationProperty Name="WorkOrderStatu" Relationship="MaintenanceModel.FK_WorkOrders_WorkOrderStatus" FromRole="WorkOrders" ToRole="WorkOrderStatus" />
+          <NavigationProperty Name="WorkOrdersAudits" Relationship="MaintenanceModel.FK_WorkOrdersAudit_WorkOrders" FromRole="WorkOrders" ToRole="WorkOrdersAudit" />
+        </EntityType>
+        <EntityType Name="FMWorkOrdersAudit">
+          <Key>
+            <PropertyRef Name="WorkOrderAuditId" />
+          </Key>
+          <Property Name="WorkOrderAuditId" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="AuditDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="WorkOrderId" Type="Int64" Nullable="false" />
+          <Property Name="ReportingUserId" Type="Int32" />
+          <Property Name="MeterGroup" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="AreaId" Type="Int32" Nullable="false" />
+          <Property Name="MeterId" Type="Int32" Nullable="false" />
+          <Property Name="Location" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="ParkingSpaceId" Type="Int64" />
+          <Property Name="Notes" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="ZoneId" Type="Int32" />
+          <Property Name="HighestSeverity" Type="Int32" Nullable="false" />
+          <Property Name="CreateDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SLADue" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="TechnicianId" Type="Int32" />
+          <Property Name="AssignedDate" Type="DateTime" Precision="3" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedById" Type="Int32" />
+          <Property Name="CrossStreet" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="ResolutionCode" Type="Int32" />
+          <Property Name="ResolutionDesc" Type="String" MaxLength="2000" Unicode="false" FixedLength="false" />
+          <Property Name="AssignmentState" Type="Int32" />
+          <Property Name="Mechanism" Type="Int32" />
+          <NavigationProperty Name="WorkOrder" Relationship="MaintenanceModel.FK_WorkOrdersAudit_WorkOrders" FromRole="WorkOrdersAudit" ToRole="WorkOrders" />
+        </EntityType>
+        <EntityType Name="FMWorkOrderStatu">
+          <Key>
+            <PropertyRef Name="WorkOrderStatusId" />
+          </Key>
+          <Property Name="WorkOrderStatusId" Type="Int32" Nullable="false" />
+          <Property Name="WorkOrderStatusDesc" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="WorkOrders" Relationship="MaintenanceModel.FK_WorkOrders_WorkOrderStatus" FromRole="WorkOrderStatus" ToRole="WorkOrders" />
+        </EntityType>
+        <Association Name="FK_WorkOrderPart_Parts">
+          <End Role="Parts" Type="MaintenanceModel.FMPart" Multiplicity="1" />
+          <End Role="WorkOrderPart" Type="MaintenanceModel.FMWorkOrderPart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parts">
+              <PropertyRef Name="PartId" />
+            </Principal>
+            <Dependent Role="WorkOrderPart">
+              <PropertyRef Name="PartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderEvent_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.FMWorkOrder" Multiplicity="1" />
+          <End Role="WorkOrderEvent" Type="MaintenanceModel.FMWorkOrderEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderEvent">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderImage_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.FMWorkOrder" Multiplicity="1" />
+          <End Role="WorkOrderImage" Type="MaintenanceModel.FMWorkOrderImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderImage">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrderPart_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.FMWorkOrder" Multiplicity="1" />
+          <End Role="WorkOrderPart" Type="MaintenanceModel.FMWorkOrderPart" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrderPart">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrders_WorkOrderStatus">
+          <End Role="WorkOrderStatus" Type="MaintenanceModel.FMWorkOrderStatu" Multiplicity="1" />
+          <End Role="WorkOrders" Type="MaintenanceModel.FMWorkOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrderStatus">
+              <PropertyRef Name="WorkOrderStatusId" />
+            </Principal>
+            <Dependent Role="WorkOrders">
+              <PropertyRef Name="WorkOrderStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkOrdersAudit_WorkOrders">
+          <End Role="WorkOrders" Type="MaintenanceModel.FMWorkOrder" Multiplicity="1" />
+          <End Role="WorkOrdersAudit" Type="MaintenanceModel.FMWorkOrdersAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkOrders">
+              <PropertyRef Name="WorkOrderId" />
+            </Principal>
+            <Dependent Role="WorkOrdersAudit">
+              <PropertyRef Name="WorkOrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MaintenanceModelStoreContainer" CdmEntityContainer="MaintenanceEntities">
+          <EntitySetMapping Name="FMParts">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMPart">
+              <MappingFragment StoreEntitySet="Parts">
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="MeterGroup" ColumnName="MeterGroup" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="PartDesc" ColumnName="PartDesc" />
+                <ScalarProperty Name="CostInCents" ColumnName="CostInCents" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrderEvents">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrderEvent">
+              <MappingFragment StoreEntitySet="WorkOrderEvent">
+                <ScalarProperty Name="WorkOrderEventId" ColumnName="WorkOrderEventId" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventCode" ColumnName="EventCode" />
+                <ScalarProperty Name="EventDateTime" ColumnName="EventDateTime" />
+                <ScalarProperty Name="SLADue" ColumnName="SLADue" />
+                <ScalarProperty Name="EventDesc" ColumnName="EventDesc" />
+                <ScalarProperty Name="AlarmTier" ColumnName="AlarmTier" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Automated" ColumnName="Automated" />
+                <ScalarProperty Name="Vandalism" ColumnName="Vandalism" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrderImages">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrderImage">
+              <MappingFragment StoreEntitySet="WorkOrderImage">
+                <ScalarProperty Name="WorkOrderImageId" ColumnName="WorkOrderImageId" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="ImageData" ColumnName="ImageData" />
+                <ScalarProperty Name="DateTaken" ColumnName="DateTaken" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrderParts">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrderPart">
+              <MappingFragment StoreEntitySet="WorkOrderPart">
+                <ScalarProperty Name="WorkOrderPartId" ColumnName="WorkOrderPartId" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrders">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrder">
+              <MappingFragment StoreEntitySet="WorkOrders">
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="ReportingUserId" ColumnName="ReportingUserId" />
+                <ScalarProperty Name="MeterGroup" ColumnName="MeterGroup" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="MeterId" ColumnName="MeterId" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="ParkingSpaceId" ColumnName="ParkingSpaceId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <ScalarProperty Name="HighestSeverity" ColumnName="HighestSeverity" />
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="SLADue" ColumnName="SLADue" />
+                <ScalarProperty Name="WorkOrderStatusId" ColumnName="WorkOrderStatusId" />
+                <ScalarProperty Name="TechnicianId" ColumnName="TechnicianId" />
+                <ScalarProperty Name="AssignedDate" ColumnName="AssignedDate" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+                <ScalarProperty Name="CrossStreet" ColumnName="CrossStreet" />
+                <ScalarProperty Name="ResolutionCode" ColumnName="ResolutionCode" />
+                <ScalarProperty Name="ResolutionDesc" ColumnName="ResolutionDesc" />
+                <ScalarProperty Name="AssignmentState" ColumnName="AssignmentState" />
+                <ScalarProperty Name="Mechanism" ColumnName="Mechanism" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrdersAudits">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrdersAudit">
+              <MappingFragment StoreEntitySet="WorkOrdersAudit">
+                <ScalarProperty Name="WorkOrderAuditId" ColumnName="WorkOrderAuditId" />
+                <ScalarProperty Name="AuditDateTime" ColumnName="AuditDateTime" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="WorkOrderId" ColumnName="WorkOrderId" />
+                <ScalarProperty Name="ReportingUserId" ColumnName="ReportingUserId" />
+                <ScalarProperty Name="MeterGroup" ColumnName="MeterGroup" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="MeterId" ColumnName="MeterId" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="ParkingSpaceId" ColumnName="ParkingSpaceId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <ScalarProperty Name="HighestSeverity" ColumnName="HighestSeverity" />
+                <ScalarProperty Name="CreateDateTime" ColumnName="CreateDateTime" />
+                <ScalarProperty Name="SLADue" ColumnName="SLADue" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TechnicianId" ColumnName="TechnicianId" />
+                <ScalarProperty Name="AssignedDate" ColumnName="AssignedDate" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="CreatedById" ColumnName="CreatedById" />
+                <ScalarProperty Name="CrossStreet" ColumnName="CrossStreet" />
+                <ScalarProperty Name="ResolutionCode" ColumnName="ResolutionCode" />
+                <ScalarProperty Name="ResolutionDesc" ColumnName="ResolutionDesc" />
+                <ScalarProperty Name="AssignmentState" ColumnName="AssignmentState" />
+                <ScalarProperty Name="Mechanism" ColumnName="Mechanism" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FMWorkOrderStatus">
+            <EntityTypeMapping TypeName="MaintenanceModel.FMWorkOrderStatu">
+              <MappingFragment StoreEntitySet="WorkOrderStatus">
+                <ScalarProperty Name="WorkOrderStatusId" ColumnName="WorkOrderStatusId" />
+                <ScalarProperty Name="WorkOrderStatusDesc" ColumnName="WorkOrderStatusDesc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

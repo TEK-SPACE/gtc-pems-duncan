@@ -1,0 +1,254 @@
+﻿
+@using Duncan.PEMS.Business.Globalization
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie10 lt-ie9" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/css/main")
+    @Styles.Render("~/css/Kendo")
+    @RenderSection("Styles", required: false)
+    @RenderSection("header", required: false)
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-plugins")
+    @Scripts.Render("~/bundles/kendo")
+    @Scripts.Render("~/bundles/common")
+
+    @GlobalizationManager.SetKendoCulture(ViewData[Constants.ViewData.CurrentLocale].ToString())
+    @GlobalizationManager.Force24HourClock((bool)ViewData[Constants.ViewData.CurrentTimeFormatIs24])
+
+    @RenderSection("Scripts", required: false)
+    <script type="text/javascript" src="//use.typekit.net/hmq2dup.js"> </script>
+    <script type="text/javascript">
+ try {
+     Typekit.load();
+ } catch (e) {
+ } </script>
+
+    <!--[if lt IE 9]>
+        @Scripts.Render("~/bundles/IEcompat")
+    <![endif]-->
+
+
+</head>
+@{
+    if (ViewData["ShowLandingPage"] == null)
+    {
+        @Html.Raw("<body id=\"asset-inquiry\" style=\"background: #fff url(/images/body-bg.gif) repeat-y left top;\">")
+    }
+    else
+    {
+        @Html.Raw("<body id=\"client-inquiry\" style=\"background: #fff url(/images/body-bg.gif) repeat-y left top;\">")
+    }
+}
+
+<div id="wrapper">
+    <div id="wrapper2">
+        <header id="header">
+            <a href='/'>
+                <div id="logo"></div>
+            </a>
+            <div id="client">@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentCity]</div>
+            <div id="header-right">
+                <div id="header-links">
+                    @{ Html.RenderAction("Logout", "Account", new { Area = "Shared" }); }
+                    @{ Html.RenderAction("ChangeCity", "Account", new { Area = "Shared", userName = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentUser] }); }
+                    @{ Html.RenderAction("GetLink", "Help", new
+                                                                 {
+                                                                     Area = "Shared",
+                                                                     currentController = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController],
+                                                                     currentArea = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea],
+                                                                     currentAction = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction],
+                                                                     currentLocale = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocale]
+                                                                 }); }
+                    <a href="/" id="home" title="Home"></a>
+                </div>
+                <div id="date-time">@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]</div>
+                <div id="print-user">User: @ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentUser]</div>
+            </div>
+        </header>
+        <div id="content-wrapper">
+
+
+            <!--navigation-->
+            <div id="left-wrapper">
+                @{ Html.RenderAction("Index", "Menu", new { Area = "Shared", currentCity = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentCity], currentUserName = WebSecurity.CurrentUserName }); }
+                <footer id="footer">
+                    <span>&copy; @DateTime.Now.Year</span> CivicSmart, Inc
+                    @ViewData[Constants.ViewData.CurrentRevision]
+                </footer>
+            </div>
+            <!--content-->
+            <div id="content">
+                <div id="page-title" class="cf">
+                    @RenderSection("PageHeader", required: false)
+                    <div style="width: 350px; float: right;padding-top:11px;">
+                        <a id="print" href="javascript:window.print();" class="uses-grid-filter">@HttpContext.GetGlobalResourceObject(ResourceTypes.Glossary, "Print Page")</a>
+                        @RenderSection("ExportButtons", required: false)
+                    </div>
+                </div>
+                <div id="filter-wrapper" class="cf">
+                    @if (IsSectionDefined("PageFilter"))
+                    {
+                        <span class="filter-collapse open">Filter</span>
+                        <div id="filter">
+
+                            @RenderSection("PageFilter", required: false)
+
+                            <div id="filter-collapse-inside"></div>
+                        </div>
+                    }
+                </div>
+                @if (IsSectionDefined("PageFilter"))
+                {
+                    <script>
+                        $(document).ready(function () {
+
+                            var myCustomerId = '@ViewBag.CurrentCityID';
+
+                            if (myCustomerId == 5001) {
+
+                                //** It is NOLA Customer and hence remove help btn temporarily as requested by Justin (DTPEMS-160)
+                                $('a#help').css('display', 'none');
+                            }
+
+                            var demo = new jQueryCollapse($("#filter-wrapper"), { persist: false });
+                            $('#filter-collapse-inside').click(function () {
+                                demo.close();
+                            });
+                        });
+                    </script>
+                }
+                <div class="grid cf">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@(Html.Kendo().Window()
+      .Name("pemsPopup")
+      .Content(@<text>
+        <div id="pemsPopupMessageIdSection" style="display: none; padding-bottom: .25em">
+            <div id="pemsPopupMessageId"></div>
+        </div>
+        <div id="pemsPopupMessageContent">
+        </div>
+        <div id="backgroundMessageButtons" style="float: right">
+            <input type="button" title="Print" value="Print Message" onclick=" javascript: pemsPopupPrint(); " />
+            <input type="button" class="button previous" title="Close" value="Close" onclick=" javascript: $('#pemsPopup').data('kendoWindow').close(); " />
+        </div>
+    </text>)
+          .Draggable().Resizable().Width(400).Scrollable(true).Modal(true).Visible(false)
+)
+
+
+
+<div id="backgroundPopup"></div>
+@{
+
+    string pemsPopupMessageString = string.Empty;
+    string pemsPopupCodeString = string.Empty;
+    if (ViewData["__errorItem"] != null)
+    {
+        Duncan.PEMS.Entities.Errors.ErrorItem item = new Duncan.PEMS.Entities.Errors.ErrorItem();
+        item = (Duncan.PEMS.Entities.Errors.ErrorItem)ViewData["__errorItem"];
+        pemsPopupMessageString = item.ErrorMessage;
+        pemsPopupCodeString = item.ErrorCode;
+        ViewData["__errorItem"] = null;
+
+        <script type="text/ecmascript">
+                        $(document).ready(function () {
+                            var message = '@pemsPopupMessageString';
+                            var code = '@pemsPopupCodeString';
+                            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+code, message);
+                        });
+
+        </script>
+    }
+}
+
+
+@* Begin idle timeout handler and dialog *@
+
+@(Html.Kendo().Window()
+      .Name("pemsTimeoutPopup")
+      .Content(@<text>
+        <div id="pemsPopupMessageIdSection" style="display: none; padding-bottom: .25em">
+            <div>Your session is about to expire!</div>
+        </div>
+        <div id="pemsPopupMessageContent">
+            You will be logged off in <span id="dialog-countdown" style="font-weight: bold"></span>seconds.
+            <p>Do you want to continue your session?</p>
+        </div>
+        <div id="backgroundMessageButtons" style="float: right">
+            <input type="button" id="timeoutContinue" title="Continue" value="Continue" onclick="$('#pemsTimeoutPopup').data('kendoWindow').close();" />
+            <input type="button" class="button previous" title="Close" value="Close" onclick=" javascript: $('#pemsTimeoutPopup').data('kendoWindow').close(); $.idleTimeout.options.onTimeout.call(this); " />
+        </div>
+    </text>)
+          .Draggable().Resizable().Width(400).Scrollable(true).Modal(true).Visible(false)
+)
+
+<script>
+
+    // Cache a reference to the countdown element so we don't have to query the DOM for it on each ping.
+    var $countdown = $("#dialog-countdown");
+
+    @{
+        string urlLogoff = new UrlHelper(Request.RequestContext).RouteUrl(null, new { action = "LogOff", controller = "Account", area = "Shared" }, Request.Url.Scheme);
+        string urlPing = new UrlHelper(Request.RequestContext).RouteUrl(null, new { action = "PingServer", controller = "Sessions", area = "Shared" }, Request.Url.Scheme);
+    }
+
+
+    // start the idle timer plugin
+    $.idleTimeout('#pemsTimeoutPopup', '#timeoutContinue', {
+        idleAfter: '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeout]',
+        pollingInterval: '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeoutPolling]',
+        warningLength: '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeoutWarning]',
+        keepAliveURL: '@urlPing',
+        serverResponseEquals: 'OK',
+        onTimeout: function () {
+            var popup = $(this).data("kendoWindow");
+            if (popup != null) {
+                popup.close();
+            }
+            window.location = '@urlLogoff';
+        },
+        onIdle: function () {
+            var popup = $(this).data("kendoWindow");
+            popup.title("PEMS Session Timeout");
+            popup.center();
+            popup.open();
+        },
+        onCountdown: function (counter) {
+            $countdown.html(counter); // update the counter
+        }
+    });
+
+    @* End idle timeout handler and dialog *@
+
+
+    $(document).ready(function () {
+
+    });
+</script>
+
+</body>
+</html>

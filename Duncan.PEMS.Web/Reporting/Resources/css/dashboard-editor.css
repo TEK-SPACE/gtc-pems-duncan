@@ -1,0 +1,31 @@
+﻿#dashEditorDiv {
+}
+
+#dashEditorGrid {
+}
+
+#dashEditorTable {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dashEditorRowTr {
+}
+
+.dashEditorRowTd {
+}
+
+.dashEditorCellTable {
+	border: 1px solid #0d70cd;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.dashEditorCellTable tr {
+	height: 100%;
+}
+
+.dashEditorCellTable tr td {
+	background-color: #ffe4c4;
+	border: 1px solid #0d70cd;
+}

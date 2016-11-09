@@ -1,0 +1,39 @@
+﻿@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _______________________________________________________________________________________________
+ * 
+ * 01/23/2014           Sergey Ostrerov            DPTXPEMS-74 - AssetId isn't available in grid page although it's available in filter
+ * 
+ * *****************************************************************************************************************************************************/ *@
+
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Events.ConnectionEventModel>
+
+@(Html.Kendo().Grid( Model )
+      .Name( "CurrentGrid" )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Columns( columns =>
+                    {
+                        columns.Bound(p => p.DateTime).ClientTemplate("#= DateTimeDisplay #").Width(175);
+                        columns.Bound( p => p.EventUID ).Width( 100 ).ClientTemplate( "#= CreateDetailLink(EventUID) #" );
+                        columns.Bound( p => p.AssetType ).Width( 150 );
+                        columns.Bound(p => p.AssetId).Width(150);
+                        columns.Bound( p => p.AssetName ).Width( 175 );
+                        columns.Bound( p => p.ConnectionStatus ).Width( 150 );
+                        columns.Bound( p => p.ErrorDescription ).Width( 150 );
+                        columns.Bound(p => p.EndTime).ClientTemplate("#= EndTimeDisplay #").Width(175);
+                        columns.Bound( p => p.Period ).Width( 100 );
+                        columns.Bound( p => p.Port ).Width( 75 );
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+     .Pageable(pager => pager.PageSizes(true).PageSizes(new int[] { 100,250,500,1000 }))
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events(events => events.DataBound("OnGridDataBound"))
+      .Events(events => events.Change("OnRowSelected"))
+         .Events(events => events.ColumnResize("OnRowResized"))
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetConnectionEvents", "Events" ).Data("additionalData") )
+      ))

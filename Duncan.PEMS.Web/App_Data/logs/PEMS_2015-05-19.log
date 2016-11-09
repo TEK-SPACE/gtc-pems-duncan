@@ -1,0 +1,152 @@
+2015-05-19 15:27:04.5302 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:04.6972 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2015-05-19 15:27:04.6972 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:27:04.6972 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:06.3563 | Error | Duncan.PEMS.Web.Areas.city.Controllers.HomeController.Index | ERROR IN Index method (Homecontroller)
+2015-05-19 15:27:17.4039 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:17.7670 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2015-05-19 15:27:17.7710 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:17.7710 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:18.2990 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetAssetTypes_HomePage | ERROR IN GetAssetTypes Method (GIS Reports)
+2015-05-19 15:27:18.3190 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:18.3960 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 15:27:18.3960 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:18.3960 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:18.5060 | Error | Duncan.PEMS.Web.Areas.city.Controllers.GISController.GetCustomerGridDetails_NewHome | ERROR IN GetCustomerGridDetails Method (GIS Reports)
+2015-05-19 15:27:18.8300 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:18.9440 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 15:27:18.9440 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:18.9440 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:18.9580 | Error | Duncan.PEMS.Web.Areas.city.Controllers.GISController.GetCustomerGridDetails_NewHome | ERROR IN GetCustomerGridDetails Method (GIS Reports)
+2015-05-19 15:27:53.7730 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:53.8050 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2015-05-19 15:27:53.8050 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:27:53.8050 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:54.3481 | Error | Duncan.PEMS.Web.Areas.city.Controllers.HomeController.Index | ERROR IN Index method (Homecontroller)
+2015-05-19 15:27:57.5992 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:57.6942 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2015-05-19 15:27:57.6942 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:57.6942 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:58.1373 | Error | Duncan.PEMS.Business.GIS.GISFactory.GetAssetTypes_HomePage | ERROR IN GetAssetTypes Method (GIS Reports)
+2015-05-19 15:27:58.2133 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:58.3123 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 15:27:58.3123 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:58.3123 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:58.3293 | Error | Duncan.PEMS.Web.Areas.city.Controllers.GISController.GetCustomerGridDetails_NewHome | ERROR IN GetCustomerGridDetails Method (GIS Reports)
+2015-05-19 15:27:58.7263 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:27:58.8083 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 15:27:58.8083 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:27:58.8083 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:27:58.8173 | Error | Duncan.PEMS.Web.Areas.city.Controllers.GISController.GetCustomerGridDetails_NewHome | ERROR IN GetCustomerGridDetails Method (GIS Reports)
+2015-05-19 15:28:10.0369 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:28:10.0770 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 15:28:10.0770 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:28:10.0770 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:28:17.9964 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:28:18.0784 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:28:18.0784 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:28:18.0784 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:28:18.6604 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:28:19.0925 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:28:27.6380 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:28:27.7810 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:28:27.7810 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:28:27.7810 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:28:28.1580 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:28:28.6660 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:28:43.4209 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:28:43.5349 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:28:43.5349 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:28:43.5349 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:28:43.9529 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:28:44.3189 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:29:32.9497 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:29:33.0517 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:29:33.0517 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:29:33.0517 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:29:33.5957 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:29:34.0498 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:29:39.5781 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:29:39.6211 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 15:29:39.6211 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:29:39.6211 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:29:45.8124 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:29:45.9434 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:29:45.9434 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:29:45.9434 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:29:46.2795 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:29:46.6805 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:32:58.2534 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:32:58.3944 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:32:58.3944 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:32:58.3944 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:32:58.8655 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:32:59.3315 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:39:45.9828 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:39:46.0488 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 15:39:46.0488 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:39:46.0488 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:39:57.3254 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:39:57.4604 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:39:57.4614 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:39:57.4614 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:39:57.9194 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:39:58.2915 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:40:55.7677 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:40:55.8348 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 15:40:55.8348 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 15:40:55.8348 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:41:04.0152 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 15:41:04.1342 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 15:41:04.1342 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 15:41:04.1342 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 15:49:34.3424 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN Stored Procedure sp_SettledBatch (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 15:49:34.8184 | Error | Duncan.PEMS.Business.CustomerTransactions.CustomerTransactionFactory.GetRevenueAuditsummary | ERROR IN GetRevenueAuditsummary Method (Transaction Menu - Rev Aud Summary Report)
+2015-05-19 16:00:31.7520 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:00:34.2852 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: Index, A:Home
+2015-05-19 16:00:34.2852 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 16:00:34.2852 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:05.4089 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:05.5439 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetAssetTypes_HomePage, A:GIS
+2015-05-19 16:01:05.5439 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:05.5439 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:05.7530 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:05.8830 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 16:01:05.8830 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:05.8830 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:06.7650 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:06.8720 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetCustomerGridDetails_NewHome, A:GIS
+2015-05-19 16:01:06.8720 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:06.8730 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:10.2582 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:10.2972 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 16:01:10.2972 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 16:01:10.2972 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:20.7678 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:20.8738 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 16:01:20.8738 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:20.8738 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:35.2726 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:35.3836 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetEmptyResult, A:Transactions
+2015-05-19 16:01:35.3836 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:35.3836 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:35.4067 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:35.5047 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: RevenueAuditDetails2, A:Transactions
+2015-05-19 16:01:35.5047 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:35.5047 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:36.2557 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:36.3477 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetFilterValues, A:Transactions
+2015-05-19 16:01:36.3477 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:36.3477 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:36.7267 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:36.8377 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditDetails_2, A:Transactions
+2015-05-19 16:01:36.8377 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:36.8377 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:51.3606 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:51.4066 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed, C: RevenueAuditSummary, A:Transactions
+2015-05-19 16:01:51.4066 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Allowed Pass execution to action
+2015-05-19 16:01:51.4066 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit
+2015-05-19 16:01:53.1617 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Enter
+2015-05-19 16:01:53.2677 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction, C: GetRevenueAuditSummary, A:Transactions
+2015-05-19 16:01:53.2677 | Debug | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | UndefinedAction Pass execution to action
+2015-05-19 16:01:53.2677 | Trace | Duncan.PEMS.Framework.Controller.PemsController.OnActionExecuting | Exit

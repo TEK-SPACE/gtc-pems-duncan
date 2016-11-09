@@ -1,0 +1,226 @@
+﻿@model Duncan.PEMS.Entities.Events.EventCodesViewModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Entities.Events
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Customer Event Codes");
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Edit") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Event Codes")</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Id"): </div>
+    <div class="customer_text">@Html.DisplayFor(m => m.CustomerId)</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name"): </div>
+    <div class="customer_text">@Html.DisplayFor(m => m.CustomerDisplayName)</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_new">@Html.DisplayFor(m => m.Status.Status)</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor(m => m.Status.StatusDate)</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink("Identification", "EditCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Assets", "EditAssets", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Payments", "EditPayments", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Rules", "EditRules", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Custom Labels", "EditCustomLabels", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Custom Grids", "EditCustomGrids", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink("Event Codes", "EditEventCodes", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Areas").ToString(), "EditAreas", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Maintenance Schedule" ).ToString(), "EditMaintenanceSchedule", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>*@
+
+    @if (Model.Status.StatusId == CustomerStatus.New)
+    {
+        <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Activate").ToString(), "ActivateCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    }
+</div>
+<div class="grid-header">
+    @Html.ActionLink("Create", "Create", "EventCodes", new {customerId = @Model.CustomerId}, new { @class = "button important", @type = "button", style="float:left" })
+    @Html.ActionLink("Import", "Upload", "EventCodesUpload", new {customerId =  @Model.CustomerId}, new { @class = "button", @type = "button", style="float:left"  })
+
+<div style="padding-left: 50px; padding-top:10px; float:left; ">
+    <a style="text-decoration: none" id="exportExcel" onclick="return setExportUrls();"  href="@Url.Action( "ExportEventCodesToExcel", new {filter = '~', customerId = @Model.CustomerId} )">
+        <img src='/images/export-excel.png' height="20"/>
+    </a>
+    <a style="text-decoration: none" href="@Url.Action( "ExportEventCodesToCsv", new {customerId = @Model.CustomerId})">
+        <img src='/images/export-csv.png' height="20"/>
+    </a>
+    <a style="text-decoration: none" href="@Url.Action( "ExportEventCodesToPdf",new {customerId = @Model.CustomerId})">
+        <img src='/images/export-pdf.png' height="20"/>
+    </a>
+</div>
+    </div>
+@using (Html.BeginForm("EditEventCodes", "Customers", FormMethod.Post, new { @class = "customer-form", @id = "createCustomerIdentification" }))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+ 
+    <div class="customer_tab_content">
+
+        @(Html.Kendo().Grid<EventCodeViewModel>(Model.Codes)
+
+              .Name("CurrentGrid")
+              .Columns(columns =>
+                  {
+
+                      columns.Bound(p => p.Id).ClientTemplate(@Html.ActionLink("#= Id #", "Edit", "EventCodes", new
+                      {
+                          customerId = @Model.CustomerId,
+                          eventSourceId = "#= SourceId #",
+                          eventCodeId = "#= Id #"
+                      }, new { @onclick = "" }).ToHtmlString()).Filterable(fil => fil.UI("eventCodeFilter")).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Event Code").ToString());
+                      columns.Bound(p => p.AlarmTier).Width(125).Filterable(fil => fil.UI("alarmSeverityFilter")).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Alarm Severity").ToString());
+                      columns.Bound(p => p.DescAbbrev).Width(125).Filterable(false).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Description").ToString());
+                      columns.Bound(p => p.SLAMinutes).Width(100).Filterable(false).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "SLA Duration").ToString());
+                      columns.Bound(p => p.Type).Width(125).Filterable(fil => fil.UI("eventTypeFilter")).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Event Type").ToString());
+                      columns.Bound(p => p.AssetType).Filterable(fil => fil.UI("assetTypeFilter")).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Asset Type").ToString());
+                  })
+            //do not make this a virtual scrolling table, otherwise it wont pick up the checked items that arent visible to the user
+              .Scrollable()
+              .Sortable()
+              .Resizable(resize => resize.Columns(true))
+              .Filterable(filterable => filterable.Extra(false).Messages(msg => msg.Info("")).Operators(operators => operators.ForString(str => str.Clear().Contains("Starts with")).ForNumber(num => num.Clear().IsEqualTo("Equals"))))
+              .DataSource(dataSource => dataSource.Ajax().ServerOperation(false))
+              )
+        
+
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="CONTINUE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue")</button>
+            <button type="submit" name="submitButton" class="button" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            <button type="submit" name="submitButton" class="button previous" value="RETURN">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+        </div>
+
+    </div>
+}
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function() {
+        setExportUrls();
+
+    });
+    function setExportUrls() {
+        var grid = $('#CurrentGrid').data('kendoGrid');
+
+        // ask the parameterMap to create the request object for you
+        var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+            .options.parameterMap({
+                filter: grid.dataSource.filter()
+            });
+        var $excelLink = $('#exportExcel');
+
+        var href = $excelLink.attr('href');
+        href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+        $excelLink.attr('href', href);
+
+        return true;
+    }
+
+
+    function assetTypeFilter(element) {
+        var data = @Html.Raw(Json.Encode(@Model.Codes.Select(x => x.AssetType).Distinct().ToArray()));
+         element.kendoAutoComplete({
+             filter: "contains",
+             dataSource: data
+         });
+     }
+    function eventTypeFilter(element) {
+        var data = @Html.Raw(Json.Encode(@Model.Codes.Select(x => x.Type).Distinct().ToArray()));
+         element.kendoAutoComplete({
+             filter: "contains",
+             dataSource: data
+         });
+     }
+    function eventCodeFilter(element) {
+        var data = @Html.Raw(Json.Encode(@Model.Codes.Select(x => x.Id.ToString()).Distinct().ToArray()));
+           element.kendoAutoComplete({
+               filter: "contains",
+               dataSource: data
+           });
+       }
+    function alarmSeverityFilter(element) {
+        var data = @Html.Raw(Json.Encode(@Model.Codes.Select(x => x.AlarmTier).Distinct().ToArray()));
+         element.kendoAutoComplete({
+             filter: "contains",
+             dataSource: data
+         });
+     }
+
+
+</script>
+
+
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        Last Modified by: @Html.DisplayFor(m => m.Status.ModifiedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.ModifiedOn)
+    </div>
+    <div class="customer_created_by">
+        Created by: @Html.DisplayFor(m => m.Status.CreatedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.CreatedOn)
+    </div>
+</div>
+
+
+@section Styles
+{
+    <style>
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+          .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker { background-color: transparent !important; }
+
+    </style>
+}

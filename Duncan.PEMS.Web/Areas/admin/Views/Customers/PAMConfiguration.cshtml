@@ -1,0 +1,701 @@
+﻿@model Duncan.PEMS.Entities.Customers.CustomerPAMConfigurationModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "PAM Configuration");
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Edit")  / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "PAM Configuration")</span></h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .areas-existing-grid {
+            float: left;
+            width: 55% !important;
+        }
+
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+        }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Id"): </div>
+    <div class="customer_text">@Html.DisplayFor(m => m.CustomerId)</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name"): </div>
+    <div class="customer_text">@Html.DisplayFor(m => m.DisplayName)</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_new">@Html.DisplayFor(m => m.Status.Status)</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor(m => m.Status.StatusDate)</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Identification").ToString(), "EditCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Assets").ToString(), "EditAssets", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Payments").ToString(), "EditPayments", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Rules").ToString(), "EditRules", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Labels").ToString(), "EditCustomLabels", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Grids").ToString(), "EditCustomGrids", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Event Codes").ToString(), "EditEventCodes", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Areas").ToString(), "EditAreas", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Maintenance Schedule").ToString(), "EditMaintenanceSchedule", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+   @if (Model.Status.StatusId == CustomerStatus.New)
+    {
+        <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Activate").ToString(), "ActivateCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    }
+</div>
+
+
+@using (Html.BeginForm("PAMConfiguration", "Customers", FormMethod.Post, new { @class = "customer-form", @id = "createCustomerAreas" }))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+
+    <!-- Hidden form fields for form save.  These will contain new fields for associated form areas. -->
+    <input id="NewAreas" name="NewAreas" type="hidden" value="" />
+    <input id="NewZones" name="NewZones" type="hidden" value="" />
+    <input id="NewCustomGroup1s" name="NewCustomGroup1s" type="hidden" value="" />
+    <input id="NewCustomGroup2s" name="NewCustomGroup2s" type="hidden" value="" />
+    <input id="NewCustomGroup3s" name="NewCustomGroup3s" type="hidden" value="" />
+
+    <div class="customer_tab_content">
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "PAM Active Customer")</div>
+            <div class="checkbox">
+                <input type="checkbox" id="ChkCustomerId" name="ChkCustomerId" data-bind="checked: CustomerId">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Used PAM")
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="ChkExpTimeByPAM" name="ChkExpTimeByPAM" data-bind="checked: ExpTimeByPAM">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return Expiry Time")
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="ChkResetImin" name="ChkResetImin" data-bind="checked: ResetImin">&nbsp;@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Reset Min")
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cluster ID"):</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="100" value="0" name="Clusterid" id="Clusterid" />
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Grace Period")@Html.Raw(": ")</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="60" value="0" name="GracePeriod" id="GracePeriod" />&nbsp;Minutes
+            </div>
+
+            <button type="button" name="AddButton" class="button areas-new-button" style="margin-left:0px; margin-top:19px;" onclick="AddGridRow();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add")</button>
+            <div id="DivCustomerDetails" class="grid-content" style="margin-left:0px; margin-top:8px;">
+
+                @(Html.Kendo().Grid<Duncan.PEMS.Entities.Customers.PAMGracePeriodModel>()
+
+        .Name("grdDetailsPAM")
+        .Columns(col =>
+        {
+            col.Bound(a => a.Clusterid).Title("Cluster ID").Width("90px");
+            col.Bound(a => a.GracePeriod).Title("Grace Period").Width("90px");
+
+            col.Command(command =>
+            {
+
+                command.Destroy().Text("Remove");
+            }).Width("90px");
+
+        }
+            )
+
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(true)
+        //  .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Reorderable(reoder => reoder.Columns(true))
+        .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                 .Model(model =>
+                        {
+                            model.Id(a => a.Clusterid);
+                            model.Field(a => a.Clusterid).Editable(false);
+                            model.Field(a => a.GracePeriod).Editable(true);
+
+                        })
+
+                 .Create(create => create.Action("AddGracePeriod", "Customers").Data("GetAllFilterData").Type(HttpVerbs.Post))
+                .Update(update => update.Action("AddGracePeriod", "Customers").Data("GetAllFilterData").Type(HttpVerbs.Post))
+                  .Destroy(destroy => destroy.Action("DeleteGracePeriod", "Customers").Data("GetAllFilterData").Type(HttpVerbs.Post))
+                .Read(read => read.Action("GetGracePeriod", "Customers").Data("GetAllFilterData"))
+                 .Events(e => e.RequestEnd("onRequestEnd"))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                )
+
+
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="customer_tab_content">
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "PAM Cluster Configuration")</div>
+            <div>
+
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cluster ID"):</div>
+
+                    @(Html.Kendo().DropDownList()
+                .Name("ClusterIDList")
+                .OptionLabel("Select Cluster ID")
+                .HtmlAttributes(new { style = "width: 270px; font-size: 14px;" })
+.DataTextField("Clusterid")
+.DataValueField("Clusterid")
+
+                                         .SelectedIndex(0)
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Customers/ClusterIDList").Data("GetAllFilterData");
+                                    });
+                                })
+
+                    )
+
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Description"):</div>
+                    <input id="TextDescription" type="text" maxlength="50" style="width: 264px;" />
+                </div>
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter ID")@Html.Raw(": ")</div>
+                    @(Html.Kendo().DropDownList()
+                .Name("MeterIDList")
+                .OptionLabel("Select Meter ID")
+                .HtmlAttributes(new { style = "width: 270px; font-size: 14px;" })
+    .DataTextField("MeterId")
+    .DataValueField("MeterId")
+
+                                         .SelectedIndex(0)
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Customers/MeterIDList").Data("GetAllFilterData");
+                                    });
+                                })
+
+                    )
+                </div>
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Range Start")@Html.Raw(": ")</div>
+                    <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="200" value="0" name="BayRangeStart" id="BayRangeStart" />&nbsp;
+
+
+                </div>
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Range End")@Html.Raw(": ")</div>
+                    <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="200" value="0" name="BayRangeEnd" id="BayRangeEnd" />&nbsp;
+
+
+                </div>
+
+                <button type="button" name="AddButton" class="button areas-new-button" onclick="AddClusterGridRow();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add")</button>
+           
+            <div id="DivCustomerDetails" class="grid-content" style="margin-left:0px; margin-top:8px; ">
+
+
+
+                @(Html.Kendo().Grid<Duncan.PEMS.Entities.Customers.PAMClusters>()
+
+        .Name("grdDetailsPAMMeters")
+        .Columns(col =>
+        {
+            col.Bound(a => a.Clusterid).Title("Cluster ID").Width("90px");
+            col.Bound(a => a.Description).Title("Description").Width("90px");
+            col.Bound(a => a.MeterId).Title("Meter ID").Width("100px");
+            col.Bound(a => a.Hostedbaystart).Title("Bay Range Start").Width("130px");
+            col.Bound(a => a.Hostedbayend).Title("Bay Range End").Width("130px");
+            col.Command(command =>
+            {
+
+                command.Destroy().Text("Remove");
+            }).Width("90px");
+
+        }
+            )
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(true)
+        //  .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+        .Editable(editable => editable.Mode(GridEditMode.InCell))
+        .Reorderable(reoder => reoder.Columns(true))
+        .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Single))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                 .Model(model =>
+                        {
+                            model.Id(a => a.Clusterid);
+                            model.Field(a => a.Clusterid).Editable(false);
+                            model.Field(a => a.MeterId).Editable(false);
+                            model.Field(a => a.Hostedbaystart).Editable(true);
+
+                            model.Field(a => a.Hostedbayend).Editable(true);
+                            model.Field(a => a.Description).Editable(true);
+
+
+                        })
+          .Create(create => create.Action("AddPAMClusterMeter", "Customers").Data("GetClusterFilterData").Type(HttpVerbs.Post))
+                .Update(update => update.Action("AddPAMClusterMeter", "Customers").Data("GetClusterFilterData").Type(HttpVerbs.Post))
+            .Destroy(destroy => destroy.Action("DeletePAMClusterMeter", "Customers").Data("GetAllFilterData").Type(HttpVerbs.Post))
+                .Read(read => read.Action("GetPAMClusterMeter", "Customers").Data("GetAllFilterData"))
+ .Events(e => e.RequestEnd("onRequestEndGridCluster"))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+                )
+
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="customer_actions">
+            <button type="button" name="Button2" class=" button" value="SAVE" onclick="SaveAll()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous returnButton" })
+        </div>
+
+
+    </div>
+}
+
+@section Scripts
+{
+}
+
+@Scripts.Render("~/bundles/kendo")
+
+
+
+
+<script type="text/javascript" src="/scripts/spin.min.js"></script>
+<script type="text/javascript">
+    var spinner;
+
+    var viewModel = kendo.observable({
+        CustomerId: @Html.Raw(Model.PAMActiveCust.CustomerIDPAM).ToString().ToLower(),
+
+        ExpTimeByPAM: @Html.Raw(Model.PAMActiveCust.ExpTimeByPAM).ToString().ToLower(),
+        ResetImin: @Html.Raw(Model.PAMActiveCust.ResetImin).ToString().ToLower(),
+
+
+    });
+
+    $(document).ready(function() {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+    });
+
+    function onRequestEnd (e) {
+
+        if (e.type == "create" || e.type == "update" || e.type == "destroy") {
+            showProgressBar(true)
+            var grid = $("#grdDetailsPAM").data("kendoGrid");
+
+            var Clusterdropdown = $("#ClusterIDList").data("kendoDropDownList");
+
+            grid.dataSource.read();
+            Clusterdropdown.dataSource.read();
+        }
+        if (e.type == "read")
+        {
+            showProgressBar(false)
+        }
+    }
+
+
+    function onRequestEndGridCluster (e) {
+
+        if (e.type == "create" || e.type == "update" || e.type == "destroy") {
+            showProgressBar(true)
+            var gridCluster = $("#grdDetailsPAMMeters").data("kendoGrid");
+
+
+            gridCluster.dataSource.read();
+        }
+        if (e.type == "read")
+        {
+            showProgressBar(false)
+        }
+    }
+
+    function showProgressBar(visisbility) {
+
+        if (visisbility == false) {
+            if (spinner != null || spinner != undefined) {
+                spinner.stop() //** hide the PB
+            }
+        } else {
+            //** Create spinner and display PB
+            var opts = {
+                lines: 13, // The number of lines to draw
+                length: 0, // The length of each line
+                width: 5, // The line thickness
+                radius: 15, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 48, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: '#000', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: '450px', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
+            };
+            spinner = new Spinner(opts).spin(document.body);
+        }
+
+    }
+
+
+    function GetAllFilterData() {
+
+        var CustomerId = '@Model.CustomerId';
+
+        return {
+            CustomerId: CustomerId
+        }
+    }
+ 
+    function GetClusterFilterData(e) {
+        var metergroup;
+        $.ajax({
+            url: '@Url.Action( "GetGroupID" )',
+            data: { customerId: '@Model.CustomerId',MeterId: e.MeterId},
+            type: 'POST',
+            success: function (GID) {
+                meterGroup=GID;
+                if (meterGroup==1)
+                {
+                    if(parseInt(e.Hostedbaystart) > parseInt(e.Hostedbayend) )
+                    {
+                        alert(e.Hostedbaystart +" - "+ e.Hostedbayend +" BayRangeEnd should greater than BayRangeStart");
+                        return false;
+
+                    }
+
+                    var grid = $("#grdDetailsPAMMeters").data("kendoGrid");
+
+
+                    var result = grid.dataSource.data();
+
+                    for (i = 0; i < result.length; i++) {
+                        if (result[i].MeterId != e.MeterId ) {
+                            if(parseInt(result[i].Hostedbaystart) <= parseInt(e.Hostedbaystart) && parseInt(result[i].Hostedbayend) >= parseInt(e.Hostedbaystart) )
+                            {
+                                alert(e.Hostedbaystart +" - " + e.Hostedbayend + " BayRange already exists")
+                                return false;
+                            }
+                            if(parseInt(result[i].Hostedbaystart) <= parseInt(e.Hostedbayend) && parseInt(result[i].Hostedbayend) >= parseInt(e.Hostedbayend) )
+                            {
+                                alert(e.Hostedbaystart +" - " + e.Hostedbayend + " BayRange already exists")
+                                return false;
+                            }
+
+                            if(parseInt(e.Hostedbaystart) <= parseInt(result[i].Hostedbaystart) && parseInt(e.Hostedbayend) >= parseInt(result[i].Hostedbaystart) )
+                            {
+                                alert(e.Hostedbaystart +" - " + e.Hostedbayend + " BayRange already exists")
+                                return false;
+                            }
+
+                            if(parseInt(e.Hostedbaystart) <= parseInt(result[i].Hostedbayend) && parseInt(e.Hostedbayend) >= parseInt(result[i].Hostedbayend) )
+                            {
+                                alert(e.Hostedbaystart +" - " + e.Hostedbayend + " BayRange already exists")
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        var CustomerId = '@Model.CustomerId';
+
+        return {
+            CustomerId: CustomerId
+        }
+    }
+
+    function AddGridRow()
+    {
+        var Clusteridval =$("#Clusterid").val();
+        var  GracePeriod=$("#GracePeriod").val();
+
+        var grid = $("#grdDetailsPAM").data("kendoGrid");
+
+        var result = grid.dataSource.data();
+
+        for (i = 0; i < result.length; i++) {
+
+
+            if (result[i].Clusterid == Clusteridval) {
+                alert(Clusteridval+ " Cluster ID already exists")
+                return false;
+            }
+        }
+        var gridrow =  { Clusterid: Clusteridval, GracePeriod: GracePeriod } ;
+        grid.dataSource.insert(gridrow).set("dirty", true);
+
+    }
+
+    function AddClusterGridRow()
+    {
+
+
+        var ClusterId = $("#ClusterIDList").val();
+        if (ClusterId == "Select ClusterID" || ClusterId == "" ) {
+            alert("Select ClusterID");
+            return;
+        }
+
+        var MeterId = $("#MeterIDList").val();
+        if (MeterId == "Select MeterID") {
+            alert("Select MeterID");
+            return;
+        }
+
+
+        var TextDescription =$("#TextDescription").val();
+        var  BayRangeStart=$("#BayRangeStart").val();
+        var  BayRangeEnd=$("#BayRangeEnd").val();
+
+        var metergroup;
+        $.ajax({
+            url: '@Url.Action( "GetGroupID" )',
+            data: { customerId: '@Model.CustomerId',MeterId: MeterId},
+            type: 'POST',
+            success: function (GID) {
+                meterGroup=GID;
+                var grid = $("#grdDetailsPAMMeters").data("kendoGrid");
+                if (meterGroup==1)
+                {
+                    if(parseInt(BayRangeStart) > parseInt(BayRangeEnd) )
+                    {
+                        alert("BayRangeEnd should greater than BayRangeStart");
+                        return;
+
+                    }
+
+                    if (meterGroup=1)
+                    {
+                        var result = grid.dataSource.data();
+                        for (i = 0; i < result.length; i++) {
+
+                            if (result[i].Clusterid == ClusterId) {
+                                if(parseInt(result[i].Hostedbaystart) <= parseInt(BayRangeStart) && parseInt(result[i].Hostedbayend) >= parseInt(BayRangeStart) )
+                                {
+                                    alert(BayRangeStart +" - " + BayRangeEnd + " BayRange already exists")
+                                    return false;
+                                }
+                                if(parseInt(result[i].Hostedbaystart) <= parseInt(BayRangeEnd) && parseInt(result[i].Hostedbayend) >= parseInt(BayRangeEnd) )
+                                {
+                                    alert(BayRangeStart +" - " + BayRangeEnd + " BayRange already exists")
+                                    return false;
+                                }
+
+                                if(parseInt(BayRangeStart) <= parseInt(result[i].Hostedbaystart) && parseInt(BayRangeEnd) >= parseInt(result[i].Hostedbaystart) )
+                                {
+                                    alert(BayRangeStart +" - " + BayRangeEnd + " BayRange already exists")
+                                    return false;
+                                }
+
+                                if(parseInt(BayRangeStart) <= parseInt(result[i].Hostedbayend) && parseInt(BayRangeEnd) >= parseInt(result[i].Hostedbayend) )
+                                {
+                                    alert(BayRangeStart +" - " + BayRangeEnd + " BayRange already exists")
+                                    return false;
+                                }
+                            }
+
+                        }
+                    }
+                }
+                var gridrow =  { Clusterid: ClusterId, MeterId: MeterId,Description: TextDescription, Hostedbaystart:  BayRangeStart, Hostedbayend: BayRangeEnd  } ;
+                grid.dataSource.insert(gridrow).set("dirty", true);
+
+            },
+        });
+
+
+
+    }
+
+
+    function PAMActive()
+    {
+        var pamCustactive = false;
+        if($('#ChkCustomerId').attr('checked'))
+            pamCustactive= true;
+        var ChkExpTimeByPAM = false;
+        if($('#ChkExpTimeByPAM').attr('checked'))
+            ChkExpTimeByPAM= true;
+        var ChkResetImin = false;
+        if($('#ChkResetImin').attr('checked'))
+            ChkResetImin= true;
+
+        $.ajax({
+            url: '@Url.Action( "SetPAMActive" )',
+            data: { customerId: '@Model.CustomerId', pamCustactive: pamCustactive,ChkExpTimeByPAM: ChkExpTimeByPAM, ChkResetImin: ChkResetImin },
+            type: 'POST',
+            success: function (data) {
+
+            },
+        });
+    }
+
+
+
+
+    function SaveAll()
+    {
+        PAMActive();
+        var grid = $("#grdDetailsPAM").data("kendoGrid");
+        var gridCluster = $("#grdDetailsPAMMeters").data("kendoGrid");
+        var Clusterdropdown = $("#ClusterIDList").data("kendoDropDownList");
+        if($('#ChkCustomerId').attr('checked'))
+        {
+            grid.saveChanges();
+            gridCluster.saveChanges();
+
+        }
+        // grid.dataSource.read();
+        //  gridCluster.dataSource.read();
+        // Clusterdropdown.dataSource.read();
+    }
+
+
+</script>
+
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Modified by"): @Html.DisplayFor(m => m.Status.ModifiedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.ModifiedOn)
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created by"): @Html.DisplayFor(m => m.Status.CreatedBy)
+        @Html.Raw(" on ")
+        @Html.DisplayFor(m => m.Status.CreatedOn)
+    </div>
+</div>

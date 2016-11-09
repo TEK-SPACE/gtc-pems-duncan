@@ -1,0 +1,454 @@
+﻿
+@model Duncan.PEMS.Entities.Customers.CustomerPayByCellModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit Customer Areas" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer Edit" )  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Pay By Cell" )</span></h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        
+        .paybycell-existing-grid {
+            float: left;
+            width: 97% !important;
+        }
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+         }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text" id="labelId1">@Html.DisplayFor(m => m.CustomerId)</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_new">@Html.DisplayFor( m => m.Status.Status )</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor( m => m.Status.StatusDate )</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Identification").ToString(), "EditCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Assets").ToString(), "EditAssets", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Payments").ToString(), "EditPayments", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Rules").ToString(), "EditRules", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Labels").ToString(), "EditCustomLabels", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Custom Grids").ToString(), "EditCustomGrids", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Event Codes").ToString(), "EditEventCodes", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Areas").ToString(), "EditAreas", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Maintenance Schedule").ToString(), "EditMaintenanceSchedule", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>*@
+    @if (Model.Status.StatusId == CustomerStatus.New)
+    {
+        <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Activate").ToString(), "ActivateCustomer", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    }
+</div>
+
+
+
+
+
+@using (Html.BeginForm( "EditCustPayByCell", "Customers", FormMethod.Post, new {@class = "customer-form", @id = "createCustomerAreas"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+
+    <!-- Hidden form fields for form save.  These will contain new fields for associated form areas. -->
+    <input id="NewAreas" name="NewAreas" type="hidden" value="" />     
+    <input id="NewZones" name="NewZones" type="hidden" value="" />     
+    <input id="NewCustomGroup1s" name="NewCustomGroup1s" type="hidden" value="" />     
+    <input id="NewCustomGroup2s" name="NewCustomGroup2s" type="hidden" value="" />     
+    <input id="NewCustomGroup3s" name="NewCustomGroup3s" type="hidden" value="" />     
+
+    <div class="customer_tab_content">
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Select Pay By Cell Vendor" )</div>    
+            <div class="paybycell-existing-grid">
+                @(Html.Kendo().Grid(Model.CustPayByCell) // Bind the grid to the Model property of the view
+                      .Name("VendorsGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(a => a.VendorID).Title("Use").Width("30px").ClientTemplate("<input id='#= VendorID #' type='checkbox' class='check_row'></input>");
+                          columns.Bound(p => p.VendorName).Width(150).Title("Vendor Name");
+                      })
+                .Scrollable(scr => scr.Height(150))
+               .Navigatable()
+                .Sortable()
+                //.Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+               // .Events(events => events.DataBound("onDataBound_LeftGrid"))
+               .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                                     {
+                                         model.Id(p => p.VendorID);
+                                     })
+                            
+
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10, 50, 100, 200 })) // Enable paging
+
+    )
+            </div>
+ 
+        </div>       
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Vendor Options" )</div>    
+            <div class="paybycell-existing-grid">
+
+                 @(Html.Kendo().Grid(Model.Ripnet) // Bind the grid to the Model property of the view
+                      .Name("RipnetPropGrid")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(p => p.KeyText).Title("Key").Width("75px");
+                          columns.Bound(p => p.ValueText).Width("110px").Title("Value");
+                      })
+                         .Scrollable(scr => scr.Height(150))
+                .Sortable()
+                .Filterable()
+                .AutoBind(false)
+                .Reorderable(reoder => reoder.Columns(true))
+    .Selectable(selectable => selectable
+    .Mode(GridSelectionMode.Single))
+.Events(events => events.DataBound("onDataBound_RightGrid"))
+               .DataSource(dataSource => dataSource
+                .Ajax()
+                .Model(model =>
+                                     {
+                                          model.Id(p => p.KeyText);
+                                     })
+                            
+ .Read(read => read.Action("UpdateRipnetGrid", "Customers").Data("GetKeyValue"))
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10, 50, 100, 200 })) // Enable paging
+
+    )
+
+
+            </div>
+
+
+
+        </div>       
+
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="CONTINUE" onclick="">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Continue" )</button>
+            @*<button type="submit" name="submitButton" class="button" value="SAVE"  onclick="OnSaveButtonClick()">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>*@
+            <button type="button" name="AddButton" class="button" onclick="OnSaveButtonClick();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+             <button type="submit" name="submitButton" class="button previous" value="RETURN" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+        </div>
+
+    </div>
+}
+
+<script type="text/javascript">
+
+    var selectedDataItems = new Array();
+
+    var timeInterval;
+
+    //var viewModel = kendo.observable({
+    //    selectedDataItems: [],
+    //});
+
+    $(document).ready(function () {
+        var cnt = '@Model.selectedIds.Count()';
+
+        if (cnt > 0) {
+            onDataBound_LeftGrid();
+        }
+
+
+    });
+    
+    function GetCustID() {
+        var CID = $('#labelId1').text()
+        return { vendorid: CID }
+    }
+
+    function onDataBound_RightGrid() {
+
+    }
+
+    function onDataBound_LeftGrid() {
+
+        selectedDataItems = [];
+        var entityGrid = $("#VendorsGrid").data("kendoGrid");
+        var availableAgentGridData = $('#VendorsGrid').data().kendoGrid;
+        var data = entityGrid.dataSource.data();
+        var totalNumber = data.length;
+        var enabledVendorArr = [];
+
+        //** First loop through model to get 'enabled' vendor ids so that we can use it to check checkbox accordingly
+        var SelectedVendorIds = @Html.Raw(Json.Encode(Model.selectedIds))
+       $.each(SelectedVendorIds, function () {
+           var isselected = this.VendorID;
+           enabledVendorArr.push(isselected);
+       });
+
+        //** Now compare against each enabled vendor item and display checkbox in Vendors Grid
+        $("#VendorsGrid tbody tr").each(function (index) {
+            var datasource = $("#VendorsGrid").data("kendoGrid").dataSource.data()[index];
+            var id = availableAgentGridData.dataItem($(this).closest('tr')).VendorID;
+            var vid = datasource.VendorID;
+            for (var k = 0; k < enabledVendorArr.length; k++) {
+                if (vid == enabledVendorArr[k]) {
+                    //** Match found so display checkbox
+                    $('#' + id).attr('checked', 'checked');
+                    selectedDataItems.push(vid);
+                    break;
+                }
+            }
+
+
+        });
+
+       var AutoComplete = $("#RipnetPropGrid").data("kendoGrid");
+       AutoComplete.dataSource.read();
+       AutoComplete.refresh();
+   }
+
+
+
+    @*function onDataBound_VendorGrid() {
+       
+       //alert($cb.VendorID)
+       var entityGrid = $("#VendorsGrid").data("kendoGrid");
+       var data = entityGrid.dataSource.data();
+       var totalNumber = data.length;
+       for (var i = 0; i < totalNumber; i++) {
+           var datasource = entityGrid.dataSource.data()[i];
+           var vid = datasource.VendorID;
+           //alert(' vendorid=' + vid)
+           //anothr loop through model to compare vendor id and check checkbox accordingly
+           var SelectedVendorIds = @Html.Raw(Json.Encode(Model.selectedIds))
+           $.each(SelectedVendorIds, function () {
+               var isselected = this.VendorID
+              
+               if (isselected == vid)
+               {
+                 //  alert('isselected:' + isselected)
+                   //Check Checkbox if yes and store id  in selectedDataItems 
+                   selectedDataItems.push(isselected);
+                   //$("#VendorsGrid tbody tr").find('.check_row').attr('checked', 'checked');
+                   // $("#VendorsGrid tbody tr").find(' tbody tr').find('.check_row').attr('checked', 'checked');
+                       
+               }
+
+           });
+
+           var check = $('.k-detail-row').find('td.k-detail-cell').find('div.k-grid').find('table').find('tbody').find('[type="checkbox"]').attr('checked', true);
+           var asd = check.is(':checked');
+           alert(asd);
+       }
+
+       var AutoComplete = $("#RipnetPropGrid").data("kendoGrid");
+       AutoComplete.dataSource.read();
+       AutoComplete.refresh();
+   }*@
+    //function CheckBoxState() {
+        
+    //    $("#VendorsGrid tbody tr").each(function () {
+    //        var $cb = $(this);
+    //        $cb.find('.check_row').attr('checked', 'checked');
+    //    });
+       
+
+    //  //  var arrayLength = viewModel.selectedDataItems.length;
+    //    //for (var p = 0; p < arrayLength; p++) {
+    //    //    var id = viewModel.selectedDataItems[p];
+    //    //    $("#" + id).prop('checked', true);
+    //    //}
+      
+    //    //$("#VendorsGrid  tbody").find('.c-ok').each(function () {
+         
+    //    //    var IsAdd = $(this).is(':checked');
+    //    //    if (IsAdd == false) {
+              
+    //    //        $(this).prop('checked', true);
+                
+    //    //    }
+    //    //});
+    //   // alert(1235)
+
+    //   // setTimeout(function () { BindGridOnTimer(); }, 5000);
+    //}
+
+  
+    var check_row = 0;
+    $('#VendorsGrid').on('click', '.check_row', function (e) {
+        check_row = 1;
+        var grid = $("#VendorsGrid").data().kendoGrid;
+        var rowindex = grid.select().index();
+        var datasource = grid.dataSource.data()[rowindex];
+        var IsAdd = $(this).is(':checked');
+       // alert(datasource.VendorID)
+        if (String(IsAdd).toUpperCase() == "FALSE") {
+          //  alert(IsAdd)
+            //selectedDataItems.pop(datasource.VendorID);
+            var itemToBeDeleted = datasource.VendorID;
+          //  alert('before:' + selectedDataItems)
+            for (var i = 0; i < selectedDataItems.length; i++)
+            {
+
+                if (selectedDataItems[i] == itemToBeDeleted)
+                {
+                    selectedDataItems.splice(i, 1);
+                }
+            }
+
+        }
+        else {
+            selectedDataItems.push(datasource.VendorID);
+        }
+    
+        var AutoComplete = $("#RipnetPropGrid").data("kendoGrid");
+        AutoComplete.dataSource.read();
+        AutoComplete.refresh();
+
+       
+    });
+
+    //function onDataBound(arg) {
+    //    var result = $("#RipnetPropGrid").data().kendoGrid.dataSource.data()
+    //    alert('result data' + result.length);
+    //}
+ 
+    function GetKeyValue()
+    {
+        var result = ""
+        result = selectedDataItems.join(",")
+     
+        return  {CustID: $('#labelId1').text(), selectedvendor: result }
+    }
+
+    function OnSaveButtonClick() {        
+        if (check_row == 1) {
+            $.ajax({
+                url: '@Url.Action("SaveVendorCustPayByCellMapping", "Customers", Request.RequestContext.RouteData.Values)',
+                type: 'POST',
+                traditional: true,
+                dataType: "json",
+                contentType: "application/json",
+                data: kendo.stringify({ CustID: $('#labelId1').text(), selectedvendor: selectedDataItems.join(",") }),
+                success: function (data) {
+                    alert(data)
+                    CheckBoxState()
+                    var AutoComplete = $("#RipnetPropGrid").data("kendoGrid");
+                    AutoComplete.dataSource.read();
+                    AutoComplete.refresh();
+
+                    // $('#GridCustProp').data('kendoGrid').dataSource.read();
+                },
+                error: function (txt) {
+                    alert("error");
+
+                }
+            });
+
+        }
+        else
+        {
+            alert("Nothing to save");
+        }
+    }
+    
+</script>
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Modified by" ): @Html.DisplayFor( m => m.Status.ModifiedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.ModifiedOn )
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created by" ): @Html.DisplayFor( m => m.Status.CreatedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.CreatedOn )
+    </div>
+</div>

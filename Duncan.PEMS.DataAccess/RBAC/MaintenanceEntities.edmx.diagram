@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fc43301ef884475c9a9f69e70e841e4f" Name="Diagram1">
+        <EntityTypeShape EntityType="MaintenanceModel.FMPart" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrderEvent" Width="1.5" PointX="5.25" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrderImage" Width="1.5" PointX="5.25" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrderPart" Width="1.5" PointX="8.25" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrder" Width="1.5" PointX="3" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrdersAudit" Width="1.5" PointX="5.25" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MaintenanceModel.FMWorkOrderStatu" Width="1.5" PointX="0.75" PointY="10.25" IsExpanded="true" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrderPart_Parts" ManuallyRouted="false" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrderEvent_WorkOrders" ManuallyRouted="false" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrderImage_WorkOrders" ManuallyRouted="false" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrderPart_WorkOrders" ManuallyRouted="false" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrders_WorkOrderStatus" ManuallyRouted="false" />
+        <AssociationConnector Association="MaintenanceModel.FK_WorkOrdersAudit_WorkOrders" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

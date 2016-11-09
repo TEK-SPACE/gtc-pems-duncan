@@ -1,0 +1,17 @@
+﻿@model Duncan.PEMS.Entities.Reports.IzendaAdHocModel
+
+@{
+    ViewBag.Title = "ShowAdHoc";
+}
+
+<h2>ShowAdHoc</h2>
+
+
+@foreach (var pair in Model.HiddenFilters)
+{
+    <div>
+    @Html.Raw(pair.Key)
+    @Html.Raw(" - ")
+    @Html.Raw( pair.Value )
+        </div>
+}

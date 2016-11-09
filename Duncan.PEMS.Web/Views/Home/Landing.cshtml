@@ -1,0 +1,97 @@
+﻿@using Duncan.PEMS.Entities.Users
+@model Duncan.PEMS.Entities.Users.LandingDropDownModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Multi Client Landing");
+    ViewBag.BodyId = "select-client";
+    ViewBag.SubTitle = "Select Client";
+}
+
+@section PageHeader 
+{   
+    @if (@ViewBag.PWExpiration < 15)
+    {
+        <div class="message">
+            <ul>
+                <li>Your password will expire in @ViewBag.PWExpiration day(s).</li>
+                @if (@ViewBag.PWExpiration == 0)
+                {
+                    <li>You will be required to change your password after selecting your city.</li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+@using (Html.BeginForm("Landing", "Home", FormMethod.Post, new {@id = "landingForm"}))
+{
+    <script type="text/javascript">
+
+        var selectedClient = "";
+
+        function SetSelectedClient(elementId, trimmedElementId, loginType) {
+            //remove all the currently selected clients
+            jQuery("#select-client-list li").each(function() {
+                var li = jQuery(this);
+                li.removeClass('selected-client');
+            });
+
+            //set the vairable that a client has been selected
+            selectedClient = elementId;
+
+            //set this item as the currently selected client
+            $('#' + trimmedElementId + loginType).addClass('selected-client');
+
+            //update the dropdownlist to have the correct selected item.
+            document.getElementById("hiddenSelectedClient").value = elementId + "|" + loginType;
+        }
+
+        function CheckCitySelection() {
+            if (selectedClient == '') {
+                alert('You must select a client.');
+                return false;
+            }
+            return true;
+        }
+
+        $(document).ready(function() {
+            $("li").dblclick(function() {
+                $('#landingForm').submit();
+            });
+            $("#selectClientButton").click(function() {
+                if (!CheckCitySelection()) {
+                    return false;
+                } else {
+                    $('#landingForm').submit();
+                }
+            });
+        });
+
+    </script>
+
+    <div id="select-client-box">
+        <ul id="select-client-list">
+            @{
+                bool odd = false;
+                foreach (var menuItem in Model.Items)
+                {
+                    string classname = odd ? "odd" : "";
+
+                    if (menuItem.LoginType == CustomerLoginType.MaintenanceGroupCustomer)
+                    {
+                        <li id="@menuItem.Value.Replace(" ", "")@menuItem.LoginType.ToString()" class="@classname "  onclick=" SetSelectedClient('@menuItem.Value', '@menuItem.Value.Replace(" ", "")', '@menuItem.LoginType') ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-@menuItem.Text</li>
+                    }
+                    else
+                    {
+                        <li id="@menuItem.Value.Replace(" ", "")@menuItem.LoginType.ToString()" class="@classname "  onclick=" SetSelectedClient('@menuItem.Value', '@menuItem.Value.Replace(" ", "")', '@menuItem.LoginType') ">@menuItem.Text</li>
+
+                    }
+                    odd = !odd;
+                }
+            }
+        </ul>
+    </div>
+
+    <button type="submit" style="box-shadow: none !important" class="button important" name="submitButton" id="selectClientButton" value="Select Client">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Select Client")</button>
+    @Html.Hidden("hiddenSelectedClient")
+}

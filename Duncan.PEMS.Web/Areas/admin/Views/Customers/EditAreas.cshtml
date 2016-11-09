@@ -1,0 +1,362 @@
+﻿@* 
+
+/******************* CHANGE LOG ****************************************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________      ___________________             ___________________________________________________________________________________________________
+ * 
+ * 01/22/2014       Sergey Ostrerov                 DPTXPEMS-45 - Can't create new customer; Replace text box to Drop Down Box for Area editing.
+ * 01/29/2014       Sergey Ostrerov                 DPTXPEMS-8, 14, 45 Reopened - Can't create new customer; Replace text box to Drop Down Box for Area editing.
+ * 01/31/2014       Sergey Ostrerov                 DPTXPEMS - 45 Reopened - Can't create new customer; Replace Drop Down Box to text box for Area editing.
+************************************************************************************************************************************************************************/
+
+ *@
+
+@model Duncan.PEMS.Entities.Customers.CustomerAreasModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Edit Customer Areas" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer Edit" )  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Areas" )</span></h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .areas-existing-grid {
+            float: left;
+            width: 55% !important;
+        }
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+         }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.CustomerId )</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_new">@Html.DisplayFor( m => m.Status.Status )</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor( m => m.Status.StatusDate )</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Identification" ).ToString(), "EditCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Assets" ).ToString(), "EditAssets", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Payments" ).ToString(), "EditPayments", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Rules" ).ToString(), "EditRules", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Custom Labels" ).ToString(), "EditCustomLabels", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Custom Grids" ).ToString(), "EditCustomGrids", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes" ).ToString(), "EditEventCodes", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Areas" ).ToString(), "EditAreas", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = @Model.CustomerId }, null)</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Maintenance Schedule" ).ToString(), "EditMaintenanceSchedule", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = @Model.CustomerId }, null)</div>*@
+
+    @if ( Model.Status.StatusId == CustomerStatus.New )
+    {
+        <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Activate" ).ToString(), "ActivateCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    }
+</div>
+
+
+@using (Html.BeginForm( "EditAreas", "Customers", FormMethod.Post, new {@class = "customer-form", @id = "createCustomerAreas"} ))
+{
+    @Html.HiddenFor( m => m.CustomerId )
+
+    <!-- Hidden form fields for form save.  These will contain new fields for associated form areas. -->
+    <input id="NewAreas" name="NewAreas" type="hidden" value="" />     
+    <input id="NewZones" name="NewZones" type="hidden" value="" />     
+    <input id="NewCustomGroup1s" name="NewCustomGroup1s" type="hidden" value="" />     
+    <input id="NewCustomGroup2s" name="NewCustomGroup2s" type="hidden" value="" />     
+    <input id="NewCustomGroup3s" name="NewCustomGroup3s" type="hidden" value="" />     
+
+    <div class="customer_tab_content">
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Areas" )</div>    
+            <div class="areas-existing-grid">
+                @(Html.Kendo().Grid( Model.Areas ) // Bind the grid to the Model property of the view
+                      .Name( "ExistingAreasGrid" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( p => p.Id ).Width( 35 ).Title( "Id" );
+                              columns.Bound( p => p.Name ).Width( 150 );
+                              columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);                              
+                          } )
+                      .Scrollable( scr => scr.Height( 200 ) )
+                      .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                      )
+                )
+            </div>
+            <div class="areas-new-grid">
+                <input id="TextNewArea" type="text" class="areas-new-text" maxlength="25"/>
+                <button type="submit" name="submitButton" class="button areas-new-button" onclick="return OnAddArea('ExistingAreasGrid', 'TextNewArea', 'Areas');">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add" )</button>
+            </div>       
+        </div>       
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zones" )</div>    
+            <div class="areas-existing-grid">
+                @(Html.Kendo().Grid( Model.Zones ) // Bind the grid to the Model property of the view
+                      .Name( "ExistingZonesGrid" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( p => p.Id ).Width( 35 ).Title( "Id" );
+                              columns.Bound( p => p.Name ).Width( 150 );
+                              columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);                              
+                          } )
+                      .Scrollable( scr => scr.Height( 200 ) )
+                      .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                      )
+                )
+            </div>
+            <div class="areas-new-grid">
+                <input id="TextNewZone" type="text"  class="areas-new-text" maxlength="50"/>
+                <button type="submit" name="submitButton" class="button areas-new-button" onclick="return OnAddArea('ExistingZonesGrid', 'TextNewZone', 'Zones');">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add" )</button>
+            </div>       
+        </div>       
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 1" )</div>    
+            <div class="areas-existing-grid">
+                @(Html.Kendo().Grid( Model.CustomGroup1 ) // Bind the grid to the Model property of the view
+                      .Name( "ExistingCustomGroup1sGrid" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( p => p.Id).Width( 35 ).Title( "Id" );
+                              columns.Bound( p => p.Name ).Width( 150 );
+                              columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);                              
+                          } )
+                      .Scrollable( scr => scr.Height( 200 ) )
+                      .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                      )
+                )
+            </div>
+            <div class="areas-new-grid">
+                <input id="TextNewCustomGroup1" type="text"  class="areas-new-text" maxlength="50"/>
+                <button type="submit" name="submitButton" class="button areas-new-button" onclick="return OnAddArea('ExistingCustomGroup1sGrid', 'TextNewCustomGroup1', 'Custom Group 1');">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add" )</button>
+            </div>       
+        </div>       
+
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 2" )</div>    
+            <div class="areas-existing-grid">
+                @(Html.Kendo().Grid( Model.CustomGroup2 ) // Bind the grid to the Model property of the view
+                      .Name( "ExistingCustomGroup2sGrid" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( p => p.Id ).Width( 35 ).Title( "Id" );
+                              columns.Bound( p => p.Name ).Width( 150 );
+                              columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);                              
+                          } )
+                      .Scrollable( scr => scr.Height( 200 ) )
+                      .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                      )
+                )
+            </div>
+            <div class="areas-new-grid">
+                <input id="TextNewCustomGroup2" type="text"  class="areas-new-text" maxlength="50"/>
+                <button type="submit" name="submitButton" class="button areas-new-button" onclick="return OnAddArea('ExistingCustomGroup2sGrid', 'TextNewCustomGroup2', 'Custom Group 2');">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add" )</button>
+            </div>       
+        </div>       
+        
+        <div class="two-column">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Custom Group 3" )</div>    
+            <div class="areas-existing-grid">
+                @(Html.Kendo().Grid( Model.CustomGroup3 ) // Bind the grid to the Model property of the view
+                      .Name( "ExistingCustomGroup3sGrid" )
+                      .Columns( columns =>
+                          {
+                              columns.Bound( p => p.Id ).Width( 35 ).Title( "Id" );
+                              columns.Bound( p => p.Name ).Width( 150 );
+                              columns.Command(command => command.Custom("x").Click("OnRemoveArea")).Width(40);                              
+                          } )
+                      .Scrollable( scr => scr.Height( 200 ) )
+                      .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                             .ServerOperation(false)
+                      )
+                )
+            </div>
+            <div class="areas-new-grid">
+                <input id="TextNewCustomGroup3" type="text"  class="areas-new-text" maxlength="50"/>
+                <button type="submit" name="submitButton" class="button areas-new-button" onclick="return OnAddArea('ExistingCustomGroup3sGrid', 'TextNewCustomGroup3', 'Custom Group 3');">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Add" )</button>
+            </div>       
+        </div>       
+        
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="CONTINUE" onclick="SaveAllAreas()">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Continue" )</button>
+            <button type="submit" name="submitButton" class="button" value="SAVE"  onclick="SaveAllAreas()">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+            <button type="submit" name="submitButton" class="button previous" value="RETURN" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+        </div>
+
+    </div>
+}
+
+<script type="text/javascript">
+
+    var areasToAdd = new Array();
+
+
+    $(document).ready(function() {
+
+    });
+    
+
+    function OnRemoveArea(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+        if (dataItem.Id == "") {
+            this.dataSource.remove(dataItem);
+            this.refresh();
+        }
+    }
+
+    function OnAddArea(theGrid, theNewItemTextBox, theAreaType) {
+        var currentAreas = $('#' + theGrid).data('kendoGrid');
+        var currentDs = currentAreas.dataSource;
+
+        var newItem = $("#" + theNewItemTextBox).val();
+
+        if (newItem) {
+
+            var alreadyExists = false;
+            // Does this name already exist?
+            var allData = currentDs.data();
+            //get a list of all selected meters
+            $.each(allData, function (index, currentItem) {
+                if (newItem == currentItem.Name) {
+                    alreadyExists = true;
+                }
+            });
+            if (alreadyExists) {
+                pemsPopupShowErrorWithTag(
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                    "", "Item '" + newItem + "' already exists in " + theAreaType);
+            } else {
+                currentDs.insert({ Id: "", Name: newItem });
+                $("#" + theNewItemTextBox).val("");
+            }
+        }
+        return false;
+    }
+    
+
+
+    function SaveNewItems(theGrid, theHiddenField) {
+        var allData = $('#' + theGrid).data('kendoGrid').dataSource.data();
+
+        var data = "";
+        $.each(allData, function (idx, currentItem) {
+            if (currentItem.Id == "") {
+                data += currentItem.Name + "@Model.Separator";
+            }
+        });
+        $("#" + theHiddenField).val(data);
+
+    }
+
+
+    function SaveAllAreas() {
+
+        SaveNewItems("ExistingAreasGrid", "NewAreas");
+        SaveNewItems("ExistingZonesGrid", "NewZones");
+        SaveNewItems("ExistingCustomGroup1sGrid", "NewCustomGroup1s");
+        SaveNewItems("ExistingCustomGroup2sGrid", "NewCustomGroup2s");
+        SaveNewItems("ExistingCustomGroup3sGrid", "NewCustomGroup3s");
+
+    }
+
+
+
+
+</script>
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Modified by" ): @Html.DisplayFor( m => m.Status.ModifiedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.ModifiedOn )
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created by" ): @Html.DisplayFor( m => m.Status.CreatedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.CreatedOn )
+    </div>
+</div>

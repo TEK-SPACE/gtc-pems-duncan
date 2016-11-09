@@ -1,0 +1,249 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Users.ProfileModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Profile Settings" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Profile" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Update Profile" )</span></h1>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var myCustomerId = '@ViewBag.CurrentCityID';
+
+         if (myCustomerId == 5001) {
+
+             //** It is NOLA Customer and hence remove help btn temporarily as requested by Justin (DTPEMS-160)
+             $('a#help').css('display', 'none');
+         }
+
+    });
+
+    function SaveClick() {
+        var $secondaryIdType = $("#SecondaryIDType").val();
+        var $secondaryIdValue = $("#SecondaryIDValue").val();
+        //if one of them has a value but not both, then display that to the user
+        if (($secondaryIdType && $secondaryIdValue) || (!$secondaryIdType && !$secondaryIdValue)) {
+            return true;
+        } else {
+            alert('@HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "Both Secondary Id fields either have to have values or be empty." )');
+            return false;
+        }
+    }
+</script>
+
+
+<style>
+    .field-validation-error {
+        clear: both;
+        float: left;
+    }
+
+</style>
+
+
+
+@using (Html.BeginForm( "Edit", "Profile" ))
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Identification" )</div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Username" ): </div>
+            @Html.DisplayFor( m => m.Username, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Username )
+            @Html.HiddenFor( model => model.Active )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Name" ): </div>
+            @Html.TextBoxFor( m => m.FirstName, new {@class = "customer_text", @maxlength = "50"} )
+            @Html.RequiredMarkFor( m => m.FirstName, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.FirstName )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Middle Initial" ): </div>
+            @Html.TextBoxFor( m => m.MiddleInitial, new {@class = "customer_text", @maxlength = "50"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Name" ): </div>
+            @Html.TextBoxFor( m => m.LastName, new {@class = "customer_text", @maxlength = "50"} )
+            @Html.RequiredMarkFor( m => m.LastName, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.LastName )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Phone Number" ): </div>
+            @Html.TextBoxFor( m => m.PhoneNumber, new {@class = "customer_text", @maxlength = "50"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Email Address" ): </div>
+            @Html.TextBoxFor( m => m.EmailAddress, new {@class = "customer_text", @maxlength = "50"} )
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Organization Name" ): </div>
+            @Html.TextBoxFor( m => m.OrganizationName, new {@class = "customer_text", @maxlength = "255"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Type" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDType, new {@class = "customer_text", @maxlength = "255"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Value" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDValue, new {@class = "customer_text", @maxlength = "255"} )
+        </div>
+        
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Is Technician" ): </div>
+                <div class="customer_text"> @Model.IsTechnician.ToString() &nbsp;</div>
+            </div>
+        @Html.HiddenFor( m => m.IsTechnician ) 
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Security Questions" )</div>
+
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Question 1" ): </div>
+            @Html.TextBoxFor( m => m.Question1.Question, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.Question1.Question, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.Question1.Question )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Answer 1" ): </div>
+            @Html.TextBoxFor( m => m.Question1.Answer, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.Question1.Answer, new {@class = "required_asterisk"} )
+            @Html.HiddenFor( m => m.Question1.QuestionNumber )
+            @Html.ValidationMessageFor( m => m.Question1.Answer )
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Question 2" ): </div>
+            @Html.TextBoxFor( m => m.Question2.Question, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.Question2.Question, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.Question2.Question )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Answer 2" ): </div>
+            @Html.TextBoxFor( m => m.Question2.Answer, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.Question2.Answer, new {@class = "required_asterisk"} )
+            @Html.HiddenFor( m => m.Question2.QuestionNumber )
+            @Html.ValidationMessageFor( m => m.Question2.Answer )
+
+        </div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Statistics" )</div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Creation Date" ): </div>
+            <div class="customer_text"> @{
+                                            if ( Model.CreationDate == DateTime.MinValue )
+                                            {
+                                                @:N/A
+                                            }
+                                            else
+                                            {
+                                                @Model.CreationDate.ToString( "d" )
+                                            }
+                                        } 
+                @Html.HiddenFor( model => model.CreationDate )
+
+            </div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Login Date" ): </div>
+            <div class="customer_text">       @Html.HiddenFor( model => model.LastLoginDate ) @{
+                                                                                                  if ( Model.LastLoginDate == DateTime.MinValue )
+                                                                                                  {
+                                                                                                      @:N/A
+                                                                                                  }
+                                                                                                  else
+                                                                                                  {
+                                                                                                      @Model.LastLoginDate.ToShortDateString()
+                                                                                                  }
+                                                                                              } </div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Login Failure" ): </div>
+            <div class="customer_text"> @Html.HiddenFor( model => model.LastLoginFailure )  @{
+                                                                                                if ( Model.LastLoginFailure == DateTime.MinValue )
+                                                                                                {
+                                                                                                    @:N/A
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    @Model.LastLoginFailure.ToShortDateString()
+                                                                                                }
+                                                                                            } </div>
+        </div>
+     
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bad Login Count" ): </div>
+            <div class="customer_text">@Html.DisplayFor( m => m.BadLoginCount, new {@class = "customer_text"} )  @Html.HiddenFor( model => model.BadLoginCount )</div>
+        </div> <div>
+                   <div class="customer_text_label">Password Expiration: </div>
+                   <div class="customer_text">@Html.HiddenFor( model => model.PasswordExipration ) @{
+                                                                                                       if ( Model.PasswordExipration == DateTime.MinValue )
+                                                                                                       {
+                                                                                                           @:N/A
+                                                                                                       }
+                                                                                                       else
+                                                                                                       {
+                                                                                                           @Model.PasswordExipration.ToShortDateString()
+                                                                                                       }
+                                                                                                   } </div>
+               </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Password Change Date" ): </div>
+            <div class="customer_text"> @Html.HiddenFor( model => model.LastPasswordChangeDate )@{
+                                                                                                    if ( Model.LastPasswordChangeDate == DateTime.MinValue )
+                                                                                                    {
+                                                                                                        @:N/A
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @Model.LastPasswordChangeDate.ToShortDateString()
+                                                                                                    }
+                                                                                                } </div>
+        </div>
+       
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Additional Actions" )</div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "New Password" ):</div>
+            @Html.PasswordFor( m => m.Password.NewPassword )<br/>
+            @Html.ValidationMessageFor( m => m.Password.NewPassword )
+        </div>
+        <div>
+            <div class="customer_text_label">
+                @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Confirm Password" ):</div>
+            @Html.PasswordFor( m => m.Password.ConfirmPassword ) <button type="submit" class="button" value="Change Password" name="submitButton">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Change Password" )</button><br/>
+            @Html.ValidationMessageFor( m => m.Password.ConfirmPassword )
+            @Html.ShowAllErrors( "Password" )
+        </div>
+    </div>
+    <div style="clear: both">&nbsp;</div>
+    <div class="button-Container">
+        <button type="submit" name="submitButton" class="button important" onclick=" return SaveClick(); " value="Update" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Update" )</button>
+        <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+
+    @Html.HiddenFor( m => m.PasswordResetRequired )
+}

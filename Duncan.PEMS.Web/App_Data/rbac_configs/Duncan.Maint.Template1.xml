@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Configuration of NetSqlAzMan for [CUSTOMER]. Created on 3/20/2013 10:01:24 AM-->
+<Customer Name="Sydney Maintenance">
+  <Users>
+
+  </Users>
+  <Groups>
+    <Group Name="_members" SID="a330618e-ad03-4095-bbf5-7fe82589fc9d"  Action="Add">
+      <Member>admin</Member>
+    </Group>
+    <Group Name="_maintenance" SID="67e02583-ma3n-47e9-a791-834302be267c" Action="Add">
+      <Member>admin</Member>
+    </Group>
+    <Group Name="Administrators" SID="e7d12a38-b532-4bcd-aff2-42b3fe463363"  Action="Add">
+      <Member>caleb</Member>
+      <Member>ron</Member>
+      <Member>justin</Member>
+      <Member>margaret</Member>
+      <Member>sriram</Member>
+    </Group>
+  </Groups>
+  <Applications>
+    <Application Name="Authorization" Action="Add">
+    </Application>
+
+    <Application Name="Home" Action="Add">
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="Profile" Action="Add">
+      <Operation>Edit</Operation>
+    </Application>
+
+    <Application Name="Roles" Action="Add">
+      <Operation>Copy</Operation>
+      <Operation>Create</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="StoreGroups" Action="Add">
+      <Operation>Index</Operation>
+    </Application>
+
+    <!--name of controller-->
+    <Application Name="Users" Action="Add">
+      <!--name of action-->
+      <Operation>Action</Operation>
+      <Operation>BulkUpdate</Operation>
+      <Operation>Create</Operation>
+      <Operation>CustomerRoles</Operation>
+      <Operation>Delete</Operation>
+      <Operation>Details</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="WorkOrders" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>CreateEventId</Operation>
+      <Operation>WorkLoad</Operation>
+      <Operation>WorkOrderDetail</Operation>
+      <Operation>PartsIndex</Operation>
+      <Operation>PartsImport</Operation>
+      <Operation>MassAssign</Operation>
+      <Operation>MassUnassign</Operation>
+      <Operation>EventDetail</Operation>
+    </Application>
+
+  </Applications>
+
+  <AuthTree>
+
+    <AuthItem Name="Home" authtext="Home" Action="Add">
+      <AuthItem Name="AuthHome" authtext="Home Page">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <!--authtext is role name text-->
+    <AuthItem Name="Profile" authtext="User Profile" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <!--maps to the actions-->
+          <Operation>Edit</Operation>
+        </Operations>
+        <Authorizations>
+          <!--default groups that will have rights to this item-->
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="Roles" authtext="Roles" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Copy</Operation>
+          <Operation>Create</Operation>
+          <Operation>Edit</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="Users" authtext="User Management" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Action</Operation>
+          <Operation>Create</Operation>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Delete</Operation>
+          <Operation>Details</Operation>
+          <Operation>Edit</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>BulkUpdate</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="WorkOrders" authtext="Work Order Management" Action="Add">
+      <AuthItem Name="AuthParts" authtext="Parts">
+        <Operations>
+          <Operation>PartsIndex</Operation>
+          <Operation>PartsImport</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthWorkOrders" authtext="Work Orders">
+        <Operations>
+          <Operation>EventDetail</Operation>
+          <Operation>CreateEventId</Operation>
+          <Operation>WorkOrderDetail</Operation>
+          <Operation>WorkLoad</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>MassAssign</Operation>
+          <Operation>MassUnassign</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+  </AuthTree>
+
+  <MenuTree Action="Clear">
+
+    <MenuItem Name="WorkOrders" menutext="Work Order Management" tooltip="Manage work orders"  menuicon="WorkOrderManagement.png" Action="Add">
+      <MenuItem Name="WOCreateEventId" menutext="Create Event ID" tooltip="Create Event" Action="Add">
+        <Link operation="CreateEventId" application="WorkOrders" />
+      </MenuItem>
+      <MenuItem Name="WOInquiries" menutext="Work Order Summary" tooltip="View work orders" Action="Add">
+        <Link operation="Index" application="WorkOrders" />
+      </MenuItem>
+      <MenuItem Name="PSInquiries" menutext="Parts Summary" tooltip="View parts" Action="Add">
+        <Link operation="PartsIndex" application="WorkOrders" />
+      </MenuItem>
+    </MenuItem>
+    <MenuItem Name="Profile" menutext="User Profile" tooltip="Manage my settings" menuicon="UserProfile.png" Action="Add">
+      <Link operation="Edit" application="Profile"  Action="Add"/>
+    </MenuItem>
+    <MenuItem Name="Users" menutext="Administration"  menuicon="Admin.png" Action="Add">
+      <MenuItem Name="MUsers" menutext="User Management" tooltip="Manage client users" Action="Add">
+        <Link operation="Index" application="Users" />
+      </MenuItem>
+      <MenuItem Name="MRoles" menutext="Manage Roles" tooltip="Manage client user roles" Action="Add">
+        <Link operation="Index" application="Roles" />
+      </MenuItem>
+    </MenuItem>
+
+  </MenuTree>
+</Customer>

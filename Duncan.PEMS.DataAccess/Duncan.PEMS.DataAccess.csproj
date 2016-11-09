@@ -1,0 +1,1702 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{331E3202-9C03-4497-89F5-134694E84770}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Duncan.PEMS.DataAccess</RootNamespace>
+    <AssemblyName>Duncan.PEMS.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Duncan.PEMS.DataAccess.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Duncan.PEMS.DataAccess.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'dev|AnyCPU'">
+    <OutputPath>bin\dev\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'demo|AnyCPU'">
+    <OutputPath>bin\demo\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="OracleDB\ACTIVITYLOG.cs">
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\OracleDB.Context.cs" />
+    <Compile Include="OracleDB\OracleDB.cs" />
+    <Compile Include="OracleDB\OracleDB.Designer.cs">
+      <DependentUpon>OracleDB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\OracleDB1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\OracleDB1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OracleDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\OracleDBEntitiesAbstract.cs" />
+    <Compile Include="OracleDB\PARKING.cs">
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\PARKING_VIOS.cs">
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\PARKNOTE.cs">
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OracleDB\SECURITY_USER.cs">
+      <DependentUpon>OracleDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AccountStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AcquirerBatch.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AcquirerIF.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ACS_Rate_AllFailed.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ACS_Rate_File_Version_Status.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ACS_Rate_Transmission_Status.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ActiveAlarm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ActiveAlarmsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AISyncupCustConfig.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AISyncupDataConfig.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AISyncupStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_ACTIVITYLOG.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_EXPORT.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_OFFICERS.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_PARKING.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_PARKING_TRANSLINK.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_PARKING_VIOS.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AI_PARK_NOTE.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AlamrUIDGen.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AlarmStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AlarmTier.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Area.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AreaSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetEventListV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetPending.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetPendingReason.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetState.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetStateCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AssetVersionMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AuditLog.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\AuditRegistry.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\avgbatteryvoltage.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Bank.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BatteryAnalysisChart.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BatteryChangeGrid.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BatteryVoltageV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BaySnapshot.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BlackListActive.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BlackListArchive.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\BlackListFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CardType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBox.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBoxAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBoxDataHistory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBoxDataImport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashboxDataImportV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBoxImportSubV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CashBoxLocationType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CBImpFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CoinDenomination.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CoinDenominationCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollDataImport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollDataMeterStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollDataSched.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollDataSumm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollectionRun.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollectionRunMeter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollectionRunReport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollectionRunStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollectionRunSummary_View.cs" />
+    <Compile Include="PEMS\CollectionRunVendor.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollReconDetCBRCOMMSsubV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollReconDetCBRDLRsubV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollRoute.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollRouteManualAmount.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CollRouteSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ColorCode.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ComplexType1.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ComplexType2.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ConfigProfile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ConfigProfileSpace.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ConfigProfileSpaceAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ConfigStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ConfigurationIDGen.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CreditCardAttempt.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CreditCardReconciliationV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CreditCardType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CreditCardTypesCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CSPark.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CurrentParkingSpotStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Customer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerBaseMeterFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerFileArchive.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerPaymentTransactionV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerProperty.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomerPropertyGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomersAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomGroup1.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomGroup2.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\CustomGroup3.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DailyFinancialTransactionV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\dailyGPRSRevenue1_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\dailyGPRSRevenue_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DataKey.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DataKeyAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DataKeyType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DayOfWeek.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DemandZone.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DemandZoneCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DeviceUsageSummaryV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountScheme.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeCustomerInfo.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeEmailTemplate.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeExpirationType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeMeter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountSchemeType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountUserCard.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountUserScheme.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\DiscountUserSchemeAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EmailGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EmailTemplateType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EnforceRoute.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EnforceRouteSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventCategory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventCode.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventCodeAssetType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventCodeMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventCodesAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventLog.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventsAllAlarmsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventsCollectionCBRV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventsCollectionCommEventV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventsGSMConnectionLogsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventSource.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventSourceCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventState.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventsTransactionsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\EventUIDGen.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDFilesAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDFileType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDFileTypeMeterGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDHousing.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDHousingAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDJob.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDJobHistory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDJobStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FDSummary.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\FileTypeMap.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Gateway.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\GatewayResp.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\GatewaysAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\GetLandingRevenue.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\GSMConnectionLog.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\GSMConnectionStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HistoricalAlarm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HistoricalAlarmsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HolidayRate.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HolidayRateConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HolidayRateConfigurationProfile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HolidayRateForConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HousingAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HousingMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\HousingType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ImportDirectory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\InactiveRemark.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\LatestMeterData.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\LatestMeterDataAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\LocationTier.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\LocationTierMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\LookupItem.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MagneticFlux.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MaintenanceCode.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MaintenanceEventsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MaintRoute.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MaintRouteSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MechanismMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MechanismMasterCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MechHistory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MechMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MechMasterAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Meter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterComm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterConfigurationReportV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterCurrentStatusReportV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterDiagnostic.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterDiagnosticType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterDiagnosticTypeCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\meterdiagnostivalue_v.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterInventory.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterMap.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterMapAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterMapping.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\metermap_bk.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterPushSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterResetSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MetersAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterServiceStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterStatusEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\meters_bays.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Meters_CurrentState.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MeterUptimeV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MissingPaymentSequence.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MParkImport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\MSM_Sensor_Gateway_AttribStatExceptsSummV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NoCommunicationV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NonComplianceRate_view.cs" />
+    <Compile Include="PEMS\NonCompliantStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NotificationMeterSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NotificationReceipient.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NotificationTier.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\NSC_Triggers_Logs.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OccRateDerived.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OccupancyRateReport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OccupancyRateSummaryV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OccupancyStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OccupancyV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OLTAcquirer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OLTCardHash.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OLTEventDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OperationalStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\OperationMode.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMActiveCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMBayExpt.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMCluster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMCustomerMap.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMGracePeriod.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMMeterAccess.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PAMTx.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkeonAlarm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingOccupancyReport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpace.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpaceDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpaceExpiryConfirmationEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Parkingspaceid_changed.cs" />
+    <Compile Include="PEMS\ParkingSpaceMeterBayMap.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpaceOccupancy.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpaceOccupancyAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkingSpacesAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkSpaceRight.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ParkVehicle.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Part.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PayByCellAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PayByCellVendor.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PaymentReceived.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PaymentTargetType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PaymentType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Pending_Meters.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PPOImport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PPOStatusCode.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Process.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ProcessType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PropertyGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PublicHoliday.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PushStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_ActiveAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_CombineActiveHistoricalAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_CustomerSensorTransactions.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_CustomerTransactions.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_CustomerTransactions_lincoln.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsActiveAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsAllAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsCollectionCBR.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsCollectionCommEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsDiagnostics.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsGSMConnectionLogs.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsHistoricalAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsSummary.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_EventsTransactions.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_HistoricAlarms.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\pv_Occupancy.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qCashBoxDataImport.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qCashBoxImport_subV235.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qCBImpFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qCollReconDetCBRCOMMS_SubV235.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qCollReconDetCBRDLR_SubV235.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qGSMFailed_Sub.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qGSMFailed_SubSub.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qHistoricalMeterStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qLastMeterStatus_Sub.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qMaxCollDateTime.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qMetersNotCollected.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qMeter_failedGSM.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qMissingCollection.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qParkingSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qTransaction.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qTransactionsCk.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qTransactionsCreditCard.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qvActMaxAlmTime.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\qvActUnqAlarm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateScheduleConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateScheduleConfigurationProfile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateScheduleForConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateTransmission.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateTransmissionDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RateTransmissionJob.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RegulatedHour.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RegulatedStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ReinoParameter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RejectedDiscount.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Report.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ReportDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ReportMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RevenueLayer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RipnetProperty.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RouteMetersDetailsV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\RouteMetersDetailsV2.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Schedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ScheduledMeter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ScheduleProcess.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Sensor.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorMapping.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorMappingAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorPaymentTransaction.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorPaymentTransactionAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorPaymentTransactionCurrent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sensorProfile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorsAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SensorUndeterminedReason.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ServerInstance.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SettledBatch.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SFMeterMaintenanceEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SFPriceSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sla_AlarmWorkOrder.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_AssetDownTime.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_Holiday.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_MaintenanceSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_Minutes.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_OperationSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SLA_RegulatedSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SmartCardSerial.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SpaceMeterAssetV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SpaceType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spDailyGPRSRevenue_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spDailyGPRSTotals_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spGetCardNumForSalt_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spGetCardNum_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spImportMXCashBox_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spLastMeterState31_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\spResubmitReport_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_helpdiagramdefinition1_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_helpdiagrams1_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_helpdiagrams_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_LowBattery_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_revenue_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_UDP_MeterPushSchedule_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sp_UDP_MeterResetSchedule_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\StreetlineEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\StreetlineSpace.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SubArea.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SubAreaSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\SupportedCreditCard.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\sysdiagram.cs" />
+    <Compile Include="PEMS\TargetServiceDesignation.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TargetServiceDesignationMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Tariff.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TariffRate.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TariffRateConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TariffRateConfigurationProfile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TariffRateForConfiguration.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TariffState.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TccDeclinedBuffer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TechCreditEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TechnicianDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TechnicianKeyChangeLog.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TimeType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TimeTypeCustomer.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TimeUnit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TimeZone.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\trace.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Transaction.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionBatch.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionPackage.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionPackageStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsAcquirerResp.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsBlackList.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsCash.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsCashKey.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsCreditCard.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsMPark.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsPending.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsReconcile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionsSmartCard.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransactionType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransDataSumm.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\TransUserType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\txbackup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\UDP_MeterPushSchedule.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\User.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\UserRole.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\UserType.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VehicleMovement.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VehicleSensingEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\vendorcustomerpaybycellmap.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Version.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VersionDetail.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VersionGroup.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VersionMaster.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VersionProfileMeter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VersionProfileMeterAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ViolationSummaryByAreaV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ViolationSummaryV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VoidReasonSummaryV.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\VSNodeStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\v_ActiveCollectionRunMeter.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\v_ChangeBattery.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\v_PlanChangeBattery.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\V_UnProcessed_CollRun.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\webpages_Membership.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\webpages_OAuthMembership.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\webpages_Roles.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WhilteListFile.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WhilteListFileStaging.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WhiteListFile_Unique.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WhiteList_All.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrder.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrder1.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrderCaller.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrderEvent.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrderImage.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrderPart.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrdersAudit.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\WorkOrderStatu.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\Zone.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\ZoneSeq.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\zzParkingInfo_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\zzzParkingInfo_Result.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\zzzParkingSpace.cs">
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\AccessLog.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\AccessLogMembershipEvent.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerGrid.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerProfile.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerReport.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerReportsAdHoc.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerReportsCategory.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerReportsSource.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerSetting.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerSettingsGroup.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerSettingsGroupMember.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerSettingType.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerSettingTypeList.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerTimeZone.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\CustomerType.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\DataContextPartials.cs" />
+    <Compile Include="RBAC\ErrorMessage.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMPart.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrder.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrderEvent.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrderImage.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrderPart.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrdersAudit.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\FMWorkOrderStatu.cs">
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\GridDefinition.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\HelpMap.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\LocaleResource.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\LocaleResourcesCustom.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\LoginAttemptHistory.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\MaintenanceEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaintenanceEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\MaintenanceEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaintenanceEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\MaintenanceEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MaintenanceEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PEMEntities.cs" />
+    <Compile Include="RBAC\MaintenanceGroupCustomer.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\Membership.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\MembershipEventType.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\netsqlazman_StoreGroupsTable.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\netsqlazman_StoresTable.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\News.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\NewsContent.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\PEMRBACEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMRBACEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\PEMRBACEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\PEMRBACEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMRBACEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PEMS.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMS.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PEMS.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PEMS\PEMS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PEMS.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RBAC\ResourceEvent.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\ResourceEventType.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\SystemInformation.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\UserCustomerAccess.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\UserPasswordHistory.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\UserPasswordQuestion.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\UserProfile.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\UserSetting.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\User_CustomerGrids.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RBAC\webpages_Roles.cs">
+      <DependentUpon>PEMRBACEntities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="RBAC\PEMRBACEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PEMRBACEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Duncan.PEMS.DataAccess.cd" />
+    <None Include="OracleDB\OracleDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OracleDB.Context1.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="OracleDB\OracleDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>OracleDB1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="OracleDB\OracleDB.edmx.diagram">
+      <DependentUpon>OracleDB.edmx</DependentUpon>
+    </None>
+    <None Include="OracleDB\OracleDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OracleDB1.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="RBAC\MaintenanceEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MaintenanceEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="RBAC\MaintenanceEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MaintenanceEntities.edmx</DependentUpon>
+      <LastGenOutput>MaintenanceEntities.Context.cs</LastGenOutput>
+    </None>
+    <None Include="RBAC\MaintenanceEntities.edmx.diagram">
+      <DependentUpon>MaintenanceEntities.edmx</DependentUpon>
+    </None>
+    <None Include="RBAC\MaintenanceEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MaintenanceEntities.edmx</DependentUpon>
+      <LastGenOutput>MaintenanceEntities.cs</LastGenOutput>
+    </None>
+    <None Include="RBAC\PEMRBACEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEMRBACEntities.edmx</DependentUpon>
+      <LastGenOutput>PEMRBACEntities.Context.cs</LastGenOutput>
+    </None>
+    <None Include="RBAC\PEMRBACEntities.edmx.diagram">
+      <DependentUpon>PEMRBACEntities.edmx</DependentUpon>
+    </None>
+    <None Include="RBAC\PEMRBACEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEMRBACEntities.edmx</DependentUpon>
+      <LastGenOutput>PEMRBACEntities.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="PEMS\PEMS.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PEMS.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="PEMS\PEMS.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEMS.edmx</DependentUpon>
+      <LastGenOutput>PEMS.Context.cs</LastGenOutput>
+    </None>
+    <None Include="PEMS\PEMS.edmx.diagram">
+      <DependentUpon>PEMS.edmx</DependentUpon>
+    </None>
+    <None Include="PEMS\PEMS.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PEMS.edmx</DependentUpon>
+      <LastGenOutput>PEMS.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\GIS_Enforcement_FileUpload.sql" />
+    <Content Include="Scripts\Grids\Alarms\Stored Procedures\sp_GetActiveAlarms.sql" />
+    <Content Include="Scripts\Grids\Alarms\Views\pv_ActiveAlarms.sql" />
+    <Content Include="Scripts\Grids\Alarms\Views\pv_HistoricAlarms.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertAllCustomGridOptions.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertCustomerGridsFromTemplateMap.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertCustomerGridTemplate.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertCustomerGridTemplateCol.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertCustomerGridTemplateMapping.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_InsertCustomerGridTemplateMappingDefaults.sql" />
+    <Content Include="Scripts\Grids\Customer Grids\sp_RefreshAllCustomerGrids.sql" />
+    <Content Include="Scripts\Grids\Events\Stored Procedures\sp_GetEventsItems.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsActiveAlarms.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsAllAlarms.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsCollectionCBR.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsCollectionCommEvent.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsDiagnostics.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsGSMConnectionLogs.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsHistoricalAlarms.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsSummary.sql" />
+    <Content Include="Scripts\Grids\Events\Views\pv_EventsTransactions.sql" />
+    <Content Include="Scripts\Grids\Occupancy\Stored Procedures\sp_GetOccupancy.sql" />
+    <Content Include="Scripts\Grids\Occupancy\Views\pv_Occupancy.sql" />
+    <Content Include="Scripts\Grids\Transactions\Stored Procedures\sp_GetCustomerTransactions.sql" />
+    <Content Include="Scripts\Grids\Transactions\Views\pv_CustomerTransactions.sql" />
+    <Content Include="Scripts\PEMSRBAC_CreateScript.sql" />
+    <Content Include="Scripts\PEMSRBAC_DML.sql" />
+    <Content Include="Scripts\PEMS_DDL.sql" />
+    <Content Include="Scripts\PEMS_DML.sql" />
+    <Content Include="Scripts\temp\DuncanViewsAndStoredProcs.sql" />
+    <Content Include="Scripts\temp\PEMS.AddMissingKeys.sql" />
+    <Content Include="Scripts\PEMS.Updates.sql" />
+    <Content Include="Scripts\Unidev_RBAC_Changes.sql" />
+    <Content Include="Scripts\RBAC.ChangeStoreId.sql" />
+    <Content Include="Scripts\RBAC.InitialDataInserts.sql" />
+    <Content Include="Scripts\Unidev_NSC_Changes.sql" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

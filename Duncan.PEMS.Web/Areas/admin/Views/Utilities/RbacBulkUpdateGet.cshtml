@@ -1,0 +1,34 @@
+﻿@model Duncan.PEMS.Entities.Utilities.RbacCustomerListModel
+@using Duncan.PEMS.Utilities
+@{
+    ViewBag.Title = "RbacBulkUpdateGet";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Utilities") / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "RBAC Bulk Updates")</span></h1>
+}
+
+
+<select class = "customer_text" id = "CustomerList">
+@foreach (var customer in Model.Customers)
+{
+    @Html.Raw("<option value = \"" + customer.Id.ToString() + "\">" + customer.DisplayName + "</option>\n");
+}
+</select>
+
+
+<div class="customer_actions">
+    <button type="submit" name="submitButton" class="button" onclick="GetXML()">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Get XML" )</button>
+</div>
+        
+
+<script>
+    
+    function GetXML() {
+        var customerId = $("#CustomerList option:selected").val();
+        var link = '@Html.Raw(@Url.Action( "RbacBulkUpdateGetExisting", "Utilities"))' + "?customerId=" + customerId;
+        window.location = link;
+    }
+
+</script>

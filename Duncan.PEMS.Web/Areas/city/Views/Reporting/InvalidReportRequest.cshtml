@@ -1,0 +1,18 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Reports.ReportErrorModel
+
+@{
+    ViewBag.Title = "Invalid Report Request";
+}
+
+<h2>Invalid Report Request</h2>
+
+
+<div class="validationSum-container">@Model.ErrorDescription</div>
+
+
+<div class="customer_actions" style="float:left">
+            @Html.ActionLink( (string) ( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ) ?? "Return" ), Model.ReturnAction, Model.ReturnController,
+                              null,  new {@class = "button previous"} )
+        </div>
+

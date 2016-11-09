@@ -1,0 +1,1002 @@
+﻿@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _________________________________________________________________________________________________________
+ * 
+ * 12/12/2013           Sergey Ostrerov            Updated: syntax error in Javascript.
+ * 12/20/2013           Sergey Ostrerov            Enhancement - AssetID Change: Allow manually entering AssetID
+ * 01/27/2014           Sergey Ostrerov            DPTXPEMS-8, 14, 45 - Can't create new TX meter through PEMS UI. 
+ * *****************************************************************************************************************************************************/ *@
+
+@using Duncan.PEMS.DataAccess
+@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Assets.AssetTypesModel
+
+@{
+    ViewBag.Title = "Create Asset";
+}
+
+
+@section PageHeader 
+{
+
+    <!--<h1>Asset Management / Asset Inquiry / <span>Create Asset</span></h1>-->
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Create Asset")</span></h1>
+}
+
+
+@using (Html.BeginForm("Create", "Assets", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+{
+
+    var isChecked = false;
+    <fieldset style="padding-left: 1em; float: left; border: solid; border-width: thin; border-color: InactiveCaption; width: 30%">
+        <legend style="font-style: italic;">Asset Adding Type&nbsp;</legend>
+        <div>
+            <span>@Html.RadioButton(Duncan.PEMS.Entities.Assets.AssetTypesModel.GroupNameMode, "1", true, new { @onclick = "AssetModeSelected(this);", @id = "autoMode" })Auto</span><br />
+            <span>@Html.RadioButton(Duncan.PEMS.Entities.Assets.AssetTypesModel.GroupNameMode, "0", false, new { @onclick = "AssetModeSelected(this);", @id = "manualMode" })Manual</span>
+        </div>
+
+    </fieldset>
+    <br />
+    <div>&nbsp;    &nbsp;&nbsp;&nbsp;        </div>
+    <div>&nbsp;   &nbsp;&nbsp;         </div>
+    <div>&nbsp;   &nbsp;&nbsp;        </div>
+    <div>&nbsp;&nbsp;      </div>
+
+    <hr />
+    <div style="float: left; width: 20%;">
+
+        @foreach (var assetType in Model.AssetTypes)
+        {
+            @Html.Raw("<div>")
+            @Html.RadioButton(Duncan.PEMS.Entities.Assets.AssetTypesModel.GroupName, ((int)assetType.Type).ToString(), isChecked, new { id = Duncan.PEMS.Entities.Assets.AssetTypesModel.GroupName + '_' + ((int)assetType.Type).ToString(), @onclick = "AssetTypeSelected(this);" }) @assetType.Name
+            isChecked = false;
+            @Html.Raw("</div>")
+        }
+    </div>
+    <div style="float: left; width: 60%">
+        <div id="div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.SingleSpaceMeter).ToString()); }"  style="display: none">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Single-Space Meter Data")</div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Number")</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="1" data-max="9999" 
+                                data-bind="value: StartBay, events:{ change: OnBayRangeChange }" name="StartBay"  id="StartBay" value="@Model.StartBay" />
+                @Html.RequiredMarkFor(m => m.StartBay, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.StartBay)
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Enter Location ID")</div>
+                @Html.TextBoxFor(m => m.LocationName, new { @class = "customer_text", @id = "LocationName" })
+                @Html.RequiredMarkFor(m => m.LocationName, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.LocationName)
+                <span class="required_asterisk">*</span>
+                <span id="divValidNotifLocation" class="divValidNotificationHide"></span>                
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Enter Mech Serial Number")</div>
+                @Html.TextBoxFor(m => m.MechSerialNo, new { @class = "customer_text", @id = "MechSerialNo" })
+                @Html.RequiredMarkFor(m => m.MechSerialNo, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.MechSerialNo)               
+                <span id="divValidNotifMechSerial" class="divValidNotificationHide"></span>
+            </div>
+
+
+
+        </div>
+        <div id="div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.MultiSpaceMeter).ToString()); }"  style="display: none">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Multi-Space Meter Data")</div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Start")</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999" 
+                                data-bind="value: StartBay, events:{ change: OnBayRangeChange }" name="StartBay"  id="StartBay" value="@Model.StartBay" />
+                @Html.RequiredMarkFor(m => m.StartBay, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.StartBay)
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay End")</div>
+                <input type="text" style="width: 60px" data-role="numerictextbox" data-format="#;" data-step="1" data-min="0" data-max="9999" 
+                                 data-bind="value: EndBay, events:{ change: OnBayRangeChange }" name="EndBay" id="EndBay"  value="@Model.EndBay" />
+                @Html.RequiredMarkFor(m => m.EndBay, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.EndBay)
+            </div>
+        </div>
+
+        <div id="div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.Gateway).ToString()); }"  style="display: none">
+            <div id="divGateWay" class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Gateway Data")</div>
+        </div>
+
+        <div id="div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.Sensor).ToString()); }" style="display: none">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Sensor Data")</div>
+
+                           
+                    <div>
+                        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")</div>
+                        <div id="divMetersDropdown">
+                        </div>
+                    </div>
+               
+                    
+                    <div>
+                        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Associated Space")</div>
+                        <div id="divSensorSpacesDropdown">
+                        </div>
+                    </div>
+                                      
+                        <div>
+                            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Associated Gateway")</div>
+                            <div id="divSensorGatewaysDropdown">
+                            </div>
+                        </div>
+              </div>
+
+
+               
+        
+            <div id="div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.Mechanism).ToString()); }"  style="display: none">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Mechanism Data")</div>
+          <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Serial Number")</div>
+                  @Html.TextBoxFor(m => m.SerialNumber, new { @class = "customer_text", @id = "serialNumber" })
+                @Html.RequiredMarkFor(m => m.SerialNumber, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.SerialNumber)
+              <span class="required_asterisk">*</span>
+                <span id="divValidNotifSerial" class="divValidNotificationHide"></span>
+            </div>
+        </div>
+        
+        
+        @* //todo - GTC: DataKey Work. Add DataKey here and also add display/hide logic in javascript below just like Mechanisms*@
+        
+
+        <div id="divAssetEntry" style="display: none;">
+            <div>
+                <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Enter Asset ID")</div>
+                @Html.TextBoxFor(m => m.AssetID, new { @class = "customer_text", @id = "assetID" })
+                @Html.RequiredMarkFor(m => m.AssetID, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.AssetID)
+                <span class="required_asterisk">*</span>
+                <span id="divValidNotif" class="divValidNotificationHide"></span>
+            </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Confirm Asset ID")</div>
+                @Html.TextBoxFor(m => m.AssetIDConfirm, new { @class = "customer_text", @id = "assetIDConf" })
+                @Html.RequiredMarkFor(m => m.AssetIDConfirm, new { @class = "required_asterisk" })
+                @Html.ValidationMessageFor(m => m.AssetIDConfirm)
+                <span class="required_asterisk">*</span>
+                <span id="divValidNotifConf" class="divValidNotificationVisible"></span>
+            </div>
+        </div>
+    </div>
+    
+               
+
+    
+
+    <div style="padding-left: 1em" class="customer_actions">
+        <button type="submit" name="submitButton" class="button important disabledButton" value="CREATE" disabled onclick="SetReturnURL();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Create Asset")</button>
+        @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous", @id = "btnReturn" })
+    </div>
+    
+    
+}
+
+
+
+<script>
+
+    // **************** GLOBAL VARIABLES DECLARATION ****************************************
+    var custID = '@Model.CustomerId';
+    var AssetEntryMode = 1;
+    var areaIDVal;
+    var meterTypeSelected = false;
+    var assetModeAutoSelected = true;
+    var assetModeManualSelected = false;
+    var isMatched=null;
+    var assetTypeSelectedID;
+    var confirmCntr = 0;
+    var lastVisibleDiv;
+    var assetIdReg = '@@[0-9]*\.?[0-9]';
+
+    // **************** END OF GLOBAL VARIABLES DECLARATION ****************************************
+
+    // Create a view-model for the page controls. Model holds variables and view-related methods
+    var viewModel = kendo.observable({
+        StartBay: @Model.StartBay,
+        EndBay: @Model.EndBay,
+        OnBayRangeChange : function () {
+            if (this.EndBay < this.StartBay) {
+                this.set("EndBay", this.StartBay);
+            }
+        } // End of OnBayRangeChange : function ()
+    });  // kendo.observable({
+
+   
+    $(document).ready(function () {
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+        ResetReturnURL();
+        $("#assetIDConf").css("background-color", "#F0F0F0"); 
+        $('#assetIDConf').attr('disabled',true).attr('readonly',true);
+
+
+        // *******************************************************************************************************************************
+        // ********************************************* E V E N T S **************************************************************************
+        // *******************************************************************************************************************************
+
+        $('#assetID').keypress(function(key){
+            var assetIdVal =  $(this).val();
+            if(assetIdVal == null){
+                $('#divValidNotif').html('');
+                $('#divValidNotif').hide();
+            }
+            if(!isNaN(String.fromCharCode(key.which))){
+                $('#divValidNotif').html('');
+                $('#divValidNotif').hide();
+            }
+            else{
+                $('#divValidNotif').html('Only Number Allowed '+ assetIdVal);
+                $('#divValidNotif').show();
+                return false;
+            }
+        });  // End Of $('#assetID').keypress(function(key){
+
+
+
+        $('#assetID').keyup(function(key){
+            if($('#assetID').val() == '' && !isNaN(String.fromCharCode(key.which))){
+                $('#divValidNotif').html('');
+                $('#divValidNotif').hide();
+            }
+        });  // // End Of $('#assetID').keyup(function(key){
+
+
+        $('#assetIDConf').keypress(function(e){
+            var assetIDValConf =  $(this).val();
+            var assetIdVal =  $('#assetID').val();
+            if(assetIDValConf == ''){
+                isMatched = 1;
+                $('#divValidNotif').html('');
+                $('#divValidNotif').hide();
+            }
+
+            if(!isNaN(String.fromCharCode(e.which))){
+                isMatched = 1;
+                $('#divValidNotifConf').html('');
+                $('#divValidNotifConf').hide();
+            }
+            else{
+                $('#divValidNotifConf').html('Only Number Allowed '+ assetIdVal);
+                $('#divValidNotifConf').show();
+                return false;
+            }
+        });   // $('#assetIDConf').keypress(function(e){
+
+
+        $('#assetIDConf').keyup(function(key){
+            var assetIdVal =  $('#assetID').val();
+            var assetIdValConf =  $(this).val();
+            var userEntryCharConf  = String.fromCharCode(key.keyCode);
+            var arrAssetUserEntry = new Array();
+            arrAssetUserEntry = assetIdVal.split('');
+            var assetMainUserEntrySingleChar = arrAssetUserEntry[confirmCntr];
+            if($(this).val().length > $('#assetID').val().length )
+            {
+                isMatched = 1;
+                $('#divValidNotifConf').html('');
+                $('#divValidNotifConf').hide();
+                return false;
+            }
+        });  // End Of $('#assetIDConf').keyup(function(key){
+
+
+        $('#assetID').change(function(){
+            var assetID = $(this).val();
+            confirmCntr=0;
+            $('#assetIDConf').val('');
+            if(assetID != ''){
+                // Validate AssetID entered by user - existance in DB (ajax call)
+                $.ajax({
+                    url: '@Url.Action("AssetIDExistence")',
+                    data: { 
+                        assetID: assetID,
+                        customerID:custID,
+                        areaID: areaIDVal,
+                        assetTpeId:assetTypeSelectedID
+                    },
+                    type: 'GET',
+                    contentType: 'application.json',
+                    success: function (data) {
+                        $('#divValidNotif').html(data);
+                        $('#divValidNotif').show();
+                        $('#assetIDConf').val('');
+                        $('#divValidNotifConf').html('');
+                        $(":button").attr("disabled",true);
+                        $(":button").addClass("disabledButton");
+                        $('#assetIDConf').focus();
+                        var ccc = data.indexOf('use');
+                        if(data.indexOf('use') == '-1'){
+                            $('#divValidNotif').removeClass('divValidNotificationVisible');
+                            $('#divValidNotif').addClass('divValidNotificationVisibleValid');
+                            $('#assetIDConf').removeAttr('disabled').removeAttr('readonly');
+                            $(function() {
+                                $('#assetIDConf').focus();
+                            });
+                            $("#assetIDConf").css("background-color", "#FFFFFF"); 
+                        }
+                        else{
+                            $('#divValidNotif').removeClass('divValidNotificationVisibleValid');
+                            $('#divValidNotif').addClass('divValidNotificationVisible');
+                            $("#assetIDConf").css("background-color", "#F0F0F0"); 
+                            $('#assetIDConf').attr('disabled',true).attr('readonly',true);
+                            $('#divValidNotifConf').html('');
+                            
+                            $(":button").attr("disabled",true);
+                            $(":button").addClass("disabledButton");
+                            $('#assetID').select();
+                            confirmCntr=0;
+                        }
+                    },
+                    error: function(data) {
+                        var ggg=data.responseText;
+                    }
+                });  // End Of  $.ajax({
+            }
+            else{
+                $("#assetIDConf").css("background-color", "#F0F0F0"); 
+                $('#assetIDConf').attr('disabled',true).attr('readonly',true);
+                $('#divValidNotifConf').html('');
+                $('#assetIDConf').val('');
+                $(":button").attr("disabled",true);
+                $(":button").addClass("disabledButton");
+                $('#divValidNotif').html('');
+                $('#divValidNotif').hide();
+                $(this).focus();
+            }
+        });  // End Of  $('#assetID').change(function(){
+
+
+
+        $('#assetIDConf').change(function(){
+            var assetIDVal = $('#assetID').val();
+            var assetIDConfVal = $(this).val();
+
+         
+            
+
+            if (assetIDConfVal != '' && assetIDConfVal.length == assetIDVal.length) {
+                if (assetIDConfVal != assetIDVal) {
+                    // isMatched = 0;
+                    $('#divValidNotifConf').removeClass('divValidNotificationVisibleValid');
+                    $('#divValidNotifConf').addClass('divValidNotificationVisible');
+                    $('#divValidNotifConf').html('Mismatched!!! ' + assetIDConfVal);
+                    $('#divValidNotifConf').show();
+                    $(":button").attr("disabled", true);
+                    $(":button").addClass("disabledButton");
+                } else {
+                    $('#assetIDConf').focus();
+                    $('#divValidNotifConf').removeClass('divValidNotificationVisible');
+                    $('#divValidNotifConf').addClass('divValidNotificationVisibleValid');
+                    $('#divValidNotifConf').html('Confirmed: ' + assetIDConfVal);
+                    $('#divValidNotifConf').show();
+                    $("#assetIDConf").css("background-color", "#F0F0F0");
+                    $('#assetIDConf').attr('disabled', true).attr('readonly', true);
+                    if($('#AssetType_4').is(':checked'))
+                    {
+                        //if($('#MechSerialNo').val() != '' && $('#LocationName').val() != '' )
+                        if($('#LocationName').val() != '' )
+                        {
+                            $(":button").removeAttr("disabled");
+                            $(":button").removeClass("disabledButton");
+                        }
+                    }
+                    else
+                    {
+                        $(":button").removeAttr("disabled");
+                        $(":button").removeClass("disabledButton");
+                    }
+                    //if this is mechanism, make sure the serial number is inputted once this is successful
+                    if ($('#AssetType_8').attr("checked")) {
+                        if (($('#serialNumber').val() == null ||$('#serialNumber').val() == '' )) {
+                            $(":button").attr("disabled", true);
+                            $(":button").addClass("disabledButton");
+                        }
+                    }
+                    
+                }
+
+            } else {
+                //$('#divValidNotifConf').removeClass('divValidNotificationVisibleValid');
+                //$('#divValidNotifConf').addClass('divValidNotificationVisible');
+                //$('#divValidNotifConf').html('Please confirm asset ID.');
+                //$('#divValidNotifConf').show();
+                //$('#divValidNotifConf').focus();
+            }
+        });   // End Of $('#assetIDConf').change(function(){
+
+       
+
+
+
+        //mechanism serial number unique key check
+        $('#serialNumber').change(function(){
+            var serialNumber = $(this).val();
+            confirmCntr=0;
+            if(serialNumber != ''){
+                // Validate Serial number entered by user - existance in DB (ajax call)
+                $.ajax({
+                    url: '@Url.Action("SerialNumberIDExistence")',
+                    data: { 
+                        serialNumber: serialNumber,
+                        customerID:custID
+                    },
+                    type: 'GET',
+                    contentType: 'application.json',
+                    success: function (data) {
+                        $('#divValidNotifSerial').html(data);
+                        $('#divValidNotifSerial').show();
+                        $(":button").attr("disabled",true);
+                        $(":button").addClass("disabledButton");
+                       
+                        if(data.indexOf('use') == '-1'){                           
+                            $('#divValidNotifSerial').removeClass('divValidNotificationVisible');
+                            $('#divValidNotifSerial').addClass('divValidNotificationVisibleValid');
+                            //if its auto, make sure the button is enabled, otherwise the asset confirmation bo wil do that
+                            if (AssetEntryMode == 1) {
+                                $(":button").removeAttr("disabled");
+                                $(":button").removeClass("disabledButton");
+                            } 
+                                //if its manual, we need ot make sure the asset id was successful
+                            
+                            else {
+
+                               
+                                if (($('#assetIDConf').val() != null && $('#assetIDConf').val() != '')) {                                    
+                                    $(":button").removeAttr("disabled");
+                                    $(":button").removeClass("disabledButton");
+                                }
+                            }
+                        }
+                        else{
+                            
+                            $('#divValidNotifSerial').removeClass('divValidNotificationVisibleValid');
+                            $('#divValidNotifSerial').addClass('divValidNotificationVisible');
+                            $(":button").attr("disabled",true);
+                            $(":button").addClass("disabledButton");
+                            $('#serialNumber').val('');
+                            $('#serialNumber').select();
+                            confirmCntr=0;
+                        }
+                    },
+                    error: function(data) {
+                        var ggg=data.responseText;
+                    }
+                });  // End Of  $.ajax({
+            }
+            else
+            {
+               
+                $(":button").attr("disabled",true);
+                $(":button").addClass("disabledButton");
+                $('#divValidNotifSerial').html('');
+                $('#divValidNotifSerial').hide();
+                $(this).focus();
+            }
+        });  // End Of  $('#assetID').change(function(){
+
+        //});  // End Of $(document).ready(function () 
+
+
+
+
+        //mechanism serial number unique key check for single space
+        $('#MechSerialNo').change(function(){
+            var serialNumber = $(this).val();
+            $('#divValidNotifMechSerial').html('');
+            confirmCntr=0;
+            if(serialNumber != ''){
+                // Validate Serial number entered by user - existance in DB (ajax call)
+                $.ajax({
+                    url: '@Url.Action("SingleSpaceSerialNumberExistance")',
+                    data: { 
+                        serialNumber: serialNumber,
+                        customerID:custID
+                    },
+                    type: 'GET',
+                    contentType: 'application.json',
+                    success: function (data) {
+                       
+                        $(":button").attr("disabled",true);
+                        $(":button").addClass("disabledButton");
+                       
+                        if(data.indexOf('use') == '-1'){                         
+                            $('#divValidNotifMechSerial').html(data);
+                            $('#divValidNotifMechSerial').show();
+                            $('#divValidNotifMechSerial').removeClass('divValidNotificationVisible');
+                            $('#divValidNotifMechSerial').addClass('divValidNotificationVisibleValid');
+                            //if its auto, make sure the button is enabled, otherwise the asset confirmation bo wil do that
+                            if (AssetEntryMode == 1) {
+                                if (($('#LocationName').val() != null && $('#LocationName').val() != '')) {
+                                    $(":button").removeAttr("disabled");
+                                    $(":button").removeClass("disabledButton");
+                                }
+                            } 
+                                //if its manual, we need ot make sure the asset id was successful
+                            
+                            else {
+                            
+                                if (($('#assetIDConf').val() != null && $('#assetIDConf').val() != '')) {
+                                    $(":button").removeAttr("disabled");
+                                    $(":button").removeClass("disabledButton");
+                                }
+                            }
+                        }
+                        else{                           
+                            if(data.indexOf('already') != '-1'){
+                                var r = confirm("Are you sure you want to reassign the same Serial number with the current asset ?");
+                                if (r == false) {
+                                    //$('#divValidNotifMechSerial').html(data);
+                                    //$('#divValidNotifMechSerial').show();
+                                    $('#MechSerialNo').val('');
+                                    $('#divValidNotifMechSerial').removeClass('divValidNotificationVisibleValid');
+                                    $('#divValidNotifMechSerial').addClass('divValidNotificationVisible');
+                                   // $('#assetIDConf').val('');                                 
+                                       
+                                        if(AssetEntryMode == 1){
+                                            if (($('#LocationName').val() != null && $('#LocationName').val() != '')) {
+                                                $(":button").removeAttr("disabled");
+                                                $(":button").removeClass("disabledButton");
+                                            }
+                                        }
+                                        else{
+                                            if (($('#assetIDConf').val() != null && $('#assetIDConf').val() != '')) {
+                                                $(":button").removeAttr("disabled");
+                                                $(":button").removeClass("disabledButton");
+                                            }
+                                        }
+
+                                        $('#MechSerialNo').select();
+                                  
+                                    confirmCntr=0;
+                                   
+                                }
+                                else{                                    
+                                    $('#divValidNotifMechSerial').removeClass('divValidNotificationVisible');
+                                    $('#divValidNotifMechSerial').addClass('divValidNotificationVisibleValid');
+                                    //if its auto, make sure the button is enabled, otherwise the asset confirmation bo wil do that
+                                    if (AssetEntryMode == 1) {                                       
+                                        if (($('#LocationName').val() != null && $('#LocationName').val() != '')) {
+                                            $(":button").removeAttr("disabled");
+                                            $(":button").removeClass("disabledButton");
+                                        }
+                                    } 
+                                        //if its manual, we need ot make sure the asset id was successful
+                            
+                                    else {                                        
+                                        if (($('#assetIDConf').val() != null && $('#assetIDConf').val() != '')) {
+                                            $(":button").removeAttr("disabled");
+                                            $(":button").removeClass("disabledButton");
+                                        }
+                                    }
+
+                                }
+                            }
+                            else{
+                                $('#divValidNotifMechSerial').html(data);
+                                $('#divValidNotifMechSerial').show();
+                                $('#assetIDConf').val('');
+                                if (($('#assetID').val() != null && $('#assetID').val() != '')) {
+                                    $('#assetIDConf').removeAttr('disabled').removeAttr('readonly');                               
+                                    $("#assetIDConf").css("background-color", "#FFFFFF"); 
+                                }
+                                $('#MechSerialNo').val('');
+                                $('#divValidNotifMechSerial').removeClass('divValidNotificationVisibleValid');
+                                $('#divValidNotifMechSerial').addClass('divValidNotificationVisible');
+                                $(":button").attr("disabled",true);
+                                $(":button").addClass("disabledButton");
+                                $('#MechSerialNo').select();
+                                confirmCntr=0;
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        var ggg=data.responseText;
+                    }
+                });  // End Of  $.ajax({
+            }
+            //else{
+               
+            //    $(":button").attr("disabled",true);
+            //    $(":button").addClass("disabledButton");
+            //    $('#divValidNotifMechSerial').html('');
+            //    $('#divValidNotifMechSerial').hide();
+            //    $(this).focus();
+            //}
+        });  // End Of  $('#assetID').change(function(){
+
+         
+
+        //location Nmae check for single space
+        $('#LocationName').change(function(){  
+             var LocationName = $(this).val();
+            confirmCntr=0;
+            if(LocationName != ''){
+                // Validate Serial number entered by user - existance in DB (ajax call)
+                $.ajax({
+                    url: '@Url.Action("LocationNameExistence")',
+                    data: { 
+                        locationname: LocationName,
+                        customerID:custID
+                    },
+                    type: 'GET',
+                    contentType: 'application.json',
+                    success: function (data) {
+                        $('#divValidNotifLocation').html(data);
+                        $('#divValidNotifLocation').show();
+                        $(":button").attr("disabled",true);
+                        $(":button").addClass("disabledButton");
+                        if(data.indexOf('use') == '-1'){                           
+                            $('#divValidNotifLocation').removeClass('divValidNotificationVisible');
+                            $('#divValidNotifLocation').addClass('divValidNotificationVisibleValid');
+                            
+                            //if its auto, make sure the button is enabled, otherwise the asset confirmation bo wil do that
+                            
+                            if (AssetEntryMode == 1) {                               
+                               // if (($('#MechSerialNo').val() != null && $('#MechSerialNo').val() != '')) {
+                                    $(":button").removeAttr("disabled");
+                                    $(":button").removeClass("disabledButton");
+                              //  }
+                            } 
+                                
+                                //if its manual, we need ot make sure the asset id was successful
+                            
+                           else {                                
+                                if (($('#assetIDConf').val() != null && $('#assetIDConf').val() != '')) {
+                                    $(":button").removeAttr("disabled");
+                                    $(":button").removeClass("disabledButton");
+                                }
+                            }
+                        }
+                        else{
+                            $('#assetIDConf').val('');
+
+                            if (($('#assetID').val() != null && $('#assetID').val() != '')) {
+                                $('#assetIDConf').removeAttr('disabled').removeAttr('readonly');                               
+                                $("#assetIDConf").css("background-color", "#FFFFFF"); 
+                            }
+                            $('#LocationName').val('');
+                            $('#divValidNotifLocation').removeClass('divValidNotificationVisibleValid');
+                            $('#divValidNotifLocation').addClass('divValidNotificationVisible');
+                            $(":button").attr("disabled",true);
+                            $(":button").addClass("disabledButton");
+                            $('#LocationName').select();
+                            confirmCntr=0;
+                        }
+                    },
+                    error: function(data) {
+                        var ggg=data.responseText;
+                    }
+                });  // End Of  $.ajax({
+            }
+            else{
+               
+                $(":button").attr("disabled",true);
+                $(":button").addClass("disabledButton");
+                $('#divValidNotifLocation').html('');
+                $('#divValidNotifLocation').hide();
+                $(this).focus();
+            }
+        });  // End Of  $('#assetID').change(function(){
+
+        // ********************************************* END OF E V E N T S *******************************************************
+
+
+    });  // End Of $(document).ready(function () 
+
+    var lastVisibleDiv;
+
+    // ***************************************************************************************************************
+    // *********************************** HELPERS *******************************************************************
+    // ***************************************************************************************************************
+    function onspaceChange()
+    {
+       
+        var AssociatedSpaceId = $("#SensorSpaceList").val();       
+        $.ajax({
+            url: '@Url.Action("IsExistsAssociatedSpaceId")',             
+            data: { AssociatedSpaceId: AssociatedSpaceId, CustomerId: custID },
+            type: 'POST',
+            success: function (data) {
+                if (data == true) {
+                    var r = confirm("Are you sure you want to reassign the same space with the current sensor ?");
+                    if (r == false) {
+                        $("#SensorSpaceList").val('');
+                    }
+                }                  
+
+            },              
+        });
+    }
+    function AssetTypeSelected(item) {
+        meterTypeSelected = true
+        if (lastVisibleDiv != null) {
+            $(lastVisibleDiv).hide();
+        }
+       
+        $('#divValidNotifSerial').html('');
+        $('#divValidNotif').html('');
+        $('#divValidNotifConf').html('');
+        $('#divValidNotif').hide();
+        $('#divValidNotifConf').hide();
+        $('#serialNumber').val('');
+        $('#assetID').val('');
+        $('#assetIDConf').val('');
+        $("#assetIDConf").css("background-color", "#F0F0F0");
+        $('#assetIDConf').attr('disabled', true).attr('readonly', true);
+
+        switch (item.value) {
+            case "1":
+                assetTypeSelectedID = "1";
+                break;
+            case "2":
+                assetTypeSelectedID = "13";  // Gateway
+                areaIDVal = 98;
+                break;
+            case "3":
+                assetTypeSelectedID = "10";  // Sensor
+                areaIDVal = 99;
+                break;
+            case "4":
+                assetTypeSelectedID = "0";  // Single Space
+                areaIDVal = 1;
+
+                break;
+            case "5":
+                assetTypeSelectedID = "1";  // Multispace
+                areaIDVal = 1;
+                break;
+            case "6":
+                assetTypeSelectedID = "11";  // Cashbox
+                areaIDVal = 97;
+                break;
+            case "8":
+                assetTypeSelectedID = "31";  // mech
+                areaIDVal = 96;
+                break;
+            case "9":
+                assetTypeSelectedID = "32";  // datakey
+                areaIDVal = 95;
+                break;
+        }
+
+        lastVisibleDiv = "#div_data_" + item.defaultValue;
+
+        if (item.defaultValue == 3) {
+            OnSensorGetSpacesAndGateways();
+        }
+
+        if(AssetEntryMode == 1 && lastVisibleDiv != '#div_data_2' ){
+            $(lastVisibleDiv).show();
+        }
+        else if(AssetEntryMode != 1 && lastVisibleDiv != '#div_data_2' ){
+            $(lastVisibleDiv).show();
+        }
+        else if(AssetEntryMode != 1 && lastVisibleDiv == '#div_data_2' ){
+            $(lastVisibleDiv).show();
+        }
+        else if(AssetEntryMode == 1 && (lastVisibleDiv == '#div_data_2' || lastVisibleDiv == '#div_data_6')) {
+            $(lastVisibleDiv).hide();
+        }
+
+
+        if (($('#assetID').val() != null && $('#assetIDConf').val() == null)) {
+            $(":button").removeAttr("disabled");
+            $(":button").removeClass("disabledButton");
+        }      
+        if (AssetEntryMode == 1) {
+            $("#divAssetEntry").hide();
+            $('#assetID').focus();
+        }
+        else if (AssetEntryMode == 0) {
+            $("#divAssetEntry").show();
+            $('#assetID').focus();
+        }
+
+        if (assetTypeSelectedID != 0 && AssetEntryMode > 0) {
+            $(":button").removeAttr("disabled");
+            $(":button").removeClass("disabledButton");
+        }
+        else if (assetTypeSelectedID == 0  && AssetEntryMode == 1){
+            $(":button").removeAttr("disabled");
+            $(":button").removeClass("disabledButton");
+        }
+
+
+        //for mechanisms, force them to add serial number
+        if ($('#AssetType_8').attr("checked")) {
+            $(":button").attr("disabled",true);
+            $(":button").addClass("disabledButton");
+        }
+
+        //for mechanisms, force them to add serial number
+        if ($('#AssetType_4').attr("checked")) {
+            $(":button").attr("disabled",true);
+            $(":button").addClass("disabledButton");
+        }
+
+    }  // End  Of function AssetTypeSelected(item){
+
+
+    function OnSensorGetSpacesAndGateways() {
+        $.ajax({
+            url: '@Url.Action("GetSensorSpacesAndGateways")',
+                data: { customerId: '@Model.CustomerId' },
+                type: 'POST',
+                success: OnSensorGetSpacesAndGatewaysSuccess,
+                error: function (data) {
+                    pemsPopupShowErrorWithTag(
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]', "1234", data.responseText);
+                }
+            });
+        }
+
+
+
+
+    function OnSensorGetSpacesAndGatewaysSuccess(data, textStatus, jqXHR) {
+
+        var ddl = "<select id=\"MeterList\" name=\"MetersList\" onchange=onChange();>\n"; 
+        ddl += "<option value=\"-1\">  </option>\n";
+
+        for (var meters in data.Meters) {
+            var myMeters = data.Meters[meters];
+            
+            ddl += "<option value=\"" + myMeters.MeterID + "\">" + myMeters.MeterName + "</option>\n";
+            //ddl += "<option value=\"" + myMeters.MeterName + "</option>\n";
+        }
+        ddl += "</select>\n";
+
+        $("#divMetersDropdown").html(ddl);
+
+        var ddl = "<select id=\"SensorSpaceList\" name=\"SensorSpaceList\" onchange=onspaceChange();>\n"; 
+        ddl += "<option value=\"-1\">  </option>\n";
+
+        for (var space in data.Spaces) {
+            var mySpace = data.Spaces[space];
+            //  ddl += "<option value=\"" + mySpace.SpaceIdDisplay + "\">" + mySpace.SpaceIdDisplay + " - Bay " + mySpace.BayNumber + "</option>\n";
+        }
+        ddl += "</select>\n";
+
+        $("#divSensorSpacesDropdown").html(ddl);
+
+        // Populate gateway drop-down with data.
+        ddl = "<select id=\"SensorGatewayList\" name=\"SensorGatewayList\">\n";
+        for (var gateway in data.Gateways) {
+            var myGateway = data.Gateways[gateway];
+            ddl += "<option value=\"" + myGateway.Value + "\">" + myGateway.Text + "</option>\n";
+        }
+        ddl += "</select>\n";
+
+        $("#divSensorGatewaysDropdown").html(ddl);
+    }
+
+    function onChange()
+    {       
+        var MeterID = $("#MeterList").val();    
+        $.ajax({
+            url: '@Url.Action("GetAssociatedSpaceIDs")',             
+            data: { meterID: MeterID, CustomerId: custID },
+            type: 'POST',
+            success:GetSpaceIDs,            
+        });
+    }
+    function GetSpaceIDs(data, textStatus, jqXHR) {
+        // Populate parking space drop-down with data.
+        var ddl = "<select id=\"SensorSpaceList\" name=\"SensorSpaceList\" onchange=onspaceChange();>\n"; 
+        ddl += "<option value=\"-1\">  </option>\n";
+
+        for (var space in data.Spaces) {
+            var mySpace = data.Spaces[space];
+            ddl += "<option value=\"" + mySpace.SpaceIdDisplay + "\">" + mySpace.SpaceIdDisplay + " - Bay " + mySpace.BayNumber + "</option>\n";
+        }
+        ddl += "</select>\n";
+
+        $("#divSensorSpacesDropdown").html(ddl);
+    }
+
+
+        // *************************************************************
+        // Set/Reset Return URL
+        // *************************************************************
+        function SetReturnURL() {
+            var returnURLObject = new Object();
+
+            returnURLObject.url = location.pathname + "?";
+
+            if (getParameterByName('customerId')) {
+                returnURLObject.url += "customerId=" + getParameterByName('customerId');
+            }
+            if (getParameterByName('areaId')) {
+                returnURLObject.url += "&areaId=" + getParameterByName('areaId');
+            }
+            if (getParameterByName('assetId')) {
+                returnURLObject.url += "&assetId=" + getParameterByName('assetId');
+            }
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                window.sessionStorage.setItem("returnToAssetURL", JSON.stringify(returnURLObject));
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+        }
+
+
+
+        // Enhancement: Asset ID Entry
+        function AssetModeSelected(item) {          
+            AssetEntryMode = item.defaultValue;
+            // Auto Entering AssetID
+            if (AssetEntryMode == 1) {               
+                $('#AssetType_6').removeAttr('disabled');
+                $("#divAssetEntry").hide();
+                assetModeAutoSelected = true;
+                assetModeManualSelected = false;
+                $('#divValidNotifSerial').html('');
+                $('#divValidNotif').html('');
+                $('#divValidNotifConf').html('');
+                $('#divValidNotif').hide();
+                $('#divValidNotifConf').hide();
+                $('#assetID').val('');
+                $('#assetIDConf').val('');
+                $("#assetIDConf").css("background-color", "#F0F0F0");
+                $('#assetIDConf').attr('disabled', true).attr('readonly', true);
+                $('#div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.Gateway).ToString()); }').css('display','none');
+              
+            }
+                // Manual Entering AssetID
+            else if (AssetEntryMode == 0 && meterTypeSelected == true) {               
+                
+               // if ( $('#AssetType_6').attr("checked")){
+                  //  $("#divAssetEntry").hide();
+               // }
+              //  else{
+                   // $('#AssetType_6').attr("checked", false);
+                  //  $('#AssetType_6').attr('disabled', 'disabled');
+                    $("#divAssetEntry").show();
+                    var assetModeAutoSelected = false;
+                    var assetModeManualSelected = true;
+                    $(":button").attr("disabled", true);
+                    $(":button").addClass("disabledButton");
+                    $("#assetIDConf").css("background-color", "#F0F0F0");
+                    $('#assetIDConf').attr('disabled', true).attr('readonly', true);
+            //    }
+                if ( $('#AssetType_2').attr("checked")){
+                    $('#div_data_@{ @Html.Raw(((int)Duncan.PEMS.Entities.Assets.AssetTypeModel.AssetType.Gateway).ToString()); }').css('display','block');
+                }
+            }
+            //else if (AssetEntryMode == 0 && meterTypeSelected == false) {
+            //    $('#AssetType_6').attr("checked", false);
+            //    $('#AssetType_6').attr('disabled', 'disabled');
+            //}
+
+        $('#assetID').focus();
+    }  // End Of function AssetModeSelected(item) {
+
+
+    function ResetReturnURL() {
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.removeItem("returnToAssetURL");
+        }
+        else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+    }
+
+
+    // ****************  END OF HELPERS ********************************************************************
+ 
+</script>
+

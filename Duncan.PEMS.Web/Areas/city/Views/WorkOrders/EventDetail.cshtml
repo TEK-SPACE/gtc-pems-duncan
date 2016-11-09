@@ -1,0 +1,99 @@
+﻿
+@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherEventDetailsModel
+
+@{
+    ViewBag.Title = "Event Detail";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Detail" )</span></h1>
+}
+
+   @Html.HiddenFor( model => model.WorkOrderEvent.WorkOrderId )
+<div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Information" )</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Work Order" ): </div>
+            @Html.DisplayFor( m => m.WorkOrderEvent.WorkOrderId, new {@class = "customer_text"} )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset ID" ): </div>
+            @Html.DisplayFor( m => m.WorkOrderAsset.AssetId, new {@class = "customer_text"} )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" ): </div>
+            @Html.DisplayFor( m => m.WorkOrderAsset.AssetType, new {@class = "customer_text"} )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Source" ): </div>
+            @Html.DisplayFor( m => m.Source, new {@class = "customer_text"} )
+        </div>
+    </div>
+<div class="two-column">
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Category" ): </div>
+        @Html.DisplayFor( m => m.WorkOrderAsset.AssetSubType, new {@class = "customer_text"} )
+    </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Severity" ): </div>
+        @Html.DisplayFor( m => m.WorkOrderEvent.SeverityDisplay, new {@class = "customer_text"} )
+    </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Deadline" ): </div>
+        @Html.DisplayFor( m => m.WorkOrderEvent.SLADueDisplay, new {@class = "customer_text"} )
+    </div>
+     <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): </div>
+        @Html.DisplayFor( m => m.WorkOrderEvent.StatusDisplay, new {@class = "customer_text"} )
+    </div>
+</div>
+  <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Description"):</div>
+        @Html.DisplayFor( m => m.WorkOrderEvent.EventDesc, new {@class = "customer_text"} )
+
+    </div>
+
+<div class="clear">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+        @Html.DisplayFor( m => m.WorkOrderEvent.Notes, new {@class = "customer_text"} )
+
+</div>
+
+
+@if (Model.RepairCode.HasValue)
+{
+
+<div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure / Repair" )</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Code"): </div>
+            @Html.DisplayFor(m => m.RepairCode, new {@class = "customer_text"})
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Closed By"): </div>
+            @Html.DisplayFor(m => m.ClosedBy, new {@class = "customer_text"})
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Time Cleared"): </div>
+            @Html.DisplayFor(m => m.TimeClearedDisplay, new {@class = "customer_text"})
+        </div>
+    </div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Description"): </div>
+            @Html.DisplayFor(m => m.RepairCode, new {@class = "customer_text"})
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vandalism (Y/N)"): </div>
+            @Html.DisplayFor(m => m.VandalismDisplay, new {@class = "customer_text"})
+        </div>
+
+    </div>
+    <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Closure Notes"):</div>
+        @Html.DisplayFor(m => m.ClosureNotes, new {@class = "customer_text"})
+    </div>
+    
+}

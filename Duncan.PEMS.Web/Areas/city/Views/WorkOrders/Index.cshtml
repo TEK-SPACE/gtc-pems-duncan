@@ -1,0 +1,852 @@
+﻿
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherWorkOrderListModel>
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" );
+}
+
+@section Styles
+{
+    <style type="text/css">
+        #CurrentGrid { display: none; }
+
+        #exportButtons { display: none; }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+
+        .k-red { color: crimson !important; }
+
+        .k-yellow { color: yellow !important; }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker { background-color: transparent !important; }
+
+    </style>
+
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Inquiry" )</span></h1>
+}
+
+
+@section ExportButtons 
+{
+      <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action( "ExportToExcel", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~", alarmCode = "~"} )">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action( "ExportToCsv", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~", alarmCode = "~"} )">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action( "ExportToPdf", new {page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~", alarmCode = "~"} )">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+<div class="grid-header">
+    <div class="export-buttons" id="exportActions">
+        <div style="float: right; padding-right: 20px; padding-top: 10px">
+            @using (Html.BeginForm("WorkOrderBulkAction", "WorkOrders", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+            {
+                @:Action:
+                <select title="action" id="ddlAction"  class="filter-dropdown" style="width: auto" name="ddlActionValue">
+                    <option value="">Select</option>
+                    <option value="Assign">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Assign" )</option>
+                    <option value="UnAssign">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "UnAssign" )</option>
+                </select>
+            }
+        </div>
+    </div>
+</div>
+<div style="clear: both"></div>
+
+
+@(Html.Kendo().Grid( Model )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Name( "CurrentGrid" )
+      .Columns( columns =>
+                    {
+                        columns.Bound(p => p.WorkOrderId).Sortable(false).ClientTemplate(@Html.CheckBox("cb_#= WorkOrderId #", new { @id = "cb_#= WorkOrderId #", value = "#= WorkOrderId #" }).ToHtmlString()).Title("Action").Width(50).Title("");
+                        columns.Bound(p => p.WorkOrderId).ClientTemplate(@Html.ActionLink("#= WorkOrderIdDisplay #", "WorkOrderDetail", "WorkOrders", new { workOrderId = "#= WorkOrderId #" },
+                                                                                             new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(100);
+                       
+                        
+                        columns.Bound(p => p.Customer).Width(175);
+                        columns.Bound( p => p.AssetType ).Width( 150 );
+                        columns.Bound(p => p.AssetId).Width(175);
+                        columns.Bound( p => p.Street ).Width( 175 );
+                        columns.Bound(p => p.Area).Width(100);
+                        columns.Bound(p => p.Zone).Width(100);
+                        columns.Bound( p => p.HighestPriorityDisplay ).Width( 125 );
+                        columns.Bound(p => p.CreationDate).ClientTemplate("#= CreationDateDisplay #").Width(150);
+                        columns.Bound(p => p.Deadline).ClientTemplate("#= DeadlineDisplay #").Width(150);
+                        columns.Bound( p => p.EventCount ).Width( 100 );
+                        columns.Bound( p => p.WorkOrderState ).Width( 150 );
+                        columns.Bound(p => p.Technician).Width(150);
+                        columns.Bound(p => p.AssignedDate).ClientTemplate("#= AssignedDateDisplay #").Width(150);
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnDataBound" ) )
+      .Events( events => events.ColumnResize( "OnRowResized" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetWorkOrders", "WorkOrders" ).Data( "additionalData" ).Type( HttpVerbs.Get ) )
+      ))
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function LoadFilterDropdowns(currentCityId) {
+            LoadAssetTypes();
+        }
+
+        //Asset Types
+        function LoadAssetTypes() {
+            $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/GetAssetTypes', OnAssetTypesLoaded);
+        }
+        function OnAssetTypesLoaded(data) {
+            viewModel.set("assetTypes", data);
+            LoadAssignmentStates();
+        }
+
+        //AssignmentStates
+        function LoadAssignmentStates() {
+            //start with Alarm Status - todo
+            $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/GetAssignmentStates', OnAssignmentStatesLoaded);
+        }
+        function OnAssignmentStatesLoaded(data) {
+            viewModel.set("assignmentStates", data);
+            LoadTechnicians();
+        }
+
+        //Asset State
+        function LoadTechnicians() {
+            //start with Alarm Status - todo
+            $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/GetTechnicians', OnTechniciansLoaded);
+        }
+        function OnTechniciansLoaded(data) {
+            viewModel.set("technicians", data);
+            LoadSorts();
+        }
+    </script>
+}
+
+@section PageFilter 
+{
+     <div class="one-column">
+        <div class="filter-option">
+              <div class="two-inputs">
+               <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Creation Date" ):</span>
+               <input id="dp-1" data-role="datetimepicker" style="width: 190px" data-bind="value: creationStartDate" />
+           </div>
+           <div class="two-inputs">
+               <span class="to">to</span>
+               <input id="dp-2" data-role="datetimepicker" style="width: 190px" data-bind="value: creationEndDate" />
+           </div>
+           <span class="required_asterisk">*</span>
+        </div>
+    </div>
+    
+  <div class="two-column-wrapper">
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Work Order ID" )</span>
+              <input id="txtWorkOrderId" class="filter-input k-textbox"  data-bind="value: workOrderId"  />
+          </div>
+      </div>
+      
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Work Order State" ):</span>
+              <select id="ddlWorkOrderState"  data-role="dropdownlist" class="filter-dropdown" data-bind="source: workOrderStates, value: workOrderState"></select>
+          </div>
+      </div>
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")</span>
+              <select id="ddlAssetType" class="filter-dropdown" data-role="dropdownlist"  data-bind="source: assetTypes, value: assetType" data-option-label="All" data-text-field="Text" data-value-field="Text"></select>
+          </div>
+      </div>
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")</span>
+              <input id="txtAssetId" class="filter-input k-textbox" data-bind="value: assetId" />
+          </div>
+      </div>
+      <div class="two-column" >
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Code" )</span>
+              <input id="txtEventCode" class="filter-input k-textbox" data-bind="value: alarmCode" />
+          </div>
+
+      </div>
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Priority" ):</span>
+              <select id="ddlPriorities" class="filter-dropdown" data-role="dropdownlist" data-bind="source: priorities, value: priority" ></select>
+          </div>
+      </div>
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Assignment State"):</span>
+              <select id="ddlAssignmentStates" class="filter-dropdown" data-role="dropdownlist" data-bind="source: assignmentStates, value: assignmentState" data-option-label="All" data-option-value="All" data-text-field="Text" data-value-field="Value"></select>
+          </div>
+      </div>
+      <div class="two-column">
+          <div class="filter-option">
+              <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Technician"):</span>
+              <select id="ddlTechnicians" class="filter-dropdown" data-role="dropdownlist"  data-bind="source: technicians, value: technician" data-option-label="All" data-text-field="Text" data-value-field="Value"></select>
+          </div>
+      </div>
+        <div class="two-column">
+        <div class="filter-option">
+            <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Location Type" ):</span>
+            <select id="ddlLocationType"  data-role="dropdownlist" class="filter-dropdown" data-bind="source: locationTypes, value: locationType, events: { change: OnLocationTypeChange }"></select>
+        </div>
+    </div>
+      <div class="two-column">
+          <div class="filter-option" id="location-container">
+              <span class="filter-label" id="lblLocationType" data-bind="text: locationLabel"></span>
+              <input id="txtLocation" class="disabled filter-input k-textbox" disabled="disabled" data-bind="value: location"  />
+          </div>
+      </div>
+      <div class="one-column">
+          <div class="filter-option">
+              <div class="two-inputs">
+                  <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closed Date" ):</span>
+                  <input id="dp-3" data-role="datepicker" style="width: 190px" data-bind="value: closedStartDate" />
+              </div>
+              <div class="two-inputs">
+                  <span class="to">to</span>
+                  <input id="dp-4" data-role="datepicker" style="width: 190px" data-bind="value: closedEndDate" />
+              </div>
+          </div>
+      </div>
+      <div class="one-column">
+          <div class="filter-option">
+              <div class="two-inputs">
+                  <span class="filter-label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Deadline" ):</span>
+                  <input id="dp-5" data-role="datetimepicker" style="width: 190px" data-bind="value: deadlineStartDate" />
+              </div>
+              <div class="two-inputs">
+                  <span class="to">to</span>
+                  <input id="dp-6" data-role="datetimepicker" style="width: 190px" data-bind="value: deadlineEndDate" />
+              </div>
+          </div>
+      </div>
+  </div>
+       <div class="filter-searchBox">
+        <button id="btnSearch" onclick=" LoadFreshGrid(); return false; " class="button important filter-SearchButton" type="button">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )</button>
+    </div>
+    
+    <script type="text/javascript">
+        
+        // Define default datepicker dates
+        var startD = new Date();
+        startD.setDate(new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]').getDate() - 1);
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+        var endD = new Date('@ViewData[Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate());
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+        var viewModel = kendo.observable({
+            creationStartDate: startD,
+            creationEndDate: endD,
+            workOrderId: null,
+            workOrderStates: ["All", "Open", "Closed", "Suspended", "Rejected"],
+            workOrderState: "All",
+            assetTypes: [], //["All", "Meter", "Sensor", "Gateway", "Cashbox", "Space"],
+            assetType: "All",
+            assetId:null,
+            alarmCode:null,
+            priorities: ["All", "Severe", "Major", "Minor"],
+            priority: "All",
+            assignmentStates: [], 
+            assignmentState: "All",
+            technicians: ["All"], //todo 
+            technician:"All",
+            closedStartDate: null,
+            closedEndDate: null,
+            deadlineStartDate: null,
+            deadlineEndDate: null,
+            locationTypes: ["All", "Area", "Zone", "Street"],
+            locationType: "All",
+            location: "Select a type",
+            locationLabel: "Location",
+            OnLocationTypeChange: function () {
+                // 'Location Type' filter (e.g. Area ID, Suburb, etc) drives the location input.
+                // So when the location type drop-down is changed, update the location type label
+
+                var $locationInput = $('#txtLocation');
+
+                switch (viewModel.locationType) {
+                case 'All':
+                    $locationInput.attr("disabled", "disabled"); // disable textbox
+                    $locationInput.addClass('disabled'); // gray background
+                    viewModel.set("location", "Select a type");
+                    viewModel.set("locationLabel", "Location");
+                    break;
+                default:
+                    $locationInput.removeAttr("disabled");
+                    $locationInput.removeClass('disabled');
+                    viewModel.set("locationLabel", viewModel.locationType);
+                    viewModel.set("location", "");
+                }
+            },
+
+        });
+
+        //ON LOAD
+        $(document).ready(function () {
+
+            //// bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+
+            LoadFilterDropdowns(@ViewData[Constants.ViewData.CurrentCityId]);
+            //LoadSorts();
+            $(window).bind('resize', function () {
+                $('#CurrentGrid').freezeGridColumn(2);
+            });
+            
+            // If 'returnUrl' exists in session (from a previous page), remove it 
+            if (window.sessionStorage.returnUrl) {
+                // remove the saved returnUrl from session
+                window.sessionStorage.removeItem("returnUrl");
+            }
+            
+            // Handle whether there should be a return button.
+            CreateReturnButton();
+
+
+            //hook up the actions here
+            $('#ddlAction').change(function () {
+                //only perform action on valid actions
+                var selectedValue = $("#ddlAction").val();
+                if (selectedValue == "") {
+
+                } else {
+
+                    var oneIsChecked = false;
+                    var data = {};
+
+                    var grid = $("#CurrentGrid").data("kendoGrid");
+                    // mvc model binder requires arrays to be in specific format
+                    grid.tbody
+                        .find(":checked")
+                        .each(function (idx) {
+                            data["uns[" + idx + "]"] = $(this).val();
+                            oneIsChecked = true;
+                        });
+
+                    //make sure they selected a valid value (not empty) and they have checked some boxes on the grid.
+                    if (oneIsChecked) {
+                        //save the IDs to session
+                        $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/SetActionableWorkOrderIds',data, OnWorkOrderIdsSet);
+                        //  $.post('/shared/Users/SetActionableUsernames', data, OnUserNamesSet);
+
+                    } else {
+                        alert("No items have been selected.");
+                        $("#ddlAction").val("");
+                    }
+                }
+            });
+        });
+        
+        function OnWorkOrderIdsSet(data) {
+            // gridFilters.CurrentPage = $("#CurrentGrid").data("kendoGrid").dataSource.page();
+            // $.post('/shared/Sessions/SaveUserFilters', gridFilters);
+            $('#actionForm').submit();
+        }
+        
+        //SORTS - default this to time of complaint descending
+        var sorts = {};
+
+        function LoadSorts() {
+            $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/GetSavedSortValues?indexType=WorkOrders', OnSortsLoaded);
+        }
+        
+        function OnSortsLoaded(data) {
+            if (!isEmptyObject(data)) {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+        
+        function OnRowResized(e) {
+
+            var th = $('#CurrentGrid .k-grid-header table th[data-field="' + e.column.field + '"][data-title="' + e.column.title + '"]');
+            var index = $('#CurrentGrid .k-grid-header table th').index(th);
+            $('#CurrentGrid').UpdateWidths(index, 2, e.newWidth, e.oldWidth);
+            $('#CurrentGrid').freezeGridColumn(2);
+        }
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetWorkOrderFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+            if (!isEmptyObject(data)) {
+                gridFilters = data;
+                
+                // don't want to create a new Date if null because will default to 1970
+                if (gridFilters.CreationDateFrom) {
+                    viewModel.set('creationStartDate', new Date(gridFilters.CreationDateFrom));
+                }
+                if (gridFilters.CreationDateTo) {
+                    viewModel.set('creationEndDate', new Date(gridFilters.CreationDateTo));
+                }
+                
+                // don't want to create a new Date if null because will default to 1970
+                if (gridFilters.DeadlineFrom) {
+                    viewModel.set('deadlineStartDate', new Date(gridFilters.DeadlineFrom));
+                }
+                if (gridFilters.DeadlineTo) {
+                    viewModel.set('deadlineEndDate', new Date(gridFilters.DeadlineTo));
+                }
+
+                // don't want to create a new Date if null because will default to 1970
+                if (gridFilters.ClosedDateFrom) {
+                    viewModel.set('closedStartDate', new Date(gridFilters.ClosedDateFrom));
+                }
+                if (gridFilters.ClosedDateTo) {
+                    viewModel.set('closedEndDate', new Date(gridFilters.ClosedDateTo));
+                }
+
+                $("#txtWorkOrderId").val(gridFilters.WorkOrderId);
+                $("#ddlWorkOrderState").data("kendoDropDownList").select(function (dataItem) { return dataItem.Text === gridFilters.workOrderState; });
+                $("#ddlAssetType").data("kendoDropDownList").select(function (dataItem) { return dataItem.Text === gridFilters.AssetType; });
+                $("#txtAssetId").val(gridFilters.AssetId);
+                $("#txtEventCode").val(gridFilters.AlarmCode);
+                $("#ddlPriorities").data("kendoDropDownList").select(function (dataItem) { return dataItem.Text === gridFilters.Priority; });
+                $("#ddlAssignmentStates").data("kendoDropDownList").select(function (dataItem) { return dataItem.Text === gridFilters.AssignmentState; });
+                $("#ddlTechnicians").data("kendoDropDownList").select(function (dataItem) { return dataItem.Text === gridFilters.Technician; });
+
+                $("#ddlLocationType").data("kendoDropDownList").select(function(dataItem) {return dataItem.Text ===  gridFilters.LocationType;});
+                viewModel.set('locationType', gridFilters.LocationType);
+                var $locationInput = $('#txtLocation');
+                switch (viewModel.locationType) {
+                    case 'All':
+                        $locationInput.attr("disabled", "disabled"); // disable textbox
+                        $locationInput.addClass('disabled'); // gray background
+                        viewModel.set("location", "Select a type");
+                        viewModel.set("locationLabel", "Location:");
+                        break;
+                    default:
+                        $locationInput.removeAttr("disabled");
+                        $locationInput.removeClass('disabled');
+                       
+                }
+                viewModel.set('location', gridFilters.Location);
+                viewModel.set('locationLabel', gridFilters.LocationLabel);
+
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+            }
+
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .filter method will call the read automatically
+
+        function LoadGrid() {
+            //Get the grid data out of the DB and load it
+            var $currentCid = @ViewBag.CurrentCityId;
+            $.post('/@ViewData[Constants.ViewData.CurrentCity]/pems/WorkOrders/GetGridData?cid=' + $currentCid + '&cont=WorkOrders&act=GetWorkORders', OnGridDataLoaded);
+        }
+        
+        function LoadFreshGrid() {
+
+            var currentPageSize = $("#CurrentGrid").data("kendoGrid").dataSource.pageSize();
+            
+            // Ensure the page size is at least 100
+            if (currentPageSize < 100) {
+                currentPageSize = 100;
+            }
+
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": currentPageSize };
+            LoadGrid();
+        }
+        var hasBeenOrdered = false;
+        function OnGridDataLoaded(data) {
+            if (!isEmptyObject(data) &&  !hasBeenOrdered){
+                //update the grid titles
+                LoadGridTitles(data);
+
+            } else {
+                //if there is no grid data for this in the DB, jsut load the grid as usual
+                LoadGridData();
+            }
+        }
+        
+        function LoadGridTitles(data) {
+            //load all the titles for the grid here
+            var tableHeaderCol = $('#CurrentGrid').find(".k-grid-header table thead tr th");
+            for (var i = 0; i < data.length; i++) {
+                $(tableHeaderCol).eq(i).find('a,span').text(data[i].Title);
+            }
+
+            //once that is complete, load the grid order
+            LoadGridOrder(data);
+        }
+
+        function LoadGridOrder(data) {
+            //update the grid orders here
+            //data is sorted by original position name, so the logic is as follows
+            //create an array of expected positions. this is what we will use to get the value at a specified index
+            hasBeenOrdered = true;
+            var postionArray = [];
+            var hiddenCount = 0;
+            for (var h = 0; h < data.length; h++) {
+                postionArray.push(data[h].Position);
+                if (data[h].IsHidden)
+                    hiddenCount = hiddenCount + 1;
+            }
+            var grid = $("#CurrentGrid").data("kendoGrid");
+            //foreach item in data
+            for (var currentIndex = 0; currentIndex < data.length; currentIndex++) {
+                var actualIndex = jQuery.inArray(currentIndex, postionArray);
+
+                //check to see if the original and new posisiton is different (if it is the same, do nothing)
+                if (currentIndex != actualIndex) {
+                    //if different, find the index of the original position item  that has the same value of the current position of the loop (i)
+                    //once you have the index, you wil need to reporder the columns with index of the original with the current position of hte loop
+                    grid.reorderColumn(currentIndex, grid.columns[actualIndex]);
+                    grid.reorderColumn(actualIndex, grid.columns[currentIndex + 1]);
+
+                    //update the position array to reflect the change
+                    postionArray[actualIndex] = postionArray[currentIndex];
+                    postionArray[currentIndex] = currentIndex;
+                }
+            }
+            if (hiddenCount > 0)
+                $('#CurrentGrid').hideLastColumns(hiddenCount);
+            //then load the data for the grid
+            LoadGridData();
+        }
+        
+        function LoadGridData() {
+            var $creationStartDate = viewModel.creationStartDate;
+            //Test to see if the start date is not empty, and if it is a valid date
+            if (!Date.parse($creationStartDate)) {
+                alert("Creation Start Date Must Be A Valid Date");
+                return;
+            }
+            var $creationEndDate = viewModel.creationEndDate;
+            //Test to see if the end date is not empty and if it is a valid date
+            if (!Date.parse($creationEndDate)) {
+                alert("Creation End Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if start date is less than end date
+            if ($creationStartDate != '' && $creationEndDate != '') {
+                if (Date.parse($creationStartDate) > Date.parse($creationEndDate)) {
+                    alert("Creation Date: End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+          
+            var $filter = new Array();
+            
+            //Creation Date
+            var startDate = viewModel.creationStartDate;
+            var endDate = viewModel.creationEndDate;
+            if (startDate) {
+                gridFilters.CreationDateFrom = startDate;
+                $filter.push({ field: "CreationDate", operator: "gte", value: startDate });
+            }
+            if (endDate) {
+                gridFilters.CreationDateTo = endDate;
+                $filter.push({ field: "CreationDate", operator: "lte", value: endDate });
+            }
+
+            //deadline 
+            //Test to see if the start date is not empty, and if it is a valid date
+            var deadlineStartDate = viewModel.deadlineStartDate;
+            var deadlineEndDate = viewModel.deadlineEndDate;
+            if (deadlineStartDate && !Date.parse( deadlineStartDate)) {
+                alert("Deadline Start Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if the end date is not empty and if it is a valid date
+            if (deadlineEndDate && !Date.parse(deadlineEndDate)) {
+                alert("Deadline End Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if start date is less than end date
+            if (deadlineStartDate != '' && deadlineEndDate != '') {
+                if (Date.parse(deadlineStartDate) > Date.parse(deadlineEndDate)) {
+                    alert("Deadline: End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+            if (deadlineStartDate) {
+                gridFilters.DeadlineFrom =deadlineStartDate;
+                $filter.push({ field: "Deadline", operator: "gte", value: deadlineStartDate });
+            }
+            if (deadlineEndDate) {
+                gridFilters.DeadlineTo = deadlineEndDate;
+                $filter.push({ field: "Deadline", operator: "lte", value:deadlineEndDate });
+            }
+
+            //closed date
+            //Test to see if the start date is not empty, and if it is a valid date
+            var closedStartDate = viewModel.closedStartDate;
+            var closedEndDate = viewModel.closedEndDate;
+            if (closedStartDate && !Date.parse( closedStartDate)) {
+                alert("Closed Start Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if the end date is not empty and if it is a valid date
+            if (closedEndDate && !Date.parse(closedEndDate)) {
+                alert("Closed End Date Must Be A Valid Date");
+                return;
+            }
+            //Test to see if start date is less than end date
+            if (closedStartDate != '' && closedEndDate != '') {
+                if (Date.parse(closedStartDate) > Date.parse(closedEndDate)) {
+                    alert("Closed Date: End Date Must Be Greater Than Start Date");
+                    return;
+                }
+            }
+
+            if (closedStartDate) {
+                gridFilters.ClosedDateFrom =closedStartDate;
+                $filter.push({ field: "CompletedDate", operator: "gte", value: closedStartDate });
+            }
+            if (closedEndDate) {
+                closedEndDate.setHours(23, 59, 59, 999); // set to end of day
+                gridFilters.ClosedDateTo = closedEndDate;
+                $filter.push({ field: "CompletedDate", operator: "lte", value:closedEndDate });
+            }
+
+            //Work Order ID
+            var $workOrderid = $("#txtWorkOrderId").val();
+            if ($workOrderid) {
+                gridFilters.WorkOrderId = $workOrderid;
+                $filter.push({ field: "WorkOrderId", operator: "contains", value: $workOrderid });
+            }
+
+            //Work Order State
+            if (viewModel.workOrderState != "All") {
+                gridFilters.WorkOrderState = viewModel.workOrderState;
+                $filter.push({ field: "WorkOrderState", operator: "contains", value: viewModel.workOrderState });
+            }
+            
+            //Asset Type
+            if (viewModel.assetType != "All") {
+                gridFilters.AssetType = viewModel.assetType;
+                $filter.push({ field: "AssetType", operator: "contains", value: viewModel.assetType });
+            }
+
+            //Asset ID
+            if (viewModel.assetId) {
+                gridFilters.AssetId = viewModel.assetId;
+                $filter.push({ field: "AssetId", operator: "contains", value: viewModel.assetId });
+            }
+
+            //Alarm Code - this gets added via additionalData - just add to grid filters
+            if (viewModel.alarmCode) {
+                gridFilters.AlarmCode = viewModel.alarmCode;
+            }
+
+            //Priority
+            if (viewModel.priority != "All") {
+                gridFilters.Priority = viewModel.priority;
+                $filter.push({ field: "HighestPriorityDisplay", operator: "contains", value: viewModel.priority });
+            }
+            
+            //Assignment State
+            if (viewModel.assignmentState != "All") {
+                gridFilters.AssignmentState = viewModel.assignmentState;
+                $filter.push({ field: "AssignmentState", operator: "contains", value: viewModel.assignmentState });
+            }
+            
+            //Technician
+            if (viewModel.technician != "All") {
+                gridFilters.Technician = viewModel.technician;
+                $filter.push({ field: "Technician", operator: "contains", value: viewModel.technician });
+            }
+            
+            // Location
+            var locationType = viewModel.locationType;
+            var location = viewModel.location;
+            if (locationType && locationType != 'All' && location) {
+                switch (locationType) {
+                    case 'Area':
+                        gridFilters.Area = location;
+                        $filter.push({ field: "Area", operator: "contains", value: location });
+                        break;
+                    case 'Zone':
+                        gridFilters.Zone = location;
+                        $filter.push({ field: "Zone", operator: "contains", value: location });
+                        break;
+                    case 'Street':
+                        gridFilters.Street = location;
+                        $filter.push({ field: "Street", operator: "contains", value: location });
+                        break;
+                    default:
+                        break;
+                }
+                gridFilters.Location = viewModel.location;
+                gridFilters.LocationLabel = viewModel.locationLabel;
+            }
+            if (locationType) {
+                gridFilters.LocationType = locationType;
+            } else {
+                gridFilters.LocationType = "All";
+            }
+            gridFilters.Location = viewModel.location;
+            gridFilters.LocationLabel = viewModel.locationLabel;
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+        
+        //ROW CLICK
+        function RowClick() {
+            var grid = $("#CurrentGrid").data("kendoGrid");
+
+            //get the current page 
+            gridFilters.CurrentPage = grid.dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = grid.select().index();
+            gridFilters.PageSize = grid.dataSource.pageSize();
+
+            //save the filters
+            $.post('/shared/Sessions/SaveWorkOrderFilters', gridFilters);
+        }
+        
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            applyFrozenColumns();
+            SetExportData();
+        }
+        
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            //add event code filter
+            href = href.replace(/alarmCode=([^&]*)/, 'alarmCode=' + $("#txtEventCode").val());
+            return href;
+        }
+
+        //Freeze columns if you need to for this grid
+
+        function applyFrozenColumns() {
+            $('#CurrentGrid').freezeGridColumn(2);
+        }
+        
+        
+        //additional data sent to the action when the read method is called (when we apply a filter)
+
+         function additionalData() {
+             var $alarmCode = $("#txtEventCode").val();
+            return {
+                alarmCode: $alarmCode
+            };
+        }
+        
+
+        function CreateReturnButton() {
+        
+            var stringified;
+        
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("returnToAssetURL");
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+
+            // Create the return URL
+            if (stringified) {
+            
+                var parsed = JSON.parse(stringified);
+
+                if (parsed) {
+                    if (parsed.url) {
+                        $("#btnReturn").attr("href", parsed.url);
+                        $("#ReturnButtonDiv").css("display", "block");
+                    }
+                }
+            }
+        }
+
+    </script>
+    
+
+}

@@ -1,0 +1,138 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model  Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherCreateEventModel
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Management");
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Management")</a>  / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Create Event ID")</span></h1>
+}
+
+@using (Html.BeginForm("CreateEventId", "WorkOrders", FormMethod.Post, new { @class = "admin-form", @id = "createWorkOrderForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Create Event")</div>
+    <div class="clear">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Event ID"):</div>
+            <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "System Generated")</div>
+
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order"):</div>
+            <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "System Generated")</div>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Name"):</div>
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "customer_text" })
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Name"):</div>
+            @Html.TextBoxFor(m => m.LastName, new { @class = "customer_text" })
+        </div>
+        <div>
+         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID (Area)"):</div>
+            @(Html.Kendo().ComboBoxFor(x=>x.SelectedAssetKey)
+                  .Filter("contains")
+                  .HtmlAttributes(new { @class = "customer_text", style="width:260px"})
+                  .SelectedIndex(0)
+                  .DataTextField("AssetIdFullDisplay")
+                  .DataValueField("UniqueKey")
+                  .Events(evt=>evt.Change("asChange"))
+                  .BindTo(Model.AssetIdOptions)
+                  .Suggest(true)
+                  )
+        </div>
+       @* <div> todo - might need this for the cascading combo boxes. pending discussion with duncan
+         <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Location"):</div>
+             @(Html.Kendo().ComboBox()
+              .Name("Locations")
+              .HtmlAttributes(new { style = "width:260px" })
+              .DataTextField("AreaName")
+              .DataValueField("UniqueKey")
+              .Filter(FilterType.Contains)
+              .SelectedIndex(0)
+              .BindTo(Model.AssetIdOptions)
+              .Enable(false)
+              .AutoBind(false)
+              .CascadeFrom("SelectedAssetKey")
+        )
+
+        </div>*@
+
+        <div>
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Fault Description"):</div>
+        @(Html.Kendo().ComboBoxFor(x=>x.SelectedFaultDescription)
+          .Filter("contains")
+                  .HtmlAttributes(new { @class = "customer_text", style="width:260px"})
+          .SelectedIndex(0)
+          .Events(evt=>evt.Change("fdChange"))
+          .BindTo(new SelectList(Model.FaultDescriptions, "Value", "Text"))
+          .Suggest(true)
+        )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Registration"):</div>
+            @Html.TextBoxFor(m => m.Registration, new { @class = "customer_text" })
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone"):</div>
+            @Html.TextBoxFor(m => m.Phone, new { @class = "customer_text" })
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Email Address"):</div>
+            @Html.TextBoxFor(m => m.Email, new { @class = "customer_text" })
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cross Street"):</div>
+            @Html.TextBoxFor(m => m.CrossStreet, new { @class = "customer_text" })
+        </div>
+        
+        <div>
+             <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Notes" ): </div>
+                    <div class="customer_text long_text">  @Html.TextAreaFor( m => m.Notes, new {@class = "customer_text_area long_text_area", rows = "4"} )
+                    </div>
+        </div>
+
+    </div>
+    <div class="button-Container">
+        <button type="submit" class="button important" name="submitButton" value="Create">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Create")</button>
+        <button type="submit" class="button previous" name="submitButton" value="Cancel">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+    </div>
+}
+@section Styles
+{
+    <style type="text/css">
+    </style>
+}
+
+@section Scripts 
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+        
+
+        function asChange(e) {
+            if (this.value() && this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text(dt[this.options.dataTextField]);
+                this._selectItem();
+            }
+        }
+        
+        function fdChange(e) {
+            if (this.value() && this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text(dt[this.options.dataTextField]);
+                this._selectItem();
+            }
+        }
+    </script>
+}

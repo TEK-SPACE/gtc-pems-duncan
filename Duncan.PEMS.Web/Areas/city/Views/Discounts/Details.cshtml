@@ -1,0 +1,200 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@inherits WebViewPage<Duncan.PEMS.Entities.Discounts.UserAccountDetails>
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Details");
+}
+
+@section Styles
+{
+    <style type="text/css">
+    </style>
+}
+
+@section Scripts 
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+          
+        });
+    </script>
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Discount Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Account Details")</span></h1>
+}
+
+   @using (Html.BeginForm("Details", "Discounts", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+   {
+   
+
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_@Model.AccountStatus.ToLower()">@Model.AccountStatus</span></div>@Model.AccountStatusChangeTimeDisplay
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Client Information")</div>
+
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Name"): </div>
+          @Model.LastName
+            @Html.HiddenFor(model => model.UserId)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "First Name"): </div>
+            @Model.FirstName
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Email Address"): </div>
+            @Model.Email
+           &nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Phone Number"): </div>
+            @Model.Phone
+           &nbsp;
+        </div>
+     
+    </div>
+       <div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 1"): </div>
+               @Model.Address1
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Address 2"): </div>
+               @Model.Address2
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "City"): </div>
+               @Model.City &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "State") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Postal Code"): </div>
+               @Model.State / @Model.PostalCode &nbsp;
+           </div>
+       </div>
+       <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Information")</div>
+       <div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Creation Date"): </div>
+               @Model.CreationDateDisplay
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Account Expiration Date"): </div>
+               @Model.AccountExpirationDateDisplay
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Expiration Date"): </div>
+               @Model.CreditCardExpirationDate
+               &nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "CC Last 4"): </div>
+               @Model.CreditCardLast4Digits
+               &nbsp;
+           </div>
+       </div>
+<div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last User Access"): </div>
+               @Model.LastUserAccessDisplay
+               &nbsp;
+           </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Discount Used"): </div>
+        @Model.LastDiscountUsed
+        &nbsp;
+    </div>
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Edited By"): </div>
+        @Model.LastEditiedByUserName
+        &nbsp;
+    </div>
+</div>
+       
+       <div class="one-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"): </div>
+               @Model.Notes
+               &nbsp;
+           </div>
+       </div>       
+       <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Security Information")</div>
+   
+<div class="two-column">
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Question 1"): </div>
+        @Model.SecurityQuestion1
+        &nbsp;
+    </div>
+      <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Answer 1"): </div>
+               @Model.SecurityAnswer1
+               &nbsp;
+           </div>
+</div>       
+<div class="two-column">
+    <div class="detailRow">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Question 2"): </div>
+        @Model.SecurityQuestion2
+        &nbsp;
+    </div>
+      <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Answer 2"): </div>
+               @Model.SecurityAnswer2
+               &nbsp;
+           </div>
+</div>       
+
+       <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Discount Scheme Application List" )</div>
+        <div style="padding-left: 10px; ">   <a style="text-decoration: none" href="@Url.Action( "ExportUserDiscountsToExcel", new {userId = @Model.UserId} )">
+            <img src='/images/export-excel.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportUserDiscountsToCsv", new {userId = @Model.UserId})">
+            <img src='/images/export-csv.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportUserDiscountsToPDF",new {userId = @Model.UserId})">
+            <img src='/images/export-pdf.png' height="20"/>
+        </a>
+    </div>
+    @(Html.Kendo().Grid( Model.DiscountSchemes )
+          .HtmlAttributes( new {style = "max-width: 1693px;"} )
+          .Name( "CurrentGrid" )
+          .Columns( columns =>
+                        {
+                            columns.Bound(p => p.SchemeName).ClientTemplate(@Html.ActionLink("#= SchemeName #", "UserSchemeDetails", "Discounts", new
+                                                                                                                                                 {
+                                                                                                                                                     userId = @Model.UserId,
+                                                                                                                                                     userSchemeId = "#= DiscountUserSchemeId #"
+                                                                                                                                                 }, new { }).ToHtmlString()).Width(125)
+                                                           .Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Scheme Name").ToString());
+                            columns.Bound(p => p.ApplicationDate).ClientTemplate("#= ApplicationDateDisplay  #").Width(175).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Application Date").ToString());
+                            columns.Bound(p => p.ApplicationStatus).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Application Status").ToString());
+                            columns.Bound(p => p.ApplicationStatusDate).ClientTemplate("#= ApplicationStatusDisplay  #").Width(175).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Application Status Date").ToString());
+                            columns.Bound(p => p.ExpirationDate).ClientTemplate("#= ExpirationDateDisplay  #").Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Expiraiton Date").ToString());
+                            columns.Bound(p => p.LastEditiedByUserName).Width(125).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Last Editied By").ToString());
+                        } )
+          .Scrollable()
+          .Sortable()
+          .Resizable( resize => resize.Columns( true ) )
+         // .Events( events => events.DataBound( "OnDataBound" ) )
+          .DataSource( dataSource => dataSource
+                                         .Ajax()
+                                         .ServerOperation( false )
+          )
+          )
+       
+       
+       
+       <div class="customer_actions">
+           @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Edit" ).ToString(), "EditAccount", "Discounts", new {userId = @Model.UserId}, new {@class = "button important"} )
+           @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous"} )
+       </div>
+   }

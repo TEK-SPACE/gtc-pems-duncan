@@ -1,0 +1,7 @@
+Within the Visual Studio Command Prompt, Navigate to the Schemas folder and run the following command (this  uses the Field Maintenance xsd as an example)
+
+xsd FieldMaintenanceSchema.xsd /classes
+
+This will generate the proper classes based on the XSD.
+Dont forget to include the file generated into the project.
+Then you will need to add the appripriate data in the web config (of the web services project) to handle the Restful Service calls

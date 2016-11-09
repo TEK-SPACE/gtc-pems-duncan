@@ -1,0 +1,116 @@
+﻿@model Duncan.PEMS.Entities.Assets.GatewayMassEditModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Mass Edit Gateway");
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Inquiry" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Update Asset" )</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+@using (Html.BeginForm("MassEditGateway", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "massEditGateway" }))
+{
+    <div class="customer_tab_content">
+        
+        @Html.HiddenFor( m => m.CustomerId )
+        @Html.HiddenFor(m => m.TokenizableAssetsList)
+        @Html.HiddenFor(m => m.AssetsDisplay)
+
+<div class="activation_date">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Activation Date")@Html.Raw(": ")@Html.Tooltip("EditActivationDate")</div>
+    @(Html.Kendo().DatePickerFor(m => m.ActivationDate))
+    @Html.ValidationMessageFor(m => m.ActivationDate)
+</div>
+        
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Inventory Status"): 
+    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.State, "Value", "Text"), new { @class = "customer_text" })
+    </div>
+</div>
+
+
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Assets To Update" )</div>    
+        <div>The following assets were selected for mass updates.</div>
+        <div>@Model.AssetsDisplay</div>
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Information" )</div>    
+        
+        <div class="clear">
+            <div class="two-column payment">
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" ) </div>
+                    @Html.TextBoxFor( m => m.Street, new {@class = "customer_text"} )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" ) </div>
+                    @Html.DropDownListFor( m => m.AreaListId, new SelectList( Model.Area, "Value", "Text" ), new {@class = "customer_text"} )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" ) </div>
+                    @Html.DropDownListFor( m => m.ZoneId, new SelectList( Model.Zone, "Value", "Text" ), new {@class = "customer_text"} )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" ) </div>
+                    @Html.DropDownListFor( m => m.SuburbId, new SelectList( Model.Suburb, "Value", "Text" ), new {@class = "customer_text"} )
+                </div>
+            </div>
+            
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Preventative Maintenance" )@Html.Tooltip( "LastPreventativeMaintenance" ) </div>
+                    @(Html.Kendo().DatePickerFor( m => m.LastPrevMaint ))
+                    @Html.ValidationMessageFor( m => m.LastPrevMaint )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Next Preventative Maintenance" )@Html.Tooltip( "NextPreventativeMaintenance" ) </div>
+                    @(Html.Kendo().DatePickerFor( m => m.NextPrevMaint ))
+                    @Html.ValidationMessageFor( m => m.NextPrevMaint )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Maintenance Route" )@Html.Tooltip( "MaintenanceRoute" ) </div>
+                    @Html.DropDownListFor( m => m.MaintenanceRouteId, new SelectList( Model.MaintenanceRoute, "Value", "Text" ), new {@class = "customer_text"} )
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Warranty Expiration" ) </div>
+                    @(Html.Kendo().DatePickerFor( m => m.WarrantyExpiration ))
+                    @Html.ValidationMessageFor( m => m.WarrantyExpiration )
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>    
+        <div class="clear">
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "MPV Version" )@Html.Tooltip( "MPVVersion" ) </div>
+                @Html.TextBoxFor( m => m.Configuration.MPVVersion, new {@class = "customer_text"} )
+                @Html.ValidationMessageFor( m => m.Configuration.MPVVersion )
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Software Version" )@Html.Tooltip( "SoftwareVersion" ) </div>
+                @Html.TextBoxFor( m => m.Configuration.SoftwareVersion, new {@class = "customer_text"} )
+                @Html.ValidationMessageFor( m => m.Configuration.SoftwareVersion )
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Firmware Version" )@Html.Tooltip( "FirmwareVersion" ) </div>
+                @Html.TextBoxFor( m => m.Configuration.FirmwareVersion, new {@class = "customer_text"} )
+                @Html.ValidationMessageFor( m => m.Configuration.FirmwareVersion )
+            </div>
+        </div>
+        
+        
+        
+
+        
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="SAVE" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save")</button>
+            <button type="submit" name="submitButton" class="button previous" value="RETURN" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return")</button>
+        </div>
+
+    </div>
+}

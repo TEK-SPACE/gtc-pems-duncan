@@ -1,0 +1,320 @@
+﻿@model Duncan.PEMS.Entities.AutoAlarm.AutoAlarmModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Auto Alarm");
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Auto Alarm Inquiry") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Update Auto Alarm")</h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .areas-existing-grid {
+            float: left;
+            width: 55% !important;
+        }
+
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+
+        .filter-option, .filter-searchBox {
+            float: left;
+            margin-left: 0px;
+            margin-bottom: 5px;
+        }
+
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+        }
+        .customer_text1 {
+            margin-bottom: 5px;
+            width: 257px;
+            font-size: 14px;
+        }
+
+        .customer_text2 {
+            margin-bottom: 5px;
+            width: 260px;
+            font-size: 14px;
+        }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+@using (Html.BeginForm("AutoAlarmSubmit", "AutoAlarm", FormMethod.Post))
+{
+
+
+    <div>
+        <div  >
+
+             <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "Customer ID")</div>
+            
+            <span class="filter-label" >@Model.CustomerIDText</span>
+        </div>
+       
+
+        
+       <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBattAlarmCodeMinor")</div>
+           @(Html.Kendo().DropDownList()
+      .Name("LowBattAlarmCodeMinor")
+             .HtmlAttributes(new { style = "width: 260px; font-size: 14px; margin-bottom: 5px;" })
+
+.DataTextField("Text")
+.DataValueField("ValueInt")
+
+
+      .BindTo(Model.LowBattAlarmCodeMinorEvents)
+
+           )
+            @*@Html.DropDownListFor(m => m.LowBattAlarmCodeMinor, new SelectList(Model.LowBattAlarmCodeMinorEvents, "Value", "Text"), new { @class = "customer_text2", @id = "LowBattAlarmCodeMinor" })*@
+            <span class="required_ascterisk">*</span>
+           <span id="divValidLowBattAlarmCodeMinor" class="divValidNotificationHide"></span>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBattAlarmCodeMajor")</div>
+            @(Html.Kendo().DropDownList()
+     .Name("LowBattAlarmCodeMajor")
+             .HtmlAttributes(new { style = "width: 260px; font-size: 14px; margin-bottom: 5px;" })
+
+.DataTextField("Text")
+.DataValueField("ValueInt")
+
+
+            .BindTo(Model.LowBattAlarmCodeMajorEvents)
+
+            )
+            @*@Html.DropDownListFor(m => m.LowBattAlarmCodeMajor, new SelectList(Model.LowBattAlarmCodeMajorEvents, "Value", "Text"), new { @class = "customer_text2", @id = "LowBattAlarmCodeMajor" })*@
+            <span class="required_asterisk">*</span>
+            <span id="divValidLowBattAlarmCodeMajor" class="divValidNotificationHide"></span>
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBattEnabledMeters")</div>
+            @Html.TextBoxFor(m => m.LowBattEnabledMeters, new {title="Comma separated entries. Each entry could be a single MID or a range like 3205-4590. If emtpy or null, then no meters for this customer will be considered for LowBatt alarms. If *, then all meters are considered", @class = "customer_text1", @id = "LowBattEnabledMeters" })
+
+            <span class="required_asterisk">*</span>
+            <span id="divValidLowBattEnabledMeters" class="divValidNotificationHide"></span>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "NoCommAlarmCode")</div>
+            @(Html.Kendo().DropDownList()
+             .Name("NoCommAlarmCode")    
+                    
+             .HtmlAttributes(new { style = "width: 260px; font-size: 14px; margin-bottom: 5px;" })
+            
+.DataTextField("Text")
+.DataValueField("ValueInt")
+
+
+                .BindTo(Model.NoCommAlarmCodeEvents)
+
+            )
+            @*@Html.DropDownListFor(m => m.NoCommAlarmCode, new SelectList(Model.NoCommAlarmCodeEvents, "Value", "Text" ), new { @class = "customer_text2", @id = "NoCommAlarmCode" })*@
+            <span class="required_asterisk">*</span>
+            <span id="divValidNoCommAlarmCode" class="divValidNotificationHide"></span>
+        </div>
+       
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "NoCommEnabledMeters")</div>
+            @Html.TextBoxFor(m => m.NoCommEnabledMeters, new { title = "Comma separated entries. Each entry could be a single MID or a range like 3205-4590. If emtpy or null, then no meters for this customer will be considered for NoComm alarms. If *, then all meters are considered", @class = "customer_text1", @id = "NoCommEnabledMeters" })
+
+            <span class="required_asterisk">*</span>
+            <span id="divValidNoCommEnabledMeters" class="divValidNotificationHide"></span>
+        </div>
+                
+                 
+               
+                
+
+
+    </div>
+   
+   
+    <div class="customer_actions">
+        <input type="button" class="button important" value="Save" onclick="SaveAutoAlarm();" />
+         @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "AutoAlarmGeneration", new { rtn = "true" }, new { @class = "button previous", @id = "btnReturn" })
+       
+    </div>
+
+
+
+}
+
+@section Scripts
+{
+}
+
+@Scripts.Render("~/bundles/kendo")
+
+
+
+<script type="text/javascript" src="/scripts/spin.min.js"></script>
+<script type="text/javascript">
+    var spinner;
+
+
+    $(document).ready(function () {
+        Reset();
+
+    });  
+
+    function Reset() {
+        $('#divValidCustomerIDList').hide();
+        $('#divValidLowBattAlarmCodeMinor').hide();
+        $('#divValidLowBattAlarmCodeMajor').hide();
+        $('#divValidLowBattEnabledMeters').hide();
+        $('#divValidNoCommAlarmCode').hide();
+        $('#divValidNoCommEnabledMeters').hide();
+    }
+
+    function SaveAutoAlarm() {
+
+        var temp = 0;
+        Reset();
+        var CustomerID = '@Model.CustomerIDText';
+        var LowBattAlarmCodeMinor = $("#LowBattAlarmCodeMinor").val();
+       
+        if (LowBattAlarmCodeMinor == "" || LowBattAlarmCodeMinor == "-1" || LowBattAlarmCodeMinor == "Select EventCode") {
+
+           // alert('Select LowBattAlarmCodeMinor.');
+            $('#divValidLowBattAlarmCodeMinor').html("Select LowBattAlarmCodeMinor");
+            $('#divValidLowBattAlarmCodeMinor').show();
+            $('#divValidLowBattAlarmCodeMinor').removeClass('divValidNotificationVisible');
+            $('#divValidLowBattAlarmCodeMinor').addClass('divValidNotificationVisibleValid');
+            temp = 1;
+
+        }
+        var LowBattAlarmCodeMajor = $("#LowBattAlarmCodeMajor").val();
+        if (LowBattAlarmCodeMajor == "" || LowBattAlarmCodeMajor == "-1" || LowBattAlarmCodeMajor == "Select EventCode") {
+
+            $('#divValidLowBattAlarmCodeMajor').html("Select LowBattAlarmCodeMajor");
+            $('#divValidLowBattAlarmCodeMajor').show();
+            $('#divValidLowBattAlarmCodeMajor').removeClass('divValidNotificationVisible');
+            $('#divValidLowBattAlarmCodeMajor').addClass('divValidNotificationVisibleValid');
+            temp = 1;
+
+        }
+        var LowBattEnabledMeters = $("#LowBattEnabledMeters").val();
+        if (LowBattEnabledMeters == "") {
+
+            $('#divValidLowBattEnabledMeters').html("LowBattEnabledMeters may not be blank");
+            $('#divValidLowBattEnabledMeters').show();
+            $('#divValidLowBattEnabledMeters').removeClass('divValidNotificationVisible');
+            $('#divValidLowBattEnabledMeters').addClass('divValidNotificationVisibleValid');
+            temp = 1;
+
+        }
+
+        var NoCommAlarmCode = $("#NoCommAlarmCode").val();
+        if (NoCommAlarmCode == "" || NoCommAlarmCode == "-1" || NoCommAlarmCode == "Select EventCode") {
+
+            $('#divValidNoCommAlarmCode').html("Select NoCommAlarmCode");
+            $('#divValidNoCommAlarmCode').show();
+            $('#divValidNoCommAlarmCode').removeClass('divValidNotificationVisible');
+            $('#divValidNoCommAlarmCode').addClass('divValidNotificationVisibleValid');
+            temp = 1;
+
+        }
+        var NoCommEnabledMeters = $("#NoCommEnabledMeters").val();
+        if (NoCommEnabledMeters == "") {
+
+            $('#divValidNoCommEnabledMeters').html("NoCommEnabledMeters may not be blank");
+            $('#divValidNoCommEnabledMeters').show();
+            $('#divValidNoCommEnabledMeters').removeClass('divValidNotificationVisible');
+            $('#divValidNoCommEnabledMeters').addClass('divValidNotificationVisibleValid');
+            temp = 1;
+
+        }
+        if (temp == 1)
+            return false;
+        else {
+
+
+            $.ajax({
+                url: '@Url.Action("UpdateAutoAlarm", "AutoAlarm")',
+                data: {
+                    CustomerID: CustomerID, LowBattAlarmCodeMinor: LowBattAlarmCodeMinor,
+                    LowBattAlarmCodeMajor: LowBattAlarmCodeMajor, LowBattEnabledMeters: LowBattEnabledMeters,
+                    NoCommAlarmCode: NoCommAlarmCode, NoCommEnabledMeters: NoCommEnabledMeters
+                },
+                type: 'POST',
+                success: function (data) {
+                    if (data == "1")
+                        alert("Successfully added")
+                    else if (data == "0")
+                        alert("Already added")
+                    else
+                        alert("Try again");
+                },
+
+            });
+
+        }
+
+    }
+    
+</script>
+
+
+
+
+

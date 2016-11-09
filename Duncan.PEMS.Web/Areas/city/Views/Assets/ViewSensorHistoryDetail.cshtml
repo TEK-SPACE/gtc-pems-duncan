@@ -1,0 +1,213 @@
+﻿@model Duncan.PEMS.Entities.Assets.SensorViewModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "View Sensor" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Asset Inquiry" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "View Pending Asset" )</span></h1>
+}
+
+
+<div class="activationDateContainer">Activation Date: @Html.DisplayFor(m => m.ActivationDate)</div>
+
+
+<div class="customer_tab_content">
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Information" )</div>
+
+        <div class="clear">
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Type, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset ID" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.AssetId, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Street, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Area, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Zone, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Suburb, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude" )@Html.Raw( ": " )</div>
+                    @Html.DisplayForLatLong(m => m.Latitude, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Longitude" )@Html.Raw( ": " )</div>
+                    @Html.DisplayForLatLong(m => m.Longitude, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Space Type" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.SpaceType, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Model" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.AssetModel, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Name" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Name, new {@class = "customer_text"} )&nbsp;
+                </div>
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Associated Meter ID" )@Html.Raw( ": " )</div>
+                    @if ( Model.MeterId.AssetId > 0 )
+                    {
+                        @Html.ActionLink( Model.MeterId.AssetId.ToString(), "ViewMeter", "Assets", 
+                            new {customerId = Model.MeterId.CustomerId, areaId = Model.MeterId.AreaId, assetId = Model.MeterId.AssetId, viewOnly = true, activeSensorId = Model.AssetId}, null )&nbsp;
+                    }
+                    else
+                    {
+                        @Html.Raw("")&nbsp;
+                    }
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Associated Space ID" )@Html.Raw( ": " )</div>
+                    @if ( Model.SpaceId.AssetId > 0 )
+                    {
+                        @Html.ActionLink( Model.SpaceId.AssetId.ToString(), "ViewSpace", "Assets", 
+                            new {customerId = Model.CustomerId,  assetId = Model.SpaceId.AssetId, viewOnly = true, activeSensorId = Model.AssetId}, null )&nbsp;
+                    }
+                    else
+                    {
+                        @Html.Raw("")&nbsp;
+                    }
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Preventative Maintenance" )@Html.Raw( ": " )@Html.Tooltip( "LastPreventativeMaintenance" )</div>
+                    @Html.DisplayFor( m => m.LastPrevMaint, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Next Preventative Maintenance" )@Html.Raw( ": " )@Html.Tooltip( "NextPreventativeMaintenance" )</div>
+                    @Html.DisplayFor( m => m.NextPrevMaint, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Maintenance Route" )@Html.Raw( ": " )@Html.Tooltip( "MaintenanceRoute" )</div>
+                    @Html.DisplayFor( m => m.MaintenanceRoute, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Warranty Expiration" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.WarrantyExpiration, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Date Installed" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Configuration.DateInstalled, new {@class = "customer_text"} )&nbsp;
+                </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration" )@Html.Raw( ": " )</div>
+                @Html.DisplayFor( m => m.Configuration.ConfigurationName, new {@class = "customer_text"} )&nbsp;
+            </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "MPV Version" )@Html.Raw( ": " )@Html.Tooltip( "MPVVersion" )</div>
+                    @Html.DisplayFor( m => m.Configuration.MPVVersion, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Software Version" )@Html.Raw( ": " )@Html.Tooltip( "SoftwareVersion" )</div>
+                    @Html.DisplayFor( m => m.Configuration.SoftwareVersion, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Firmware Version" )@Html.Raw( ": " )@Html.Tooltip( "FirmwareVersion" )</div>
+                    @Html.DisplayFor( m => m.Configuration.FirmwareVersion, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Primary Gateway" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Configuration.PrimaryGateway.AssetId, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary Gateway" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.Configuration.SecondaryGateway.AssetId, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Functional Status" )</div>
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Operational Status" )@Html.Raw( ": " )@Html.Tooltip( "OperationalStatus" )</div>
+                    @Html.DisplayFor( m => m.Status, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Operational Status Date" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.StatusDateDisplay, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Class" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.AlarmConfiguration.Class, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Code" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.AlarmConfiguration.Code, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Duration" )@Html.Raw( ": " )@Html.Tooltip( "AlarmDuration" )</div>
+                    @Html.DisplayFor( m => m.AlarmConfiguration.Duration, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Repair Target Time" )@Html.Raw( ": " )@Html.Tooltip( "RepairTargetTime" )</div>
+                    @Html.DisplayFor( m => m.AlarmConfiguration.RepairTargetTime, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Change Details" )</div>
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Activation Date" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.LastUpdatedOnDisplay, new {@class = "customer_text"} )&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Reason" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.LastUpdatedReason, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User" )@Html.Raw( ": " )</div>
+                    @Html.DisplayFor( m => m.LastUpdatedBy, new {@class = "customer_text"} )&nbsp;
+                </div>
+            </div>
+
+    <div class="customer_actions" style="float:left">
+            @Html.ActionLink( (string) ( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ) ?? "Return" ), "ViewSensor", "Assets",
+                              new {customerId = Model.CustomerId, assetId = Model.AssetId, rtn=true}, new {@class = "button", id = "ResetButton"} )
+        </div>
+
+</div>

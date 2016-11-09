@@ -1,0 +1,311 @@
+﻿@using Duncan.PEMS.Business.ConditionalValues
+@using Duncan.PEMS.Utilities
+@* /******************* CHANGE LOG ******************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _______________________________________________________________________
+ * 
+ * 04/10/2014           Sergey Ostrerov            Updated: Izenda Reports - Remove Browser Print  menu element
+ * *************************************************************************************************************************/ *@
+
+
+@{
+    ViewBag.Title = "ReportViewer";
+}
+
+
+
+<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/print.css")" type="text/css" media="print" />
+<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/fun.css")" type="text/css" />
+@*<link rel="stylesheet" href="@Url.Content("~/Reporting/Resources/css/main.css")" type="text/css" />*@
+@*<link rel="shortcut icon" href="@Url.Content("~/Reporting/rs.aspx?image=ModernImages.report-icon.png")" type='image/png' />*@
+<script type="text/javascript" src="@Url.Content("~/Reporting/Resources/js/main.js")"></script>
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-responsive")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-modals")" rel="stylesheet" />
+<link href="@Url.Content("~/Reporting/rs.aspx?css=ModernStyles.bootstrap-override")" rel="stylesheet" />
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-dropdown")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-tab")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-transition")"></script>
+<script type="text/javascript" src="@Url.Content("~/Reporting/rs.aspx?js=ModernScripts.bootstrap-modal")"></script>
+
+@*<link rel="stylesheet" href="http://use.typekit.net/c/295821/alternate-gothic-no-3-d:n4,futura-pt:i4:i7:n4:n7.TV5:J:2,SH9:J:2,SH6:J:2,Y5K:J:2,SH5:J:2/d?3bb2a6e53c9684ffdc9a99f01e5b2a623ad79e195c89f6d92bca17b16fcbc50f75bcccd1bf70585adeba1b8682b73760ece2f2b99537e613283dd94dadf7b79dc0b59f8634b983ab17642952fafe6c2939a7a8fd0e47d6c95bb90834ca4e5070ef80b7dea5d0690eea2b1dc2eeef7fce414b560cfebe973897b679bb5b58f2fa6caa78dea0b0f093953515393616ee053fe324199cfca85d22fbb5fa8ecdeb73bc7f5db8165b72f2328cd32c080eaf72a239f2a93587514463565a634d2a9aba49bc03b9d79498c6a9d63a46e8d6844e3fcf71352cdebf929cfd37ed0e2e31f003ed319b2330fa92ac3a3080d03e841fd0a5c988041504832668b6a3fb84a8361a6ac9c38e454fae89cc56cc7bec13540c19ce09ba8615f7a2c1f20f8eb62732f033ac359409fd371bda56809fef3c6e20959292df144830b87237211e88d94dd63f9c6ba4f30fe6eb58634a7c4cb76878c6dac1c6ae470a638d1c804af9499bf4feb0a2c2309ac968f77435">*@
+
+@Html.Partial("_ReportViewer-Head")
+
+
+@section PageHeader 
+{
+    <h1><div id="report-page-title"></div></h1>
+}
+
+
+
+
+@section PageFilter
+{
+	<div id="filtersContainerId"></div>
+}
+
+
+@section ExportButtons 
+{
+				<div class="btn-toolbar" style="margin: 4px 38px; position: relative; width: 50%; white-space: nowrap; left: 0px;">
+@*					<div class="btn-group">
+						<a class="btn" id="rlhref" href="ReportList.aspx" title="Report list">
+							<img class="icon" src="rs.aspx?image=ModernImages.report-list.png" alt="Report list" />
+							<span class="hide">Report list</span>
+						</a>
+					</div>*@
+@*					<div class="btn-group cool designer-only hide-locked hide-viewonly" id="saveControls">
+						<button type="button" class="btn" title="Save" id="btnSaveDirect" onclick="javascript:event.preventDefault();SaveReportSet();">
+							<img class="icon" src="rs.aspx?image=ModernImages.floppy.png" alt="Save" />
+							<span class="hide">Save</span>
+						</button>
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li class="hide-readonly"><a href="javascript:void(0)" style="min-width: 18em;"
+								onclick="javascript:SaveReportSet();">
+								<img class="icon" src="rs.aspx?image=ModernImages.save-32.png" alt="Save changes" />
+								<b>Save</b><br>
+								Save changes to the report for everyone it is shared with
+							</a></li>
+							<li><a href="javascript:void(0)"
+								onclick="javascript:ShowSaveAsDialog();">
+								<img class="icon" src="rs.aspx?image=ModernImages.save-as-32.png" alt="Save a copy" />
+								<b>Save As</b><br>
+								Save a copy with a new name, keeping the original intact
+							</a></li>
+						</ul>
+					</div>*@
+					<div class="btn-group cool">
+						<button type="button" class="btn" title="Print"
+							onclick="responseServer.OpenUrl('rs.aspx?p=htmlreport&print=1', 'aspnetForm', '');">
+							<img class="icon" src="rs.aspx?image=ModernImages.print.png" alt="Printer" />
+							<span class="hide">Print</span>
+						</button>
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:void(0)" title="" onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=PDF', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.html-to-pdf-32.png" alt="" />
+								<b>HTML-powered PDF</b><br>
+								One-file compilation of all the report's pages
+							</a></li>
+							<!--			<li><a href="javascript:void(0)" title="" 
+								onclick="responseServer.OpenUrlWithModalDialogNew('rs.aspx?output=PDF', 'aspnetForm', 'reportFrame');">
+								<img class="icon" src="rs.aspx?image=ModernImages.pdf-32.png" alt="" />
+								<b>Standard PDF</b><br>
+								Non-HTML PDF generation
+							</a></li>  -->
+						</ul>
+					</div>
+					<div class="btn-group cool">
+						<button type="button" class="btn" title="Excel"
+							onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=XLS(MIME)', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+							<img class="icon" src="rs.aspx?image=ModernImages.excel.png" alt="Get Excel file" />
+							<span class="hide">Export to Excel</span>
+						</button>
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="javascript:void(0)" title="" style="min-width: 18em;"
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=XLS(MIME)', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.xls-32.png" alt="" />
+								<b>Export to Excel</b><br>
+								File for Microsoft's spreadsheet application
+							</a></li>
+							<li><a href="javascript:void(0)" title=""
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=DOC', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.word-32.png" alt="" />
+								<b>Word document</b><br>
+								File for Microsoft's word processor, most widely-used office application
+							</a></li>
+							<li><a href="javascript:void(0)" title=""
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=CSV', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.csv-32.png" alt="" />
+								<b>CSV</b><br>
+								Stores tabular data in text file, that can be used in Google Docs
+							</a></li>
+							<li><a href="javascript:void(0)" title=""
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=XML', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.xml-32.png" alt="" />
+								<b>XML</b><br>
+								Both human-readable and machine-readable text file
+							</a></li>
+							<li><a href="javascript:void(0)" title=""
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=RTF', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.rtf-32.png" alt="" />
+								<b>RTF</b><br>
+								File format for cross-platform document interchange
+							</a></li>
+							<li><a href="javascript:void(0)" title=""
+								onclick="reportViewerFilter.refreshFilters(false, function(){ responseServer.OpenUrlWithModalDialogNewCustomRsUrl('rs.aspx?output=ODT', 'aspnetForm', 'reportFrame', nrvConfig.ResponseServerUrl); });">
+								<img class="icon" src="rs.aspx?image=ModernImages.open-office-32.png" alt="" />
+								<b>Open Office</b><br>
+								File for open-source office software suite 
+							</a></li>
+						</ul>
+					</div>
+@*					<div class="btn-group">
+						<button type="button" class="btn" title="Send report"
+							onclick="InitiateEmail();">
+							<img class="icon" src="rs.aspx?image=ModernImages.mail.png" alt="Send report" />
+							<span class="hide">Send report</span>
+						</button>
+					</div>*@
+					<div class="btn-group cool" data-toggle="buttons-radio">
+						<button type="button" class="btn" title="Results per page" onclick="">
+							<img class="icon" id="resNumImg" src="rs.aspx?image=ModernImages.rows-100.png" alt="Results per page" />
+							<span class="hide">Results per page</span>
+						</button>
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li class="change-top" id="resNumLi0"><a href="javascript:void(0)" title="" style="min-width: 12em;">
+								<img class="icon" src="rs.aspx?image=ModernImages.result-1-32.png" alt="" />
+								<b>1 Result</b><br />
+								Ideal for large forms
+							</a></li>
+							<li class="change-top" id="resNumLi1"><a href="javascript:void(0)" title="">
+								<img class="icon" src="rs.aspx?image=ModernImages.results-10-32.png" alt="" />
+								<b>10 Results</b><br />
+								Good for single parameter reports
+							</a></li>
+							<li class="change-top" id="resNumLi2"><a href="javascript:void(0)" title="">
+								<img class="icon" src="rs.aspx?image=ModernImages.results-100-32.png" alt="" />
+								<b>100 Results</b><br />
+								Default and recommended value
+							</a></li>
+							<li class="change-top" id="resNumLi3"><a href="javascript:void(0)" title="">
+								<img class="icon" src="rs.aspx?image=ModernImages.results-1000-32.png" alt="" />
+								<b>1000 Results</b><br />
+								Good for larger reports
+							</a></li>
+							<li class="divider"></li>
+							<li class="change-top" id="resNumLi4"><a href="javascript:void(0)" title="">
+								<img class="icon" src="rs.aspx?image=ModernImages.results-all-32.png" alt="" />
+								<b>Show all results</b><br>
+								Use carefully as this may overload the browser
+							</a></li>
+						</ul>
+					</div>
+@*					<div class="btn-group">
+						<button type="button" class="btn designer-only hide-locked hide-viewonly" title="Open in designer" id="designerBtn">
+							<img class="icon" src="rs.aspx?image=ModernImages.design.png" alt="Open in designer" />
+							<span class="hide">Open in designer</span>
+						</button>
+					</div>*@
+				</div>
+
+}
+
+    <div class="layout">
+
+    <script type="text/javascript">
+        function insertParam(key, value) {
+            key = escape(key); value = escape(value);
+            var kvp = document.location.search.substr(1).split('&');
+            if (kvp.length == 1 && kvp[0] == '')
+                kvp.length = 0;
+            var i = kvp.length; var x; while (i--) {
+                x = kvp[i].split('=');
+                if (x[0] == key) {
+                    x[1] = value;
+                    kvp[i] = x.join('=');
+                    break;
+                }
+            }
+            if (i < 0) { kvp[kvp.length] = [key, value].join('='); }
+            document.location.search = kvp.join('&');
+        }
+
+        function ShowRlToDbLoading() {
+            document.getElementById('mainContentDiv').style.display = 'none';
+            var dld = document.getElementById('dashLoadingVg');
+            dld.style.height = document.body.scrollHeight + 'px';
+            dld.style.display = '';
+            var limg = document.getElementById('limgDb');
+            var lw = document.getElementById('loadingWordDb');
+            var vSize = document.body.offsetHeight;
+            lw.style.paddingTop = (3 + vSize / 3) + 'px';
+        }
+    </script>
+
+    <div id="dashLoadingVg" style="text-align: center; width: 100%; height: 100%; top: 130px; left: 0px; background-color: #FFFFFF; z-index: 8000; display: none;">
+        <div id="loadingWordDb" style="font-size: 20px; margin-left: 70px; font-size: 20px; color: #1D5987; font-family: Verdana,Arial,Helvetica,sans-serif; font-weight: normal !important; font-size: 20px; font-style: normal;">Loading...</div>
+        <img id="limgDb" style="margin-left: 70px; margin-top:40px;" src="@Url.Content("~/Reporting/rs.aspx?image=loading.gif")" alt="" />
+    </div>
+    <div class="main-content" id="mainContentDiv">
+           @Html.Partial("_ReportViewer-Body")
+
+    </div>
+
+@*    <div class="footer applyStyles">
+        <div class="line"></div>
+        <div class="page">
+            <p>
+                Copyright 2013 Izenda, LLC<br />
+                <a href="http://izenda.com">Home</a> <em style="margin: 0 .25em;">·</em>@Html.ActionLink("Reports", "ReportList", @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString()) <em style="margin: 0 .25em;">·</em> <a href="http://blog.izenda.com">Blog</a>
+            </p>
+        </div>
+    </div>*@
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#print.uses-grid-filter').hide();
+        TryHiddingFilters();
+    });
+    var filterTryCount = 0;
+    var waitOneMoreSecond = false;
+    function TryHiddingFilters() {
+        filterTryCount++;
+        if (filterTryCount < 10) {
+            //check to see if it has been loaded
+            //check to see if the filter area is loaded, and if not, then try it again
+            if ($("#filtersContainerId").contents().length) {
+                //we give it one more second to load fully
+                if (waitOneMoreSecond == false) {
+                    waitOneMoreSecond = true;
+                    window.setTimeout(function () {
+                        TryHiddingFilters();
+                    }, 1000);
+                } else {
+                    //// some html page loaded in iframe
+                    LoadHiddenFilters();
+                }
+            } else {
+                window.setTimeout(function () {
+                    TryHiddingFilters();
+                }, 1500);
+            }
+        }
+    }
+    function LoadHiddenFilters() {
+        $.post('/Reporting/GetCustomerHiddenFilters?customerId=@int.Parse(ViewData[Constants.ViewData.CurrentCityId].ToString())',
+            OnHiddenFiltersLoaded);
+    }
+    function OnHiddenFiltersLoaded(data) {
+
+        if (!isEmptyObject(data)) {
+            //foreach hide filter value
+            data.forEach(function (entry) {
+                HideFilter(entry);
+            });
+        } 
+    }
+    function HideFilter(hiddenFilterValue) {
+        $(".rvf-group-item[title='"+hiddenFilterValue+"']").css("display", "none");
+        $(".rvf-group-header").filter(":contains('" + hiddenFilterValue+ "')").css("display", "none");
+    }
+</script>        
+
+
+

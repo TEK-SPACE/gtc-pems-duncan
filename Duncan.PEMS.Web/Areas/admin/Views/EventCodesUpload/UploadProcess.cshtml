@@ -1,0 +1,85 @@
+﻿@model Duncan.PEMS.Entities.Events.EventCodesUploadResultsModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Event Codes Upload Results";
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes Upload" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Upload Event Codes Results" )</span></h1>
+}
+
+            @(Html.Kendo().Grid(Model.Results)
+              .Name("BulkSettingResultsLogGrid")
+              .HtmlAttributes( new {style = "max-width: 1693px; height: 170px;"} )
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Log").HtmlAttributes(new { style = "text-align:left" }).HeaderHtmlAttributes(new { style = "text-align:left" });
+              })
+              .Pageable()
+              .Scrollable()
+            )
+            @(Html.Kendo().Grid(Model.Errors)
+              .Name("BulkSettingResultsErrorGrid")
+              .HtmlAttributes( new {style = "max-width: 1693px; height: 300px;"} )
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Errors").HtmlAttributes(new { style = "text-align:left" }).HeaderHtmlAttributes(new { style = "text-align:left" });
+              })
+              .Pageable()
+              .Scrollable()
+            )
+        
+<div class="customer_actions">
+            @Html.ActionLink( (string) ( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ) ?? "Return" ), "Upload", "EventCodesUpload",
+                              new {customerId = Model.CustomerId}, new {@class = "button previous"} )
+</div>
+
+
+
+
+
+<script>
+    
+    function onSelect(e) {
+
+        var grid = $("#BulkSettingResultsLogGrid");
+        
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+        grid = $("#BulkSettingResultsErrorGrid");
+
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+
+
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", "Only one file may be selected.");
+            e.preventDefault();
+        }
+    }
+
+    function onComplete(e) {
+        alert("Done.");
+    }
+
+    function onProgress(e) {
+        //kendoConsole.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+
+
+
+</script>

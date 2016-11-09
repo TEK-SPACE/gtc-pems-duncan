@@ -1,0 +1,101 @@
+﻿@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Users.UserModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create User" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create User" )</span></h1>
+}
+
+<script type="text/javascript">
+    function SaveClick() {
+        var $secondaryIdType = $("#SecondaryIDType").val();
+        var $secondaryIdValue = $("#SecondaryIDValue").val();
+        //if one of them has a value but not both, then display that to the user
+        if (($secondaryIdType && $secondaryIdValue) || (!$secondaryIdType && !$secondaryIdValue)) {
+            return true;
+        } else {
+            alert('Both Secondary Id fields either have to have values or be empty.');
+            return false;
+        }
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )  @Html.ShowAllErrors( "Password" )</div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Identification" )</div>
+
+    <div class="two-column">
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Name" ): </div>
+            @Html.TextBoxFor( m => m.FirstName, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.FirstName, new {@class = "required_asterisk"} )
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Middle Initial" ): </div>
+            @Html.TextBoxFor( m => m.MiddleInitial, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Name" ): </div>
+            @Html.TextBoxFor( m => m.LastName, new {@class = "customer_text"} )
+            @Html.RequiredMarkFor( m => m.LastName, new {@class = "required_asterisk"} )
+        </div>
+       
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Phone Number" ): </div>
+            @Html.TextBoxFor( m => m.PhoneNumber, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Email Address" ): </div>
+            @Html.TextBoxFor( m => m.EmailAddress, new {@class = "customer_text"} )
+        </div>
+
+    </div>
+    <div class="two-column">
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): </div>
+            <select name="status">
+                <option value="Active">Active</option>
+                <option value="Terminated">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Terminated" )</option>
+            </select>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Organization Name" ): </div>
+            @Html.TextBoxFor( m => m.OrganizationName, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Type" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDType, new {@class = "customer_text"} )
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Secondary ID Value" ): </div>
+            @Html.TextBoxFor( m => m.SecondaryIDValue, new {@class = "customer_text"} )
+        </div>
+        @if (ViewData[Constants.ViewData.CurrentCityType].ToString() == CustomerProfileType.MaintenanceGroup.ToString())
+        {
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Is a Technician"): </div>
+                @Html.CheckBoxFor(m => m.IsTechnician, new {@class = "customer_text"})
+            </div>
+        }
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Permission Settings" )</div>
+    <div>
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role" ): </div>
+        @Html.DropDownListFor( m => m.Role, Model.Groups.Select( c => new SelectListItem {Text = c.Text, Value = c.Value} ) )
+        @Html.RequiredMarkFor( m => m.Role, new {@class = "required_asterisk"} )
+    </div>
+    <div class="button-Container">
+        <button type="submit" name="submitButton" class="button important" onclick=" return SaveClick(); " value="Create">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create" )</button>
+        <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+}

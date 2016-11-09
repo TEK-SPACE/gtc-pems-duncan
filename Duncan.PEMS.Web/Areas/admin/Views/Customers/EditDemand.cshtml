@@ -1,0 +1,69 @@
+﻿@model Duncan.PEMS.Entities.Customers.CustomerDemandZone
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Update Event Code");
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Manage Customer")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Demand Zone") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Demand Zone Configuration")</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+
+@using (Html.BeginForm("EditDemand", "Customers", FormMethod.Post, new { @class = "customer-form", @id = "editdemandzones" }))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+    @Html.HiddenFor(m => m.DemandZoneId)
+    @Html.HiddenFor(m => m.DemandZoneCustomerId)
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Demand Zones Details")</div>
+    <div>
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name")@Html.Raw(": ")</div>
+        @Html.DisplayFor(m => m.DemandZoneCustomerName, new { @class = "customer_text" })
+        @Html.HiddenFor(m => m.DemandZoneCustomerName, new { @class = "customer_text" })&nbsp;
+    </div>
+    <div>
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Demand Zone")@Html.Raw(": ")</div>
+
+        @Html.DisplayFor(m => m.DemandZoneDesc, new { @class = "customer_text" })
+        @Html.HiddenFor(m => m.DemandZoneDesc, new { @class = "customer_text" })&nbsp;
+    </div>
+    <div>
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Is Display")@Html.Raw(": ")</div>
+        <div class="checkbox" >
+            @Html.CheckBoxFor(m => m.IsDisplay, new { @class = "checkbox", @id = "checkme" })
+        </div>
+    </div>
+
+    <div class="customer_actions">
+        <button id="save" type="submit" name="submitButton" class="button" value="SAVE" onsubmit="checkalert()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+        <button type="submit" name="submitButton" class="button previous" value="BACK">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    var chkd;
+
+    $(document).ready(function () {
+
+
+    });
+  
+    $('#save').on('click', function (e) {
+        var responsefrompage = '@Model.getResponse';
+        if (responsefrompage != "") {
+            alert(responsefrompage)
+            document.getElementById("checkme").checked = chkd;
+            return false;
+        }
+    });
+    $('#checkme').on('click', function (e) {
+        var chkd =!($(this).is(':checked'));
+    });
+
+</script>

@@ -1,0 +1,132 @@
+﻿@model Duncan.PEMS.Entities.Assets.AssetTypesModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Assets Upload";
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Upload") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Upload Assets")</span></h1>
+}
+
+@using (Html.BeginForm("UploadSubmit", "AssetsUpload", FormMethod.Post))
+{
+
+    @Html.HiddenFor(m => m.CustomerId)
+
+
+    <div class="clear">
+
+        <div class="two-column payment">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")</div>
+            <div class="clear" style="padding-top: 5px; padding-bottom: 5px">
+                @Html.DropDownListFor(m => m.AssetTypesId, new SelectList(Model.AssetTypes, "TypeValue", "Name"), new { @class = "customer_text" })
+            </div>
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Assets File to Upload")</div>
+            <div class="clear">
+                @(Html.Kendo().Upload()
+                          .Name("files")
+                          .Multiple(false)
+                          .Events(events => events
+                                                .Progress("onProgress")
+                                                .Select("onSelect")
+                                                .Remove("onRemove")
+                          )
+                )
+            </div>
+        </div>
+
+        <div class="two-column payment">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Example Files")</div>
+            To download an example file or instructions, click on the appropriate links below.
+            <div style="width: 95%">
+                @(Html.Kendo().Grid(Model.AssetTypes) // Bind the grid to the Model property of the view
+                            .Name("AssetUploadInstructionGrid")
+                            .Columns(columns =>
+                                {
+                                    columns.Bound(p => p.Name).Title("Type");
+                                    columns.Bound(p => p.TypeValue).ClientTemplate(@Html.ActionLink("Example", "DownloadExample", "AssetsUpload",
+                                        new { customerId = Model.CustomerId, assetType = "#= TypeValue #" }, null).ToHtmlString()).Title("Example");
+                                    columns.Bound(p => p.TypeValue).ClientTemplate(@Html.ActionLink("Instructions", "DownloadInstructions", "AssetsUpload",
+                                        new { customerId = Model.CustomerId, assetType = "#= TypeValue #" }, null).ToHtmlString()).Title("Instructions");
+                                })
+                            .DataSource(datasource => datasource.Ajax())
+                )
+            </div>
+            <div style="float: right; width: 5%"></div>
+        </div>
+    </div>
+
+
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" id="btnSubmit" class="button" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Upload")</button>
+        @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "Index", "Assets",
+                              new { rtn = "true" }, new { @class = "button previous" })
+    </div>
+}
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#btnSubmit').attr('disabled', true).attr('readonly', true);       
+        $(":button").addClass("disabledButton");
+        
+
+        
+    });
+    function onSelect(e) {
+
+
+        if (!/\.csv$/i.test(e.files[0].extension)) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"", "Please upload csv file only.");
+            $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+            $(":button").addClass("disabledButton");
+            e.preventDefault();
+
+        }
+        else {
+          
+           $('#btnSubmit').attr('disabled', false).attr('readonly', false);
+           $(":button").removeClass("disabledButton");
+           
+        }
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"", "Only one file may be selected.");
+            $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+            $(":button").addClass("disabledButton");
+            e.preventDefault();
+        }
+       
+    }
+
+
+    function onRemove() {
+        $('#btnSubmit').attr('disabled', true).attr('readonly', true);
+        $(":button").addClass("disabledButton");
+    }
+    function onComplete(e) {
+        alert("Done.");
+    }
+
+    function onProgress(e) {
+        //kendoConsole.log("Upload progress :: " + e.percentComplete + "% :: " + getFileInfo(e));
+    }
+
+
+
+</script>

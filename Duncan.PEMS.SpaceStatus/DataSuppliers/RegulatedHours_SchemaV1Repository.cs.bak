@@ -1,0 +1,556 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Xml;
+using System.Xml.Linq;
+
+
+using Duncan.PEMS.SpaceStatus.DataSuppliers;
+using Duncan.PEMS.SpaceStatus.DataMappers;
+using Duncan.PEMS.SpaceStatus.Models;
+using Duncan.PEMS.SpaceStatus.UtilityClasses;
+
+namespace Duncan.PEMS.SpaceStatus.DataSuppliers
+{
+    // DEBUG: RegulatedHours_ExperimentalDBSchemaV1Repository was partially implemented for RegulatedHours storage in ReinoComm DB,
+    // but was never completed because the DB schema wasn't what we wanted.  For interim, we are using an XML file for repository
+    // instead of the database. Therefore, RegulatedHours_ExperimentalDBSchemaV1Repository code is still a useful starting point
+    // incase we end up moving to DB instead of XML, but it will need to be finalized and work with the current schema...
+
+    public sealed class RegulatedHours_ExperimentalDBSchemaV1DTOLogicalComparer : System.Collections.Generic.IComparer<RegulatedHours_ExperimentalDBSchemaV1DTO>
+    {
+        private static readonly System.Collections.Generic.IComparer<RegulatedHours_ExperimentalDBSchemaV1DTO> _default = new RegulatedHours_ExperimentalDBSchemaV1DTOLogicalComparer();
+
+        public RegulatedHours_ExperimentalDBSchemaV1DTOLogicalComparer()
+        {
+        }
+
+        public static System.Collections.Generic.IComparer<RegulatedHours_ExperimentalDBSchemaV1DTO> Default
+        {
+            get { return _default; }
+        }
+
+        public int Compare(RegulatedHours_ExperimentalDBSchemaV1DTO s1, RegulatedHours_ExperimentalDBSchemaV1DTO s2)
+        {
+            // Sort in order of appearance by Customer, Meter, Space, DayOfWeek, and StartTime
+
+            int result = s1.CID.CompareTo(s2.CID);
+            if (result != 0)
+                return result;
+
+            result = s1.MID.CompareTo(s2.MID);
+            if (result != 0)
+                return result;
+
+            result = s1.BayNumber.CompareTo(s2.BayNumber);
+            if (result != 0)
+                return result;
+
+            result = s1.DayOfWeek.CompareTo(s2.DayOfWeek);
+            if (result != 0)
+                return result;
+
+            result = s1.RegulatedStartTime_Minutes.CompareTo(s2.RegulatedStartTime_Minutes);
+            return result;
+        }
+    }
+
+    public class RegulatedHours_ExperimentalDBSchemaV1DTOPredicate
+    {
+        private int? _CID;
+        private int? _BayNumber;
+        private int? _MID;
+
+        public RegulatedHours_ExperimentalDBSchemaV1DTOPredicate(int? cid, int? bayNumber, int? mid)
+        {
+            _CID = cid;
+            _BayNumber = bayNumber;
+            _MID = mid;
+        }
+
+        public bool CompareVariableScope(RegulatedHours_ExperimentalDBSchemaV1DTO pObject)
+        {
+            bool cidIsSame = false;
+            bool bayNumberIsSame = false;
+            bool midIsSame = false;
+
+            // Compare CustomerID (Null and -1 will be treated as the same value)
+            if ((this._CID == null) || (this._CID.HasValue == false) || (this._CID.Value == -1))
+                cidIsSame = true;
+            else
+                cidIsSame = (this._CID.Value == pObject.CID);
+
+            // Compare MeterID (Null and -1 will be treated as the same value)
+            if ((this._MID == null) || (this._MID.HasValue == false) || (this._MID.Value == -1))
+                midIsSame = true;
+            else
+                midIsSame = (this._MID.Value == pObject.MID);
+
+            // Compare BayNumber (Null and -1 will be treated as the same value)
+            if ((this._BayNumber == null) || (this._BayNumber.HasValue == false) || (this._BayNumber.Value == -1))
+                bayNumberIsSame = true;
+            else
+                bayNumberIsSame = (this._BayNumber.Value == pObject.BayNumber);
+
+
+            return ((cidIsSame) && (bayNumberIsSame) && (midIsSame));
+        }
+
+        public bool CompareCustomerID(RegulatedHours_ExperimentalDBSchemaV1DTO pObject)
+        {
+            bool cidIsSame = false;
+
+            // Compare CustomerID (Null and -1 will be treated as the same value)
+            if ((this._CID == null) || (this._CID.HasValue == false) || (this._CID.Value == -1))
+                cidIsSame = true;
+            else
+                cidIsSame = (this._CID.Value == pObject.CID);
+
+            return cidIsSame;
+        }
+    }
+
+    
+    public class RegulatedHours_ExperimentalDBSchemaV1Repository
+    {
+        static public RegulatedHours_ExperimentalDBSchemaV1Repository Repository = null;
+
+        private ReaderWriterLockAlt _cacheReadWriteLocker = new ReaderWriterLockAlt(); // For thread-safe read/write access of the cached regulations
+        private List<RegulatedHours_ExperimentalDBSchemaV1DTO> _cachedRegulations = null; // Use "_cacheReadWriteLocker" in read or write mode when accessing this member
+        private string _xmlCacheFilename = string.Empty;
+        private SqlServerDAO _sharedSqlDao = null;
+        private Dictionary<int, DateTime> _cacheExpirationsByCustomerId = new Dictionary<int, DateTime>(); // Access this member in a thread-safe manner
+
+        public SqlServerDAO SharedSqlDao
+        {
+            get { return _sharedSqlDao; }
+            set { _sharedSqlDao = value; }
+        }
+
+        public RegulatedHours_ExperimentalDBSchemaV1Repository()
+        {
+            // Determine the filename that will be used for local caching of regulations
+            _xmlCacheFilename = HttpContext.Current.Server.MapPath("~/App_Data/RegulatedHours_SchemaV1.xml");
+
+            // Attempt to restore in-memory cache from the contents of XML file, if it exists
+            try
+            {
+                if (System.IO.File.Exists(_xmlCacheFilename))
+                {
+                    XDocument xmlCache = XDocument.Load(_xmlCacheFilename);
+                    BuildMemCacheFromXml(xmlCache);
+                }
+            }
+            catch 
+            {
+            }
+        }
+
+        private int? GetNullableInt(XElement element)
+        {
+            if (element == null)
+                return null;
+            else if (string.IsNullOrEmpty(element.Value))
+                return null;
+            else
+                return (int?)element;
+        }
+
+        private DateTime GetCacheExpirationForCustomer(int customerID)
+        {
+            // In a thread-safe manner, determine the cache expiration for the current customer
+            DateTime _cacheExpireTime = DateTime.MinValue;
+            lock (_cacheExpirationsByCustomerId)
+            {
+                if (_cacheExpirationsByCustomerId.ContainsKey(customerID))
+                    _cacheExpireTime = _cacheExpirationsByCustomerId[customerID];
+                else
+                {
+                    _cacheExpireTime = DateTime.UtcNow;
+                    _cacheExpirationsByCustomerId.Add(customerID, _cacheExpireTime);
+                }
+            }
+            return _cacheExpireTime;
+        }
+
+        private void BuildMemCacheFromXml(XDocument xmlCache)
+        {
+            // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+            using (_cacheReadWriteLocker.WriteLock())
+            {
+                _cachedRegulations = new List<RegulatedHours_ExperimentalDBSchemaV1DTO>();
+                try
+                {
+                    // Create an object from each record in the XML
+                    _cachedRegulations =
+                        (from rec in xmlCache.Element("RegulatedHours").Elements("Record")
+                         select new RegulatedHours_ExperimentalDBSchemaV1DTO
+                         {
+                             ID_PrimaryKey = (int)rec.Attribute("ID_PrimaryKey"),
+                             ParkingSpaceID = (Int64)rec.Attribute("ParkingSpaceID"),
+                             DayOfWeek = (DayOfWeek)(((int)rec.Attribute("DayOfWeek")) - 1), // Persisted as Sunday = 1, so we need to offset to get to C# DayOfWeek
+                             RegulatedStartTime_Minutes = (int)rec.Attribute("RegulatedStartTime_Minutes"),
+                             RegulatedEndTime_Minutes = (int)rec.Attribute("RegulatedEndTime_Minutes"),
+                             MaxStayMinute = (int)rec.Attribute("MaxStayMinute"),
+                             CID = (int)rec.Attribute("CID"),
+                             AID = (int)rec.Attribute("AID"),
+                             MID = (int)rec.Attribute("MID"),
+                             BayNumber = (int)rec.Attribute("BayNumber")
+                         }).ToList();
+
+                    // Sort our final list
+                    _cachedRegulations.Sort(RegulatedHours_ExperimentalDBSchemaV1DTOLogicalComparer.Default);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        // This routine should only be called from a routine that already has a write lock via the "_cacheReadWriteLocker" object!
+        private void RewriteXmlCache_WriteLockAlreadyAcquired()
+        {
+            // Create a new XML object and add the root element
+            XDocument xmlCache = new XDocument();
+            xmlCache.AddFirst(new XElement("RegulatedHours"));
+
+            // Create cache object if doesn't exist yet
+            if (_cachedRegulations == null)
+                _cachedRegulations = new List<RegulatedHours_ExperimentalDBSchemaV1DTO>();
+
+            foreach (RegulatedHours_ExperimentalDBSchemaV1DTO regulation in _cachedRegulations)
+            {
+                // Create a new node for the group
+                XElement groupNode = null;
+                groupNode = new XElement("Record",
+                        new XAttribute("ID_PrimaryKey", regulation.ID_PrimaryKey),
+                        new XAttribute("ParkingSpaceID", regulation.ParkingSpaceID),
+                        new XAttribute("DayOfWeek", ((int)regulation.DayOfWeek) + 1), // Day of week needs to be persisted as Sunday = 1
+                        new XAttribute("RegulatedStartTime_Minutes", regulation.RegulatedStartTime_Minutes),
+                        new XAttribute("RegulatedEndTime_Minutes", regulation.RegulatedEndTime_Minutes),
+                        new XAttribute("MaxStayMinute", regulation.MaxStayMinute),
+                        new XAttribute("CID", regulation.CID),
+                        new XAttribute("AID", regulation.AID),
+                        new XAttribute("MID", regulation.MID),
+                        new XAttribute("BayNumber", regulation.BayNumber));
+                xmlCache.Root.Add(groupNode);
+            }
+
+            // Persist the changes to file
+            if (System.IO.File.Exists(_xmlCacheFilename))
+                System.IO.File.Delete(_xmlCacheFilename);
+            xmlCache.Save(_xmlCacheFilename);
+        }
+
+        private void RewriteXmlCache()
+        {
+            // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+            using (_cacheReadWriteLocker.WriteLock())
+            {
+                RewriteXmlCache_WriteLockAlreadyAcquired();
+            }
+        }
+
+        // Return a list of all regulations for a given customer (from cache)
+        public IEnumerable<RegulatedHours_ExperimentalDBSchemaV1DTO> GetRegulations(int? cid)
+        {
+            // Update the cache in background thread. The update routine will return immediately if the cache isn't expired yet
+            if (cid.HasValue)
+            {
+                // Run this async so that the main thread can continue
+                var task = new Task(() => { UpdateMemAndXmlCacheForCustomerFromDB(cid.Value, false); });
+                task.Start();
+            }
+
+            RegulatedHours_ExperimentalDBSchemaV1DTOPredicate predicate = new RegulatedHours_ExperimentalDBSchemaV1DTOPredicate(cid, null, null);
+            List<RegulatedHours_ExperimentalDBSchemaV1DTO> result = null;
+
+            // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+            using (_cacheReadWriteLocker.ReadLock())
+            {
+                result = _cachedRegulations.FindAll(predicate.CompareCustomerID);
+            }
+            return result;
+        }
+
+        // Return a list of all regulations for a given customer, meter, bay, or combination of such parameters (from cache)
+        public List<RegulatedHours_ExperimentalDBSchemaV1DTO> GetRegulationsWithSameScope(int? cid, int? bayNumber, int? mid)
+        {
+            // Update the cache in background thread. The update routine will return immediately if the cache isn't expired yet
+            if (cid.HasValue)
+            {
+                // Run this async so that the main thread can continue
+                var task = new Task(() => { UpdateMemAndXmlCacheForCustomerFromDB(cid.Value, false); });
+                task.Start();
+            }
+
+            RegulatedHours_ExperimentalDBSchemaV1DTOPredicate predicate = new RegulatedHours_ExperimentalDBSchemaV1DTOPredicate(cid, bayNumber, mid);
+            List<RegulatedHours_ExperimentalDBSchemaV1DTO> result = null;
+
+            // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+            using (_cacheReadWriteLocker.ReadLock())
+            {
+                result = _cachedRegulations.FindAll(predicate.CompareVariableScope);
+            }
+            return result;
+        }
+
+        // Get a regulation of a known ID (from cache)
+        public RegulatedHours_ExperimentalDBSchemaV1DTO GetRegulationByID(int regulatedHoursID)
+        {
+            // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+            using (_cacheReadWriteLocker.ReadLock())
+            {
+                RegulatedHours_ExperimentalDBSchemaV1DTO result = _cachedRegulations.Find(item => item.ID_PrimaryKey == regulatedHoursID);
+
+                // Update the cache in background thread. The update routine will return immediately if the cache isn't expired yet
+                var task = new Task(() => { UpdateMemAndXmlCacheForCustomerFromDB(result.CID, false); });
+                task.Start();
+
+                return result;
+            }
+        }
+
+
+        // Return a list of all regulations for a given customer (from database, instead of from cache)
+        public List<RegulatedHours_ExperimentalDBSchemaV1DTO> GetRegulatedHoursForCustomerFromDB(int customerID)
+        {
+            string query = 
+                "SELECT rh.ID, rh.ParkingSpaceId, rh.DayOfWeek, rh.RegulatedStartTime, rh.RegulatedEndTime, rh.MaxStayMinute," +
+                " ps.CustomerId, ps.AreaId, ps.MeterId, ps.BayNumber" +
+                " FROM RegulatedHours as rh, ParkingSpaces ps" +
+                " where rh.ParkingSpaceId = ps.ParkingSpaceId" +
+                " and ps.CustomerId = @CustomerId" +
+                " order by ps.MeterId, ps.BayNumber, rh.DayOfWeek, rh.RegulatedStartTime";
+            SqlServerDAO dao = SharedSqlDao;
+            SqlCommand command = dao.GetSqlCommand(query);
+            command.Parameters.Add(dao.CreateParameter("@CustomerId", customerID));
+            return dao.GetList<RegulatedHours_ExperimentalDBSchemaV1DTO>(command);
+        }
+
+        // Update the local cache with current regulations from the database for a specific customer
+        public void UpdateMemAndXmlCacheForCustomerFromDB(int customerID, bool forceUpdateIfCacheNotExpiredYet)
+        {
+            // Get the current cache expiration for this customer
+            DateTime _cacheExpireTime = GetCacheExpirationForCustomer(customerID);
+
+            // Only update the cache if it is expired, or we have been explicitly told to do so
+            if ((DateTime.UtcNow >= _cacheExpireTime) || (forceUpdateIfCacheNotExpiredYet))
+            {
+                // Protect this section with our ReadWriterLockAlt that handles concurrency issues for us
+                using (_cacheReadWriteLocker.WriteLock())
+                {
+                    // If multiple threads were calling this same routine, we might've had to wait around awhile, so we 
+                    // will check the cache expiration again (unless we are in the "force update" mode)
+                    _cacheExpireTime = GetCacheExpirationForCustomer(customerID);
+                    if ((!forceUpdateIfCacheNotExpiredYet) && (DateTime.UtcNow >= _cacheExpireTime))
+                    {
+                        // Gather the regulations for current customer from the database
+                        List<RegulatedHours_ExperimentalDBSchemaV1DTO> customerRegsFromDB = GetRegulatedHoursForCustomerFromDB(customerID);
+
+                        // Create cache object if doesn't exist yet
+                        if (_cachedRegulations == null)
+                            _cachedRegulations = new List<RegulatedHours_ExperimentalDBSchemaV1DTO>();
+
+                        // Remove existing items from memory cache for the current customer
+                        RegulatedHours_ExperimentalDBSchemaV1DTOPredicate predicate = new RegulatedHours_ExperimentalDBSchemaV1DTOPredicate(customerID, null, null);
+                        List<RegulatedHours_ExperimentalDBSchemaV1DTO> cachedCustomerRegulations = _cachedRegulations.FindAll(predicate.CompareCustomerID);
+                        foreach (RegulatedHours_ExperimentalDBSchemaV1DTO nextReg in cachedCustomerRegulations)
+                        {
+                            _cachedRegulations.Remove(nextReg);
+                        }
+
+                        // Add the customer regulations that were obtained from the physical database
+                        _cachedRegulations.AddRange(customerRegsFromDB);
+
+                        // Now rewrite the XML cache
+                        RewriteXmlCache_WriteLockAlreadyAcquired();
+
+                        // Finally, we will update the cache expiration for this customer so the cache won't try to be 
+                        // updated again for this customer until another hour from now.  Note that we need to be thread-safe
+                        // in upating the expiration time, because another thread might be trying to read it
+                        lock (_cacheExpirationsByCustomerId)
+                        {
+                            _cacheExpirationsByCustomerId[customerID] = DateTime.UtcNow.AddHours(1);
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Cache not expired yet, no need to update");
+                    }
+                }
+            }
+            else
+            {
+                /*System.Diagnostics.Debug.WriteLine("Cache not expired yet, no need to update");*/
+            }
+        }
+
+
+        /*
+// Insert Record
+public void InsertGroup(RegulatedHours_SchemaV1DTO group)
+{
+    // Before inserting this group, we should see if there are any existing groups with the same scope. 
+    // If so, we will delete them since this should be a treated as a replacement of any existing rules
+    // that are for the same scope
+    RegulatedHours_SchemaV1DTOPredicate predicate = new RegulatedHours_SchemaV1DTOPredicate(group.CID, group.AID, group.MID);
+    List<RegulatedHours_SchemaV1DTO> groupsWithSameScope = _cachedRegulations.FindAll(predicate.CompareScope);
+    if (groupsWithSameScope.Count > 0)
+    {
+        foreach (RegulatedHours_SchemaV1DTO groupToRemove in groupsWithSameScope)
+        {
+            // Remove from the data store (XML in this case, but could also be a database)
+            xmlCache.Root.Elements("Record").Where(i => (int)i.Element("regulatedhoursgroupid") == groupToRemove.RegulatedHoursGroupID).Remove();
+
+            // Also remove from the in-memory cache
+            _cachedRegulations.Remove(groupToRemove);
+        }
+    }
+
+    // Assign a new ID to the group (AutoInc equivalent)
+    group.RegulatedHoursGroupID = (int)(from b in xmlCache.Descendants("Record") orderby (int)b.Element("regulatedhoursgroupid") descending select (int)b.Element("regulatedhoursgroupid")).FirstOrDefault() + 1;
+
+    // Add root node to XML if not already present
+    if (xmlCache.Root == null)
+    {
+        xmlCache.AddFirst(new XElement("RegulatedHours"));
+    }
+
+    // Create a new node for the group
+    XElement groupNode = null;
+    groupNode = new XElement("Record", 
+            new XElement("regulatedhoursgroupid", group.RegulatedHoursGroupID),
+            new XElement("description", group.Description),
+            new XElement("cid", group.CID),
+            new XElement("aid", group.AID),
+            new XElement("mid", group.MID));
+    xmlCache.Root.Add(groupNode);
+
+    // Sort the children details
+    group.Details.Sort(RegulatedHoursDetailLogicalComparer.Default);
+
+    // Create a details node for the group, then add child nodes 
+    XElement detailsRoot = null;
+    detailsRoot = new XElement("details");
+    groupNode.Add( detailsRoot);
+    foreach (RegulatedHoursDetail detail in group.Details)
+    {
+        // Assign the correct parent ID to this child
+        detail.RegulatedHoursGroupID = group.RegulatedHoursGroupID;
+
+        // Assign a new ID to the child (AutoInc equivalent)
+        detail.RegulatedHoursDetailID = (int)(from b in xmlCache.Descendants("detail") orderby (int)b.Element("regulatedhoursdetailid") descending select (int)b.Element("regulatedhoursdetailid")).FirstOrDefault() + 1;
+
+        detailsRoot.Add(new XElement("detail", new XElement("regulatedhoursdetailid", detail.RegulatedHoursDetailID), 
+            new XElement("regulatedhoursgroupid", detail.RegulatedHoursGroupID),
+            new XElement("dayofweek", detail.DayOfWeek),
+            new XElement("starttime", detail.StartTime.ToString("HH:mm")),
+            new XElement("endtime", detail.EndTime.ToString("HH:mm")),
+            new XElement("type", detail.Type),
+            new XElement("maxstayminutes", detail.MaxStayMinutes)));
+    }
+
+    // Persist the changes
+    xmlCache.Save(_xmlCacheFilename);
+
+    // We modified the XML, so let's also update our in-memory cache of objects based on the XML contents
+    _cachedRegulations.Add(group);
+    group.Details.Sort(RegulatedHoursDetailLogicalComparer.Default);
+}
+
+// Delete Record
+public void DeleteGroup(int regulatedHoursGroupID)
+{
+    // Remove from the data store (XML in this case, but could also be a database)
+    xmlCache.Root.Elements("Record").Where(i => (int)i.Element("regulatedhoursgroupid") == regulatedHoursGroupID).Remove();
+    xmlCache.Save(_xmlCacheFilename);
+
+    // Also remove from the in-memory cache
+    RegulatedHoursGroup groupToRemove = this.GetGroupByID(regulatedHoursGroupID);
+    if (groupToRemove != null)
+        _cachedRegulations.Remove(groupToRemove);
+}
+
+// Edit Record
+public void EditGroup(RegulatedHours_SchemaV1DTO group)
+{
+    // Before saving this group, we should see if there are any existing groups
+    // with the same scope (but a different group ID, of course!). If so, we will delete them 
+    // since this should be a treated as a replacement of existing rules.
+    RegulatedHours_SchemaV1DTOPredicate predicate = new RegulatedHours_SchemaV1DTOPredicate(group.CID, group.AID, group.MID);
+    List<RegulatedHours_SchemaV1DTO> groupsWithSameScope = _cachedRegulations.FindAll(predicate.CompareScope);
+    if (groupsWithSameScope.Count > 0)
+    {
+        foreach (RegulatedHours_SchemaV1DTO groupToRemove in groupsWithSameScope)
+        {
+            // Delete this group, but only if its NOT for the same GroupID that we are editing!
+            if (groupToRemove.RegulatedHoursGroupID != group.RegulatedHoursGroupID)
+            {
+                xmlCache.Root.Elements("Record").Where(i => (int)i.Element("regulatedhoursgroupid") == groupToRemove.RegulatedHoursGroupID).Remove();
+
+                // Also remove from the in-memory cache
+                _cachedRegulations.Remove(groupToRemove);
+            }
+        }
+    }
+
+    // Find the existing group node that we will be updating
+    XElement groupNode = xmlCache.Root.Elements("Record").Where(i => (int)i.Element("regulatedhoursgroupid") == group.RegulatedHoursGroupID).FirstOrDefault();
+
+    groupNode.SetElementValue("description", group.Description);
+    groupNode.SetElementValue("cid", group.CID);
+    groupNode.SetElementValue("aid", group.AID);
+    groupNode.SetElementValue("mid", group.MID);
+
+    // Sort the children details
+    group.Details.Sort(RegulatedHoursDetailLogicalComparer.Default);
+
+    // Try to get existing "details" child node
+    XElement detailsRoot = groupNode.Element("details");
+    if (detailsRoot != null)
+    {
+        // If there is an existing details child node, we will delete it, because we will completely recreate it
+        detailsRoot.Remove();
+        detailsRoot = null;
+    }
+
+    // Create a new detail node, then populate with all children
+    detailsRoot = new XElement("details");
+    groupNode.Add(detailsRoot);
+
+    foreach (RegulatedHoursDetail detail in group.Details)
+    {
+        // We need to get a new ID for each detail, and also assign the correct parent ID
+        detail.RegulatedHoursGroupID = group.RegulatedHoursGroupID;
+        detail.RegulatedHoursDetailID = (int)(from b in xmlCache.Descendants("detail") orderby (int)b.Element("regulatedhoursdetailid") descending select (int)b.Element("regulatedhoursdetailid")).FirstOrDefault() + 1;
+
+        detailsRoot.Add(new XElement("detail", new XElement("regulatedhoursdetailid", detail.RegulatedHoursDetailID),
+            new XElement("regulatedhoursgroupid", detail.RegulatedHoursGroupID),
+            new XElement("dayofweek", detail.DayOfWeek),
+            new XElement("starttime", detail.StartTime.ToString("HH:mm")),
+            new XElement("endtime", detail.EndTime.ToString("HH:mm")),
+            new XElement("type", detail.Type),
+            new XElement("maxstayminutes", detail.MaxStayMinutes)));
+    }
+
+    xmlCache.Save(_xmlCacheFilename);
+
+    // We modified the XML, so let's also update our in-memory cache of objects based on the XML contents
+    // We will do the update by actually removing the existing group and adding the new one
+    RegulatedHours_SchemaV1DTO existingGroup = this.GetGroupByID(group.RegulatedHoursGroupID);
+    if (existingGroup != null)
+        _cachedRegulations.Remove(existingGroup);
+    _cachedRegulations.Add(group);
+    group.Details.Sort(RegulatedHoursDetailLogicalComparer.Default);
+}
+*/
+
+    }
+}

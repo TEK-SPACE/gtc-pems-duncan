@@ -1,0 +1,50 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.MaintenanceGroups.MaintenangeGroupCreateModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Add Maintenance Group" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Maintenance Inquiry" )  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Maintenance Group" )</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+@using (Html.BeginForm("AddMaintenanceGroup", "MaintenanceGroups"))
+{
+    @Html.AntiForgeryToken()
+
+    <ol>
+        <li>
+            <label>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "ID" )</label>
+            @Html.TextBoxFor( m => m.Id, new {@class = "customer_textBox k-textbox"} )
+            @Html.RequiredMarkFor( m => m.Id, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.Id )
+        </li>
+        <li>
+            <label>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Name" )</label>
+            @Html.TextBoxFor( m => m.DisplayName, new {@class = "customer_textBox k-textbox"} )
+            @Html.RequiredMarkFor( m => m.DisplayName, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.DisplayName )
+        </li>
+        <li>
+            <label>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Internal Name" )</label>
+            @Html.TextBoxFor( m => m.InternalName, new {@class = "customer_textBox k-textbox"} )
+            @Html.RequiredMarkFor( m => m.InternalName, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.InternalName )
+        </li>
+          <li>
+              <label>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Connection String Name" )</label>
+                @Html.DropDownListFor( x => x.ConnectionStringName, Model.ConnectionStrings, new {@class = "customer_textBox textbox", @id = "ddlConnectionStrings"} )
+            @Html.RequiredMarkFor( m => m.ConnectionStringName, new {@class = "required_asterisk"} )
+            @Html.ValidationMessageFor( m => m.ConnectionStringName )
+        </li>
+    </ol>
+
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="SAVE" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create Group" )</button>
+        <button type="submit" name="submitButton" class="button previous" value="RETURN" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+}

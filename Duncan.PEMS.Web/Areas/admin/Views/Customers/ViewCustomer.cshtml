@@ -1,0 +1,188 @@
+﻿@model Duncan.PEMS.Entities.Customers.CustomerIdentificationModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "View Customer" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer View" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer" )</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Id" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.CustomerId )</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ): </div>
+    <div class="customer_text">@Html.DisplayFor( m => m.DisplayName )</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_new">@Html.DisplayFor( m => m.Status.Status )</span></div>
+    <div class="customer_status_as_of">@Html.DisplayFor( m => m.Status.StatusDate )</div>
+</div>
+
+<div class="customer_tabs">
+    <div class="customer_tab selected_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Identification" ).ToString(), "ViewCustomer", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Assets" ).ToString(), "ViewAssets", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Payments" ).ToString(), "ViewPayments", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Rules" ).ToString(), "ViewRules", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Custom Labels" ).ToString(), "ViewCustomLabels", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Custom Grids" ).ToString(), "ViewCustomGrids", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Event Codes" ).ToString(), "ViewEventCodes", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Areas" ).ToString(), "ViewAreas", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+    <div class="customer_tab">@Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Maintenance Schedule" ).ToString(), "ViewMaintenanceSchedule", "Customers", new {customerId = @Model.CustomerId}, null )</div>
+</div>
+
+
+    <div class="customer_tab_content">
+    
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Name Information" )</div>    
+        <div class="clear">
+            <div class="two-column payment">
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" )</div>
+                    @Html.DisplayFor( m => m.DisplayName, new {@class = "customer_text"} )
+                </div>    
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Internal Client Name" )</div>
+                    @Html.DisplayFor( m => m.InternalName, new {@class = "customer_text"} )
+                </div>    
+            </div>    
+            <div class="two-column payment">
+                <div class="customer_actions"  style="float: right">
+                    
+                </div>
+            </div>    
+        </div>    
+
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Location Information" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street Address 1" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressLine1, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street Address 2" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressLine2, new {@class = "customer_text"} )&nbsp;
+        </div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "City" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressCity, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "State" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressState, new {@class = "customer_text"} )&nbsp;
+        </div>    
+    
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Country" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressCountryDisplay, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zip Code" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AddressPostalCode, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+    
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude" )@Html.Raw( ": " )</div>
+            @Html.DisplayForLatLong(m => m.Latitude, new {@class = "customer_text"} ) &nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Longitude" )@Html.Raw( ": " )</div>
+            @Html.DisplayForLatLong(m => m.Longitude, new {@class = "customer_text"} ) &nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Email Address" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.FromEmailAddress, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Phone Number" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.PhoneNumber, new {@class = "customer_text"} )&nbsp;
+        </div>    
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Contact Information" )</div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "First Name" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Contact.FirstName, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Name" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Contact.LastName, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "email Address" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Contact.FromEmailAddress, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Phone Number" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Contact.PhoneNumber, new {@class = "customer_text"} )&nbsp;
+        </div>    
+    
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Localization" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Zone" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Localization.TimeZoneDisplay, new {@class = "customer_text"} )&nbsp;
+        </div>    
+    
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Language" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Localization.LanguageDisplay, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+    
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "24 Hour Clock" )@Html.Raw( ": " )</div>
+            @Html.CheckBoxFor( m => m.Localization.Is24Hr, new {@class = "customer_text", disabled="disabled"} )
+        </div>    
+        
+        
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User Settings" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Default Password" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.DefaultPassword, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+    
+        <div class="customer_actions">
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue").ToString(), "ViewAssets", "Customers", new {customerId = Model.CustomerId}, new { @class = "button important", @type = "button" })
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", "Customers", new {rtn = "true"}, new { @class = "button previous", @type = "button" })
+        </div>
+
+    </div>
+
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Modified by" ): @Html.DisplayFor( m => m.Status.ModifiedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.ModifiedOn )
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created by" ): @Html.DisplayFor( m => m.Status.CreatedBy )
+        @Html.Raw( " on " )
+        @Html.DisplayFor( m => m.Status.CreatedOn )
+    </div>
+</div>

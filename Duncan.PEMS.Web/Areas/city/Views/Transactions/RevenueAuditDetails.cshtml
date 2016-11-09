@@ -1,0 +1,732 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Transactions.RevenueAudit
+
+
+@{
+    ViewBag.Title = "Revenue Audit Details";
+}
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!-- file upload -->
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+
+    <script id="rowTemplate" type="text/x-kendo-tmpl">
+        <tr>
+            <td><a href="${ IssueNo_final }" target="_blank">${ IssueNo_final }</a></td>
+        </tr>
+    </script>
+
+    <script type="text/javascript">
+
+        //** for file upload
+
+
+        var timeInterval;
+        var spinner;
+
+        // Define default date-picker dates
+        var startD = new Date();
+
+        startD.setDate(new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]').getDate());
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+
+        var endD = new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate());
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+
+        var viewModel = kendo.observable({
+            startDate: startD,
+            endDate: endD,
+        });
+
+
+
+
+        $(document).ready(function () {
+
+
+            showProgressBar(true);
+
+            // when the view state changes, cache it
+            viewModel.bind("change", function (e) {
+                SaveViewState();
+            });
+
+            // if returning from details page, load cached page state (filters, grid state, etc)
+            if (getParameterByName('rtn') == 'true') {
+
+
+                LoadViewState();
+
+
+            } else {
+
+                // Since not pulling filter values from cache, get them from server
+                GetDynamicFilterValues();
+
+            }
+
+
+        });
+
+
+        function SaveViewState() {
+
+            /// Save filters view state to local storage, with fallback to
+            /// server if HTML5 local storage not supported (IE7)
+
+            // serialize viewstate
+            var json = viewModel.toJSON();
+            var stringified = JSON.stringify(json);
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                window.sessionStorage.setItem("enforcementViewState", stringified);
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+        }
+
+        function executeExportToExcel() {
+            $.ajax({
+                url: '@Url.Action("ExportToExcel", "Enforcement")',
+                data: GetAllFilterData(),
+                type: 'GET',
+                success: function (data) {
+                    //  alert('success');
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //alert("Error: " + textStatus);
+                }
+            });
+        }
+
+
+        function LoadViewState() {
+            /// Load filter view state if found in session
+
+            var stringified;
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("enforcementViewState");
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+
+            // reconstruct the view model from the cache
+            if (stringified) {
+                var parsed = JSON.parse(stringified);
+                if (parsed) {
+
+                    if (!parsed.licenseTypes) {
+                        GetDynamicFilterValues();
+                    }
+                    // first, restore dynamic filter/dropdown values
+                    if (parsed.startDate) {
+                        $('#startDateTime').val(parsed.startDate);
+                    }
+                    if (parsed.endDate) {
+                        $('#endDateTime').val(parsed.endDate);
+                    }
+
+                }
+            } else {
+                // No view state stored in cache, so get dynamic filter values from server
+                //console.log('no view state found, defaults will be used');
+                GetDynamicFilterValues();
+            }
+
+            showProgressBar(false);
+        }
+        function GetDynamicFilterValues() {
+
+            var url = '@Url.Action("GetFilterValues")';
+            $.post(url, function (data) {
+                showProgressBar(false);
+
+            });
+        }
+
+
+        function LoadFreshGrid() {
+            showProgressBar(false); //** Display Progress bar animation till the server returns response;
+
+            var $startDate = viewModel.startDate;
+
+            //Test to see if the start date is not empty, and if it is a valid date
+            if (!Date.parse($startDate)) {
+                alert("Start Date Must Be A Valid Date");
+                return;
+            }
+            var $endDate = viewModel.endDate;
+            //Test to see if the end date is not empty and if it is a valid date
+            if (!Date.parse($endDate)) {
+                alert('End Date Must Be A Valid Date');
+                return;
+            }
+
+            //Test to see if start date is less than end date
+            if ($startDate != '' && $endDate != '') {
+                if (Date.parse($startDate) > Date.parse($endDate)) {
+                    alert('End Date Must Be Greater Than Start Date');
+                    return;
+                }
+            }
+
+            var CustomerId = '@ViewBag.CurrentCityID';
+            invokeDataSource(50) //** set the default no. of records as 50
+
+        }
+
+
+        function invokeDataSource(maxCount) {
+
+            //** The below line needs to be uncommented after fetching service
+            showProgressBar(true); //** Display Progress bar animation till the server returns response;
+
+            //** The below 4 lines of grid are commented temporarily.
+            var grid = $("#grdRevenueAuditDetails").data("kendoGrid");
+            grid.dataSource.pageSize(maxCount);
+            grid.dataSource.groupable(false);
+            grid.dataSource.read();
+        }
+
+        function GetAllFilterData() {
+
+            var page = 1;
+            var pageSize = "~";
+            var filter = "~";
+            var sort = "~";
+            return {
+                batchIDIs: '@Model.RevenueAuditDetailsBatchID',
+                batchDateIs:'@Model.RevenueAuditDetailsBatchDate',
+                PageIs: page,
+                PageSizeIs: pageSize,
+                FilterIs: filter,
+                SortIs: sort
+            }
+        }
+
+
+        function onDataBound(arg) {
+
+            showProgressBar(false); //** Hide Progress bar animation after the server response;
+
+            //** Display the Grid part
+            $("#DivRevenueAuditDetails").show();
+            $('#DivRevenueAuditDetails').css('display', 'inline');
+
+            $("#DivRevenueTotals").show();
+            $('DivRevenueTotals').css('display', 'inline');
+
+            //** Display the export icons
+            // $("#exportButtons").css("display", "inline");
+
+            var setAmt = '@Model.TotalSettleAmount'/100;
+            var setCnt = '@Model.TotalSettleCount'
+            var RefAmt = '@Model.TotalRefundAmount'/100;
+            var RefCnt = '@Model.TotalRefundCount'
+
+
+            @*var TransAmt = '@Model.TotalTransactionAmount'/100;
+            var TransCnt = '@Model.TotalTransactionCount'*@
+
+            var DclnAmt = '@Model.TotalDeclinedAmount'/100;
+            var DclnCnt = '@Model.TotalDeclinedCount'
+            var UnpsrsdAmt = '@Model.TotalUnprocessedAmount'/100;
+            var UnpsrsdCnt = '@Model.TotalUnprocessedCount'
+
+
+            //document.getElementById("TC").innerHTML = TransCnt;
+            //document.getElementById("TA").innerHTML = TransAmt;
+            document.getElementById("RC").innerHTML = RefCnt;
+            document.getElementById("RA").innerHTML = RefAmt;
+            document.getElementById("SC").innerHTML = setCnt;
+            document.getElementById("SA").innerHTML = setAmt;
+
+            document.getElementById("TDA").innerHTML = DclnAmt;
+            document.getElementById("TDC").innerHTML = DclnCnt;
+            document.getElementById("TUA").innerHTML = UnpsrsdAmt;
+            document.getElementById("TUC").innerHTML = UnpsrsdCnt;
+
+
+            $('a.commaformat, #RA, #SA, #TDA, #TUA').text(function(i,v){
+                var val=parseFloat(v).toFixed(2);
+                if(val.length>6){
+                    var p=val.split('.');
+                    var a=p[0].length % 3;
+                    var n=p[0].slice(a).match(/.{1,3}/g);
+                    return  (a===0?'':p[0].slice(0,a)+',')+n.join(',')+'.'+p[1];
+                }
+                return "$"+val;
+            });
+
+            $('#RC, #SC, #TDC, #TUC').text(function(i,v){
+                var val=parseFloat(v);//.toFixed(2);
+                if(val.length>6){
+                    var p=val.split('.');
+                    var a=p[0].length % 3;
+                    var n=p[0].slice(a).match(/.{1,3}/g);
+                    return  (a===0?'':p[0].slice(0,a)+',')+n.join(',')+'.'+p[1];
+                }
+                return val;
+            });
+
+            //** When No Data, just show zero values in total fields
+            var result = $("#grdRevenueAuditDetails").data().kendoGrid.dataSource.data()
+            if (result.length == 0) {
+                alert('No Data.');
+                return;
+            }
+
+
+            //  UpdateExportLinks();
+
+        }
+
+
+        function UpdateExportLinks() {
+            /// Update the href for the export buttons
+            var grid = $('#grdRevenueAuditDetails').data('kendoGrid');
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            $("#exportButtons").css("display", "inline");
+            $("#exportActions").css("display", "block");
+        }
+
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            // update the grid type parameter
+            href = href.replace(/gridType=([^&]*)/, 'gridType=' + viewModel.gridType);
+
+
+            var $currentCid = @ViewData[Constants.ViewData.CurrentCityId];
+            href = href.replace(/customerId=([^&]*)/, 'customerId=' + ($currentCid));
+
+            var $assetType = $("#ddlAssetType :selected").text();
+            href = href.replace(/assetType=([^&]*)/, 'assetType=' + ($assetType));
+            return href;
+        }
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '380px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+
+    </script>
+}
+
+
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        ready .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+        ready .filter-SearchButton:hover {
+	            background: #ccc!important;
+	            text-decoration: none!important;
+         }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-autocomplete {
+            width: 169px;
+        }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker {
+            background-color: transparent !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+
+        /* SQUARED THREE */
+        /*.squaredThree {
+            width: 18px;
+            margin: 20px;
+            position: relative;
+        }
+
+            .squaredThree label {
+                cursor: pointer;
+                position: absolute;
+                width: 17px;
+                height: 17px;
+                top: 0;
+                border-radius: 4px;
+                -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                background: -webkit-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -moz-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -o-linear-gradient(top, #222 0%, #45484d 100%);
+                background: -ms-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: linear-gradient(top, #222 0%, #45484d 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#45484d',GradientType=0 );
+            }
+
+                .squaredThree label:after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+                    filter: alpha(opacity=0);
+                    opacity: 0;
+                    content: '';
+                    position: absolute;
+                    width: 7px;
+                    height: 3px;
+                    background: transparent;
+                    top: 4px;
+                    left: 4px;
+                    border: 2px solid #000000;
+                    border-top: none;
+                    border-right: none;
+                    -webkit-transform: rotate(-45deg);
+                    -moz-transform: rotate(-45deg);
+                    -o-transform: rotate(-45deg);
+                    -ms-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+                }
+
+                .squaredThree label:hover::after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+                    filter: alpha(opacity=30);
+                    opacity: 0.3;
+                }
+
+            .squaredThree input[type=checkbox]:checked + label:after {
+                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+                filter: alpha(opacity=100);
+                opacity: 1;
+            }*/
+    </style>
+}
+
+@section PageHeader
+{
+    <h1>Transactions Management / <span>Revenue Audit Details</span></h1>
+}
+
+@*@section PageFilter
+    {
+
+
+    }*@
+
+
+@section ExportButtons
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" onclick="executeExportToExcel();">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+@*<div class="grid-header" style="margin-left:-40px">
+
+    </div>*@
+
+<div style="margin-bottom:80px">
+    <label style="width:100px;"><b>Batch Date:</b></label>
+    <label><b>@Model.RevenueAuditDetailsBatchID</b></label>
+</div>
+
+<div id="DivRevenueTotals" style="width: 100%;margin-left:0px;margin-bottom:10px">
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Refund Amount</div>
+        <div id="RA" style=" text-align:center;font-weight:bold;  margin:2px" class:'commaformat';>@Model.TotalRefundAmount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Refund Count</div>
+        <div id="RC" style=" text-align:center;font-weight:bold;  margin: 2px">@Model.TotalRefundCount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+
+        <div style=" text-align:center;  margin: 2px">Total Settle Amount</div>
+        <div id="SA" style=" text-align:center;font-weight:bold;  margin: 2px">@Model.TotalSettleAmount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Settle Count</div>
+        <div id="SC" style=" text-align:center;font-weight:bold;  margin: 2px">@Model.TotalSettleCount</div>
+    </div>
+    @*<div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Transaction Amount</div>
+        <div id="TA" style=" text-align:center; font-weight:bold; margin: 2px" class:'commaformat';>@Model.TotalTransactionAmount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Transaction Count</div>
+        <div id="TC" style=" text-align:center; font-weight:bold; margin: 2px">@Model.TotalTransactionCount</div>
+    </div>*@
+
+    @*new code*@
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+
+        <div style=" text-align:center;  margin: 2px"><a id="totSetLink" class="totSetLinks"> Total Declined Amount</a></div>
+        <div id="TDA" style=" text-align:center;font-weight:bold;  margin: 2px">@Model.TotalDeclinedAmount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Declined Count</div>
+        <div id="TDC" style=" text-align:center;font-weight:bold;  margin: 2px">@Model.TotalDeclinedCount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Unprocessed Amount</div>
+        <div id="TUA" style=" text-align:center; font-weight:bold; margin: 2px" class:'commaformat';>@Model.TotalUnprocessedAmount</div>
+    </div>
+    <div style="width: 16%; float:left; height:70px; margin:2px">
+        <div style=" text-align:center;  margin: 2px">Total Unprocessed Count</div>
+        <div id="TUC" style=" text-align:center; font-weight:bold; margin: 2px">@Model.TotalUnprocessedCount</div>
+    </div>
+</div>
+<div id="DivRevenueAuditDetails" class="grid-content" style=" width: 100%;margin-left:0px;">
+
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.Transactions.RevenueAudit>()
+
+                .Name("grdRevenueAuditDetails")
+                .Columns(col =>
+                {
+                    col.Bound(a => a.RevenueBatchID).Title("Date").Width("100px");
+                    col.Bound(a => a.areaID).Title("Area ID").Width("65px");
+                    col.Bound(a => a.meterID).Title("Meter ID").Width("95px");
+                    col.Bound(a => a.bayNumber).Title("Bay Number").Width("100px");
+                    col.Bound(a => a.transDateTime).Title("Transaction Date Time").Width("193px");
+                    col.Bound(a => a.creditCardType).Title("Credit Card type").Width("130px");
+                    col.Bound(a => a.timePaid).Title("Time paid").Width("100px");
+                    col.Bound(a => a.amount).Title("Amount").Width("105px");
+                    col.Bound(a => a.acqReference).Title("Acq Reference").Width("150px");
+                    col.Bound(a => a.status).Title("Status").Width("170px");
+
+                }
+                    )
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+            //.AutoBind(false)
+            //.Groupable()
+                 .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                 .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                                .Read(read => read.Action("GetRevenueAuditDetails", "Transactions").Data("GetAllFilterData"))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+</br>
+<div id="btnAction">
+    <div style="float: left; padding-left: 10px">
+        @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "RevenueAuditSummary", "Transactions", new { rtn = "true" }, new { @class = "button previous returnButton" })
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,162 @@
+﻿
+@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _________________________________________________________________________________________________________
+ * 
+ * 01/31/2014           Sergey Ostrerov            DPTXPEMS - 45 - Allow 0 value for Bay Number field while adding space on Add Space dialog box.
+ * *****************************************************************************************************************************************************/ *@
+
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Assets.SpaceListModel
+
+@{
+    Layout = null;
+}
+
+
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.MeterId )
+    @Html.HiddenFor( m => m.MeterAreaId )
+    @Html.HiddenFor( m => m.AreaId )
+    @Html.HiddenFor( m => m.DemandStatus )
+
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bay Name" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @Html.EditorFor(m => m.BayName, new {@class = "k-edit-field"} )
+        <div class = "required_asterisk"  style="float: right">*</div>
+    </div>
+</div>
+
+    <div class="clear" id="BayNumberDiv" style="display: none">
+        <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bay Number" )@Html.Raw( ": " )</div>
+        <div style="float: left; width: 90px">
+            @(Html.Kendo().NumericTextBox<double>().Name( "BayNumber" ).Min( 0 ).Max( 9999 ).Format( "n0" ).Value( Model.BayNumber ))                    
+        </div>
+        <button name="btnNextBayNumber" class="button" onclick="OnGetNextBayNumber(); return false; ">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Generate Bay Number" )</button>
+
+    </div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Demand Status" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+    <div id="ddlDemandStatus" class = "k-edit-field"></div>
+        <div class = "required_asterisk"  style="float: right">*</div>
+    </div>
+</div>    
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+    @(Html.Kendo().NumericTextBox<double>().Name( "Latitude" ).Min( -90.0 ).Max( 90.0 ).Format( "n5" ).Decimals( 6 ).Value( Model.Latitude ))                    
+        <div class = "required_asterisk"  style="float: right">*</div>
+    </div>
+</div>    
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Longitude" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+    @(Html.Kendo().NumericTextBox<double>().Name( "Longitude" ).Min( -180.0 ).Max( 180.0 ).Format( "n5" ).Decimals( 6 ).Value( Model.Longitude ))                    
+        <div class = "required_asterisk"  style="float: right">*</div>
+    </div>
+</div>    
+
+<br/>
+<br/>
+<br/>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function() {
+
+        SelectDemandStatus();
+
+    });
+    
+
+    function SelectDemandStatus() {
+
+        $.ajax({
+            url: '@Url.Action( "GetDemandZones", "Assets" )',
+            data: { customerId: $("#CustomerId").val(), selectedDemandZoneId: @Model.DemandStatusId },
+            type: 'POST',
+            success: SelectDemandStatusSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", data.responseText);
+            },
+        });
+    }
+
+
+        function SelectDemandStatusSuccess(data, textStatus, jqXHR) {
+
+            var divContent = "<select class = 'customer_text' id = 'DemandStatusId' name = 'DemandStatusId' onchange = 'OnDemandStatusChange();'>";
+            var demandStatus = $("#DemandStatus").val();
+
+            $.each(data.list, function (i, item) {
+                divContent += "<option value = \"" + item.Value + "\"";
+                if ( item.Text == demandStatus )
+                    divContent += " selected";
+                divContent += ">" + item.Text + "</option>";
+            });
+
+            divContent += "</select>";
+
+
+            $("#ddlDemandStatus").html(divContent);
+            
+
+            if ($("#BayNumber").val() == 0) {
+                $("#BayNumberDiv").show();
+            }
+
+
+    }
+
+
+        function OnDemandStatusChange(e) {
+
+            $("#DemandStatus").val($("#DemandStatusId option:selected").text());
+        }
+
+
+        function OnGetNextBayNumber() {
+        $.ajax({
+        url: '@Url.Action( "GetNextBayNumber", "Assets" )',
+        data: { customerId: $("#CustomerId").val(), 
+        meterId: $("#AssetId").val(), 
+        areaId: $("#AreaId").val() },
+        type: 'POST',
+        success: OnGetNextBayNumberSuccess,
+        error: function (data) {
+            pemsPopupShowErrorWithTag(
+        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", data.responseText);
+    },
+    });            
+    }     
+
+        function OnGetNextBayNumberSuccess(data, textStatus, jqXHR) {
+
+        var newBayNumber = data.BayNumber;
+
+        $("#BayNumber").data("kendoNumericTextBox").value(data.BayNumber);
+    }
+
+
+
+
+
+</script>

@@ -1,0 +1,35 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Assets.AssetListModel>
+
+@(Html.Kendo().Grid( Model )
+      .Name( "CurrentGrid" )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Columns( columns =>
+                    {
+                        columns.Bound(p => p.AssetId).Sortable(false).HeaderTemplate("<input type='checkbox' id='SelectAll' onclick='CheckedAll(this)' ></input>")
+                            .ClientTemplate(@Html.CheckBox("ASSET_#= DisplayAssetId #", new { @id = "ASSET_#= DisplayAssetId #", value = "#= DisplayAssetId #" }).ToHtmlString()).Width(50).Title(" ");
+                        columns.Bound(p => p.AssetId).ClientTemplate(@Html.ActionLink("#= DisplayAssetId #", "View#= Type #", "Assets", new { customerId = @ViewData[Constants.ViewData.CurrentCityId], areaId = "#= AreaId #", assetId = "#= DisplayAssetId #" },
+                                                                                      new { @onclick = "OnRowSelected(this);" }).ToHtmlString()).Width(200);
+                        columns.Bound(p => p.AssetName).Width(175);
+                        columns.Bound(p => p.MeterName).Width(175);
+                        columns.Bound(p => p.SensorName).Width(175);
+                        columns.Bound(p => p.OperationalStatus).Width(200);
+                        columns.Bound(p => p.OperationalStatusDate).ClientTemplate("#= OperationalStatusDateDisplay  #").Width(175);
+                        columns.Bound(p => p.OccupancyStatus).Width(200);
+                        columns.Bound(p => p.OccupancyStatusDate).ClientTemplate("#= OccupancyStatusDateDisplay  #").Width(175);
+                        columns.Bound(p => p.NonComplianceStatus).Width(200);
+                        columns.Bound(p => p.NonComplianceStatusDate).ClientTemplate("#= NonComplianceStatusDateDisplay #").Width(175);
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnGridDataBound" ) )
+      .Events( events => events.Change( "OnRowSelected" ) )
+      .Events( events => events.ColumnResize( "OnRowResized" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetOccupancyItems", "Assets" ).Data( "additionalData" ) )
+      ))

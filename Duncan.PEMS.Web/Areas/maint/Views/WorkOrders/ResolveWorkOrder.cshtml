@@ -1,0 +1,196 @@
+﻿@using Duncan.PEMS.Business.Resources
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Resolve Work Order");
+}
+@section PageHeader  
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Resolve Work Order") </h2>
+ 
+     @if (!Model.WorkOrderEvents.Any())
+     {
+   <a class="back" href='@Url.Action("WorkOrders", "WorkOrders", new { selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+     }
+     else
+     {
+         <a class="back" href='@Url.Action("WorkOrderDetails", "WorkOrders", new {workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection})' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+     }
+}
+
+@using (Html.BeginForm("ResolveWorkOrder", "WorkOrders", FormMethod.Post, new { @id = "resolveForm" }))
+{
+     <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+    <input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+    <input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+
+    <div id="content-inner">
+            <div class="validationSum-container">@Html.HeaderMessage()</div>
+        @if (!Model.WorkOrderEvents.Any())
+        {
+            <div class="customer_text" style="color: red; font-weight: bold;">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Note: ")</div>
+            <div class="customer_text" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work order must be closed: No events found.")
+            </div><br/>
+        }
+
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Id"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+        </div>
+         <div class="clear">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Description"):</div><br/>
+        @(Html.Kendo().DropDownListFor(x => x.SelectedRepairDescription)
+          .HtmlAttributes(new { style = "width:100%" })
+          .SelectedIndex(0)
+          .BindTo(new SelectList(Model.RepairDescriptions, "Value", "Text"))
+        )
+        
+    </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vandalism Involved?"):</div><br/>
+            @(Html.Kendo().DropDownList()
+          .Name("ddlVandalism")
+          .HtmlAttributes(new { style = "width:100%" })
+          .DataTextField("Text")
+          .DataValueField("Value")
+          .BindTo(new List<SelectListItem>() {
+              new SelectListItem() {
+                  Text = HttpContext.Current.GetLocaleResource(ResourceTypes.Label, ResourceTypes.DropDownDefault),
+                  Value = "-1"
+              },
+              new SelectListItem() {
+                  Text = "Yes",
+                  Value = "Yes"
+              },
+              new SelectListItem() {
+                  Text = "No",
+                  Value = "No"
+              }
+          })
+          .Value("-1")
+    )
+            
+      
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new { @class = "customer_text_area long_text_area", rows = "5" })
+        </div>
+        <div class="clear" id="image-upload">
+
+            @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Attached Images"):<br />
+            @{
+        if (Model.WorkOrderImages.Any())
+        {
+            foreach (var workOrderImage in Model.WorkOrderImages)
+            {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions
+                                                      .Close())
+                              .Content(@<text>
+                                             <img alt="" style="max-width: 100%" src="@workOrderImage.ImageSource"/>
+                                        </text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+
+                              )
+                        <a href="#" id='open_@workOrderImage.WorkOrderImageId' >WO# @workOrderImage.ImageName</a><br/>
+                    
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                               
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").open();
+                                    dialog.data("kendoWindow").center();
+
+                                });
+
+                            });
+
+                            $(document).on('click', ".k-overlay" , function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                dialog.data("kendoWindow").close();
+                            });
+                        </script>
+            }
+        }
+        else
+        {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+        }
+            }
+        </div>
+        <div class="clear button-row">
+        <a class="button" style="float: left; margin-right: 5px" onclick="Submit('Images');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Add Images")</a> 
+        <a class="button" style="float: left" onclick="Submit('Parts');" href="#" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Add Parts")</a>
+        <a class="button important" style="float: right" id="btnNext" onclick="CloseWorkOrder();" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Close")</a>
+        </div>
+    </div>
+    <script>
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#resolveForm');
+            $('#resolveForm').submit();
+        }
+
+        function CloseWorkOrder() {
+            ////have to make sure they selected something for the vandalism and the repair code.
+            //SelectedRepairDescription
+            var selectedRepairDescription = $("#SelectedRepairDescription").data("kendoDropDownList");
+            if (  selectedRepairDescription.value() == "-1") {
+                alert("Repair Description Required");
+                return false;
+            }
+
+            //vandalism
+            var ddlVandalism = $("#ddlVandalism").data("kendoDropDownList");
+            if (  ddlVandalism.value() == "-1") {
+                alert("Vandalism Selection Required");
+                return false;
+            }
+            
+
+            //finally, we have to check to see if there was vandalism, make sure there are notes
+            if (  ddlVandalism.value() == "Yes") {
+                var notes = $("#Notes").val();
+                if (notes == '') {
+                    alert("Vandalism: Notes Required");
+                    return false;
+                }
+            }
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', "Close").appendTo('#resolveForm');
+            $('#resolveForm').submit();
+        }
+
+        function fdChange(e) {
+            if (this.value() && this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text(dt[this.options.dataTextField]);
+                this._selectItem();
+            }
+        }
+    </script>
+        <style>
+        .k-upload-button {
+            visibility: hidden;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+    </style>
+}

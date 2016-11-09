@@ -1,0 +1,55 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Users.BulkUpdateModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Users Management" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Bulk User Update" )</span></h1>
+}
+
+@using (Html.BeginForm( "BulkUpdate", "Users", FormMethod.Post, new {@class = "admin-form", @id = "actionForm"} ))
+{
+    <b style="text-transform: uppercase">@Model.ChangeDisplay:</b>
+    @Html.DropDownListFor( x => x.Action, Model.ChangeOptions )
+
+    <br/>
+    <br/>
+    <style>
+        #select-client-list li:hover { background: none !important; }
+
+        #select-client-list li { cursor: default !important; }
+
+        #select-client-list li.odd:hover { background: #EFEFEF !important; }
+
+        #select-client-list li.headerRow, #select-client-list li.headerRow:hover {
+            background: #456e97 !important;
+            color: white !important;
+            font-weight: bold !important;
+            padding: 2px 10px !important;
+        }
+
+        #select-client-list { height: auto !important; }
+    </style>
+    <div >
+        <ul id="select-client-list">
+            <li class="headerRow"  >Usernames</li>
+            @{
+                string classname;
+                bool odd = false;
+                foreach (var item in Model.UserNames)
+                {
+                    classname = odd ? "odd" : "";
+                    <li id="@item" class="@classname " >@item</li>
+                    odd = !odd;
+                }
+            }
+        </ul>
+    </div>
+    <div >
+        <button type="submit" name="submitButton" class="button important"  value="Update" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Update" )</button>
+        <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>
+}

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Duncan.PEMS.Security.AccessLoggingManager">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAACAAAJACAAAAAAAAAAgAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>AccessLoggingManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.AuthorizationManager">
+    <Position X="5.75" Y="0.5" Width="4.25" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Security.AuthorizationManager.AccessRights" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AuthorizationManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Duncan.PEMS.Security.AuthorizationManager.XmlAction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AuthorizationManagerEx.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>TTcgMCkLCqgQEsKsTDU/QRMjIDRDIBqW0SBooAaAuVU=</HashCode>
+      <FileName>AuthorizationManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.CookieManager">
+    <Position X="10.5" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAQAAABAAAAAAAAAAAAAEAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>CookieManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.EncryptionManager">
+    <Position X="0.5" Y="5.5" Width="2.25" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Security.EncryptionManager.HashType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>EncryptionManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAQAAAAAAAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EncryptionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.PasswordManager">
+    <Position X="14" Y="0.5" Width="3.5" />
+    <NestedTypes>
+      <Enum Name="Duncan.PEMS.Security.PasswordManager.ChangeResult" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>PasswordManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAIAAAgAAAAAACAAEAMABgAggIAAIBAAAAAAA=</HashCode>
+      <FileName>PasswordManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.SecurityManager">
+    <Position X="10.25" Y="0.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>iAAAAgAAACAAAAEAAIAAgAICLAAAAAAEEAAQAAAAAAA=</HashCode>
+      <FileName>SecurityManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.UserCustomerAccessManager">
+    <Position X="3" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAgAAAAAAAAAAAAAAAAAIAAACIAAAAAAAAIAAAA=</HashCode>
+      <FileName>UserCustomerAccessManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.Menu.PemsMenu">
+    <Position X="3" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAIAAAAAgkEAAAAgAEAAAAAAAAAAACAAAAAggA=</HashCode>
+      <FileName>Menu\PemsMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Security.Menu.PemsMenuItem" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAAgAQEAABAAAgAAAAAACAACAAAAEEAAAA=</HashCode>
+      <FileName>Menu\PemsMenuItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

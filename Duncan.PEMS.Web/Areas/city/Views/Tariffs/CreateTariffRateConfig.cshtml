@@ -1,0 +1,385 @@
+﻿@model Duncan.PEMS.Entities.Tariffs.TariffRateConfigurationModel
+@using Duncan.PEMS.Entities.Tariffs
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = "Create Tariff Configuration";
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .k-widget.k-window {
+            width: 500px;
+        }
+
+        .k-edit-form-container {
+            width: 490px !important;
+        }
+
+        .k-grid .k-grid-edit {
+            background: #33BAB1 !important;
+            color: #fff !important;
+            border: 1px solid #00A99D !important;
+            padding: .25em .5em !important;
+            font-size: 0.7em;
+            box-shadow: 0px 0px 3px 2px #f2f2f2;
+            display: inline-block;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            box-shadow: 0px 0px 3px 2px #d5d5d5;
+        }
+
+        .k-grid .k-grid-delete {
+            background: #33BAB1 !important;
+            color: #fff !important;
+            border: 1px solid #00A99D !important;
+            padding: .25em .5em !important;
+            font-size: 0.7em;
+            box-shadow: 0px 0px 3px 2px #f2f2f2;
+            display: inline-block;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 1;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            box-shadow: 0px 0px 3px 2px #d5d5d5;
+        }
+
+
+        .k-grid .k-grid-edit > span {
+            visibility: hidden;
+            width: 0;
+        }
+
+        .k-grid .k-grid-delete > span {
+            visibility: hidden;
+            width: 0;
+        }
+
+
+        span.k-numerictextbox {
+            width: 80px;
+        }
+
+        select {
+            width: 140px;
+        }
+    </style>
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="~/Areas/city/Views/Tariffs/Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Create Tariff Rate Configuration")</span></h1>
+}
+
+
+
+@using (Html.BeginForm("CreateTariffRateConfig", "Tariffs", FormMethod.Post, new { @class = "customer-form", @id = "createTariffRateConfig" }))
+{
+    
+    @Html.HiddenFor(m => m.CustomerId)
+    @Html.HiddenFor(m => m.TariffRateConfigurationId)
+
+    
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Tariff Rate Configuration")</div>
+
+    <div class="clear">
+        <div class="two-column payment">
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Name")@Html.Raw(": ")</div>
+                @Html.TextBoxFor(m => m.Name, new { @class = "customer_text" })
+                <span class="required_asterisk">*</span>
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+        <div class="two-column payment">
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Description")@Html.Raw(": ")</div>
+                @Html.TextBoxFor(m => m.Description, new { @class = "customer_text" })
+            </div>
+        </div>
+    </div>
+    
+        
+    <div class="clear">
+
+    @(Html.Kendo().Grid<TariffRateModel>()
+          .Name("TariffRateConfigurationGrid")
+          .Columns(columns =>
+          {
+              columns.Bound(p => p.RateName);
+              columns.Bound(p => p.RateDescription).Title("Description");
+              columns.Bound(p => p.RateInCents).Title("Cents");
+              columns.Bound(p => p.PerTimeValue).Title("Per Time");
+              columns.Bound(p => p.PerTimeUnitName).Title("Units");
+              columns.Bound(p => p.MaxTimeValue).Title("Max Time");
+              columns.Bound(p => p.MaxTimeUnitName).Title("Units");
+              columns.Bound(p => p.GracePeriodMinute).Title("Grace Period");
+              columns.Bound(p => p.LockMaxTime);
+              columns.Bound(p => p.LinkedTariffRateName).Title("Linked Rate");
+
+              columns.Command(command =>
+              {
+                  command.Edit();
+                  command.Destroy();
+              }).Width(172);
+          })
+          .Scrollable()
+          .HtmlAttributes(new { style = "height:430px;" })
+              .Editable(editable => editable.Mode(GridEditMode.PopUp).TemplateName("TariffRateTemplate"))
+              .ToolBar(toolbar =>
+              {
+                  toolbar.Create().Text("Add Tariff").HtmlAttributes(new { @class = "tariff-toolbar-button" });
+                  toolbar.Custom().Text("Import Configuration").Action("SelectTariffRateConfig", "Tariffs", new { customerId = Model.CustomerId }).HtmlAttributes(new { @class = "tariff-toolbar-button"});
+              })
+              .Events(e => e.Edit("OnEdit").Save("OnSave").DataBound("OnDataBound"))
+                    .AutoBind(true)
+                .Resizable(resize => resize.Columns(true))
+          .DataSource(dataSource => dataSource
+                                         .Ajax()
+                                         .PageSize(20)
+                                         .Events(events => events.Error("TariffRateErrorHandler"))
+                                         .Model(model => model.Id(p => p.TariffRateId))
+                                         .Create(update => update.Action("TariffRateCreate", "Tariffs"))
+                                         .Read(read => read.Action("TariffRateRead", "Tariffs").Type(HttpVerbs.Get))
+                                         .Update(update => update.Action("TariffRateUpdate", "Tariffs"))
+                                         .Destroy(update => update.Action("TariffRateDestroy", "Tariffs"))
+          )
+          )
+
+
+    </div>
+    
+   
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="CONFIGURE" id="btnConfigure">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Configure")</button>
+        <button type="submit" name="submitButton" class="button" value="SAVE" id="btnSave">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+        <button type="submit" name="submitButton" class="button previous" value="RETURN" id="btnReturn">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+        <button type="submit" name="submitButton" class="button previous" value="CANCEL" id="btnCancel">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Cancel")</button>
+    </div>
+    
+    
+}
+
+
+<script type="text/javascript">
+
+    var editState = 0;
+    var stateReset = 0;
+    var stateRefresh = 3;
+
+    function NextState(editEvent) {
+        if (editEvent == "OnEdit") {
+            if (editState == 0) {
+                editState = 1;
+            } else if (editState == 1) {
+                editState = 1;
+            } else {
+                editState = stateReset;
+            }
+            return;
+        }
+        if (editEvent == "OnSave") {
+            if (editState == 1) {
+                editState = 2;
+            } else if (editState == 2) {
+                editState = 2;
+            } else {
+                editState = stateReset;
+            }
+            return;
+        }
+        if (editEvent == "OnError") {
+            editState = stateReset;
+            return;
+        }
+        if (editEvent == "OnDataBound") {
+            if (editState == 2) {
+                editState = stateRefresh;
+            } else {
+                editState = stateReset;
+            }
+            return;
+        }
+    }
+
+
+    $(document).ready(function () {
+
+
+    });
+
+
+    function OnDataBound(e) {
+        NextState("OnDataBound");
+
+        if (editState == stateRefresh) {
+            $("#TariffRateConfigurationGrid").data("kendoGrid").dataSource.read();
+        }
+        editState = stateReset;
+
+        SetButtonStates();
+    }
+
+    function OnEdit(e) {
+        NextState("OnEdit");
+
+
+        $("#RateName").attr("readonly", true);
+
+        if (e.model.isNew()) {
+
+            // Set the popup window title.
+            e.container.data("kendoWindow").title('Add Tariff');
+            // Set the save button title.
+            $(".k-window .k-grid-update").html("<span class=\"k-icon k-update\"></span>Save");
+
+            e.model.CustomerId = $("#CustomerId").val();
+        }
+        else {
+            // Set the popup window title.
+            e.container.data("kendoWindow").title('Edit Tariff');
+
+        }
+
+    }
+
+    function OnSave(e) {
+        NextState("OnSave");
+
+        // Set the model's PerTimeUnit
+        if (e.model.PerTimeUnitId != $("#PerTimeUnitId").val()) {
+            e.model.PerTimeUnitId = $("#PerTimeUnitId").val();
+            e.model.PerTimeUnitName = $("#PerTimeUnitList option:selected").text();
+            $("#PerTimeUnitName").val(e.model.PerTimeUnitName);
+
+            e.model.dirty = true;
+        }
+
+        // Set the model's MaxTimeUnit
+        if (e.model.MaxTimeUnitId != $("#MaxTimeUnitId").val()) {
+            e.model.MaxTimeUnitId = $("#MaxTimeUnitId").val();
+            e.model.MaxTimeUnitName = $("#MaxTimeUnitList option:selected").text();
+            $("#MaxTimeUnitName").val(e.model.MaxTimeUnitName);
+
+            e.model.dirty = true;
+        }
+
+        // Set the model's LinkedTariffRateId
+        if (e.model.LinkedTariffRateId != $("#LinkedTariffRateId").val()) {
+            e.model.LinkedTariffRateId = $("#LinkedTariffRateId").val();
+            e.model.LinkedTariffRateName = $("#LinkableRateList option:selected").text();
+            $("#LinkedTariffRateName").val(e.model.LinkedTariffRateName);
+
+            e.model.dirty = true;
+        }
+
+        // Set the model's RateName and RateNameIndex
+        if (e.model.RateName != $("#RateName").val()) {
+            e.model.RateName = $("#RateName").val();
+            e.model.RateNameIndex = $("#RateNameIndex").val();
+
+            e.model.dirty = true;
+        }
+
+
+
+    }
+
+
+    function TariffRateErrorHandler(e) {
+        if (e.errors) {
+            var message = "";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += "<br/>" + this;
+                    });
+                }
+            });
+
+
+            var grid = $("#TariffRateConfigurationGrid").data("kendoGrid");
+            grid.one("dataBinding", function (e) {
+                e.preventDefault(); 
+            });
+
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", message);
+        }
+    }
+
+
+    function SetButtonStates() {
+
+        var hasDirtyItems = false;
+        var hasUnsavedItems = false;
+        var hasData = false;
+
+        var allData = $("#TariffRateConfigurationGrid").data('kendoGrid').dataSource.data();
+
+        if (allData.length > 0) {
+            hasData = true;
+            $.each(allData, function (idx, currentItem) {
+                if (!currentItem.IsSaved) {
+                    hasUnsavedItems = true;
+                }
+                if (currentItem.IsChanged) {
+                    hasDirtyItems = true;
+                }
+            });
+        }
+
+        //if (hasData) {
+        //    console.log("has data");
+        //} else {
+        //    console.log("no data");
+        //}
+
+        //if (hasUnsavedItems) {
+        //    console.log("has unsaved items");
+        //} else {
+        //    console.log("no unsaved items");
+        //}
+
+        //if (hasDirtyItems) {
+        //    console.log("has dirty items");
+        //} else {
+        //    console.log("no dirty items");
+        //}
+
+
+
+        SetButtonState("btnSave", hasData && (hasUnsavedItems || hasDirtyItems));
+        SetButtonState("btnConfigure", hasData);
+        SetButtonState("btnReturn", !hasData || !hasUnsavedItems);
+        SetButtonState("btnCancel", hasData && hasUnsavedItems);
+    }
+
+    function SetButtonState(id, isEnabled) {
+
+        var theButton = $("#" + id);
+        
+        if (isEnabled) {
+            theButton.removeAttr('disabled');
+            theButton.removeClass("disabledButton");
+        } else {
+            theButton.attr('disabled', 'disabled');
+            theButton.addClass("disabledButton");
+        }
+
+    }
+
+
+
+</script>

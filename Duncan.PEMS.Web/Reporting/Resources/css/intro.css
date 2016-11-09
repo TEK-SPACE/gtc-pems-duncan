@@ -1,0 +1,113 @@
+/* Copyright (c) 2005-2013 Izenda, L.L.C. - ALL RIGHTS RESERVED */
+
+.listintro-text {
+  padding: 12px;
+  line-height: 1.5em;
+  color: black;
+  margin: 12px 0px;
+  padding-left: 50px;
+}
+
+.listintro-text a {
+  color: #E96A02;
+}
+.listintro-text a:hover {
+  color: #163465;
+}
+
+
+.gallery-row {
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 99;
+}
+
+.gallery-cell {
+  display: inline-block;
+  width:  240px;
+}
+
+.gallery-cell:hover {
+  cursor: pointer;
+}
+
+.gallery-cell h3 {
+  font-weight: normal;
+  font-size: 16px;
+  color: black;
+  text-align: left;
+  padding-left: 12px;
+  margin: 0;
+}
+
+.gallery-cell img {
+  width: 213px;
+  height: 158px;
+  margin: 12px;
+}
+
+
+
+.listintro-panel-top {
+  padding: 24px;
+}
+.listintro-panel-top > div {
+	vertical-align: middle;
+}
+
+.listintro-panel-bottom p, .listintro-panel-bottom h2 {
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+.listintro-panel-bottom {
+  padding: 24px;
+  background-image: linear-gradient(bottom, rgb(255,255,255) 25%, rgb(204,204,204) 100%);
+  background-image: -o-linear-gradient(bottom, rgb(255,255,255) 25%, rgb(204,204,204) 100%);
+  background-image: -moz-linear-gradient(bottom, rgb(255,255,255) 25%, rgb(204,204,204) 100%);
+  background-image: -webkit-linear-gradient(bottom, rgb(255,255,255) 25%, rgb(204,204,204) 100%);
+  background-image: -ms-linear-gradient(bottom, rgb(255,255,255) 25%, rgb(204,204,204) 100%);
+  background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0.25, white), color-stop(1, #CCC) );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc, endColorstr=#ffffff);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc, endColorstr=#ffffff)";
+}
+
+#listintro-links-container {
+  display: block;
+  width: 100px;
+  text-align: center;
+  margin: 0 auto;
+}
+#listintro-text-container {
+  display: inline-block;
+  width: 480px;
+  margin: 0px 12px;
+}
+
+#listintro-text {
+  line-height: 1.25em;
+}
+
+#listintro-video-container {
+  display: inline-block;
+  -moz-box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+  -webkit-box-shadow:  2px 2px 10px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.3);
+}
+.intro-video-container {
+  padding: 12px;
+}
+
+#listintro-gallery-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-left: 50px;
+  margin-bottom: 25px;
+}
+
+.gallery-cell img {
+  display: inline-block;
+  -moz-box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+}

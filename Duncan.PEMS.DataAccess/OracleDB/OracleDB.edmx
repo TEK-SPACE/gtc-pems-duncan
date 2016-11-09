@@ -1,0 +1,869 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="OracleDBModel.Store" Provider="Oracle.ManagedDataAccess.Client" ProviderManifestToken="11.2" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ACTIVITYLOG">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="STARTDATE" Type="date" />
+          <Property Name="STARTTIME" Type="date" />
+          <Property Name="ENDDATE" Type="date" />
+          <Property Name="ENDTIME" Type="date" />
+          <Property Name="OFFICERNAME" Type="varchar2" MaxLength="20" />
+          <Property Name="OFFICERID" Type="varchar2" MaxLength="20" />
+          <Property Name="PRIMARYACTIVITYNAME" Type="varchar2" MaxLength="40" />
+          <Property Name="PRIMARYACTIVITYCOUNT" Type="number" Precision="5" Scale="0" />
+          <Property Name="SECONDARYACTIVITYNAME" Type="varchar2" MaxLength="40" />
+          <Property Name="SECONDARYACTIVITYCOUNT" Type="number" Precision="5" Scale="0" />
+          <Property Name="EXTRAPROMPT1" Type="varchar2" MaxLength="80" />
+          <Property Name="EXTRADATA1" Type="varchar2" MaxLength="80" />
+          <Property Name="EXTRAPROMPT2" Type="varchar2" MaxLength="80" />
+          <Property Name="EXTRADATA2" Type="varchar2" MaxLength="80" />
+          <Property Name="EXTRAPROMPT3" Type="varchar2" MaxLength="80" />
+          <Property Name="EXTRADATA3" Type="varchar2" MaxLength="80" />
+          <Property Name="UNIQUEKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="RECCREATIONDATE" Type="date" />
+          <Property Name="RECOVEREDBYHH" Type="varchar2" MaxLength="1" />
+          <Property Name="FORMREV" Type="number" Precision="9" Scale="0" />
+          <Property Name="FORMNAME" Type="varchar2" MaxLength="25" />
+          <Property Name="TABLEREV" Type="number" Precision="9" Scale="0" />
+          <Property Name="STANDARDEXPORTDATE" Type="date" />
+          <Property Name="REINOROWVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="SUBCONFIGKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TBLENCRYPTVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="ENCRYPTIONKEYID" Type="number" Precision="9" Scale="0" />
+          <Property Name="TRANSACTIONKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TRANSACTIONNAME" Type="varchar2" MaxLength="50" />
+          <Property Name="USERDEF1EXPORTDATE" Type="date" />
+          <Property Name="USERDEF2EXPORTDATE" Type="date" />
+          <Property Name="USERDEF3EXPORTDATE" Type="date" />
+          <Property Name="USERDEF4EXPORTDATE" Type="date" />
+          <Property Name="USERDEF5EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="date" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="date" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="START_LOCLATITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="START_LOCLONGITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="END_LOCLATITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="END_LOCLONGITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="UNITSERIAL" Type="varchar2" MaxLength="12" />
+        </EntityType>
+        <EntityType Name="PARKING">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="ISSUEDATE" Type="date" />
+          <Property Name="PLATECHECKDIGIT" Type="varchar2" MaxLength="1" />
+          <Property Name="ISSUETIME" Type="date" />
+          <Property Name="ISSUENOPFX" Type="varchar2" MaxLength="20" />
+          <Property Name="ISSUENO" Type="number" Precision="38" Scale="0" />
+          <Property Name="ISSUENOSFX" Type="varchar2" MaxLength="20" />
+          <Property Name="DUEDATE" Type="date" />
+          <Property Name="DUEDATE2" Type="varchar2" MaxLength="20" />
+          <Property Name="DUEDATE3" Type="date" />
+          <Property Name="OFFICERNAME" Type="varchar2" MaxLength="20" />
+          <Property Name="OFFICERID" Type="varchar2" MaxLength="20" />
+          <Property Name="AGENCY" Type="varchar2" MaxLength="30" />
+          <Property Name="LOCMETER" Type="varchar2" MaxLength="20" />
+          <Property Name="LOCLOT" Type="varchar2" MaxLength="60" />
+          <Property Name="LOCBLOCK" Type="varchar2" MaxLength="20" />
+          <Property Name="LOCSTREET" Type="varchar2" MaxLength="60" />
+          <Property Name="LOCCROSSSTREET1" Type="varchar2" MaxLength="60" />
+          <Property Name="LOCCROSSSTREET2" Type="varchar2" MaxLength="60" />
+          <Property Name="METERNO" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHLICNO" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHLICSTATE" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHLICEXPDATE" Type="date" />
+          <Property Name="VEHLICTYPE" Type="varchar2" MaxLength="30" />
+          <Property Name="VEHVIN" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHMAKE" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHMODEL" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHBODYSTYLE" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHCOLOR1" Type="varchar2" MaxLength="3" />
+          <Property Name="VEHCOLOR2" Type="varchar2" MaxLength="3" />
+          <Property Name="REMARK1" Type="varchar2" MaxLength="60" />
+          <Property Name="REMARK2" Type="varchar2" MaxLength="60" />
+          <Property Name="FORMREV" Type="number" Precision="3" Scale="0" />
+          <Property Name="DIRECTION" Type="varchar2" MaxLength="20" />
+          <Property Name="PERMITNO" Type="varchar2" MaxLength="20" />
+          <Property Name="ISWARNING" Type="varchar2" MaxLength="3" />
+          <Property Name="NOTE1" Type="varchar2" MaxLength="60" />
+          <Property Name="NOTE2" Type="varchar2" MaxLength="60" />
+          <Property Name="WARNINGREMARK" Type="varchar2" MaxLength="60" />
+          <Property Name="AGENCYDESIGNATOR" Type="varchar2" MaxLength="20" />
+          <Property Name="LOCSPACE" Type="varchar2" MaxLength="20" />
+          <Property Name="ESCALATEDFINE" Type="float" Precision="126" Scale="0" />
+          <Property Name="ESCALATEDLATEFEE" Type="float" Precision="126" Scale="0" />
+          <Property Name="ESCALATIONCOUNT" Type="varchar2" MaxLength="20" />
+          <Property Name="COURTAPPDATE" Type="varchar2" MaxLength="20" />
+          <Property Name="COURTTIME" Type="date" />
+          <Property Name="VEHLICCD" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHLICTYPECODE" Type="varchar2" MaxLength="20" />
+          <Property Name="VEHTYPE" Type="varchar2" MaxLength="20" />
+          <Property Name="PERMIT" Type="varchar2" MaxLength="20" />
+          <Property Name="OFFICERSIGNATURE" Type="varchar2" MaxLength="4000" />
+          <Property Name="UNIQUEKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="RECCREATIONDATE" Type="date" />
+          <Property Name="RECOVEREDBYHH" Type="varchar2" MaxLength="1" />
+          <Property Name="FORMNAME" Type="varchar2" MaxLength="25" />
+          <Property Name="TABLEREV" Type="number" Precision="9" Scale="0" />
+          <Property Name="STANDARDEXPORTDATE" Type="date" />
+          <Property Name="REINOROWVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="SUBCONFIGKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TBLENCRYPTVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="ENCRYPTIONKEYID" Type="number" Precision="9" Scale="0" />
+          <Property Name="TRANSACTIONKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TRANSACTIONNAME" Type="varchar2" MaxLength="50" />
+          <Property Name="FRMANDSTRREV" Type="float" Precision="126" Scale="0" />
+          <Property Name="UNITSERIAL" Type="varchar2" MaxLength="12" />
+          <Property Name="ISSUENOCHKDGT" Type="varchar2" MaxLength="5" />
+          <Property Name="VOIDSTATUS" Type="varchar2" MaxLength="2" />
+          <Property Name="VOIDSTATUSDATE" Type="date" />
+          <Property Name="VOIDREASON" Type="varchar2" MaxLength="80" />
+          <Property Name="VOIDEDINFIELD" Type="varchar2" MaxLength="1" />
+          <Property Name="REISSUED" Type="varchar2" MaxLength="1" />
+          <Property Name="USERDEF1EXPORTDATE" Type="date" />
+          <Property Name="USERDEF2EXPORTDATE" Type="date" />
+          <Property Name="USERDEF3EXPORTDATE" Type="date" />
+          <Property Name="USERDEF4EXPORTDATE" Type="date" />
+          <Property Name="USERDEF5EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="date" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="date" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="BEAT" Type="varchar2" MaxLength="30" />
+          <Property Name="LOCDESCRIPTOR" Type="varchar2" MaxLength="20" />
+          <Property Name="LOCLATITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="LOCLONGITUDE" Type="float" Precision="126" Scale="0" />
+          <Property Name="VEHVIN4" Type="varchar2" MaxLength="20" />
+          <Property Name="SHIFT" Type="varchar2" MaxLength="20" />
+          <Property Name="SQUAD" Type="varchar2" MaxLength="20" />
+          <Property Name="HEARINGDATE" Type="date" />
+          <Property Name="HEARINGTIME" Type="varchar2" MaxLength="20" />
+          <Property Name="LOCDIRECTION" Type="varchar2" MaxLength="20" />
+          <Property Name="REMARK3" Type="varchar2" MaxLength="60" />
+          <Property Name="ENF_METERID" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERSCANDATETIME" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERRTCDATETIME" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERLUTDATETIME" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERMODE" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERCLUSTERID" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERCLUSTERMEMBERS" Type="varchar2" MaxLength="250" />
+          <Property Name="ENF_BAYEXPIREDMINUTES" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_BAYSTATUSCODE" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_BAYSTATECODE" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_HANDHELDMODE" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERBAYNO" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERID_INTERNAL" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METERBAYNO_INTERNAL" Type="varchar2" MaxLength="20" />
+          <Property Name="ENF_METER_TYPE" Type="varchar2" MaxLength="20" />
+          <Property Name="REINO_DATA_AGE" Type="number" Precision="38" Scale="0" />
+          <Property Name="REINO_CONFIRMATION_CODE" Type="varchar2" MaxLength="20" />
+          <Property Name="REINO_METER_ID" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_ENF_ZONEID" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_ENF_LICPLATE" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_ENF_LICSTATE" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_ENF_REASON" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_DATA_AGE" Type="varchar2" MaxLength="20" />
+          <Property Name="PBC_CONFIRMATION_CODE" Type="varchar2" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="PARKING_VIOS">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+            <PropertyRef Name="MASTERKEY" />
+          </Key>
+          <Property Name="VIOSELECT" Type="varchar2" MaxLength="80" />
+          <Property Name="VIOXFERCODE" Type="varchar2" MaxLength="10" />
+          <Property Name="VIOCODE" Type="varchar2" MaxLength="20" />
+          <Property Name="VIODESCRIPTION1" Type="varchar2" MaxLength="500" />
+          <Property Name="VIOFINE" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFEE1" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFINE1" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFEE2" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFINE2" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFEE3" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFINE3" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOQUERYTYPE" Type="varchar2" MaxLength="20" />
+          <Property Name="REPEAT_ESCALATE" Type="varchar2" MaxLength="5" />
+          <Property Name="VIOLATEFEE" Type="float" Precision="126" Scale="0" />
+          <Property Name="VIOLATEFINE" Type="float" Precision="126" Scale="0" />
+          <Property Name="UNIQUEKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="MASTERKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="OCCURNO" Type="number" Precision="9" Scale="0" />
+          <Property Name="VIODESCRIPTION2" Type="varchar2" MaxLength="80" />
+        </EntityType>
+        <EntityType Name="PARKNOTE">
+          <Key>
+            <PropertyRef Name="MASTERKEY" />
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="MASTERKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="DETAILRECNO" Type="number" Precision="5" Scale="0" />
+          <Property Name="NOTEDATE" Type="date" />
+          <Property Name="NOTETIME" Type="date" />
+          <Property Name="OFFICERNAME" Type="varchar2" MaxLength="20" />
+          <Property Name="OFFICERID" Type="varchar2" MaxLength="20" />
+          <Property Name="RECCREATIONDATE" Type="date" />
+          <Property Name="RECCREATIONTIME" Type="date" />
+          <Property Name="NOTESMEMO" Type="varchar2" MaxLength="500" />
+          <Property Name="DIAGRAM" Type="varchar2" MaxLength="4000" />
+          <Property Name="MULTIMEDIANOTEDATATYPE" Type="varchar2" MaxLength="30" />
+          <Property Name="MULTIMEDIANOTEFILENAME" Type="varchar2" MaxLength="266" />
+          <Property Name="MULTIMEDIANOTEFILEDATESTAMP" Type="date" />
+          <Property Name="MULTIMEDIANOTEFILETIMESTAMP" Type="date" />
+          <Property Name="UNIQUEKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="RECOVEREDBYHH" Type="varchar2" MaxLength="1" />
+          <Property Name="FORMREV" Type="number" Precision="9" Scale="0" />
+          <Property Name="FORMNAME" Type="varchar2" MaxLength="25" />
+          <Property Name="TABLEREV" Type="number" Precision="9" Scale="0" />
+          <Property Name="STANDARDEXPORTDATE" Type="date" />
+          <Property Name="REINOROWVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="SUBCONFIGKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TBLENCRYPTVERSION" Type="number" Precision="9" Scale="0" />
+          <Property Name="ENCRYPTIONKEYID" Type="number" Precision="9" Scale="0" />
+          <Property Name="MULTIMEDIANOTEDATA" Type="long raw" />
+          <Property Name="PRINTEDIMAGEORDER" Type="varchar2" MaxLength="30" />
+          <Property Name="TRANSACTIONKEY" Type="number" Precision="9" Scale="0" />
+          <Property Name="TRANSACTIONNAME" Type="varchar2" MaxLength="50" />
+          <Property Name="USERDEF1EXPORTDATE" Type="date" />
+          <Property Name="USERDEF2EXPORTDATE" Type="date" />
+          <Property Name="USERDEF3EXPORTDATE" Type="date" />
+          <Property Name="USERDEF4EXPORTDATE" Type="date" />
+          <Property Name="USERDEF5EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="date" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="date" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="date" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="number" Precision="9" Scale="0" />
+        </EntityType>
+        <EntityType Name="SECURITY_USER">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="UNIQUEKEY" Type="number" Precision="9" Scale="0" Nullable="false" />
+          <Property Name="USERNAME" Type="varchar2" MaxLength="50" />
+          <Property Name="OFFICERNAME" Type="varchar2" MaxLength="50" />
+          <Property Name="OFFICERID" Type="varchar2" MaxLength="50" />
+          <Property Name="OFFICERREINOTECHKEY" Type="varchar2" MaxLength="50" />
+          <Property Name="SALT" Type="varchar2" MaxLength="16" Nullable="false" />
+          <Property Name="SALTEDHASH" Type="varchar2" MaxLength="50" Nullable="false" />
+          <Property Name="HASHBROWN" Type="varchar2" MaxLength="100" />
+          <Property Name="RECCREATIONDATE" Type="date" />
+          <Property Name="PWDCHANGED" Type="date" />
+          <Property Name="LASTLOGIN" Type="date" />
+          <Property Name="PWDEXPIRATION" Type="date" />
+          <Property Name="LOCKOUTTIME" Type="date" />
+          <Property Name="LASTREMINDER" Type="date" />
+          <Property Name="FAILEDLOGINS" Type="number" Precision="9" Scale="0" />
+          <Property Name="NETWORKDOMAIN1" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKUSERNAME1" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKPASSWORD1" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKDOMAIN2" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKUSERNAME2" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKPASSWORD2" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKDOMAIN3" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKUSERNAME3" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKPASSWORD3" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKDOMAIN4" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKUSERNAME4" Type="varchar2" MaxLength="50" />
+          <Property Name="NETWORKPASSWORD4" Type="varchar2" MaxLength="50" />
+        </EntityType>
+        <EntityContainer Name="OracleDBModelStoreContainer">
+          <EntitySet Name="ACTIVITYLOG" EntityType="Self.ACTIVITYLOG" Schema="NEWORLEANSLA" store:Type="Tables" />
+          <EntitySet Name="PARKING" EntityType="Self.PARKING" Schema="NEWORLEANSLA" store:Type="Tables" />
+          <EntitySet Name="PARKING_VIOS" EntityType="Self.PARKING_VIOS" Schema="NEWORLEANSLA" store:Type="Tables" />
+          <EntitySet Name="PARKNOTE" EntityType="Self.PARKNOTE" Schema="NEWORLEANSLA" store:Type="Tables" />
+          <EntitySet Name="SECURITY_USER" EntityType="Self.SECURITY_USER" Schema="NEWORLEANSLA" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OracleDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ACTIVITYLOG">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="STARTDATE" Type="DateTime" />
+          <Property Name="STARTTIME" Type="DateTime" />
+          <Property Name="ENDDATE" Type="DateTime" />
+          <Property Name="ENDTIME" Type="DateTime" />
+          <Property Name="OFFICERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PRIMARYACTIVITYNAME" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="PRIMARYACTIVITYCOUNT" Type="Int16" />
+          <Property Name="SECONDARYACTIVITYNAME" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="SECONDARYACTIVITYCOUNT" Type="Int16" />
+          <Property Name="EXTRAPROMPT1" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="EXTRADATA1" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="EXTRAPROMPT2" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="EXTRADATA2" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="EXTRAPROMPT3" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="EXTRADATA3" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="UNIQUEKEY" Type="Int32" Nullable="false" />
+          <Property Name="RECCREATIONDATE" Type="DateTime" />
+          <Property Name="RECOVEREDBYHH" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="FORMREV" Type="Int32" />
+          <Property Name="FORMNAME" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TABLEREV" Type="Int32" />
+          <Property Name="STANDARDEXPORTDATE" Type="DateTime" />
+          <Property Name="REINOROWVERSION" Type="Int32" />
+          <Property Name="SUBCONFIGKEY" Type="Int32" />
+          <Property Name="TBLENCRYPTVERSION" Type="Int32" />
+          <Property Name="ENCRYPTIONKEYID" Type="Int32" />
+          <Property Name="TRANSACTIONKEY" Type="Int32" />
+          <Property Name="TRANSACTIONNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USERDEF1EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF2EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF3EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF4EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF5EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="DateTime" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="DateTime" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="Int32" />
+          <Property Name="START_LOCLATITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="START_LOCLONGITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="END_LOCLATITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="END_LOCLONGITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="UNITSERIAL" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PARKING">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="ISSUEDATE" Type="DateTime" />
+          <Property Name="PLATECHECKDIGIT" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ISSUETIME" Type="DateTime" />
+          <Property Name="ISSUENOPFX" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ISSUENO" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="ISSUENOSFX" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DUEDATE" Type="DateTime" />
+          <Property Name="DUEDATE2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DUEDATE3" Type="DateTime" />
+          <Property Name="OFFICERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AGENCY" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="LOCMETER" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOCLOT" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="LOCBLOCK" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOCSTREET" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="LOCCROSSSTREET1" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="LOCCROSSSTREET2" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="METERNO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHLICNO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHLICSTATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHLICEXPDATE" Type="DateTime" />
+          <Property Name="VEHLICTYPE" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="VEHVIN" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHMAKE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHMODEL" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHBODYSTYLE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHCOLOR1" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="VEHCOLOR2" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="REMARK1" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="REMARK2" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="FORMREV" Type="Int16" />
+          <Property Name="DIRECTION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PERMITNO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ISWARNING" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="NOTE1" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="NOTE2" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="WARNINGREMARK" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="AGENCYDESIGNATOR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOCSPACE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ESCALATEDFINE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="ESCALATEDLATEFEE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="ESCALATIONCOUNT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="COURTAPPDATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="COURTTIME" Type="DateTime" />
+          <Property Name="VEHLICCD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHLICTYPECODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VEHTYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PERMIT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERSIGNATURE" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="UNIQUEKEY" Type="Int32" Nullable="false" />
+          <Property Name="RECCREATIONDATE" Type="DateTime" />
+          <Property Name="RECOVEREDBYHH" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="FORMNAME" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TABLEREV" Type="Int32" />
+          <Property Name="STANDARDEXPORTDATE" Type="DateTime" />
+          <Property Name="REINOROWVERSION" Type="Int32" />
+          <Property Name="SUBCONFIGKEY" Type="Int32" />
+          <Property Name="TBLENCRYPTVERSION" Type="Int32" />
+          <Property Name="ENCRYPTIONKEYID" Type="Int32" />
+          <Property Name="TRANSACTIONKEY" Type="Int32" />
+          <Property Name="TRANSACTIONNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FRMANDSTRREV" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="UNITSERIAL" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="ISSUENOCHKDGT" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="VOIDSTATUS" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="VOIDSTATUSDATE" Type="DateTime" />
+          <Property Name="VOIDREASON" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="VOIDEDINFIELD" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="REISSUED" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="USERDEF1EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF2EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF3EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF4EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF5EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="DateTime" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="DateTime" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="Int32" />
+          <Property Name="BEAT" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="LOCDESCRIPTOR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOCLATITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="LOCLONGITUDE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VEHVIN4" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SHIFT" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SQUAD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="HEARINGDATE" Type="DateTime" />
+          <Property Name="HEARINGTIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LOCDIRECTION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="REMARK3" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERSCANDATETIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERRTCDATETIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERLUTDATETIME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERMODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERCLUSTERID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERCLUSTERMEMBERS" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_BAYEXPIREDMINUTES" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_BAYSTATUSCODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_BAYSTATECODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_HANDHELDMODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERBAYNO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERID_INTERNAL" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METERBAYNO_INTERNAL" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ENF_METER_TYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="REINO_DATA_AGE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="REINO_CONFIRMATION_CODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="REINO_METER_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_ENF_ZONEID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_ENF_LICPLATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_ENF_LICSTATE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_ENF_REASON" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_DATA_AGE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PBC_CONFIRMATION_CODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PARKING_VIOS">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+            <PropertyRef Name="MASTERKEY" />
+          </Key>
+          <Property Name="VIOSELECT" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="VIOXFERCODE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="VIOCODE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="VIODESCRIPTION1" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="VIOFINE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFEE1" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFINE1" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFEE2" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFINE2" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFEE3" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFINE3" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOQUERYTYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="REPEAT_ESCALATE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="VIOLATEFEE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="VIOLATEFINE" Type="Decimal" Precision="38" Scale="0" />
+          <Property Name="UNIQUEKEY" Type="Int32" Nullable="false" />
+          <Property Name="MASTERKEY" Type="Int32" Nullable="false" />
+          <Property Name="OCCURNO" Type="Int32" />
+          <Property Name="VIODESCRIPTION2" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PARKNOTE">
+          <Key>
+            <PropertyRef Name="MASTERKEY" />
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="MASTERKEY" Type="Int32" Nullable="false" />
+          <Property Name="DETAILRECNO" Type="Int16" />
+          <Property Name="NOTEDATE" Type="DateTime" />
+          <Property Name="NOTETIME" Type="DateTime" />
+          <Property Name="OFFICERNAME" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RECCREATIONDATE" Type="DateTime" />
+          <Property Name="RECCREATIONTIME" Type="DateTime" />
+          <Property Name="NOTESMEMO" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DIAGRAM" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="MULTIMEDIANOTEDATATYPE" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="MULTIMEDIANOTEFILENAME" Type="String" MaxLength="266" FixedLength="false" Unicode="false" />
+          <Property Name="MULTIMEDIANOTEFILEDATESTAMP" Type="DateTime" />
+          <Property Name="MULTIMEDIANOTEFILETIMESTAMP" Type="DateTime" />
+          <Property Name="UNIQUEKEY" Type="Int32" Nullable="false" />
+          <Property Name="RECOVEREDBYHH" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="FORMREV" Type="Int32" />
+          <Property Name="FORMNAME" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="TABLEREV" Type="Int32" />
+          <Property Name="STANDARDEXPORTDATE" Type="DateTime" />
+          <Property Name="REINOROWVERSION" Type="Int32" />
+          <Property Name="SUBCONFIGKEY" Type="Int32" />
+          <Property Name="TBLENCRYPTVERSION" Type="Int32" />
+          <Property Name="ENCRYPTIONKEYID" Type="Int32" />
+          <Property Name="MULTIMEDIANOTEDATA" Type="Binary" MaxLength="2147483647" FixedLength="false" />
+          <Property Name="PRINTEDIMAGEORDER" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="TRANSACTIONKEY" Type="Int32" />
+          <Property Name="TRANSACTIONNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USERDEF1EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF2EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF3EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF4EXPORTDATE" Type="DateTime" />
+          <Property Name="USERDEF5EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM1EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM2EXPORTDATE" Type="DateTime" />
+          <Property Name="CUSTOM3EXPORTDATE" Type="DateTime" />
+          <Property Name="WIRELESSEXPORTDATE_AUTOPROC" Type="DateTime" />
+          <Property Name="AUTOPROC_UNIQUEKEY" Type="Int32" />
+        </EntityType>
+        <EntityType Name="SECURITY_USER">
+          <Key>
+            <PropertyRef Name="UNIQUEKEY" />
+          </Key>
+          <Property Name="UNIQUEKEY" Type="Int32" Nullable="false" />
+          <Property Name="USERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OFFICERREINOTECHKEY" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SALT" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SALTEDHASH" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="HASHBROWN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RECCREATIONDATE" Type="DateTime" />
+          <Property Name="PWDCHANGED" Type="DateTime" />
+          <Property Name="LASTLOGIN" Type="DateTime" />
+          <Property Name="PWDEXPIRATION" Type="DateTime" />
+          <Property Name="LOCKOUTTIME" Type="DateTime" />
+          <Property Name="LASTREMINDER" Type="DateTime" />
+          <Property Name="FAILEDLOGINS" Type="Int32" />
+          <Property Name="NETWORKDOMAIN1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKUSERNAME1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKPASSWORD1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKDOMAIN2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKUSERNAME2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKPASSWORD2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKDOMAIN3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKUSERNAME3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKPASSWORD3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKDOMAIN4" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKUSERNAME4" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NETWORKPASSWORD4" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="OracleDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ACTIVITYLOGs" EntityType="Self.ACTIVITYLOG" />
+          <EntitySet Name="PARKINGs" EntityType="Self.PARKING" />
+          <EntitySet Name="PARKING_VIOS" EntityType="Self.PARKING_VIOS" />
+          <EntitySet Name="PARKNOTEs" EntityType="Self.PARKNOTE" />
+          <EntitySet Name="SECURITY_USER" EntityType="Self.SECURITY_USER" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OracleDBModelStoreContainer" CdmEntityContainer="OracleDBEntities">
+          <EntitySetMapping Name="ACTIVITYLOGs">
+            <EntityTypeMapping TypeName="OracleDBModel.ACTIVITYLOG">
+              <MappingFragment StoreEntitySet="ACTIVITYLOG">
+                <ScalarProperty Name="STARTDATE" ColumnName="STARTDATE" />
+                <ScalarProperty Name="STARTTIME" ColumnName="STARTTIME" />
+                <ScalarProperty Name="ENDDATE" ColumnName="ENDDATE" />
+                <ScalarProperty Name="ENDTIME" ColumnName="ENDTIME" />
+                <ScalarProperty Name="OFFICERNAME" ColumnName="OFFICERNAME" />
+                <ScalarProperty Name="OFFICERID" ColumnName="OFFICERID" />
+                <ScalarProperty Name="PRIMARYACTIVITYNAME" ColumnName="PRIMARYACTIVITYNAME" />
+                <ScalarProperty Name="PRIMARYACTIVITYCOUNT" ColumnName="PRIMARYACTIVITYCOUNT" />
+                <ScalarProperty Name="SECONDARYACTIVITYNAME" ColumnName="SECONDARYACTIVITYNAME" />
+                <ScalarProperty Name="SECONDARYACTIVITYCOUNT" ColumnName="SECONDARYACTIVITYCOUNT" />
+                <ScalarProperty Name="EXTRAPROMPT1" ColumnName="EXTRAPROMPT1" />
+                <ScalarProperty Name="EXTRADATA1" ColumnName="EXTRADATA1" />
+                <ScalarProperty Name="EXTRAPROMPT2" ColumnName="EXTRAPROMPT2" />
+                <ScalarProperty Name="EXTRADATA2" ColumnName="EXTRADATA2" />
+                <ScalarProperty Name="EXTRAPROMPT3" ColumnName="EXTRAPROMPT3" />
+                <ScalarProperty Name="EXTRADATA3" ColumnName="EXTRADATA3" />
+                <ScalarProperty Name="UNIQUEKEY" ColumnName="UNIQUEKEY" />
+                <ScalarProperty Name="RECCREATIONDATE" ColumnName="RECCREATIONDATE" />
+                <ScalarProperty Name="RECOVEREDBYHH" ColumnName="RECOVEREDBYHH" />
+                <ScalarProperty Name="FORMREV" ColumnName="FORMREV" />
+                <ScalarProperty Name="FORMNAME" ColumnName="FORMNAME" />
+                <ScalarProperty Name="TABLEREV" ColumnName="TABLEREV" />
+                <ScalarProperty Name="STANDARDEXPORTDATE" ColumnName="STANDARDEXPORTDATE" />
+                <ScalarProperty Name="REINOROWVERSION" ColumnName="REINOROWVERSION" />
+                <ScalarProperty Name="SUBCONFIGKEY" ColumnName="SUBCONFIGKEY" />
+                <ScalarProperty Name="TBLENCRYPTVERSION" ColumnName="TBLENCRYPTVERSION" />
+                <ScalarProperty Name="ENCRYPTIONKEYID" ColumnName="ENCRYPTIONKEYID" />
+                <ScalarProperty Name="TRANSACTIONKEY" ColumnName="TRANSACTIONKEY" />
+                <ScalarProperty Name="TRANSACTIONNAME" ColumnName="TRANSACTIONNAME" />
+                <ScalarProperty Name="USERDEF1EXPORTDATE" ColumnName="USERDEF1EXPORTDATE" />
+                <ScalarProperty Name="USERDEF2EXPORTDATE" ColumnName="USERDEF2EXPORTDATE" />
+                <ScalarProperty Name="USERDEF3EXPORTDATE" ColumnName="USERDEF3EXPORTDATE" />
+                <ScalarProperty Name="USERDEF4EXPORTDATE" ColumnName="USERDEF4EXPORTDATE" />
+                <ScalarProperty Name="USERDEF5EXPORTDATE" ColumnName="USERDEF5EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM1EXPORTDATE" ColumnName="CUSTOM1EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM2EXPORTDATE" ColumnName="CUSTOM2EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM3EXPORTDATE" ColumnName="CUSTOM3EXPORTDATE" />
+                <ScalarProperty Name="WIRELESSEXPORTDATE_AUTOPROC" ColumnName="WIRELESSEXPORTDATE_AUTOPROC" />
+                <ScalarProperty Name="AUTOPROC_UNIQUEKEY" ColumnName="AUTOPROC_UNIQUEKEY" />
+                <ScalarProperty Name="START_LOCLATITUDE" ColumnName="START_LOCLATITUDE" />
+                <ScalarProperty Name="START_LOCLONGITUDE" ColumnName="START_LOCLONGITUDE" />
+                <ScalarProperty Name="END_LOCLATITUDE" ColumnName="END_LOCLATITUDE" />
+                <ScalarProperty Name="END_LOCLONGITUDE" ColumnName="END_LOCLONGITUDE" />
+                <ScalarProperty Name="UNITSERIAL" ColumnName="UNITSERIAL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PARKINGs">
+            <EntityTypeMapping TypeName="OracleDBModel.PARKING">
+              <MappingFragment StoreEntitySet="PARKING">
+                <ScalarProperty Name="ISSUEDATE" ColumnName="ISSUEDATE" />
+                <ScalarProperty Name="PLATECHECKDIGIT" ColumnName="PLATECHECKDIGIT" />
+                <ScalarProperty Name="ISSUETIME" ColumnName="ISSUETIME" />
+                <ScalarProperty Name="ISSUENOPFX" ColumnName="ISSUENOPFX" />
+                <ScalarProperty Name="ISSUENO" ColumnName="ISSUENO" />
+                <ScalarProperty Name="ISSUENOSFX" ColumnName="ISSUENOSFX" />
+                <ScalarProperty Name="DUEDATE" ColumnName="DUEDATE" />
+                <ScalarProperty Name="DUEDATE2" ColumnName="DUEDATE2" />
+                <ScalarProperty Name="DUEDATE3" ColumnName="DUEDATE3" />
+                <ScalarProperty Name="OFFICERNAME" ColumnName="OFFICERNAME" />
+                <ScalarProperty Name="OFFICERID" ColumnName="OFFICERID" />
+                <ScalarProperty Name="AGENCY" ColumnName="AGENCY" />
+                <ScalarProperty Name="LOCMETER" ColumnName="LOCMETER" />
+                <ScalarProperty Name="LOCLOT" ColumnName="LOCLOT" />
+                <ScalarProperty Name="LOCBLOCK" ColumnName="LOCBLOCK" />
+                <ScalarProperty Name="LOCSTREET" ColumnName="LOCSTREET" />
+                <ScalarProperty Name="LOCCROSSSTREET1" ColumnName="LOCCROSSSTREET1" />
+                <ScalarProperty Name="LOCCROSSSTREET2" ColumnName="LOCCROSSSTREET2" />
+                <ScalarProperty Name="METERNO" ColumnName="METERNO" />
+                <ScalarProperty Name="VEHLICNO" ColumnName="VEHLICNO" />
+                <ScalarProperty Name="VEHLICSTATE" ColumnName="VEHLICSTATE" />
+                <ScalarProperty Name="VEHLICEXPDATE" ColumnName="VEHLICEXPDATE" />
+                <ScalarProperty Name="VEHLICTYPE" ColumnName="VEHLICTYPE" />
+                <ScalarProperty Name="VEHVIN" ColumnName="VEHVIN" />
+                <ScalarProperty Name="VEHMAKE" ColumnName="VEHMAKE" />
+                <ScalarProperty Name="VEHMODEL" ColumnName="VEHMODEL" />
+                <ScalarProperty Name="VEHBODYSTYLE" ColumnName="VEHBODYSTYLE" />
+                <ScalarProperty Name="VEHCOLOR1" ColumnName="VEHCOLOR1" />
+                <ScalarProperty Name="VEHCOLOR2" ColumnName="VEHCOLOR2" />
+                <ScalarProperty Name="REMARK1" ColumnName="REMARK1" />
+                <ScalarProperty Name="REMARK2" ColumnName="REMARK2" />
+                <ScalarProperty Name="FORMREV" ColumnName="FORMREV" />
+                <ScalarProperty Name="DIRECTION" ColumnName="DIRECTION" />
+                <ScalarProperty Name="PERMITNO" ColumnName="PERMITNO" />
+                <ScalarProperty Name="ISWARNING" ColumnName="ISWARNING" />
+                <ScalarProperty Name="NOTE1" ColumnName="NOTE1" />
+                <ScalarProperty Name="NOTE2" ColumnName="NOTE2" />
+                <ScalarProperty Name="WARNINGREMARK" ColumnName="WARNINGREMARK" />
+                <ScalarProperty Name="AGENCYDESIGNATOR" ColumnName="AGENCYDESIGNATOR" />
+                <ScalarProperty Name="LOCSPACE" ColumnName="LOCSPACE" />
+                <ScalarProperty Name="ESCALATEDFINE" ColumnName="ESCALATEDFINE" />
+                <ScalarProperty Name="ESCALATEDLATEFEE" ColumnName="ESCALATEDLATEFEE" />
+                <ScalarProperty Name="ESCALATIONCOUNT" ColumnName="ESCALATIONCOUNT" />
+                <ScalarProperty Name="COURTAPPDATE" ColumnName="COURTAPPDATE" />
+                <ScalarProperty Name="COURTTIME" ColumnName="COURTTIME" />
+                <ScalarProperty Name="VEHLICCD" ColumnName="VEHLICCD" />
+                <ScalarProperty Name="VEHLICTYPECODE" ColumnName="VEHLICTYPECODE" />
+                <ScalarProperty Name="VEHTYPE" ColumnName="VEHTYPE" />
+                <ScalarProperty Name="PERMIT" ColumnName="PERMIT" />
+                <ScalarProperty Name="OFFICERSIGNATURE" ColumnName="OFFICERSIGNATURE" />
+                <ScalarProperty Name="UNIQUEKEY" ColumnName="UNIQUEKEY" />
+                <ScalarProperty Name="RECCREATIONDATE" ColumnName="RECCREATIONDATE" />
+                <ScalarProperty Name="RECOVEREDBYHH" ColumnName="RECOVEREDBYHH" />
+                <ScalarProperty Name="FORMNAME" ColumnName="FORMNAME" />
+                <ScalarProperty Name="TABLEREV" ColumnName="TABLEREV" />
+                <ScalarProperty Name="STANDARDEXPORTDATE" ColumnName="STANDARDEXPORTDATE" />
+                <ScalarProperty Name="REINOROWVERSION" ColumnName="REINOROWVERSION" />
+                <ScalarProperty Name="SUBCONFIGKEY" ColumnName="SUBCONFIGKEY" />
+                <ScalarProperty Name="TBLENCRYPTVERSION" ColumnName="TBLENCRYPTVERSION" />
+                <ScalarProperty Name="ENCRYPTIONKEYID" ColumnName="ENCRYPTIONKEYID" />
+                <ScalarProperty Name="TRANSACTIONKEY" ColumnName="TRANSACTIONKEY" />
+                <ScalarProperty Name="TRANSACTIONNAME" ColumnName="TRANSACTIONNAME" />
+                <ScalarProperty Name="FRMANDSTRREV" ColumnName="FRMANDSTRREV" />
+                <ScalarProperty Name="UNITSERIAL" ColumnName="UNITSERIAL" />
+                <ScalarProperty Name="ISSUENOCHKDGT" ColumnName="ISSUENOCHKDGT" />
+                <ScalarProperty Name="VOIDSTATUS" ColumnName="VOIDSTATUS" />
+                <ScalarProperty Name="VOIDSTATUSDATE" ColumnName="VOIDSTATUSDATE" />
+                <ScalarProperty Name="VOIDREASON" ColumnName="VOIDREASON" />
+                <ScalarProperty Name="VOIDEDINFIELD" ColumnName="VOIDEDINFIELD" />
+                <ScalarProperty Name="REISSUED" ColumnName="REISSUED" />
+                <ScalarProperty Name="USERDEF1EXPORTDATE" ColumnName="USERDEF1EXPORTDATE" />
+                <ScalarProperty Name="USERDEF2EXPORTDATE" ColumnName="USERDEF2EXPORTDATE" />
+                <ScalarProperty Name="USERDEF3EXPORTDATE" ColumnName="USERDEF3EXPORTDATE" />
+                <ScalarProperty Name="USERDEF4EXPORTDATE" ColumnName="USERDEF4EXPORTDATE" />
+                <ScalarProperty Name="USERDEF5EXPORTDATE" ColumnName="USERDEF5EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM1EXPORTDATE" ColumnName="CUSTOM1EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM2EXPORTDATE" ColumnName="CUSTOM2EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM3EXPORTDATE" ColumnName="CUSTOM3EXPORTDATE" />
+                <ScalarProperty Name="WIRELESSEXPORTDATE_AUTOPROC" ColumnName="WIRELESSEXPORTDATE_AUTOPROC" />
+                <ScalarProperty Name="AUTOPROC_UNIQUEKEY" ColumnName="AUTOPROC_UNIQUEKEY" />
+                <ScalarProperty Name="BEAT" ColumnName="BEAT" />
+                <ScalarProperty Name="LOCDESCRIPTOR" ColumnName="LOCDESCRIPTOR" />
+                <ScalarProperty Name="LOCLATITUDE" ColumnName="LOCLATITUDE" />
+                <ScalarProperty Name="LOCLONGITUDE" ColumnName="LOCLONGITUDE" />
+                <ScalarProperty Name="VEHVIN4" ColumnName="VEHVIN4" />
+                <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+                <ScalarProperty Name="SQUAD" ColumnName="SQUAD" />
+                <ScalarProperty Name="HEARINGDATE" ColumnName="HEARINGDATE" />
+                <ScalarProperty Name="HEARINGTIME" ColumnName="HEARINGTIME" />
+                <ScalarProperty Name="LOCDIRECTION" ColumnName="LOCDIRECTION" />
+                <ScalarProperty Name="REMARK3" ColumnName="REMARK3" />
+                <ScalarProperty Name="ENF_METERID" ColumnName="ENF_METERID" />
+                <ScalarProperty Name="ENF_METERSCANDATETIME" ColumnName="ENF_METERSCANDATETIME" />
+                <ScalarProperty Name="ENF_METERRTCDATETIME" ColumnName="ENF_METERRTCDATETIME" />
+                <ScalarProperty Name="ENF_METERLUTDATETIME" ColumnName="ENF_METERLUTDATETIME" />
+                <ScalarProperty Name="ENF_METERMODE" ColumnName="ENF_METERMODE" />
+                <ScalarProperty Name="ENF_METERCLUSTERID" ColumnName="ENF_METERCLUSTERID" />
+                <ScalarProperty Name="ENF_METERCLUSTERMEMBERS" ColumnName="ENF_METERCLUSTERMEMBERS" />
+                <ScalarProperty Name="ENF_BAYEXPIREDMINUTES" ColumnName="ENF_BAYEXPIREDMINUTES" />
+                <ScalarProperty Name="ENF_BAYSTATUSCODE" ColumnName="ENF_BAYSTATUSCODE" />
+                <ScalarProperty Name="ENF_BAYSTATECODE" ColumnName="ENF_BAYSTATECODE" />
+                <ScalarProperty Name="ENF_HANDHELDMODE" ColumnName="ENF_HANDHELDMODE" />
+                <ScalarProperty Name="ENF_METERBAYNO" ColumnName="ENF_METERBAYNO" />
+                <ScalarProperty Name="ENF_METERID_INTERNAL" ColumnName="ENF_METERID_INTERNAL" />
+                <ScalarProperty Name="ENF_METERBAYNO_INTERNAL" ColumnName="ENF_METERBAYNO_INTERNAL" />
+                <ScalarProperty Name="ENF_METER_TYPE" ColumnName="ENF_METER_TYPE" />
+                <ScalarProperty Name="REINO_DATA_AGE" ColumnName="REINO_DATA_AGE" />
+                <ScalarProperty Name="REINO_CONFIRMATION_CODE" ColumnName="REINO_CONFIRMATION_CODE" />
+                <ScalarProperty Name="REINO_METER_ID" ColumnName="REINO_METER_ID" />
+                <ScalarProperty Name="PBC_ENF_ZONEID" ColumnName="PBC_ENF_ZONEID" />
+                <ScalarProperty Name="PBC_ENF_LICPLATE" ColumnName="PBC_ENF_LICPLATE" />
+                <ScalarProperty Name="PBC_ENF_LICSTATE" ColumnName="PBC_ENF_LICSTATE" />
+                <ScalarProperty Name="PBC_ENF_REASON" ColumnName="PBC_ENF_REASON" />
+                <ScalarProperty Name="PBC_DATA_AGE" ColumnName="PBC_DATA_AGE" />
+                <ScalarProperty Name="PBC_CONFIRMATION_CODE" ColumnName="PBC_CONFIRMATION_CODE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PARKING_VIOS">
+            <EntityTypeMapping TypeName="OracleDBModel.PARKING_VIOS">
+              <MappingFragment StoreEntitySet="PARKING_VIOS">
+                <ScalarProperty Name="VIOSELECT" ColumnName="VIOSELECT" />
+                <ScalarProperty Name="VIOXFERCODE" ColumnName="VIOXFERCODE" />
+                <ScalarProperty Name="VIOCODE" ColumnName="VIOCODE" />
+                <ScalarProperty Name="VIODESCRIPTION1" ColumnName="VIODESCRIPTION1" />
+                <ScalarProperty Name="VIOFINE" ColumnName="VIOFINE" />
+                <ScalarProperty Name="VIOLATEFEE1" ColumnName="VIOLATEFEE1" />
+                <ScalarProperty Name="VIOLATEFINE1" ColumnName="VIOLATEFINE1" />
+                <ScalarProperty Name="VIOLATEFEE2" ColumnName="VIOLATEFEE2" />
+                <ScalarProperty Name="VIOLATEFINE2" ColumnName="VIOLATEFINE2" />
+                <ScalarProperty Name="VIOLATEFEE3" ColumnName="VIOLATEFEE3" />
+                <ScalarProperty Name="VIOLATEFINE3" ColumnName="VIOLATEFINE3" />
+                <ScalarProperty Name="VIOQUERYTYPE" ColumnName="VIOQUERYTYPE" />
+                <ScalarProperty Name="REPEAT_ESCALATE" ColumnName="REPEAT_ESCALATE" />
+                <ScalarProperty Name="VIOLATEFEE" ColumnName="VIOLATEFEE" />
+                <ScalarProperty Name="VIOLATEFINE" ColumnName="VIOLATEFINE" />
+                <ScalarProperty Name="UNIQUEKEY" ColumnName="UNIQUEKEY" />
+                <ScalarProperty Name="MASTERKEY" ColumnName="MASTERKEY" />
+                <ScalarProperty Name="OCCURNO" ColumnName="OCCURNO" />
+                <ScalarProperty Name="VIODESCRIPTION2" ColumnName="VIODESCRIPTION2" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PARKNOTEs">
+            <EntityTypeMapping TypeName="OracleDBModel.PARKNOTE">
+              <MappingFragment StoreEntitySet="PARKNOTE">
+                <ScalarProperty Name="MASTERKEY" ColumnName="MASTERKEY" />
+                <ScalarProperty Name="DETAILRECNO" ColumnName="DETAILRECNO" />
+                <ScalarProperty Name="NOTEDATE" ColumnName="NOTEDATE" />
+                <ScalarProperty Name="NOTETIME" ColumnName="NOTETIME" />
+                <ScalarProperty Name="OFFICERNAME" ColumnName="OFFICERNAME" />
+                <ScalarProperty Name="OFFICERID" ColumnName="OFFICERID" />
+                <ScalarProperty Name="RECCREATIONDATE" ColumnName="RECCREATIONDATE" />
+                <ScalarProperty Name="RECCREATIONTIME" ColumnName="RECCREATIONTIME" />
+                <ScalarProperty Name="NOTESMEMO" ColumnName="NOTESMEMO" />
+                <ScalarProperty Name="DIAGRAM" ColumnName="DIAGRAM" />
+                <ScalarProperty Name="MULTIMEDIANOTEDATATYPE" ColumnName="MULTIMEDIANOTEDATATYPE" />
+                <ScalarProperty Name="MULTIMEDIANOTEFILENAME" ColumnName="MULTIMEDIANOTEFILENAME" />
+                <ScalarProperty Name="MULTIMEDIANOTEFILEDATESTAMP" ColumnName="MULTIMEDIANOTEFILEDATESTAMP" />
+                <ScalarProperty Name="MULTIMEDIANOTEFILETIMESTAMP" ColumnName="MULTIMEDIANOTEFILETIMESTAMP" />
+                <ScalarProperty Name="UNIQUEKEY" ColumnName="UNIQUEKEY" />
+                <ScalarProperty Name="RECOVEREDBYHH" ColumnName="RECOVEREDBYHH" />
+                <ScalarProperty Name="FORMREV" ColumnName="FORMREV" />
+                <ScalarProperty Name="FORMNAME" ColumnName="FORMNAME" />
+                <ScalarProperty Name="TABLEREV" ColumnName="TABLEREV" />
+                <ScalarProperty Name="STANDARDEXPORTDATE" ColumnName="STANDARDEXPORTDATE" />
+                <ScalarProperty Name="REINOROWVERSION" ColumnName="REINOROWVERSION" />
+                <ScalarProperty Name="SUBCONFIGKEY" ColumnName="SUBCONFIGKEY" />
+                <ScalarProperty Name="TBLENCRYPTVERSION" ColumnName="TBLENCRYPTVERSION" />
+                <ScalarProperty Name="ENCRYPTIONKEYID" ColumnName="ENCRYPTIONKEYID" />
+                <ScalarProperty Name="MULTIMEDIANOTEDATA" ColumnName="MULTIMEDIANOTEDATA" />
+                <ScalarProperty Name="PRINTEDIMAGEORDER" ColumnName="PRINTEDIMAGEORDER" />
+                <ScalarProperty Name="TRANSACTIONKEY" ColumnName="TRANSACTIONKEY" />
+                <ScalarProperty Name="TRANSACTIONNAME" ColumnName="TRANSACTIONNAME" />
+                <ScalarProperty Name="USERDEF1EXPORTDATE" ColumnName="USERDEF1EXPORTDATE" />
+                <ScalarProperty Name="USERDEF2EXPORTDATE" ColumnName="USERDEF2EXPORTDATE" />
+                <ScalarProperty Name="USERDEF3EXPORTDATE" ColumnName="USERDEF3EXPORTDATE" />
+                <ScalarProperty Name="USERDEF4EXPORTDATE" ColumnName="USERDEF4EXPORTDATE" />
+                <ScalarProperty Name="USERDEF5EXPORTDATE" ColumnName="USERDEF5EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM1EXPORTDATE" ColumnName="CUSTOM1EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM2EXPORTDATE" ColumnName="CUSTOM2EXPORTDATE" />
+                <ScalarProperty Name="CUSTOM3EXPORTDATE" ColumnName="CUSTOM3EXPORTDATE" />
+                <ScalarProperty Name="WIRELESSEXPORTDATE_AUTOPROC" ColumnName="WIRELESSEXPORTDATE_AUTOPROC" />
+                <ScalarProperty Name="AUTOPROC_UNIQUEKEY" ColumnName="AUTOPROC_UNIQUEKEY" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SECURITY_USER">
+            <EntityTypeMapping TypeName="OracleDBModel.SECURITY_USER">
+              <MappingFragment StoreEntitySet="SECURITY_USER">
+                <ScalarProperty Name="UNIQUEKEY" ColumnName="UNIQUEKEY" />
+                <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+                <ScalarProperty Name="OFFICERNAME" ColumnName="OFFICERNAME" />
+                <ScalarProperty Name="OFFICERID" ColumnName="OFFICERID" />
+                <ScalarProperty Name="OFFICERREINOTECHKEY" ColumnName="OFFICERREINOTECHKEY" />
+                <ScalarProperty Name="SALT" ColumnName="SALT" />
+                <ScalarProperty Name="SALTEDHASH" ColumnName="SALTEDHASH" />
+                <ScalarProperty Name="HASHBROWN" ColumnName="HASHBROWN" />
+                <ScalarProperty Name="RECCREATIONDATE" ColumnName="RECCREATIONDATE" />
+                <ScalarProperty Name="PWDCHANGED" ColumnName="PWDCHANGED" />
+                <ScalarProperty Name="LASTLOGIN" ColumnName="LASTLOGIN" />
+                <ScalarProperty Name="PWDEXPIRATION" ColumnName="PWDEXPIRATION" />
+                <ScalarProperty Name="LOCKOUTTIME" ColumnName="LOCKOUTTIME" />
+                <ScalarProperty Name="LASTREMINDER" ColumnName="LASTREMINDER" />
+                <ScalarProperty Name="FAILEDLOGINS" ColumnName="FAILEDLOGINS" />
+                <ScalarProperty Name="NETWORKDOMAIN1" ColumnName="NETWORKDOMAIN1" />
+                <ScalarProperty Name="NETWORKUSERNAME1" ColumnName="NETWORKUSERNAME1" />
+                <ScalarProperty Name="NETWORKPASSWORD1" ColumnName="NETWORKPASSWORD1" />
+                <ScalarProperty Name="NETWORKDOMAIN2" ColumnName="NETWORKDOMAIN2" />
+                <ScalarProperty Name="NETWORKUSERNAME2" ColumnName="NETWORKUSERNAME2" />
+                <ScalarProperty Name="NETWORKPASSWORD2" ColumnName="NETWORKPASSWORD2" />
+                <ScalarProperty Name="NETWORKDOMAIN3" ColumnName="NETWORKDOMAIN3" />
+                <ScalarProperty Name="NETWORKUSERNAME3" ColumnName="NETWORKUSERNAME3" />
+                <ScalarProperty Name="NETWORKPASSWORD3" ColumnName="NETWORKPASSWORD3" />
+                <ScalarProperty Name="NETWORKDOMAIN4" ColumnName="NETWORKDOMAIN4" />
+                <ScalarProperty Name="NETWORKUSERNAME4" ColumnName="NETWORKUSERNAME4" />
+                <ScalarProperty Name="NETWORKPASSWORD4" ColumnName="NETWORKPASSWORD4" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

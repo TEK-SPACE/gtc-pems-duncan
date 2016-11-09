@@ -1,0 +1,96 @@
+﻿html {
+background:none repeat scroll 0 0 #FFFFFF;
+color:#000000;
+}
+.reset-defaults *, 
+.reset-defaults body,
+.reset-defaults div, 
+.reset-defaults dl, 
+.reset-defaults dt, 
+.reset-defaults dd, 
+.reset-defaults ul, 
+.reset-defaults ol, 
+.reset-defaults li, 
+.reset-defaults h1, 
+.reset-defaults h2, 
+.reset-defaults h3, 
+.reset-defaults h4, 
+.reset-defaults h5, 
+.reset-defaults h6,
+.reset-defaults pre, 
+.reset-defaults code, 
+.reset-defaults form, 
+.reset-defaults fieldset, 
+.reset-defaults legend, 
+.reset-defaults input, 
+.reset-defaults textarea, 
+.reset-defaults p, 
+.reset-defaults blockquote,
+.reset-defaults th,
+.reset-defaults td {
+margin:0;
+padding:0;
+}
+.reset-defaults table {
+border-collapse:collapse;
+border-spacing:0;
+}
+.reset-defaults fieldset, 
+.reset-defaults img {
+border:0 none;
+}
+.reset-defaults address, 
+.reset-defaults caption, 
+.reset-defaults cite, 
+.reset-defaults code, 
+.reset-defaults dfn, 
+.reset-defaults em, 
+.reset-defaults th, 
+.reset-defaults var {
+font-style:normal;
+font-weight:normal;
+}
+.reset-defaults li {
+list-style:none outside none;
+}
+.reset-defaults caption, 
+.reset-defaults th {
+text-align:left;
+}
+.reset-defaults h1, 
+.reset-defaults h2, 
+.reset-defaults h3, 
+.reset-defaults h4, 
+.reset-defaults h5, 
+.reset-defaults h6 {
+}
+.reset-defaults q:before, 
+.reset-defaults q:after {
+content:"";
+}
+.reset-defaults abbr, 
+.reset-defaults acronym {
+border:0 none;
+font-variant:normal;
+}
+.reset-defaults sup {
+vertical-align:text-top;
+}
+.reset-defaults sub {
+vertical-align:text-bottom;
+}
+.reset-defaults input, 
+.reset-defaults textarea, 
+.reset-defaults select {
+font-family:inherit;
+font-size:inherit;
+font-weight:inherit;
+}
+.reset-defaults input, 
+.reset-defaults textarea, 
+.reset-defaults select {
+font-size:100%;
+}
+.reset-defaults legend {
+color:#000000;
+}

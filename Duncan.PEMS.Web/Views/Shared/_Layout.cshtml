@@ -1,0 +1,114 @@
+﻿@* /******************* CHANGE LOG ************************************************************************************************
+    * DATE                 NAME                        DESCRIPTION
+    * ___________          ___________________        _________________________________________________________________________________________________________
+    *
+    * 12/12/2013           Sergey Ostrerov            Updated: syntax error in Javascript.
+    * 12/20/2013           Sergey Ostrerov            Enhancement - AssetID Change: Allow manually entering AssetID
+    * 01/06/2014           Sergey Ostrerov            Change Copyright year to current year.
+    * *****************************************************************************************************************************************************/ *@
+
+@using Duncan.PEMS.Entities.Errors
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie10 lt-ie9" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/css/main")
+
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/jquery.errordialog.js" type="text/javascript"> </script>
+    <script type="text/javascript" src="//use.typekit.net/hmq2dup.js"> </script>
+    <script type="text/javascript">
+ try {
+     Typekit.load();
+ } catch (e) {
+ } </script>
+    <!--[if lt IE 9]>
+        @Scripts.Render( "~/bundles/IEcompat" )
+    <![endif]-->
+</head>
+
+<body id="@ViewBag.BodyId">
+    <div id="wrapper">
+        <div id="wrapper2">
+            <header id="header">
+                <div id="logo"></div>
+                @{ Html.RenderAction("HeaderLinks", "Account"); }
+            </header>
+            <section id="content">
+                <div id="login-wrapper" class="cf">
+                    <!--no navigation-->
+                    <!--content-->
+                    <div id="login-center">
+                        <div id="login-title">
+                            @RenderSection("PageHeader", required: false)
+                        </div>
+                        <div id="login-box">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+
+                <footer id="footer">
+                    &copy; @DateTime.Now.Year CivicSmart, Inc<br />
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a href="@Url.Action( "Terms", "Account" )">Terms &amp; Conditions</a>
+                    }
+                </footer>
+            </section>
+        </div>
+    </div>
+
+    <div id="popupError">
+        <a id="popupErrorClose" class="errormessage-closeX">x</a>
+        <h1 id="errorTitle" class="errormessage-title">PEMS ERROR</h1>
+        <div id="errorCodeArea"></div>
+        <div id="errorArea" class="errormessage-text">
+            This section will have the error message
+        </div>
+
+        <div class="errormessage-closesection">
+            Press ESCAPE, Click on X (right-top) or Click Out from the popup to close the popup!
+        </div>
+        <div class="errormessage-print">
+            <input type="button" id="btnErrorPrint" title="Print" value="Print Message" />
+            <input type="button" id="btnCloseError" title="Close" value="Close" onclick=" javascript: disablePopup(); " />
+        </div>
+    </div>
+
+    <div id="backgroundPopup"></div>
+    @{
+        if (ViewData["__errorItem"] != null)
+        {
+            var item = (ErrorItem)ViewData["__errorItem"];
+            string errorMessage = item.ErrorMessage;
+            string errorCode = item.ErrorCode;
+            ViewData["__errorItem"] = null;
+            <script type="text/ecmascript">
+                var message = '@errorMessage';
+                var code = '@errorCode';
+                loadPopup(code, message);
+            </script>
+        }
+    }
+
+    <script type="text/javascript">
+        // executes when the complete page is fully loaded, including all frames, objects and images.
+        $(window).load(function () {
+            // auto-focus first text box on page
+            $('input[type=text], input[type=password]').filter(':visible:enabled').first().focus();
+        });
+    </script>
+</body>
+
+</html>

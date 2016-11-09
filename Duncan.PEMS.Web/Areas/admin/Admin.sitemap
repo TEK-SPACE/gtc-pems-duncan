@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0 MvcSiteMapSchema.xsd"
+            enableLocalization="true" >
+
+  <mvcSiteMapNode title="Home" controller="Home" action="Index" area="admin" >
+    <mvcSiteMapNode title="Customers" controller="Customers" action="Index" area="admin" >
+      <mvcSiteMapNode title="Add" controller="Customers" action="Add" area="admin" />
+      <mvcSiteMapNode title="Add City Group" controller="Customers" action="AddCityGroup" area="admin" />
+      <mvcSiteMapNode title="Add Group Member" controller="Customers" action="AddGroupMember" area="admin" />
+      <mvcSiteMapNode title="Details" controller="Customers" action="Details" area="admin" />
+      <mvcSiteMapNode title="Edit Assets" controller="Customers" action="EditAssets" area="admin" />
+      <mvcSiteMapNode title="Edit City Group" controller="Customers" action="EditCityGroup" area="admin" />
+      <mvcSiteMapNode title="Edit Customer" controller="Customers" action="EditCustomer" area="admin" />
+      <mvcSiteMapNode title="Edit Custom Grids" controller="Customers" action="EditCustomGrids" area="admin" />
+      <mvcSiteMapNode title="Edit Custom Labels" controller="Customers" action="EditCustomLabels" area="admin" />
+      <mvcSiteMapNode title="Edit Event Codes" controller="Customers" action="EditEventCodes" area="admin" />
+      <mvcSiteMapNode title="Edit Payments" controller="Customers" action="EditPayments" area="admin" />
+      <mvcSiteMapNode title="Edit Rules" controller="Customers" action="EditRules" area="admin" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Tarrifs" controller="Tarrifs" action="TarrifIndex" area="admin" />
+    <mvcSiteMapNode title="Users" controller="Users" action="CustomerRoles" area="admin" />
+    <mvcSiteMapNode title="Tarrifs" controller="Tarrifs" action="TarrifIndex" area="admin" />
+    <mvcSiteMapNode title="Users" controller="Users" action="CustomerRoles" area="admin" />
+    <mvcSiteMapNode title="Utilities" controller="Utilities" action="RbacBulkUpdate" area="admin" />
+    <mvcSiteMapNode title="Versions" controller="Versions" action="AssetVersion" area="admin" />
+  </mvcSiteMapNode>
+</mvcSiteMap>

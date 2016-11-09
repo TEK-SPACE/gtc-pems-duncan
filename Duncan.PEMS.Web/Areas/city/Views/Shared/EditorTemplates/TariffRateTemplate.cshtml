@@ -1,0 +1,244 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Tariffs.TariffRateModel
+
+@{
+    Layout = null;
+}
+
+    @Html.HiddenFor( m => m.CustomerId )
+    @Html.HiddenFor( m => m.PerTimeUnitName )
+    @Html.HiddenFor( m => m.PerTimeUnitId )
+    @Html.HiddenFor( m => m.MaxTimeUnitName )
+    @Html.HiddenFor( m => m.MaxTimeUnitId )
+    @Html.HiddenFor( m => m.LinkedTariffRateName )
+    @Html.HiddenFor( m => m.LinkedTariffRateId )
+    @Html.HiddenFor( m => m.TariffRateId )
+    @Html.HiddenFor( m => m.RateNameIndex )
+
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Name" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @Html.EditorFor(m => m.RateName, new {@class = "k-edit-field"} )
+    </div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Description" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @Html.EditorFor(m => m.RateDescription, new {@class = "k-edit-field"} )
+    </div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Rate in Cents" )@Html.Raw( ": " )</div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "RateInCents" ).Min( 0 ).Max( 9999 ).Format( "n0" ).Value( Model.RateInCents ))                    
+    </div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Per Time Value" )@Html.Raw( ": " )</div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "PerTimeValue" ).Min( 0 ).Max( 60 ).Format( "n0" ).Value( Model.PerTimeValue ))                    
+    </div>
+    <div style="float: left; width: 90px">
+    <div id="ddlPerTimeUnit" class = "k-edit-field"></div>
+        <div class = "required_asterisk"  style="float: right">*</div>
+    </div>
+</div>
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Max Time Value" )@Html.Raw( ": " )</div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "MaxTimeValue" ).Min( 0 ).Max( 60 ).Format( "n0" ).Value( Model.MaxTimeValue ))                    
+    </div>
+    <div style="float: left; width: 90px">
+    <div id="ddlMaxTimeUnit" class = "k-edit-field"></div>
+    </div>
+</div>
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Grace Period" )@Html.Raw( ": " )</div>
+    <div style="float: left; width: 90px">
+        @(Html.Kendo().NumericTextBox<double>().Name( "GracePeriodMinute" ).Min( 0 ).Max( 60 ).Format( "n0" ).Value( Model.GracePeriodMinute ))                    
+    </div>
+</div>
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left; padding-top: 3px">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Lock Max Time" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        @Html.CheckBoxFor(m => m.LockMaxTime)
+    </div>
+</div>
+
+
+<div class="clear">
+    <div class="k-edit-label" style="float: left">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Linked Rate" )@Html.Raw( ": " )</div>
+    <div style="float: left">
+        <div id="ddlLinkedRate" class = "k-edit-field"></div>
+    </div>
+</div>    
+
+
+
+<br/>
+<br/>
+<br/>
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function() {
+
+
+        SelectTimeUnits();
+
+        GetNextRateName();
+    });
+    
+
+    function GetNextRateName() {
+        $.ajax({
+            url: '@Url.Action( "GetSessionNextTariffRateName", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val() },
+            type: 'POST',
+            success: GetNextRateNameSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+    function GetNextRateNameSuccess(data, textStatus, jqXHR) {
+
+        if ($("#RateName").val().length <= 0) {
+            $("#RateName").val(data.RateName);
+            $("#RateNameIndex").val(data.RateNameIndex);
+        }
+
+    }
+
+    function SelectTimeUnits() {
+
+        $.ajax({
+            url: '@Url.Action( "GetTimeUnits", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val() },
+            type: 'POST',
+            success: SelectTimeUnitsSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+
+    function SelectTimeUnitsSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'PerTimeUnitList' name = 'PerTimeUnitList' onchange = 'OnPerTimeUnitChange();'>";
+        var timeUnit = $("#PerTimeUnitId").val();
+
+        $.each(data.list, function (i, item) {
+            divContent += "<option value = \"" + item.Value + "\"";
+            if (item.Value == timeUnit)
+                divContent += " selected";
+            divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlPerTimeUnit").html(divContent);
+            
+        divContent = "<select class = 'customer_text' id = 'MaxTimeUnitList' name = 'MaxTimeUnitList' onchange = 'OnMaxTimeUnitChange();'>";
+        timeUnit = $("#MaxTimeUnitId").val();
+
+        $.each(data.list, function (i, item) {
+            divContent += "<option value = \"" + item.Value + "\"";
+            if (item.Value == timeUnit)
+                divContent += " selected";
+            divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlMaxTimeUnit").html(divContent);
+
+
+        SelectLinkableRates();
+
+    }
+
+
+    function OnPerTimeUnitChange(e) {
+
+        $("#PerTimeUnitName").val($("#PerTimeUnitList option:selected").text());
+        $("#PerTimeUnitId").val($("#PerTimeUnitList option:selected").val());        
+
+    }
+
+    function OnMaxTimeUnitChange(e) {
+
+        $("#MaxTimeUnitName").val($("#MaxTimeUnitList option:selected").text());
+        $("#MaxTimeUnitId").val($("#MaxTimeUnitList option:selected").val());
+
+    }
+
+
+
+    function SelectLinkableRates() {
+
+        $.ajax({
+            url: '@Url.Action( "GetLinkableRates", "Tariffs" )',
+            data: { customerId: $("#CustomerId").val(), currentRateId: $("#TariffRateId").val() },
+            type: 'POST',
+            success: SelectLinkableRatesSuccess,
+            error: function (data) {
+                pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.responseText);
+            },
+        });
+    }
+
+
+
+    function SelectLinkableRatesSuccess(data, textStatus, jqXHR) {
+
+        var divContent = "<select class = 'customer_text' id = 'LinkableRateList' name = 'LinkableRateList' onchange = 'OnLinkableRateChange();'>";
+        var linkedRate = $("#LinkedTariffRateId").val();
+
+        $.each(data.list, function (i, item) {
+                divContent += "<option value = \"" + item.Value + "\"";
+                if (item.Value == linkedRate) {
+                    divContent += " selected";
+                }
+                divContent += ">" + item.Text + "</option>";
+        });
+
+        divContent += "</select>";
+        $("#ddlLinkedRate").html(divContent);
+           
+    }
+
+
+    function OnLinkableRateChange(e) {
+
+        $("#LinkedTariffRateName").val($("#LinkableRateList option:selected").text());
+        $("#LinkedTariffRateId").val($("#LinkableRateList option:selected").val());
+    }
+
+
+</script>

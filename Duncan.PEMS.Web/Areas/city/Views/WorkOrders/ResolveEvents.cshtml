@@ -1,0 +1,149 @@
+﻿@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Entities.WorkOrders
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherWorkOrderDetailsModel
+@{
+    ViewBag.Title = "Resolve Events";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Resolve Events")</span></h1>
+}
+
+   @using (Html.BeginForm("DPResolveEvents", "WorkOrders", FormMethod.Get, new { @class = "admin-form", @id = "woResolveForm" }))
+   {
+         @Html.HiddenFor(model => model.WorkOrderId)
+    <div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Information")</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order ID"): </div>
+            @Html.DisplayFor(m => m.WorkOrderId, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.WorkOrderId)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Status"): </div>
+            @Html.DisplayFor(m => m.Status, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Status)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created Date"): </div>
+            @Html.DisplayFor(m => m.CreationDateDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.CreationDate)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Priority"): </div>
+            @Html.DisplayFor(m => m.PriorityDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Priority)
+            @Html.HiddenFor(model => model.PriorityDisplay)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"): </div>
+            @Html.DisplayFor(m => m.DeadlineDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Deadline)&nbsp;
+        </div>
+    </div>
+       <div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type"): </div>
+               @Html.DisplayFor(m => m.WorkOrderAsset.AssetType, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.WorkOrderAsset.AssetType)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"): </div>
+               @Html.DisplayFor(m => m.WorkOrderAsset.AssetId, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.WorkOrderAsset.AssetId)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area"): </div>
+               @Html.DisplayFor(m => m.AreaId2Display, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.AreaId2Display)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"): </div>
+               @Html.DisplayFor(m => m.Location, new { @class = "customer_text" }) 
+               @Html.HiddenFor(model => model.Location)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cross Street"): </div>
+               @Html.DisplayFor(m => m.CrossStreet, new { @class = "customer_text" }) 
+               @Html.HiddenFor(model => model.CrossStreet)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone"):</div>
+               <div class="customer_text ">    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                   @Html.HiddenFor(model => model.Zone)&nbsp;</div>
+           </div>
+       </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolution")</div>
+          <div class="clear">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Events To Resolve"):</div>
+        <div class="clear" id="event-detail">
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td colspan="2" class="event-detail-header">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Event Detail")</td>
+                </tr>
+                @{
+                    if (Model.WorkOrderEvents.Any())
+                    {
+                        bool even = false;
+                        foreach (var workOrderEvent in Model.WorkOrderEvents)
+                        {
+                            string classname = even ? "even" : "";
+
+                            <tr class="event-detail-row @classname">
+                                <td>
+                                   @workOrderEvent.EventDesc - @workOrderEvent.EventCode - @workOrderEvent.StatusDisplay
+                                </td>
+                                <td>
+                                    <input name="eventIds" value="@workOrderEvent.WorkOrderEventId" class="checkbox" type="checkbox">
+                                </td>
+                            </tr>
+                            even = !even;
+                        }
+                    }
+                    else
+                    {
+                        <tr class="event-detail-row ">
+                             <td colspan="2">
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")</div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>     
+       <div class="customer_actions">
+           <button type="submit" name="submitButton" class="button important" value="Resolve">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Resolve")</button>
+           @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return"), "WorkOrderDetail", new { workOrderId = Model.WorkOrderId}, new { @class = "button previous returnButton" })
+       </div>
+   }
+       
+<style>
+    .k-grid-content {
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .k-window
+    {
+        max-width: 100% !important;
+         }
+
+     .k-upload-button {
+            visibility: hidden;
+         height: 1px;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+       .parts span{
+            width: auto !important;
+            float: left !important;
+        }
+
+</style>

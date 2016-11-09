@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Duncan.PEMS.Framework.Controller.BaseController">
+    <Position X="0.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>QAMhAAAGAAAAAAAAAQIgQAICJBACAAAAAwAgI4AAAAA=</HashCode>
+      <FileName>Controller\BaseController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Framework.Controller.PemsController">
+    <Position X="0.5" Y="7.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AgAEAIAAAAAEAYCBIIAAQQAIIwAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Controller\PemsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Framework.ViewEngine.PemsRazorViewEngine">
+    <Position X="4.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAEAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>ViewEngine\PemsRazorViewEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Framework.ViewEngine.PemsWebFormViewEngine">
+    <Position X="4.75" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAEAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>ViewEngine\PemsWebFormViewEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Duncan.PEMS.Framework.ViewEngine.ViewEngineUtility">
+    <Position X="4.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>ViewEngine\ViewEngineUtility.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

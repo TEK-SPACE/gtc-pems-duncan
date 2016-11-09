@@ -1,0 +1,124 @@
+﻿@using Duncan.PEMS.Entities.Roles
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@model EditRoleModel
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" )</a>  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Update Role" )</span></h1>
+}
+
+<div >
+    <p>Modify permission settings for this role</p>
+</div>
+@using (Html.BeginForm( "Edit", "Roles", FormMethod.Post, new {@class = "admin-form"} ))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <ul>
+        <li class="labelLi">
+            <label for="CustomerName">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ):</label>
+            @Html.DisplayTextFor( m => m.CustomerName )
+        </li>
+        <li class="labelLi">
+            <label for="RoleName">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role Name" ):</label>
+            @Html.DisplayTextFor( m => m.RoleName )
+            @Html.HiddenFor( m => m.RoleName )
+            @Html.HiddenFor( m => m.CustomerInternalName )
+        </li>
+    </ul>
+
+    @(Html.Kendo().TreeView()
+          .Name( "CurrentGrid" )
+          .Checkboxes( cb => cb.CheckChildren( true ) )
+          .ExpandAll( true )
+          .DragAndDrop( false )
+          .Events( events => events.Collapse( "treeview_collapse" ) )
+          .Checkboxes( x => x.CheckChildren( true ) )
+          .BindTo( Model.Items, mapping => mapping.For<AuthorizationItem>( binding => binding
+                                                                                          .Children( c => c.Items ) // The "child" items will be bound to the the "Items" property
+                                                                                          .ItemDataBound( (item, c) =>
+                                                                                                              {
+                                                                                                                  item.Text = c.Name + (c.Required == true ? " (required)" : " ");
+                                                                                                                  item.Checked = c.Authorized;
+                                                                                                                  item.Id = c.Id.ToString();
+                                                                                                              } )
+                                               // Map "Items" properties to TreeViewItem properties
+                                               )
+          )
+          )
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //set your click event, so when they click on text, we remove the selected state 
+            $("#CurrentGrid").on("click", ".k-in", function(e) {
+                e.preventDefault();
+                treeview_click(e);
+            });
+
+        });
+
+        function treeview_collapse(e) {
+            //Handle the collapse event
+            e.preventDefault();
+        }
+
+        function treeview_click(e) {
+            //when the user clicks a work, it seelects the item, we need to unselect the item
+            var treeview = $("#CurrentGrid").data("kendoTreeView");
+            //gets currently selected <li> element
+            var selectedITem = treeview.select().find("span.k-state-selected");
+            selectedITem.removeClass("k-state-selected");
+
+            //   UpdatePartials();
+        }
+
+        function UpdatePartials() {
+            $('#CurrentGrid  :checkbox').each(function() {
+                if (this.indeterminate) {
+                    var el = $(this);
+                    el.prop('indeterminate', false);
+                    el.prop('checked', true);
+                }
+            });
+        }
+
+    </script>
+
+    <div class="button-Container">
+        <input type="submit" name="submitButton" class="save-button" onclick=" UpdatePartials(); "  value="Update Role" />
+        <input type="submit" name="submitButton"  value="Copy Role" />
+        <input type="submit" class="previous-Button" name="submitButton"  value="Return" />
+       
+    </div>
+}
+
+
+@section Styles
+{
+    <style type="text/css">
+        ul.k-group li.k-item {
+            float: left;
+            margin-bottom: 20px;
+            width: 40%;
+        }
+
+        ul.k-group li.k-item ul.k-group li.k-item {
+            float: none;
+            margin: 0;
+            width: auto;
+        }
+
+        .k-icon { background-image: none; }
+
+        #CurrentGrid > ul > li > div { font-weight: bold !important; }
+
+        #CurrentGrid > ul > li > div > span input:first-of-type { visibility: hidden !important; }
+    
+    </style>
+}

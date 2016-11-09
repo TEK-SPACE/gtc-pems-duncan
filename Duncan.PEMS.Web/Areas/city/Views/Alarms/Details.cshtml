@@ -1,0 +1,339 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@inherits WebViewPage<Duncan.PEMS.Entities.Alarms.AlarmModel>
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Alarm Details" );
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .customer_text_label { width: 215px !important; }
+
+        .validationSum-container { height: auto !important; }
+    </style>
+}
+
+@section Scripts 
+{
+    @Scripts.Render( "~/bundles/kendo" );
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#clearAlarmActions").hide();
+
+            // If 'returnUrl' exists in session, change the 'Return' button to link to the returnUrl
+            if (window.sessionStorage.returnUrl) {
+                // Update the return button url
+                $(".returnButton").attr("href", window.sessionStorage.returnUrl + "?rtn=true");
+            }
+        });
+
+        function ToggleAlarmSection() {
+            $("#clearmAlarmSelection").toggle();
+            $("#clearAlarmActions").toggle();
+        }
+
+        function CheckTimes() {
+            var timeCleared = $("#TimeCleared").data("kendoDateTimePicker");
+            if (!timeCleared) {
+                alert("Time Cleared Must Be A Valid Date");
+                return false;
+            }
+
+            var $closureNotes = $("#ClosureNotes").val();
+            if ($closureNotes == '') {
+                alert("Closure Notes Required");
+                return false;
+            }
+
+            var $resolutionCode = $("#ResolutionCode").val();
+            if ($resolutionCode == '-1') {
+                alert("Resolution Code Required");
+                return false;
+            }
+
+            var $technicianId = $("#TechnicianID").val();
+            if ($technicianId == '-1') {
+                alert("Technician Required");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
+    
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Alarm Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Alarm Transaction Details" )</span></h1>
+}
+
+   @using (Html.BeginForm( "Details", "Alarms", FormMethod.Post, new {@class = "admin-form", @id = "actionForm"} ))
+{
+         @Html.HiddenFor( model => model.CustomerId )
+         @Html.HiddenFor( model => model.AreaId )
+         @Html.HiddenFor( model => model.EventSource )
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Status" ): <span class="customer_status_state state_@Model.AlarmStatus.ToLower()">@Model.AlarmStatus</span></div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset / Location" )</div>
+
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset ID" ): </div>
+            @Html.DisplayFor( m => m.AssetID, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AssetID )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Name" ): </div>
+            @Html.DisplayFor( m => m.AssetName, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AssetName )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" ): </div>
+            @Html.DisplayFor( m => m.Area, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Area )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" ): </div>
+            @Html.DisplayFor( m => m.Suburb, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Suburb )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" ): </div>
+            @Html.DisplayFor( m => m.Street, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Street )&nbsp;
+        </div>
+       
+    </div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" ): </div>
+            @Html.DisplayFor( m => m.AssetType, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AssetType )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bays Affected" ): </div>
+            @Html.DisplayFor( m => m.BaysAffected, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.BaysAffected )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" ): </div>
+            @Html.DisplayFor( m => m.Zone, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Zone )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Lat/Long" ): </div>
+            @Html.DisplayForLatLong( m => m.Latitude, new {@class = "customer_text"} ) / @Html.DisplayForLatLong( m => m.Longitude, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.Latitude )&nbsp;
+            @Html.HiddenFor( model => model.Longitude )&nbsp;
+
+        </div>
+          <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Operational Status" ):@Html.Tooltip( "OperationalStatus" )</div>
+            <div class="customer_text long_text">    @Html.DisplayFor( m => m.OperationalStatus, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.OperationalStatus )&nbsp;</div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Information" )</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Id" ): </div>
+            @Html.DisplayFor( m => m.AlarmID, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AlarmID )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Code" ): </div>
+            @Html.DisplayFor( m => m.AlarmCode, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AlarmCode )&nbsp;
+        </div>
+         <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Abbreviated Description" ): </div>
+            <div class="customer_text long_text">    @Html.DisplayFor( m => m.AlarmDesription, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.AlarmDesription )&nbsp;</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Long Description" ): </div>
+            <div class="customer_text long_text">    @Html.DisplayFor( m => m.AlarmDesriptionVerbose, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.AlarmDesriptionVerbose )&nbsp;</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Entry Notes" ): </div>
+            <div class="customer_text long_text">    @Html.DisplayFor( m => m.EntryNotes, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.EntryNotes )&nbsp;</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Severity" ):@Html.Tooltip( "AlarmSeverity" )</div>
+            @Html.DisplayFor( m => m.AlarmSeverity, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AlarmSeverity )&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Source" ):@Html.Tooltip( "AlarmSource" ) </div>
+            @Html.DisplayFor( m => m.AlarmSource, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.AlarmSource )&nbsp;
+        </div>
+     
+    </div>
+    <div class="two-column">
+         <div class="detailRow">
+                   <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Occured" ): </div>
+                   <div class="customer_text"> @FormatHelper.FormatDateTime( Model.TimeOccured, true )
+                          @if (Model.TimeTypes != null && Model.TimeTypes.Any() && Model.TimeTypes.Any(x => x.Description.Contains("Peak")))
+                          {
+                            @:-  @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Peak" )
+                          }
+                       @Html.HiddenFor( model => model.TimeOccured )&nbsp;
+                       @Html.HiddenFor( model => model.OccuranceTimeTicks )&nbsp;</div>
+               </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Notified" ): </div>
+            <div class="customer_text"> @FormatHelper.FormatDateTime( Model.TimeNotified, true )
+                @Html.HiddenFor( model => model.TimeNotified )&nbsp;</div>
+        </div>
+           <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Service Target Time" ):@Html.Tooltip( "ServiceTargetTime" )</div>
+            <div class="customer_text"> @FormatHelper.FormatDateTime( Model.ServiceTargetTime, true )
+            @Html.HiddenFor( model => model.ServiceTargetTime )&nbsp;</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Remaining Until Target" ):@Html.Tooltip( "TimeRemainingUntilTarget" )</div>
+            @Html.DisplayFor( m => m.TimeRemainingTillTargetTimeDisplay, new {@class = "customer_text"} )
+            @Html.HiddenFor( model => model.TimeRemainingTillTargetTimeDisplay )&nbsp;
+        </div>
+       
+@*        @if ( Model.TimeTypes != null && Model.TimeTypes.Any() && Model.TimeTypes.Any(x=>x.Description.Contains("Peak")) )
+        {
+            <div class="detailRow">
+                <div class="customer_text_label"><span style="text-decoration: underline">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Tier" )</span>@Html.Tooltip( "TimeTier" )</div><br/>
+                @{
+                    IEnumerable<string> timeTypes = from x in Model.TimeTypes select x.Description;
+                    string csv = String.Join( ", ", timeTypes );
+                }
+                <div class="customer_text_label">@Html.Raw( csv )</div>
+            </div>
+        }*@
+    </div>
+    <div class="clear">
+       
+       
+    </div>
+
+    if ( Model.IsClosed )
+    {
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure / Repair" )</div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Resolution Code" ):@Html.Tooltip( "ResolutionCode" )</div>
+                @Html.DisplayFor( m => m.ResolutionCodeDesc, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.ResolutionCodeDesc )
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User ID" ): </div>
+                @Html.DisplayFor( m => m.ClosedBy, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.ClosedBy )&nbsp;
+            </div>
+          
+              <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Technician ID" ): </div>
+                @Html.DisplayFor( m => m.TechnicianDisplay, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.TechnicianID )&nbsp;
+            </div>
+        </div>
+        <div class="two-column">
+              <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Cleared" ):@Html.Tooltip( "ZeroOutTime" )</div>
+                <div class="customer_text"> @FormatHelper.FormatDateTime( Model.TimeCleared, true )
+                    @Html.HiddenFor( model => model.TimeCleared )&nbsp;</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure Notification Time" ): </div>
+                <div class="customer_text"> @FormatHelper.FormatDateTime( Model.ClosureNotification, true )
+                    @Html.HiddenFor( model => model.ClosureNotification )&nbsp;</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Service Designation" ):</div>
+                @Html.DisplayFor( m => m.ServiceDesignation, new {@class = "customer_text"} )
+                @Html.HiddenFor( model => model.ServiceDesignation )&nbsp;
+            </div>
+        </div>
+        <div class="clear">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure Notes" ): </div>
+                <div class="customer_text long_text">  @Html.DisplayFor( m => m.ClosureNotes, new {@class = "customer_text"} )
+                    @Html.HiddenFor( model => model.ClosureNotes )&nbsp;</div>
+            </div>
+        </div>
+        <div class="customer_actions">
+            @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous returnButton"} )
+        </div>
+    }
+    else
+    {
+        <div id="clearmAlarmSelection">
+            <div class="customer_actions">
+                <button type="submit" name="submitButton" class="button important" onclick=" ToggleAlarmSection(); return false; " value="Clear Alarm">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Clear Alarm" )</button>
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous returnButton"} )
+            </div>
+        </div>
+        <div id="clearAlarmActions">
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure / Repair" )</div>
+            <div class="two-column">
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Resolution Code" ):@Html.Tooltip( "ResolutionCode" )</div>
+                    @Html.DropDownListFor( m => m.ResolutionCode, new SelectList( Model.ResolutionCodes, "Value", "Text" ) )
+                    <span class="required_asterisk">*</span>
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "User ID" ): </div>
+                    @Html.DisplayFor( m => m.ClosedBy, new {@class = "customer_text"} )
+                    @Html.HiddenFor( model => model.ClosedBy )&nbsp;
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Technician ID" ): </div>
+                    @Html.DropDownListFor( m => m.TechnicianID, new SelectList( Model.TechnicianIDs, "Value", "Text" ) )
+                    <span class="required_asterisk">*</span>
+                </div>
+            </div>
+            <div class="two-column">
+                  <div class="detailRow">
+                            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Cleared" ):@Html.Tooltip( "ZeroOutTime" )</div>
+                            @(Html.Kendo().DateTimePicker()
+                                  .Name( "TimeCleared" )
+                                  .Value(@Model.TimeCleared)
+                                  )
+                            <span class="required_asterisk">*</span>
+                        </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure Notification Time" ): </div>
+                    @FormatHelper.FormatDateTime( Model.ClosureNotification, true )
+                    @Html.HiddenFor( model => model.ClosureNotification )&nbsp;
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Service Designation" ): </div>
+                    @Html.DisplayFor( m => m.ServiceDesignation, new {@class = "customer_text"} )
+                    @Html.HiddenFor( model => model.ServiceDesignation )&nbsp;
+                    @Html.HiddenFor( model => model.ServiceDesignationId )
+                </div>
+              
+            </div>
+            <div class="clear">
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Closure Notes" ): </div>
+                    <div class="customer_text long_text">  @Html.TextAreaFor( m => m.ClosureNotes, new {@class = "customer_text_area long_text_area", rows = "4"} )
+                        <span class="required_asterisk">*</span>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="customer_actions">
+                <button type="submit" name="submitButton" onclick=" return CheckTimes(); " class="button important" value="Save">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+                @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new { @class = "button previous returnButton"} )      
+            </div>
+
+        </div>
+    }
+}

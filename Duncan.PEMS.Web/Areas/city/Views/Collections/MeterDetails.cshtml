@@ -1,0 +1,279 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Collections.AggregationMeterDetails
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Meter Detail");
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> /   <a href="Aggregation">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Collection Management")</a>  / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Collection Route Aggregation Meter Details")</span></h1>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter and Location Information")</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Id"): </div>
+        @Html.DisplayFor(m => m.MeterId, new { @class = "customer_text" })
+        @Html.HiddenFor( model => model.MeterId )
+        @Html.HiddenFor(model => model.CustomerId)
+        @Html.HiddenFor(model => model.CollectionDate)
+        @Html.HiddenFor(model => model.CollectionRunId)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Name"): </div>
+        @Html.DisplayFor(m => m.MeterName, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.MeterName)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"): </div>
+        @Html.DisplayFor(m => m.Street, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.Street)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area"): </div>
+        @Html.DisplayFor(m => m.Area, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.AreaId)
+        @Html.HiddenFor(model => model.Area)
+        @Html.HiddenFor(model => model.AreaId2)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone"): </div>
+        @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.ZoneId)
+        @Html.HiddenFor(model => model.Zone)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb"): </div>
+        @Html.DisplayFor(m => m.Suburb, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.Suburb)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Latitude"): </div>
+        @Html.DisplayForLatLong(m => m.Latitude, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.Latitude)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Longitude"): </div>
+        @Html.DisplayForLatLong(m => m.Longitude, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.Longitude)
+        &nbsp;
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collection Information")</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cashbox ID Removed"): </div>
+        @Html.DisplayFor(m => m.CashBoxIdRemoved, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CashBoxIdRemoved)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Time Active"): </div>
+        @Html.DisplayFor(m => m.TimeActive, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.TimeActive)
+        &nbsp;
+    </div>
+    
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cashbox ID Inserted"): </div>
+        @Html.DisplayFor(m => m.CashBoxIdInserted, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CashBoxIdInserted)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Sequence #"): </div>
+        @Html.DisplayFor(m => m.SequenceNumber, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.SequenceNumber)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Insertion Time-Meter"): </div>
+          @if (Model.InsertionTimeMeter.GetValueOrDefault().Day < 10)
+      {
+          @:&nbsp;
+      } @Html.DisplayFor(m => m.InsertionTimeMeter, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.InsertionTimeMeter)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Percentage Full"): </div>
+        @Html.DisplayFor(m => m.PercentageFull, new { @class = "customer_text" })%
+        @Html.HiddenFor(model => model.PercentageFull)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Removal Time-Meter"): </div>
+         @if (Model.RemovalTimeMeter.Day < 10 && Model.RemovalTimeMeter.Year ==1)
+      {
+          @:&nbsp;
+      } 
+        else
+         { 
+        @Html.DisplayFor(m => m.RemovalTimeMeter, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.RemovalTimeMeter)
+@:&nbsp;
+         }
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Version"): </div>
+        @Html.DisplayFor(m => m.Version, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.Version)
+        &nbsp;
+    </div>
+    @*<div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Insertion Time-Chip"): </div>
+         @if (Model.InsertionTimeChip.GetValueOrDefault().Day < 10)
+      {
+          @:&nbsp;
+      } @Html.DisplayFor(m => m.InsertionTimeChip, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.InsertionTimeChip)
+        &nbsp;
+    </div>*@
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collector ID"): </div>
+        @Html.DisplayFor(m => m.CollectorId, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CollectorId)
+        &nbsp;
+    </div>
+      <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Read Time"): </div>
+        @if (Model.ReadTime.GetValueOrDefault().Day < 10)
+      {
+          @:&nbsp;
+      } @Html.DisplayFor(m => m.ReadTime, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.ReadTime)
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Collector ID"): </div>
+        @Html.DisplayFor(m => m.CollectorId, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CollectorId)
+        &nbsp;
+    </div>
+   
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operator ID"): </div>
+        @Html.DisplayFor(m => m.OperatorId, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.OperatorId)
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Transaction Log File Name"): </div>
+        @Html.DisplayFor(m => m.TransactionLogFileName, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.TransactionLogFileName)
+        &nbsp;
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Revenue Collected")</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Meter Amount"): </div>
+        @Html.DisplayFor(m => m.MeterAmount, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.MeterAmount)
+        &nbsp;
+    </div> 
+     <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Difference Meter-Vendor"): </div>
+        @Html.DisplayFor(m => m.DifferenceMeterVendor, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.DifferenceMeterVendor)
+        &nbsp;
+    </div> 
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vendor Amount"): </div>
+        @Html.DisplayFor(m => m.VendorAmount, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.VendorAmount)
+        &nbsp;
+    </div>
+    @*<div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Difference Meter-Chip"): </div>
+        @Html.DisplayFor(m => m.DifferenceMeterChip, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.DifferenceMeterChip)
+        &nbsp;
+    </div>*@
+    @*<div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Chip Amount"): </div>
+        @Html.DisplayFor(m => m.ChipAmount, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.ChipAmount)
+        &nbsp;
+    </div>*@
+    @*<div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Difference Vendor-Chip"): </div>
+        @Html.DisplayFor(m => m.DifferenceVendorChip, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.DifferenceVendorChip)
+        &nbsp;
+    </div>*@
+    
+        @Html.HiddenFor(model => model.CoinType1Count)
+        @Html.HiddenFor(model => model.CoinType3Count)
+        @Html.HiddenFor(model => model.CoinType2Count)
+        @Html.HiddenFor(model => model.CoinType4Count)
+        @Html.HiddenFor(model => model.CoinType5Count)
+    
+    if (Model.DisplayType1)
+    {
+         <div class="two-column">
+        <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType1, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType1Count, new { @class = "customer_text" })
+        &nbsp;
+    </div>
+    }
+
+    if (Model.DisplayType2)
+    {
+           <div class="two-column">
+              <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType2, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType2Count, new { @class = "customer_text" })
+        &nbsp;
+    </div>
+    }
+
+    if (Model.DisplayType3)
+    {
+         <div class="two-column">
+             <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType3, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType3Count, new { @class = "customer_text" })
+        &nbsp;
+    </div>
+    }
+    if (Model.DisplayType4)
+    {
+         <div class="two-column">
+             <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType4, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType4Count, new { @class = "customer_text" })
+        &nbsp;
+    </div>
+    }
+    if (Model.DisplayType5)
+    {
+        <div class="two-column">
+        <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType5, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType5Count, new { @class = "customer_text" })
+        &nbsp;
+    </div>
+    }
+    if (Model.DisplayType6)
+    {
+         <div class="two-column">
+               <div class="customer_text_label">  @Html.DisplayFor(m => m.DisplayNameType6, new { @class = "customer_text" }): </div>
+        @Html.DisplayFor(m => m.CoinType6Count, new { @class = "customer_text" })
+        @Html.HiddenFor(model => model.CoinType6Count)
+        &nbsp;
+    </div>
+    }
+  
+    
+   
+   
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button previous" value="Cancel">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+    </div>
+}

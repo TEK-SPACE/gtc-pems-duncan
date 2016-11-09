@@ -1,0 +1,94 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Roles.CopyRoleModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" )</a>  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Copy Role" )</span></h1>
+}
+
+@using (Html.BeginForm( "Copy", "Roles", FormMethod.Post, new {@class = "admin-form", @id = "copyRoleForm"} ))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    @Html.HiddenFor( c => c.CustomerInternalName )
+    @Html.HiddenFor( c => c.CustomerId )
+    @Html.HiddenFor( c => c.CustomerName )
+
+    <div id="toCustomer">
+        <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "FROM Role Name" ): </span>
+        <select id="ddlRoleName" class="filter-dropdown" name="ddlRoleName">
+            <option value="All">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "All" )</option>
+        </select><br/>
+        <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "TO Role Name" ):  </span>
+        @Html.TextBoxFor( x => x.ToRoleName, new {@class = "textBox"} ) <span id="requiredRoleError" class="error">* @HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "Required" ).</span> <span id="existingRoleError" class="error">* @HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "A role with this name already exists" ).</span>
+    </div>
+
+    <button type="submit" name="submitButton" class="button important" onclick=" return CheckRoles(); " value="Create Role">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create Role" )</button>
+    <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#requiredRoleError").hide();
+            $("#existingRoleError").hide();
+            LoadRoles();
+        });
+
+        function LoadRoles() {
+            //get roles based on selected client
+            var $customerId = $("#CustomerId").val();
+            $.post('/shared/Roles/GetRoles?cid=' + $customerId, OnRolesLoaded);
+        }
+
+        function OnRolesLoaded(data) {
+
+            var $select = $("#ddlRoleName");
+            $select.html('');
+            for (var index = 0; index < data.length; index++) {
+                var option = data[index];
+                $select.append($('<option></option>').val(option.Text).html(option.Text));
+            }
+            var selectedRoleName = '@ViewBag.RoleName';
+            if (selectedRoleName != '') {
+                $("#ddlRoleName").find("option:contains('" + selectedRoleName + "')").each(function() {
+                    if ($(this).text() == selectedRoleName) {
+                        $(this).attr("selected", "selected");
+                    }
+                });
+            }
+        }
+
+        var createRole = false;
+
+        function CheckRoles() {
+            $("#existingRoleError").hide();
+            $("#requiredRoleError").hide();
+            var $customerInternalName = $("#CustomerInternalName").val();
+            var $roleName = $("#ToRoleName").val();
+            createRole = false;
+            if ($customerInternalName && $roleName) {
+                $.post('/shared/Roles/DoesRoleExist?roleName=' + $roleName + '&customerInternalName=' + $customerInternalName, OnDoesRoleExistLoaded);
+            } else {
+                $("#requiredRoleError").show();
+            }
+            return false;
+        }
+
+        function OnDoesRoleExistLoaded(data) {
+            createRole = !data;
+            if (!createRole) {
+                $("#existingRoleError").show();
+            }
+                //submit the form
+            else {
+                $('#copyRoleForm').submit();
+            }
+        }
+
+    </script>
+}

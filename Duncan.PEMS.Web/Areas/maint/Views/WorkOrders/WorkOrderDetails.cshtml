@@ -1,0 +1,202 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Details");
+}
+                     
+@section PageHeader  
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Work Order Summary Detail") </h2>
+   <a id="backBtn" class="back" href='@Url.Action("WorkOrders", "WorkOrders", new { selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+}
+
+
+@section Scripts 
+{
+    
+
+}
+
+<style>
+    
+           .k-window { width: 100%;}
+           .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+</style>
+
+@using (Html.BeginForm("GetWorkOrderDetails", "WorkOrders", FormMethod.Get, new { @id = "woDetailsForm" }))
+{
+    
+    <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+<input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+<input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+
+    <div id="content-inner">
+        <div class="customer_status">
+            <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): 
+                <span class="customer_status_state state_open">@Model.Status </span></div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetType</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Subtype"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetSubType</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"):</div>
+            <div class="customer_text">@Model.DeadlineDisplay</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Priority"):</div>
+            <div class="customer_text">@Model.PriorityDisplay</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Past Work Orders"):</div>
+            @Model.PastWorkOrders
+        </div>
+
+        <div class="clear" id="event-detail">
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td class="event-detail-header">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Events")</td>
+                </tr>
+                @{
+
+                    if (Model.WorkOrderEvents.Any())
+                    {
+                        bool even = false;
+                        foreach (var workOrderEvent in Model.WorkOrderEvents)
+                        {
+                            string classname = even ? "even" : "";
+                            <tr class="event-detail-row @classname">
+                                <td>
+                                    <div class="customer_text_label"><a  href='@Url.Action("EventDetails", "WorkOrders", new {eventId = workOrderEvent.WorkOrderEventId, workOrderId = workOrderEvent.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection})'>@workOrderEvent.EventDesc - @workOrderEvent.EventCode - @workOrderEvent.StatusDisplay</a></div>
+                                </td>
+                            </tr>
+                            even = !even;
+                        }
+                    }
+                    else
+                    {
+                        <tr class="event-detail-row ">
+                            <td>
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")</div>
+                            </td>
+                        </tr>
+                    }
+
+                }
+            </table>
+        </div>
+        <div class="clear" id="image-upload">
+            @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Attached Images"):<br />
+            @{
+                if (Model.WorkOrderImages.Any())
+                {
+                    foreach (var workOrderImage in Model.WorkOrderImages)
+                    {
+                        @(Html.Kendo().Window()
+                              .Name("workOrderImage" + @workOrderImage.WorkOrderImageId)
+                              .Title("Image: " + @workOrderImage.ImageName)
+                              .Actions(actions => actions
+                                                      .Close())
+                              .Content(@<text>
+                                             <img alt="" style="max-width: 100%" src="@workOrderImage.ImageSource"/>
+                                        </text>)
+                              .Draggable(false)
+                              .Resizable(res => res.Enabled(false))
+                              .Modal(true)
+                              .Visible(false)
+                              )
+                        <a href="#" id='open_@workOrderImage.WorkOrderImageId' >WO# @workOrderImage.ImageName</a><br/>
+                        <script>
+                            $(document).ready(function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                               
+                                $("#open_" + @workOrderImage.WorkOrderImageId).bind("click", function() {
+                                    dialog.data("kendoWindow").open();
+                                    dialog.data("kendoWindow").center();
+                                });
+                            });
+                            $(document).on('click', ".k-overlay" , function() {
+                                var dialog = $("#workOrderImage" + @workOrderImage.WorkOrderImageId);
+                                dialog.data("kendoWindow").close();
+                            });
+                        </script>
+                    }
+                }
+                else
+                {
+                    @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")
+                }
+            }
+        </div>
+        <div class="clear button-row">
+            
+            
+             @if ( Model.CloseWorkOrderEvents )
+            {
+            <a class="button important" href='@Url.Action("ResolveEvents", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve Events")</a>
+                 
+             }
+            else
+            {
+            <a class="button important" href='@Url.Action("ResolveWorkOrder", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolve")</a>
+            }
+            <a class="button red" href='@Url.Action("RejectWorkOrder", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })'>@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Reject")</a>
+        </div>
+        <div class="clear button-row">
+        </div>
+    </div>
+    <script>
+
+        function Submit(btnValue) {
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#woDetailsForm');
+            $('#woDetailsForm').submit();
+        }
+        
+
+        function CreateReturnButton() {
+
+            var stringified;
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("fmReturnUrl");
+            } 
+
+            // Create the return URL
+            if (stringified) {
+                var parsed = JSON.parse(stringified);
+                if (parsed) {
+                    if (parsed.url) {
+                        $("#backBtn").attr("href", parsed.url);
+                    }
+                }
+            }
+        }
+
+        CreateReturnButton();
+    </script>
+    
+    
+
+    
+    
+    
+}

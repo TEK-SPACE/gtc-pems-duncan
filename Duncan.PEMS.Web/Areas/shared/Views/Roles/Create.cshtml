@@ -1,0 +1,154 @@
+﻿@using Duncan.PEMS.Entities.Roles
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@model CreateRoleModel
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Role Management" )</a>  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Role" )</span></h1>
+}
+
+<div>
+    <p>Modify permission settings for this role</p>
+</div>
+@using (Html.BeginForm( "Create", "Roles", FormMethod.Post, new {@class = "admin-form", @id = "createRoleForm"} ))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <ul>
+        <li class="labelLi">
+            <label for="CustomerName">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" ):</label>
+            @Html.DisplayTextFor( m => m.CustomerName )
+            @Html.HiddenFor( m => m.CustomerInternalName )
+        </li>
+        <li class="labelLi">
+            <label for="RoleName">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Role Name" ):</label>
+            @Html.TextBoxFor( m => m.RoleName ) <span id="requiredRoleError" class="error">* @HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "Required" ).</span> <span id="existingRoleError" class="error">* @HttpContext.Current.GetLocaleResource( ResourceTypes.ErrorMessage, "A role with this name already exists" ).</span>
+        </li>
+    </ul>
+
+    @(Html.Kendo().TreeView()
+          .Name( "CurrentGrid" )
+          .Checkboxes( cb => cb.CheckChildren( true ) )
+          .ExpandAll( true )
+          .DragAndDrop( false )
+          .Events( events => events.Collapse( "treeview_collapse" ) )
+          .Checkboxes( x => x.CheckChildren( true ) )
+          .BindTo( Model.Items, mapping => mapping
+                                               .For<AuthorizationItem>( binding => binding
+                                                                                       .Children( c => c.Items ) // The "child" items will be bound to the the "Items" property
+                                                                                       .ItemDataBound( (item, c) =>
+                                                                                                           {
+                                                                                                               item.Text = c.Name + (c.Required == true ? " (required)" : " ");
+                                                                                                               item.Checked = c.Authorized;
+                                                                                                               item.Id = c.Id.ToString();
+                                                                                                           } ) // Map "Items" properties to TreeViewItem properties
+                                               )
+          )
+          )
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            //set your click event
+            $("#CurrentGrid").on("click", ".k-in", function(e) {
+                e.preventDefault();
+                treeview_click(e);
+            });
+            $("#requiredRoleError").hide();
+            $("#existingRoleError").hide();
+        });
+
+        function treeview_collapse(e) {
+            //Handle the collapse event
+            e.preventDefault();
+        }
+
+        function treeview_click(e) {
+            //when the user clicks a work, it seelects the item, we need to unselect the item
+            var treeview = $("#CurrentGrid").data("kendoTreeView");
+            //gets currently selected <li> element
+            var selectedITem = treeview.select().find("span.k-state-selected");
+            selectedITem.removeClass("k-state-selected");
+        }
+
+        function SearchClick() {
+            UpdatePartials();
+            CheckRoles();
+            return false;
+        }
+
+        var createRole = false;
+
+        function CheckRoles() {
+            $("#existingRoleError").hide();
+            $("#requiredRoleError").hide();
+            var $customerInternalName = $("#CustomerInternalName").val();
+            var $roleName = $("#RoleName").val();
+            createRole = false;
+            if ($customerInternalName && $roleName) {
+                $.post('/shared/Roles/DoesRoleExist?roleName=' + $roleName + '&customerInternalName=' + $customerInternalName, OnDoesRoleExistLoaded);
+            } else {
+                $("#requiredRoleError").show();
+            }
+            return false;
+        }
+
+        function OnDoesRoleExistLoaded(data) {
+            createRole = !data;
+            if (!createRole) {
+                $("#existingRoleError").show();
+            }
+                //submit the form
+            else {
+                $('#createRoleForm').submit();
+            }
+
+        }
+
+        function UpdatePartials() {
+            $('#CurrentGrid  :checkbox').each(function() {
+                if (this.indeterminate) {
+                    var el = $(this);
+                    el.prop('indeterminate', false);
+                    el.prop('checked', true);
+                }
+            });
+        }
+
+    </script>
+
+    <div class="button-Container">
+        <button type="submit" class="button important" name="submitButton" value="Create" onclick=" return SearchClick(); " >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create" )</button>
+        <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+       
+    </div>
+}
+
+@section Styles
+{
+    <style type="text/css">
+        ul.k-group li.k-item {
+            float: left;
+            margin-bottom: 20px;
+            width: 40%;
+        }
+
+        ul.k-group li.k-item ul.k-group li.k-item {
+            float: none;
+            margin: 0;
+            width: auto;
+        }
+
+        .k-icon { background-image: none; }
+
+        #CurrentGrid > ul > li > div { font-weight: bold !important; }
+
+        #CurrentGrid > ul > li > div > span input:first-of-type { visibility: hidden !important; }
+    </style>
+}

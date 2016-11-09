@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie10 lt-ie9" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js lt-ie10" lang="en" xmlns="http://www.w3.org/1999/xhtml"> <![endif]-->
+<!--[if gt IE 9]><!-->
+    <html class="no-js" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render( "~/css/main" )
+
+    @Scripts.Render( "~/bundles/jquery" )
+    <script type="text/javascript" src="//use.typekit.net/hmq2dup.js"> </script>
+    <script type="text/javascript"> try {
+          Typekit.load();
+      } catch(e) {
+      } </script>
+    <!--[if lt IE 9]>
+        @Scripts.Render( "~/bundles/IEcompat" )
+    <![endif]-->
+</head>
+        
+<body id="login">        
+    <div id="wrapper">
+        <div id="wrapper2">
+            <header id="header">
+                <div id="logo"></div>
+                @{ Html.RenderAction( "HeaderLinks", "Account" ); }
+            </header>
+            
+            <section id="content">
+                <div id="login-wrapper" class="cf">
+                    <div id="login-center">
+                        @RenderBody() 
+                    </div>
+                </div>
+                <footer id="footer">
+                    &copy; 2016 CivicSmart, Inc
+                </footer>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+﻿@model Duncan.PEMS.Entities.Reports.ReportsListViewModel
+
+@{
+    ViewBag.Title = Model.CategoryName + " Landing Page";
+}
+
+<div class="customer_tab_content_section">@Model.CategoryName Landing Page</div>
+
+@{
+    var count = 1;
+}
+
+@Html.Raw("<div id=\"coin_div\">")
+
+<table>
+    @foreach (var report in Model.Reports)
+    {
+        <tr>
+            <td>
+
+                <div style="float: left; width: 525px">
+                    @Html.ActionLink(report.Name, report.Action)
+                </div>
+            </td>
+            @*<td>
+                <div style="float: left;padding-left: 10px">
+                    @report.Description
+                </div>
+
+                @Html.Raw("</div>")
+
+            </td>*@
+        </tr>
+    }
+</table>
+
+@Html.Raw("</div>")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@foreach (var report in Model.Reports)
+{
+
+
+}
+
+

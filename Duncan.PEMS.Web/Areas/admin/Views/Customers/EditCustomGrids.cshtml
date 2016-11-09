@@ -1,0 +1,479 @@
+﻿@model Duncan.PEMS.Entities.Grids.GridController
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Edit Customer Grids").ToString();
+}
+
+
+@section Scripts
+{
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+
+<script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+
+
+
+
+
+<script type="text/javascript" src="/scripts/spin.min.js"></script>
+@Scripts.Render("~/bundles/kendo")
+
+
+
+<script type="text/javascript">
+    function getCustId() {
+        
+       
+        var CustID = '@ViewData["CustomerId"]';
+        return { customerId: CustID }
+    }
+
+
+    function getController() {
+        var CustID = '@ViewData["CustomerId"]';;
+      
+        var controllername =$("#Controllername").val();
+        return { CustomerID: CustID,Controllername: controllername }
+    }
+
+    function getControllerAction() {
+      
+        var CustID = '@ViewData["CustomerId"]';
+        var controllername =$("#Controllername").val();
+        var actionname = $("#actionnames").val();
+        return { CustomerID: CustID,Controllername: controllername, Actionname: actionname }
+    }
+    var updatebool = true;
+    
+    function GetPar() {
+
+        var CustID = '@ViewData["CustomerId"]';       
+        return { CustomerId: CustID , BoolUpdate : updatebool}
+    }
+    function LoadFreshGrid() {
+
+
+        invokeDataSource(50) //** set the default no. of records as 50
+
+    }
+
+    function invokeDataSource(maxCount) {
+
+       
+
+        var grid = $("#grdDetails").data("kendoGrid");
+
+            grid.dataSource.pageSize(maxCount);
+          grid.dataSource.groupable(false);
+          grid.dataSource.read();
+    }
+
+
+
+    function onSave(e) {
+        updatebool = true;
+        var grid = $("#grdDetails").data("kendoGrid");
+        var result = grid.dataSource.data();
+       
+        for (i = 0; i < result.length; i++) {
+            for (j = i + 1; j < result.length; j++) {
+
+                if (result[i].Position == result[j].Position) {
+                    alert(result[i].Position + " Position is repeating")
+                    updatebool = false;
+                    return false;
+                }
+            }
+        }
+       
+    }
+
+  
+    </script>
+
+    }
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        ready .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+         ready .filter-SearchButton:hover {
+            background: #ccc!important;
+	            text-decoration: none!important;
+        }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        .k-timepicker, .k-datetimepicker, .k-datepicker {
+            background-color: transparent !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        #mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 9000;
+            background-color: gray;
+            display: none;
+        }
+
+        #boxes .window {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 510px;
+            height: 300px;
+            display: none;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        #boxes #dialog {
+            width: 434px;
+            height: 130px;
+            padding: 0px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        dd {
+            padding-bottom: 15px;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+    </style>
+}
+
+    @section PageHeader
+{
+    <h1>Admin / Customer Edit / <span>Grids</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Id"): </div>
+    <div class="customer_text">@ViewData["CustomerId"]</div>
+</div>
+<div class="customer_cred">
+    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name"): </div>
+    <div class="customer_text">@ViewData["DisplayName"]</div>
+</div>
+<div class="customer_status">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status"): <span class="customer_status_state state_new">@ViewData["Status"]</span></div>
+    <div class="customer_status_as_of">@ViewData["StatusDate"]</div>
+</div>
+
+
+<div class="customer_tabs">
+    <div class="customer_tab">@Html.ActionLink("Identification", "EditCustomer", "Customers", new { customerId =  ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Assets", "EditAssets", "Customers", new { customerId =  ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Payments", "EditPayments", "Customers", new { customerId =  ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Pay By Cell").ToString(), "EditCustPayByCell", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Rules", "EditRules", "Customers", new { customerId =  ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Custom Labels", "EditCustomLabels", "Customers", new { customerId =  ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab selected_tab">@Html.ActionLink("Custom Grids", "EditCustomGrids", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab" >@Html.ActionLink("Event Codes", "EditEventCodes", "Customers", new { customerId =  ViewData["CustomerId"]}, null)</div>
+    <div class="customer_tab">@Html.ActionLink("Areas", "EditAreas", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab ">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Demand Zones").ToString(), "EditDemandZones", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Maintenance Schedule").ToString(), "EditMaintenanceSchedule", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+@*    <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "PAMConfiguration").ToString(), "PAMConfiguration", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>*@
+
+   @if (ViewData["StatusId"].ToString() == CustomerStatus.New.ToString())
+    {
+        <div class="customer_tab">@Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Activate").ToString(), "ActivateCustomer", "Customers", new { customerId = ViewData["CustomerId"] }, null)</div>
+    }
+    
+</div>
+
+
+@using (Html.BeginForm("EditCustomGrids", "Customers", FormMethod.Post, new { @class = "customer-form", @id = "createCustomerIdentification" }))
+{
+  
+
+    <div class="customer_tab_content">
+
+        <div class="filter-option">
+            <label class="filter-label">Controller</label>
+            @(Html.Kendo().DropDownList()
+                .Name("Controllername")
+                .OptionLabel("Select Controller")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })
+            .DataTextField("Controller")
+            .DataValueField("Controller")
+
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Customers/GetController").Data("getCustId"); ;
+                                         
+                                    });
+                                })
+            )
+        </div>
+
+
+        <div class="filter-option">
+            <label class="filter-label">Actions</label>
+            @(Html.Kendo().DropDownList()
+                .Name("actionnames")
+                .OptionLabel("Select Actions")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })
+        .DataTextField("Action")
+        .DataValueField("Action")
+
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Customers/GetActionnames").Data("getController"); ;
+
+                                    })
+                                    .ServerFiltering(true);
+                                })
+                             .Enable(false)
+                            .AutoBind(false)
+             .CascadeFrom("Controllername")
+            )
+        </div>
+
+        <div class="filter-searchBox">
+            <div style="float: left">
+                <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+                @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Continue").ToString(), "EditEventCodes", "Customers", new { customerId = ViewData["CustomerId"] }, new { @class = "button important", @type = "button" })
+                @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", "Customers", new { rtn = "true" }, new { @class = "button previous", @type = "button" })
+            </div>
+            
+
+        </div>     
+
+        <div id="DivCustomerDetails" class="grid-content" margin-left:0px;">
+
+
+            @(Html.Kendo().Grid<Duncan.PEMS.Entities.Grids.GridController>()
+           
+
+        .Name("grdDetails")
+        .Columns(col =>
+        {
+           
+            col.Bound(a => a.OriginalTitle).Title("OriginalTitle").Width("90px");
+            col.Bound(a => a.OriginalPosition).Title("OriginalPosition").Width("90px");
+            col.Bound(a => a.Title).Title("Title").Width("100px");
+            col.Bound(a => a.Position).Title("Position").Width("100px");
+            col.Bound(a => a.IsHidden).Title("IsHidden").Width("100px");
+            
+        }
+            )
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+     
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+
+             .ToolBar(toolBar =>
+                             {
+
+                                 toolBar.Save().SaveText("Save").CancelText("Cancel");
+                                
+                                 
+
+
+                             })
+                 .Editable(editable => editable.Mode(GridEditMode.InCell))
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+               // .Events(events => events.DataBound("onDataBound"))
+          .Events(events => events.SaveChanges("onSave"))
+                             
+                        .DataSource(dataSource => dataSource
+                .Ajax()
+
+
+
+                         .Model(model =>
+                                {
+                                    model.Id(a => a.CustomerGridsId);                              
+                                    model.Field(a => a.OriginalTitle).Editable(false);
+                                    model.Field(a => a.OriginalPosition).Editable(false);
+                                    model.Field(a => a.Title).Editable(true);
+                                    model.Field(a => a.Position).Editable(true);
+                                    model.Field(a => a.IsHidden).Editable(true);
+                                   
+
+                                })                                   
+                                   
+                       
+                                        .Read(read => read.Action("GetCustmerGrid", "Customers").Data("getControllerAction"))
+                                  .Update(update => update.Action("UpdateCustmerGrid", "Customers").Data("GetPar").Type(HttpVerbs.Post))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+            
+            )
+
+        </div>
+
+
+
+
+
+    </div>
+    
+    
+<div class="customer_footer">
+    <div class="customer_last_mod_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Modified by" ):  @ViewData["ModifiedBy"] 
+        @Html.Raw( " on " )
+        @ViewData["ModifiedOn"]     
+    </div>
+    <div class="customer_created_by">
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created by" ): @ViewData["CreatedBy"]
+        @Html.Raw( " on " )
+        @ViewData["CreatedOn"]       
+    </div>
+</div>
+}

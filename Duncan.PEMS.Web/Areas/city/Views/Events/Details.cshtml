@@ -1,0 +1,130 @@
+﻿@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Events.EventDetails
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Details" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Details" )</span></h1>
+}
+
+<div class="grid cf">
+    <div class="validation-summary-valid">
+        @Html.ValidationSummary()
+    </div>
+    
+    @if ( Model != null )
+    {
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset / Location" )</div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Id" ):</div>
+                <div class="customer_text">@Model.AssetId</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Name" ):</div>
+                <div class="customer_text">@Model.AssetName</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" ):</div>
+                <div class="customer_text">@Model.Area</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" ):</div>
+                <div class="customer_text">@Model.Zone</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" ):</div>
+                <div class="customer_text">@Model.Suburb</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" ):</div>
+                <div class="customer_text">@Model.Street</div>
+            </div>
+        </div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" ):</div>
+                <div class="customer_text">@Model.AssetType</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude" ):</div>
+                @Html.DisplayForLatLong( m => m.Latitude, new {@class = "customer_text"} )
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Longitude" ):</div>
+                @Html.DisplayForLatLong( m => m.Longitude, new {@class = "customer_text"} )
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Demand Area" ):@Html.Tooltip( "DemandArea" )</div>
+                <div class="customer_text">@Model.DemandArea</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bays Affected" ):@Html.Tooltip( "BaysAffected" )</div>
+                <div class="customer_text">@Model.BaysAffected </div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Information" ):</div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Id" ):</div>
+                <div class="customer_text">@Model.EventId</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Code" ):</div>
+                <div class="customer_text">@Model.EventCode</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Source" ):@Html.Tooltip( "EventSource" )</div>
+                <div class="customer_text">@Model.EventSourceDescription </div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Technician Id" ):</div>
+                <div class="customer_text">@Model.TechnicianId</div>
+            </div>
+        </div>
+        <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Date / Time" ):</div>
+                <div class="customer_text">@Model.EventDateTime.ToString( "g" )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Day of Week" ):</div>
+                <div class="customer_text">@Model.EventDateTime.DayOfWeek</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Peak" ):@Html.Tooltip( "Peak" )</div>
+                <div class="customer_text">@FormatHelper.FormatBoolean( Model.Peak )</div>
+            </div>
+            @*            @if ( Model.TimeTypes != null && Model.TimeTypes.Any() )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label"><span style="text-decoration: underline">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Tier" )</span>@Html.Tooltip( "TimeTier" )</div><br/>
+                    @{
+                        IEnumerable<string> timeTypes = from x in Model.TimeTypes select x.Description;
+                        string csv = String.Join( ", ", timeTypes );
+                    }
+                    <div class="customer_text_label">@Html.Raw( csv )</div>
+                </div>
+            }*@
+        </div>
+
+        <div class="clear">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Abbreviated Description" )</div>
+                <div class="customer_text long_text">@Model.AbbrDesc</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Long Description" ) </div>
+                <div class="customer_text long_text">@Model.LongDesc</div>
+            </div>
+        </div>
+    }
+    
+    <div class="customer_actions">
+        @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous"} )
+    </div>
+</div>

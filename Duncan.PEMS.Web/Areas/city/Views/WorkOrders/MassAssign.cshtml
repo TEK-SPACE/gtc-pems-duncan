@@ -1,0 +1,38 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherBulkUpdateModel
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Bulk Update" )</span></h1>
+}
+
+@using (Html.BeginForm("MassAssign", "WorkOrders", FormMethod.Post, new { @class = "admin-form", @id = "actionForm" }))
+{
+    
+  <div>The following work orders were selected for mass assignment:</div>
+    <div>
+        @String.Join(",",Model.WorkOrderIds)
+
+    </div>
+
+    <br/>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Technician Detail" )</div>
+      <div class="two-column">
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Technician" ):</div>
+               @(Html.Kendo().DropDownListFor(x=>x.SelectedTechnicianId)
+                .SelectedIndex(0)
+                .BindTo(new SelectList(Model.AvailableTechnicians, "TechnicianID", "TechnicianDisplay"))
+                 )
+            </div>
+         </div>
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="Assign">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Assign" )</button>
+            @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ), "Index", new {rtn = "true"}, new {@class = "button previous returnButton"} )
+        </div>
+}

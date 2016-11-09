@@ -1,0 +1,123 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "PEMS City Home Page" );
+}
+                     
+@section PageHeader 
+{
+   <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Work Order Parts") </h2>
+   <a class="back" href='@Url.Action("ResolveWorkOrder", "WorkOrders", new { workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+}
+
+
+@using (Html.BeginForm("Parts", "WorkOrders", FormMethod.Post, new { @id = "imageForm" }))
+{
+    <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+    <input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+    <input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+      <div id="content-inner">
+        <div class="validationSum-container">@Html.HeaderMessage()</div>
+      <div class="clear">
+        <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"):</div>
+        <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+        </div>
+      </div>
+        <div class="clear">
+          <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Part"):</div>
+           @(Html.Kendo().DropDownListFor(x=>x.SelectedPart)
+          .HtmlAttributes(new {style = "width:100%"})
+             .Name("SelectedPart")
+          .SelectedIndex(0)
+          .BindTo(new SelectList(Model.AvailableParts, "PartIdentifier", "PartDesc"))
+        )
+        </div>
+        <div class="clear">
+          <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+             @Html.TextAreaFor(m => m.PartNote, new { @class = "customer_text_area long_text_area", rows = "5" })
+        </div>
+      <div class="clear button-row">
+       <a class="button" onclick="Submit('Add');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Add")</a> 
+      </div>
+                 <div class="clear" id="event-detail">
+                 <table cellpadding="0" cellspacing="0" width="100%">
+                     <tr>
+                         <td class="event-detail-header">Part Description</td>
+                         <td class="event-detail-header qty">QTY</td>
+                     </tr>
+                      @{
+
+                    if (Model.WorkOrderParts.Any())
+                    {
+                        bool even = false;
+                        foreach (var part in Model.WorkOrderParts)
+                        {
+                            string classname = even ? "even" : "";
+
+                            <tr class="event-detail-row @classname">
+                                <td>
+                                    <div class="customer_text_label">@part.PartDesc: @part.Notes</div>
+                                </td>
+                               <td class="qty">
+                                    <input name="partId_@part.WorkOrderPartId" value="@part.Quantity" class="customer_text short-text-box" type="text">
+                                </td>
+                            </tr>
+                            even = !even;
+                        }
+                    }
+                    else
+                    {
+                        <tr class="event-detail-row ">
+                            <td colspan="2">
+                                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "None")</div>
+                            </td>
+                        </tr>
+                    }
+                }
+        </table>
+      </div>
+      <div class="clear button-row">
+          <a class="button important" onclick="return Submit('Save');" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Save")</a>
+      </div>
+  </div>
+    <script>
+        $(document).ready(function() {
+        });
+      
+        function Submit(btnValue) {
+            //only do this check on adds. saves ignore this
+            if (btnValue == "Add") {
+                //if we are adding, make sure the part is selected (not -1) and the notes field is populated if the id is -2 ("Other")
+
+                //check selected part
+                var ddlSelectedPart = $("#SelectedPart").data("kendoDropDownList");
+                var parts = ddlSelectedPart.value().split("|");
+                if (parts[0] == "-1") {
+                    alert("Select a part");
+                    return false;
+                }
+                //check ot make sure its not the "other" without notes
+                //cant grab it from constants, just hard code the other part number here
+                if (parts[1] == "000-0000-0000-0") {
+                    var notes = $("#PartNote").val();
+                    if (notes == '') {
+                        alert("Other Part: Notes Required");
+                        return false;
+                    }
+                }
+            }
+            //if we are saving, just ignore it and submit the form
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', btnValue).appendTo('#imageForm');
+            $('#imageForm').submit();
+        }
+    </script>
+        <style>
+    </style>
+}

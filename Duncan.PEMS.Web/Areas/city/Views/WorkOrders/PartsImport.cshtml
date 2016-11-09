@@ -1,0 +1,63 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "Parts Upload";
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Parts Management" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Upload Parts" ) </h1>
+}
+
+    @using (Html.BeginForm("UploadParts", "WorkOrders", FormMethod.Post))
+    {
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Parts File to Upload" )</div>
+                <div class="clear">
+                    @(Html.Kendo().Upload()
+                          .Name("files")
+                          .Events(events => events
+                                                .Progress("onProgress")
+                                                .Select("onSelect")
+                          )
+                          )
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Example Files" )</div>
+                To download an example file or instructions, click on the appropriate link below.
+                <div style="width: 95%">
+                   @Html.ActionLink("Example", "DownloadExample", "WorkOrders", null, null)
+                    @Html.ActionLink("Instructions", "DownloadInstructions", "WorkOrders",null, null)
+                </div>
+                <div style="float: right; width: 5%"></div>
+            </div>
+        </div>
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button" value="SAVE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Upload")</button>
+            @Html.ActionLink( (string) ( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ) ?? "Return" ), "PartsIndex", "WorkOrders",
+                              new {rtn = "true"}, new {@class = "button previous"} )
+        </div>
+    }
+
+<script>
+    function onSelect(e) {
+        if (e.files.length > 1) {
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Constants.ViewData.CurrentArea]',
+                '@ViewData[Constants.ViewData.CurrentController]',
+                '@ViewData[Constants.ViewData.CurrentAction]',
+            "1239", "Only one file may be selected.");
+            e.preventDefault();
+        }
+    }
+    function onComplete(e) {
+        alert("Done.");
+    }
+    function onProgress(e) {
+    }
+</script>

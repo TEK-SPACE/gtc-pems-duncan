@@ -1,0 +1,761 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+
+
+using Duncan.PEMS.SpaceStatus.DataShapes;
+using Duncan.PEMS.SpaceStatus.DataSuppliers;
+using Duncan.PEMS.SpaceStatus.DataMappers;
+using Duncan.PEMS.SpaceStatus.UtilityClasses;
+
+namespace Duncan.PEMS.SpaceStatus.Models
+{
+    public class GenericObjForHTMLSelectList
+    {
+        public string DataValue { get; set; }
+        public string DataText { get; set; }
+
+        public GenericObjForHTMLSelectList()
+        {
+        }
+    }
+    
+    public enum ExpiryState { Expired, Critical, Safe, Inoperational, Grace };
+    public enum OccupancyState { Occupied, Empty, NotAvailable, OutOfDate, Violation, MeterFeeding, Unknown };
+    public enum EnforcementState { Unknown, Good, MeterViolation, OverstayViolation, AlreadyCited, Discretionary };
+    enum VechicleMovementType { In, Out };
+
+    public class OverstayViolationInfo
+    {
+        public bool IsForCurrentRegulationPeriod { get; set; }
+
+        public DateTime Regulation_Date { get; set; }
+        public int Regulation_DayOfWeek { get; set; }
+        public DateTime Regulation_StartTime { get; set; }
+        public DateTime Regulation_EndTime { get; set; }
+        public string Regulation_Type { get; set; }
+        public int Regulation_MaxStayMinutes { get; set; }
+
+        public DateTime DateTime_StartOfOverstayViolation { get; set; }
+        public TimeSpan DurationOfTimeBeyondStayLimits { get; set; }
+    }
+
+    public class SpaceStatusModel
+    {
+        public const bool CanOnlyBeInViolationDuringCurrentRegulationPeriod = true; //false
+
+        public int ClusterID { get; set; }
+        public int PAMGraceMinutes { get; set; }
+
+        public int MeterID { get; set; }
+        public int Meter_imin { get; set; }
+        public DateTime Meter_upTS { get; set; }
+
+        public int BayID { get; set; }
+        public ExpiryState BayExpiryState { get; set; }
+        public TimeSpan BayExpiration_AsTimeSpan { get; set; }
+        public DateTime BayExpiration_AsDateTime { get; set; }
+        public bool IsSensorOnly { get; set; }
+        public OccupancyState BayOccupancyState { get; set; }
+        public DateTime BayVehicleSensingTimestamp { get; set; }
+        public TimeSpan TimeSinceLastInOut { get; set; }
+
+        public EnforcementState BayEnforcementState { get; set; }
+
+        public OverstayViolationInfo CurrentOverstayViolation { get; set; }
+        private List<OverstayViolationInfo> _AllOverstayViolations = new List<OverstayViolationInfo>();
+        public List<OverstayViolationInfo> AllOverstayViolations
+        {
+            get { return _AllOverstayViolations; }
+            set { _AllOverstayViolations = value; }
+        }
+
+        public OverstayViolationInfo CurrentOverstayOrLatestDiscretionaryVio
+        {
+            get
+            {
+                OverstayViolationInfo result = null;
+                if (this.CurrentOverstayViolation != null)
+                {
+                    result = this.CurrentOverstayViolation;
+                }
+                else
+                {
+                    if (this.AllOverstayViolations.Count > 0)
+                        result = this.AllOverstayViolations[this.AllOverstayViolations.Count - 1];
+                }
+                return result;
+            }
+        }
+
+        public RegulatedHoursDetail ActiveRegulationPeriod { get; set; }
+
+        public string EnforcementActionTaken { get; set; }
+
+        public string GetExpiryTimeString(CustomerConfig customerCfg)
+        {
+            // Convert current time at the server to current time in the destination timezone
+            DateTime NowAtDestination = Convert.ToDateTime(customerCfg.DestinationTimeZoneDisplayName);
+            DateTime Ref = new DateTime(2000, 1, 1); //use beginning of 2000 as reference for ExpiryTime
+            TimeSpan TimeSinceRef = NowAtDestination - Ref;
+
+            if ((this.BayExpiration_AsDateTime == DateTime.MinValue) || (this.BayExpiration_AsDateTime.Ticks == Ref.Ticks))
+            {
+                // Bad expiration
+                return customerCfg.InvalidBayString;
+            }
+            else
+            {
+                string result = SpaceStatusProvider.FormatShortTimeSpan(BayExpiration_AsTimeSpan, customerCfg);
+
+                // if data is valid then go ahread and see what formatting to use
+                if ((customerCfg.GracePeriodEnabled) && (this.PAMGraceMinutes > 0))
+                {
+                    double ExpiryTimeGraceInSeconds = PAMGraceMinutes * 60; // PAM returns in minutes. Convert to seconds
+                    TimeSpan MeterExpiryGrace = TimeSpan.FromSeconds(ExpiryTimeGraceInSeconds - TimeSinceRef.TotalSeconds);
+                    if (MeterExpiryGrace.TotalSeconds > 0)
+                    {
+                        // Expiraton is within the grace period
+                        result = SpaceStatusProvider.FormatShortTimeSpan(MeterExpiryGrace, customerCfg);
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        public SpaceStatusModel()
+        {
+            // Init statuses to Unknown/NA, which will be active if there is no applicable data retrieved via PAM or vehicle sensing, etc...
+            this.BayExpiryState = ExpiryState.Inoperational;
+            this.BayOccupancyState = OccupancyState.NotAvailable;
+            this.BayEnforcementState = EnforcementState.Unknown;
+            this.IsSensorOnly = false;
+
+            this.CurrentOverstayViolation = null;
+            this._AllOverstayViolations = new List<OverstayViolationInfo>();
+        }
+    }
+
+    public class SpaceStatusModelManager
+    {
+        public List<SpaceStatusModel> SpaceStatusModels { get; set; }
+
+        private CustomerConfig _CustomerConfig = null;
+
+        private List<SpaceAsset> _cachedSpaceAssets = null;
+
+        public SpaceStatusModelManager(CustomerConfig customerCfg)
+        {
+            _CustomerConfig = customerCfg;
+
+            if (SpaceStatusModels == null)
+                SpaceStatusModels = new List<SpaceStatusModel>();
+
+            _cachedSpaceAssets = CustomerLogic.CustomerManager.GetSpaceAssetsForCustomer(_CustomerConfig);
+        }
+
+        private SpaceAsset GetSpaceAsset(int meterID, int spaceID)
+        {
+            SpaceAsset result = null;
+
+            // If we have a list of cached assets, look through it, which should be faster than constantly asking the customer manager for it
+            // since we would have a local copy and not need to worry about concurrency issues
+            if (_cachedSpaceAssets != null)
+            {
+                foreach (SpaceAsset asset in _cachedSpaceAssets)
+                {
+                    if ((asset.MeterID == meterID) && (asset.SpaceID == spaceID))
+                    {
+                        result = asset;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                result = CustomerLogic.CustomerManager.GetSpaceAsset(_CustomerConfig, meterID, spaceID);
+            }
+
+            return result;
+        }
+
+        public SpaceStatusModel GetOrCreateSpaceStatusModel(int meterID, int spaceID, SpaceAsset spaceAsset)
+        {
+            // Search our list for an existing model matching the MeterID and SpaceID
+            SpaceStatusModel result = null;
+            foreach (SpaceStatusModel nextModel in this.SpaceStatusModels)
+            {
+                if ((nextModel.MeterID == meterID) && (nextModel.BayID == spaceID))
+                {
+                    result = nextModel;
+                    break;
+                }
+            }
+
+            // If no match found, create a new object
+            if (result == null)
+            {
+                result = new SpaceStatusModel();
+                result.MeterID = meterID;
+                result.BayID = spaceID;
+
+                // If the associated space asset wasn't given to us, we will need to look it up
+                if (spaceAsset == null)
+                {
+                    SpaceAsset nextSpaceAsset = GetSpaceAsset(meterID, spaceID); // CustomerLogic.CustomerManager.GetSpaceAsset(_CustomerConfig, meterID, spaceID);
+                    if (nextSpaceAsset != null)
+                        result.IsSensorOnly = nextSpaceAsset.IsSensorOnly;
+                }
+                else
+                {
+                    result.IsSensorOnly = spaceAsset.IsSensorOnly;
+                }
+
+                // Add the new object to our list
+                this.SpaceStatusModels.Add(result);
+            }
+
+            return result;
+        }
+
+        public SpaceStatusModel GetSpaceStatusModel(int meterID, int spaceID)
+        {
+            // Search our list for an existing model matching the MeterID and SpaceID
+            SpaceStatusModel result = null;
+            foreach (SpaceStatusModel nextModel in this.SpaceStatusModels)
+            {
+                if ((nextModel.MeterID == meterID) && (nextModel.BayID == spaceID))
+                {
+                    result = nextModel;
+                    break;
+                }
+            }
+            
+            // Return result.  If no match found, then the result is null
+            return result;
+        }
+
+        public void UpdateModelsFromPAMInfoList(List<PAMSpaceExpiryInformation> PAMInfoList)
+        {
+            // If no list was given to us, then there's no work to be done
+            if (PAMInfoList == null)
+                return;
+
+            // We will copy the PAM info for each meter/space into applicable area of overall info for each meter/space
+            foreach (PAMSpaceExpiryInformation nextPAMInfo in PAMInfoList)
+            {
+                // Find existing object to update, or create a new one
+                SpaceStatusModel model = GetOrCreateSpaceStatusModel(nextPAMInfo.MeterID, nextPAMInfo.BayID, null);
+
+                // Populate applicable values from the current PAM info object
+                model.BayExpiration_AsDateTime = nextPAMInfo.BayExpiration_AsDateTime;
+                model.BayExpiration_AsTimeSpan = nextPAMInfo.BayExpiration_AsTimeSpan;
+                model.BayExpiryState = nextPAMInfo.BayExpiryState;
+                model.BayID = nextPAMInfo.BayID;
+                model.ClusterID = nextPAMInfo.ClusterID;
+                model.Meter_imin = nextPAMInfo.Meter_imin;
+                model.Meter_upTS = nextPAMInfo.Meter_upTS;
+                model.MeterID = nextPAMInfo.MeterID;
+                model.PAMGraceMinutes = nextPAMInfo.PAMGraceMinutes;
+
+                // Note: vehicle sensing data isn't copied, because it doesn't come from PAM
+            }
+        }
+
+        #region Deprecated helper function, but still might be useful in the future
+        private DataRow[] GetMatchingRecords(DataTable tableToSearch, string columnName, string searchValue)
+        {
+            // The standard DataTable.Select might not be reliable enough for us
+            /*return tableToSearch.Select(columnName + "  = '" + searchValue + "'");*/
+
+            // Perform a search on each row to see which records match our search criteria. 
+            // And just to be extra cautious, we will trim leading/trailing whitespace that might be present
+            searchValue = searchValue.Trim();
+            List<DataRow> searchResults = new List<DataRow>();
+            foreach (DataRow searchrow in tableToSearch.Rows)
+            {
+                if (string.Compare(searchrow[columnName].ToString().Trim(), searchValue) == 0)
+                {
+                    searchResults.Add(searchrow);
+                }
+            }
+            return searchResults.ToArray();
+        }
+        #endregion
+
+        public void UpdateModelsFromOccupancyInfoList(List<CurrentSpaceOccupancyInformation> occupancyInfoList, bool mustGetEnforcementActionTakenStatus, CustomerLogic result)
+        {
+            // If no list was given to us, then there's no work to be done
+            if (occupancyInfoList == null)
+                return;
+
+            // Convert current time at the server to current time in the destination timezone
+            DateTime NowAtDestination = Convert.ToDateTime(this._CustomerConfig.DestinationTimeZoneDisplayName);
+
+            // We will copy the PAM info for each meter/space into applicable area of overall info for each meter/space
+            foreach (CurrentSpaceOccupancyInformation nextOccupancyInfo in occupancyInfoList)
+            {
+                // Find existing object to update, or create a new one
+                SpaceStatusModel model = GetOrCreateSpaceStatusModel(nextOccupancyInfo.MeterID, nextOccupancyInfo.BayID, null); //GetSpaceStatusModel(nextOccupancyInfo.MeterID, nextOccupancyInfo.BayID);
+
+                // Update the object if it was found
+                if (model != null)
+                {
+                    // Populate applicable values from the current PAM info object
+                    model.BayVehicleSensingTimestamp = nextOccupancyInfo.LastInOut;
+
+                    model.BayOccupancyState = OccupancyState.NotAvailable;
+                    int BayOccupancyTolerance = _CustomerConfig.BayOccupancyToleranceInMinutes;
+                    DateTime LastUpdatedOccupancyTime = nextOccupancyInfo.LastInOut;
+
+                    model.TimeSinceLastInOut = NowAtDestination - nextOccupancyInfo.LastInOut;
+
+                    // Information is out of date if the last occupancy status date is null (DateTime.MinValue), 
+                    // or is older than the "BayOccupancyTolerance" in the customer configuration
+                    if (LastUpdatedOccupancyTime == DateTime.MinValue)
+                        model.BayOccupancyState = OccupancyState.OutOfDate;
+                    else if (DateTime.Compare(NowAtDestination, LastUpdatedOccupancyTime.AddMinutes(BayOccupancyTolerance)) > 0)
+                        model.BayOccupancyState = OccupancyState.OutOfDate;
+                    else if (nextOccupancyInfo.IsOccupied == true)
+                        model.BayOccupancyState = OccupancyState.Occupied;
+                    else if (nextOccupancyInfo.IsOccupied == false)
+                        model.BayOccupancyState = OccupancyState.Empty;
+
+                    // Determine which natural regulation period is currently in effect (but not necessarily in violation of!)
+                    FindCurrentOverstayRule(model);
+
+                    // Is it in one of the occupied statuses (and not too stale)?
+                    if ((model.BayOccupancyState == OccupancyState.Occupied) ||
+                        (model.BayOccupancyState == OccupancyState.MeterFeeding) ||
+                        (model.BayOccupancyState == OccupancyState.Violation))
+                    {
+                        // DEBUG: Try to detemine an overall "Enforcement" status by using sensor status, payment status, parking regulations, AI.NET citation issuance info, etc...
+                        //        (Not fully implemented yet)
+
+                        if (model.BayExpiryState == ExpiryState.Expired)
+                        {
+                            // VS = Occupied and PAY = Expired, so its a regular meter violation...
+                            model.BayEnforcementState = EnforcementState.MeterViolation;
+                        }
+                        else
+                        {
+                            // Check to see if it qualifies as an overstay violation
+                            AnalyzeSpaceStatusModelForOverstayViolation(model);
+
+                            // If we're still marked as "unknown" for enforcement, then set as "good", because now we know its not in a violation state
+                            if (model.BayEnforcementState == EnforcementState.Unknown)
+                                model.BayEnforcementState = EnforcementState.Good;
+                        }
+
+                        // DEBUG: If a probable violation condition is detected, we should check AI.NET (if applicable), to see if a citation has already been issued...
+                        if (model.BayEnforcementState == EnforcementState.MeterViolation)
+                        {
+                            // If we can determine that a citation for this meter/space was written after the vehicle arrived, then we want to mark as already cited
+                            /*
+                            AI.NET existing citation checking logic needs to go here....
+                            model.BayEnforcementState = EnforcementState.AlreadyCited;
+                            */
+                        }
+
+                        // If its flagged as an Overstay Violation, we will check our SqLite database to see if an "Action Taken" 
+                        // has been recorded during the violation period
+                        if ((model.BayEnforcementState == EnforcementState.OverstayViolation) || (model.BayEnforcementState == EnforcementState.Discretionary))
+                        {
+                            // Whenever the state is "Overstay" or "Discretionary", we will always retrieve info about whether or not it is already actioned!
+                            UpdateEnforcementActionTakenFromSqLite(model,result);
+                        }
+                        else
+                        {
+                            // Otherwise we will only retrieve action taken info if explicitly told to do so
+                            if (mustGetEnforcementActionTakenStatus == true)
+                                UpdateEnforcementActionTakenFromSqLite(model, result);
+                        }
+                    }
+                    else
+                    {
+                        // Otherwise we will only retrieve action taken info if explicitly told to do so
+                        if (mustGetEnforcementActionTakenStatus == true)
+                            UpdateEnforcementActionTakenFromSqLite(model,result);
+                    }
+
+                    // If the space is not occupied, then there definately isn't a violation
+                    if ((model.BayOccupancyState == OccupancyState.Empty))
+                    {
+                        model.BayEnforcementState = EnforcementState.Good;
+                    }
+                }
+            }
+        }
+
+        private void UpdateEnforcementActionTakenFromSqLite(SpaceStatusModel model, CustomerLogic result)
+        {
+            DateTime minDateCutoff = DateTime.MinValue;
+
+            // Get the related space asset so we can obtain the AreaID
+            SpaceAsset asset = GetSpaceAsset(model.MeterID, model.BayID); // CustomerLogic.CustomerManager.GetSpaceAsset(_CustomerConfig, model.MeterID, model.BayID);
+            int areaID = 0;
+            if (asset != null)
+                areaID = asset.AreaID_Internal;
+
+
+            if (((model.BayEnforcementState == EnforcementState.OverstayViolation) || (model.BayEnforcementState == EnforcementState.Discretionary)) 
+                && (model.CurrentOverstayOrLatestDiscretionaryVio != null))
+            {
+                // For overstay condition, we only want the latest action taken if it happened after the violation started!
+                minDateCutoff = model.CurrentOverstayOrLatestDiscretionaryVio.DateTime_StartOfOverstayViolation;
+
+                // Get the most recent action taken for this space asset
+                
+               
+
+                OverstayVioActionsDTO ActionTakenDTO = result.GetLatestVioActionForSpace(this._CustomerConfig.CustomerId, model.MeterID, areaID, model.BayID);
+                if ((ActionTakenDTO != null) && (minDateCutoff > DateTime.MinValue))
+                {
+                    // If the action taken was recorded after the start of this violation, then it qualifies as being the action taken for this
+                    // violation condition. If so, retain the "Action Taken" reason
+                    if (ActionTakenDTO.EventTimestamp >= minDateCutoff)
+                        model.EnforcementActionTaken = ActionTakenDTO.ActionTaken;
+                }
+            }
+            else
+            {
+                minDateCutoff = model.BayVehicleSensingTimestamp;
+
+                // Get the most recent action taken for this space asset
+                OverstayVioActionsDTO ActionTakenDTO = result.GetLatestVioActionForSpace(this._CustomerConfig.CustomerId, model.MeterID, areaID, model.BayID);
+                if ((ActionTakenDTO != null) && (minDateCutoff >= DateTime.MinValue))
+                {
+                    // If the action taken was recorded after the start of this violation, then it qualifies as being the action taken for this
+                    // violation condition. If so, retain the "Action Taken" reason
+                    if (ActionTakenDTO.EventTimestamp >= minDateCutoff)
+                        model.EnforcementActionTaken = ActionTakenDTO.ActionTaken;
+                }
+            }
+
+        }
+
+        protected int ResolveAreaIDForMeterID(int meterID)
+        {
+            int result = -1;
+            foreach (MeterAsset asset in CustomerLogic.CustomerManager.GetMeterAssetsForCustomer(_CustomerConfig))
+            {
+                if (asset.MeterID == meterID)
+                {
+                    result = asset.AreaID_PreferLibertyBeforeInternal;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        protected void FindCurrentOverstayRule(SpaceStatusModel model)
+        {
+            // We need to try to find the regulation rule that is currently in effect at the customer's current timezone
+            // Resolve the associated area for the meter
+            int areaID = ResolveAreaIDForMeterID(model.MeterID);
+            RegulatedHoursGroupRepository.Repository = new RegulatedHoursGroupRepository();
+            // Try to obtain the regulated hours applicable to this meter
+            RegulatedHoursGroup regulatedHours = RegulatedHoursGroupRepository.Repository.GetBestGroupForMeter(this._CustomerConfig.CustomerId, areaID, model.MeterID);
+
+            // If no regulated hour defintions came back, then we are unable to calculate any overstay violation, so just exit
+            if ((regulatedHours == null) || (regulatedHours.Details == null) || (regulatedHours.Details.Count == 0))
+                return;
+
+            DateTime NowAtDestination = Convert.ToDateTime(this._CustomerConfig.DestinationTimeZoneDisplayName);
+            // Determine the day of week that is involved
+            int dayOfWeek = (int)NowAtDestination.DayOfWeek;
+
+            // Loop through the daily rules and see which ones overlap with our occupied period
+            foreach (RegulatedHoursDetail detail in regulatedHours.Details)
+            {
+                // Skip this one if its for a different day of the week
+                if (detail.DayOfWeek != dayOfWeek)
+                    continue;
+
+                TimeSlot OccupiedSegment = new TimeSlot(NowAtDestination);
+
+                // Determine if the occupied timeslot overlaps with the rule's timeslot
+                DateTime ruleStart = new DateTime(NowAtDestination.Year, NowAtDestination.Month, NowAtDestination.Day, detail.StartTime.Hour, detail.StartTime.Minute, 0);
+                DateTime ruleEnd = new DateTime(NowAtDestination.Year, NowAtDestination.Month, NowAtDestination.Day, detail.EndTime.Hour, detail.EndTime.Minute, 59);
+                TimeSlot RuleSegment = new TimeSlot(ruleStart, ruleEnd);
+
+                if (RuleSegment.OverlapsWith(OccupiedSegment) == true)
+                {
+                    model.ActiveRegulationPeriod = detail;
+                    break;
+                }
+            }
+        }
+
+        protected void AnalyzeSpaceStatusModelForOverstayViolation(SpaceStatusModel model)
+        {
+            // There is nothing to do if this event is not for occupied status
+            if ((model.BayOccupancyState == OccupancyState.Empty) || (model.BayOccupancyState == OccupancyState.NotAvailable) ||
+                (model.BayOccupancyState == OccupancyState.OutOfDate) || (model.BayOccupancyState == OccupancyState.Unknown))
+            {
+                return;
+            }
+
+            // Find the space asset associated with this data model.  If the space is "inactive" (based on the "IsActive" column of "HousingMaster" table in database),
+            // then we will not consider the space to be in a violating state, because the sensor is effectively marked as bad/untrusted
+            SpaceAsset spcAsset = GetSpaceAsset(model.MeterID, model.BayID);
+            if (spcAsset != null)
+            {
+                // Nothing more to do if the space isn't active
+                if (spcAsset.IsActive == false)
+                    return;
+            }
+
+            // Resolve the associated area for the meter
+            int areaID = ResolveAreaIDForMeterID(model.MeterID);
+
+            // Try to obtain the regulated hours applicable to this meter
+            RegulatedHoursGroup regulatedHours = RegulatedHoursGroupRepository.Repository.GetBestGroupForMeter(this._CustomerConfig.CustomerId, areaID, model.MeterID);
+
+            // If no regulated hour defintions came back, then we are unable to calculate any overstay violation, so just exit
+            if ((regulatedHours == null) || (regulatedHours.Details == null) || (regulatedHours.Details.Count == 0))
+                return;
+
+            DateTime NowAtDestination = Convert.ToDateTime(this._CustomerConfig.DestinationTimeZoneDisplayName);
+            DateTime ruleStart = DateTime.MinValue;
+            DateTime ruleEnd = DateTime.MinValue;
+
+            TimeSlot OccupiedSegment = new TimeSlot(model.BayVehicleSensingTimestamp, NowAtDestination);
+
+            // We need to check if this single occupancy event is an overstay violation for multiple rules, or even for more than one day, etc.
+            while (OccupiedSegment.Start < NowAtDestination)
+            {
+                // Determine the day of week that is involved
+                int dayOfWeek = (int)OccupiedSegment.Start.DayOfWeek;
+
+                // Loop through the daily rules and see which ones overlap with our occupied period
+                foreach (RegulatedHoursDetail detail in regulatedHours.Details)
+                {
+                    // Skip this one if its for a different day of the week
+                    if (detail.DayOfWeek != dayOfWeek)
+                        continue;
+
+                    // Determine if the occupied timeslot overlaps with the rule's timeslot
+                    ruleStart = new DateTime(OccupiedSegment.Start.Year, OccupiedSegment.Start.Month, OccupiedSegment.Start.Day, detail.StartTime.Hour, detail.StartTime.Minute, 0);
+                    ruleEnd = new DateTime(OccupiedSegment.Start.Year, OccupiedSegment.Start.Month, OccupiedSegment.Start.Day, detail.EndTime.Hour, detail.EndTime.Minute, 59);
+                    TimeSlot RuleSegment = new TimeSlot(ruleStart, ruleEnd);
+
+                    // We only care about this overlapping rule if the MaxStayMinutes is greater than zero (zero or less means there is no MaxStay that is enforced),
+                    // or if it's explicitly set as a "No Parking" regulation
+                    if ((RuleSegment.OverlapsWith(OccupiedSegment) == true) &&
+                         ((detail.MaxStayMinutes > 0) || (string.Compare(detail.Type, "No Parking", true) == 0))
+                       )
+                    {
+                        // Normally we will use the verbatim value of the max stay minutes, but if its a "No Parking", we will always take that to mean 0 minutes is the actual max
+                        int timeLimitMinutes = detail.MaxStayMinutes;
+                        if (string.Compare(detail.Type, "No Parking", true) == 0)
+                            timeLimitMinutes = 0;
+
+                        // Get the intersection of the overlaps so we know how long the vehicle has been occupied during this rule
+                        TimeSlot OccupiedIntersection = RuleSegment.GetIntersection(OccupiedSegment);
+                        
+                        // Determine if the vehicle has been occupied during this rule segment in excess of the MaxStayMinutes
+                        if (OccupiedIntersection != null)
+                        {
+                            if (OccupiedIntersection.Duration.TotalMinutes >= timeLimitMinutes)
+                            {
+                                // We will check to see if this violated regulated period matches the current regulated period.
+                                // But since it could be occupied for a long time, we must also check the current date, in addition to day of week and time of day!
+                                bool currDetailMatchesCurrentRegulatedPeriod = false;
+                                DateTime TodayAtDestination = Convert.ToDateTime(this._CustomerConfig.DestinationTimeZoneDisplayName); //UtilityClasses.TimeZoneInfo.ConvertTimeZoneToTimeZone(DateTime.Now, this._CustomerConfig.ServerTimeZone, this._CustomerConfig.CustomerTimeZone).Date;
+                                if (OccupiedSegment.Start >= TodayAtDestination)
+                                {
+                                    if (model.ActiveRegulationPeriod != null)
+                                    {
+                                        RegulatedHoursDetailLogicalComparer comparer = new RegulatedHoursDetailLogicalComparer();
+                                        currDetailMatchesCurrentRegulatedPeriod = (comparer.Compare(model.ActiveRegulationPeriod, detail) == 0);
+                                    }
+                                }
+
+                                // Create a new Overstay Vio Info object and add to the overall list of violations
+                                OverstayViolationInfo overstay = new OverstayViolationInfo();
+                                overstay.IsForCurrentRegulationPeriod = currDetailMatchesCurrentRegulatedPeriod;
+                                overstay.Regulation_Date = new DateTime(OccupiedSegment.Start.Year, OccupiedSegment.Start.Month, OccupiedSegment.Start.Day);
+                                overstay.Regulation_DayOfWeek = detail.DayOfWeek;
+                                overstay.Regulation_EndTime = detail.EndTime;
+                                overstay.Regulation_MaxStayMinutes = detail.MaxStayMinutes; // Instead of using our calculated time limit, we will record the configured max stay minutes here, because it will be displayed
+                                overstay.Regulation_StartTime = detail.StartTime;
+                                overstay.Regulation_Type = detail.Type;
+                                overstay.DateTime_StartOfOverstayViolation = new DateTime(OccupiedIntersection.Start.Ticks).AddMinutes(timeLimitMinutes);
+                                overstay.DurationOfTimeBeyondStayLimits = new TimeSpan(OccupiedIntersection.Duration.Ticks).Add(new TimeSpan(0, (-1) * timeLimitMinutes, 0));
+
+                                // Add this overstay info to the model's list
+                                model.AllOverstayViolations.Add(overstay);
+
+                                // If its also for the current regulation period, retain a reference to it
+                                if (overstay.IsForCurrentRegulationPeriod == true)
+                                    model.CurrentOverstayViolation = overstay;
+
+                                // Mark as "Overstay Violation" status if we have a current overstay violation.  Otherwise mark
+                                // as "Discretionary" because there is an overstay violation, but not for the current enforcement period
+                                if (model.CurrentOverstayViolation != null)
+                                    model.BayEnforcementState = EnforcementState.OverstayViolation;
+                                else
+                                    model.BayEnforcementState = EnforcementState.Discretionary;
+                            }
+                        }
+                    }
+                }
+
+                // Rules for current day of week have been processed.  So now we will advance to beginning of next day and see if there are more violations that we will use
+                // to add accumulated time in violation state...
+                OccupiedSegment = new TimeSlot(new DateTime(OccupiedSegment.Start.Year, OccupiedSegment.Start.Month, OccupiedSegment.Start.Day).AddDays(1),
+                    NowAtDestination);
+            }
+        }
+
+    }
+
+ 
+    public class SpaceStatusProvider
+    {
+        public bool DisplayVehicleSensing = true;
+        public CustomerConfig _CustomerConfig = null;
+
+        private SensingDatabaseSource _VSProvider = null;
+
+        public SpaceStatusProvider(CustomerConfig customerCfg)
+        {
+            _CustomerConfig = customerCfg;
+        }
+
+
+        public static string FormatShortTimeSpan(TimeSpan T, CustomerConfig customerCfg)
+        {
+            int NoDays = Math.Abs(T.Days);
+            int Hours = Math.Abs(T.Hours);
+            int Minutes = Math.Abs(T.Minutes);
+            int Seconds = Math.Abs(T.Seconds);
+
+            // JLA 2013-07-24: Trying to get the time displayed closer to what Liberty meter shows
+            // If we have X or more remainder seconds, round the minute and/or hour up as needed?
+            if ((Hours > 0) || (Minutes > 0))
+            {
+                if (Seconds > 8)
+                {
+                    Minutes++;
+                    if (Minutes >= 60)
+                    {
+                        Minutes = 0;
+                        Hours++;
+                    }
+                }
+            }
+            
+            if (NoDays > 365)
+                return string.Format(customerCfg.ShortYearsSpanFormat, (NoDays / 365).ToString());
+            else if (NoDays > 30)
+                return string.Format(customerCfg.ShortMonthsSpanFormat, (NoDays / 30).ToString());
+            else if (NoDays > 0)
+                return string.Format(customerCfg.ShortDaysSpanFormat, NoDays);
+            else if ((Hours > 0) || (Minutes > 0))
+                return string.Format(customerCfg.ShortHoursMinutesSpanFormat, Hours, Minutes);
+            else
+                return string.Format(customerCfg.ShortSecondsSpanFormat, Seconds);
+        }
+
+        public List<SpaceStatusModel> GetCurrentSpaceStatusForView(int PaymentCustomerId, List<int> listOfMeterIDs, CustomerLogic result)
+        {
+            return GetCurrentSpaceStatusForView(PaymentCustomerId, listOfMeterIDs, true, false, result);
+        }
+
+        public List<SpaceStatusModel> GetCurrentSpaceStatusForView(int PaymentCustomerId, List<int> listOfMeterIDs, bool wantPaymentInfo, bool mustGetEnforcementActionTakenStatus, CustomerLogic result)
+        {
+            string _ApplicationPath = System.Web.HttpContext.Current.Server.MapPath(@"~/App_Data");
+
+            System.Diagnostics.Stopwatch swPAMandVSDataGather = new System.Diagnostics.Stopwatch();
+            swPAMandVSDataGather.Start();
+
+            List<PAMSpaceExpiryInformation> PAMInfoList = null;
+            List<CurrentSpaceOccupancyInformation> VSInfoList = null;
+
+            // Get PAM info (as strongly typed list) from each applicable Cluster (but cluster info is queried via a MeterId in the cluster, rather than via ClusterID)
+            // Only gather PAM info if the caller is interested in payment data (No need to waste time if caller is only looking to get vehicle sensor data)
+            if (wantPaymentInfo == true)
+            {
+                // Even if they want PAM info, we will skip it if we know all of the involved assets are non-metered (sensor only)
+                bool PamIsApplicable = false;
+
+                // DEBUG: This is a temporary arrangement to get us by the IPI show
+                if (_CustomerConfig.ForcePamIsApplicable == true)
+                    PamIsApplicable = true;
+
+                foreach (int nextMeterID in listOfMeterIDs)
+                {
+                    if (PamIsApplicable == true)
+                        break;
+
+                    List<SpaceAsset> spaceAssets = CustomerLogic.CustomerManager.GetSpaceAssetsForMeter(_CustomerConfig, nextMeterID);
+                    foreach (SpaceAsset nextSpaceAsset in spaceAssets)
+                    {
+                        if (nextSpaceAsset.IsSensorOnly == false)
+                        {
+                            PamIsApplicable = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (PamIsApplicable == true)
+                    PAMInfoList = new PaymentXMLSource(_ApplicationPath, _CustomerConfig).GetPAMStatusForMeters_StronglyTyped(PaymentCustomerId, listOfMeterIDs);
+            }
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            
+            // Also get the current vehicle sensing status related to each meter (and its spaces)
+            _VSProvider = new SensingDatabaseSource(_CustomerConfig);
+            VSInfoList = _VSProvider.GetCurrentVehicleSensingDataForMeters_StronglyTyped(_CustomerConfig.CustomerId, listOfMeterIDs);
+
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine("VS Query Elapsed: " + sw.Elapsed.ToString());
+
+            swPAMandVSDataGather.Stop();
+            if (wantPaymentInfo == true)
+            {
+                System.Diagnostics.Debug.WriteLine("PAM and VS Combined Data Gather Elapsed: " + swPAMandVSDataGather.Elapsed.ToString());
+            }
+
+            SpaceStatusModelManager spaceStatusModelMgr = new SpaceStatusModelManager(this._CustomerConfig);
+
+            // Create a shell object for each known space of these meters.  Later we will fill in details from PAM and Vehicle sensing.
+            // However, in the case that PAM or VS is unavailable (or non-existent), we will still be able to report *something*
+            SpaceStatusModel spaceModelShell = null;
+            foreach (int nextMeterID in listOfMeterIDs)
+            {
+                // Get a list of bays for this meter
+                foreach (SpaceAsset nextSpaceAsset in CustomerLogic.CustomerManager.GetSpaceAssetsForCustomer(_CustomerConfig))
+                {
+                    if (nextSpaceAsset.MeterID == nextMeterID)
+                    {
+                        // Find existing object to update, or create a new one
+                        spaceModelShell = spaceStatusModelMgr.GetOrCreateSpaceStatusModel(nextMeterID, nextSpaceAsset.SpaceID, nextSpaceAsset);
+                    }
+                }
+            }
+
+            // Update details from PAM info
+            spaceStatusModelMgr.UpdateModelsFromPAMInfoList(PAMInfoList);
+
+            // Update details from Vehicle sensing info
+            spaceStatusModelMgr.UpdateModelsFromOccupancyInfoList(VSInfoList, mustGetEnforcementActionTakenStatus, result);
+
+            // Finished with the temporary lists
+            PAMInfoList = null;
+            VSInfoList = null;
+
+            return spaceStatusModelMgr.SpaceStatusModels;
+        }
+
+    }
+
+}

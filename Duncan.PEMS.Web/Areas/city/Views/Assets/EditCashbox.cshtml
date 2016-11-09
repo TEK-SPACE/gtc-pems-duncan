@@ -1,0 +1,265 @@
+﻿@model Duncan.PEMS.Entities.Assets.CashboxEditModel
+@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Edit Cashbox");
+}
+
+@{
+    var currCity = ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentCity].ToString();
+    var assetIdStatus =String.Empty;
+    if(Model.isNewAsset == 1){
+        assetIdStatus = "New";
+    }
+    else{
+        assetIdStatus = "Exists";
+    }
+    Model.isNewAsset = 0;
+}
+
+
+@section PageHeader 
+{
+
+    <!--<h1>Asset Management / Asset Inquiry / <span>Asset</span></h1>-->
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset")</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+<div id="divAssetCreatedStatusMsg" style= "position:relative;  vertical-align: middle; text-align: left; width:auto; height:30px; font-size:14px; font-weight:bolder; color: #0033CC; background-color: #FFFFFF ;">@Html.AssetCashBoxCreatedStatusMsg(ViewData.ModelState,Model, currCity,assetIdStatus)</div>
+
+<div class="customer_tab_content">
+
+    @using (Html.BeginForm("EditCashbox", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "editCashbox" }))
+    {
+        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(m => m.AreaId)
+        @Html.HiddenFor(m => m.AssetId)
+        if (Model.ClonedFromAsset != null)
+        {
+            @Html.HiddenFor(m => m.ClonedFromAsset.CustomerId)
+            @Html.HiddenFor(m => m.ClonedFromAsset.AreaId)
+            @Html.HiddenFor(m => m.ClonedFromAsset.AssetId)
+        }
+        @Html.HiddenFor(m => m.TypeId);
+        @Html.HiddenFor(m => m.StatusId);
+        @Html.HiddenFor(m => m.StatusOperational);
+        @Html.HiddenFor(m => m.StatusOperationalId);
+
+<div class="activation_date">
+    <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Activation Date")@Html.Raw(": ")@Html.Tooltip("EditActivationDate")</div>
+    @(Html.Kendo().DatePickerFor(m => m.ActivationDate))
+    @Html.ValidationMessageFor(m => m.ActivationDate)
+</div>
+        
+        
+        
+        <div class="customer_status">
+            <div class="customer_status_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Inventory Status"): 
+    @Html.DropDownListFor(m => m.StateId, new SelectList(Model.State, "Value", "Text"), new { @class = "customer_text" })
+            </div>
+        </div>
+
+
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Information")</div>
+
+        <div class="clear">
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Location")@Html.Raw(": ")</div>
+                    @Html.DropDownListFor(m => m.LocationId, new SelectList(Model.Location, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.LocationId)
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model")@Html.Raw(": ")</div>
+                    @Html.DropDownListFor(m => m.AssetModelId, new SelectList(Model.AssetModel, "Value", "Text"), new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.AssetModelId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")@Html.Raw(": ")</div>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "customer_text" })
+                    <span class="required_asterisk">*</span>
+                    @Html.ValidationMessageFor(m => m.Name)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("LastPreventativeMaintenance")</div>
+                    @Html.DisplayFor(m => m.LastPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.LastPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Next Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("NextPreventativeMaintenance")</div>
+                    @(Html.Kendo().DatePickerFor(m => m.NextPrevMaint))
+                    @Html.ValidationMessageFor(m => m.NextPrevMaint)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Warranty Expiration")@Html.Raw(": ")</div>
+                    @(Html.Kendo().DatePickerFor(m => m.WarrantyExpiration))
+                    @Html.ValidationMessageFor(m => m.WarrantyExpiration)
+                </div>
+            </div>
+        </div>
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Functional Status")</div>
+        <div class="clear">
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status")@Html.Raw(": ")@Html.Tooltip("OperationalStatus")</div>
+                    <span id="OperationalStatus_Div">@Html.DisplayFor(m => m.Status, new { @class = "customer_text" })</span>
+                    @Html.HiddenFor(m => m.Status)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status Date")@Html.Raw(": ")</div>
+                    <span id="OperationalStatusDate_Div">@Html.DisplayFor(m => m.StatusDateDisplay, new { @class = "customer_text" })</span>
+                    @Html.HiddenFor(m => m.StatusDate)&nbsp;
+                </div>
+            </div>
+        
+
+        <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="SAVE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Save")</button>
+            @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Return").ToString(), "Index", new { rtn = "true" }, new { @class = "button previous", @id = "btnReturn" })
+            <button type="submit" id="btnCopyAgain" name="submitButton" value="COPY" style="visibility: hidden">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Copy")</button>
+        </div>
+
+                                                   if (Model.ClonedFromAsset != null && Model.Saved)
+                                                   {
+        @(Html.Kendo().Window()
+                  .Name("AskCopyOrReturnDialog")
+                  .Title(false)
+                  .Content(@<text>
+        <div id="AskCopyOrReturnDialogContent">
+            The asset was saved successfully<br />
+            <br />
+            Do you want to create another copy or return to previous saved asset?
+        </div>
+        <div id="meterAddTimeDialogButtons" style="horiz-align: center">
+            <input type="button" class="button important" title="COPY" value="Copy" onclick=" javascript: CopyAgain(); " />
+            @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "ViewCashbox", "Assets",
+                                                       new { customerId = Model.ClonedFromAsset.CustomerId, assetId = Model.ClonedFromAsset.AssetId }, new { @class = "button" })
+        </div>
+        </text>)
+                  .Draggable().Width(300).Scrollable(false).Modal(true).Visible(false)
+                  )
+                                                   }
+    }
+</div>
+
+<script type="text/javascript">
+
+    // Create a view-model for the page controls. Model holds variables and view-related methods
+    var viewModel = kendo.observable({
+    });
+
+    $(document).ready(function () {
+
+        // bind the view model to the filter controls
+        kendo.bind($(document.body), viewModel);
+
+        @if (Model.ClonedFromAsset != null && Model.Saved)
+        {
+            @Html.Raw("var popup = $(\"#AskCopyOrReturnDialog\").data(\"kendoWindow\");\n")
+            ;
+            @Html.Raw("popup.center();\n")
+            ;
+            @Html.Raw("popup.open();\n")
+            ;
+        }
+
+        UpdateReturnButton();
+        
+        // bind to StateId dropdown
+        $("#StateId").bind("change", OnStateChange);
+    });
+
+    function CopyAgain() {
+
+        $('#AskCopyOrReturnDialog').data('kendoWindow').close();
+        $('#btnCopyAgain').trigger('click');
+        return false;
+    }
+
+
+    function UpdateReturnButton() {
+
+        var stringified;
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            stringified = window.sessionStorage.getItem("returnToAssetURL");
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+
+        // Create the return URL
+        if (stringified) {
+
+            var parsed = JSON.parse(stringified);
+
+            if (parsed) {
+                if (parsed.url) {
+                    $('<input />').attr('type', 'hidden').attr('name', 'returnUrl').attr('value', parsed.url).appendTo('#editCashbox');
+                    $("#btnReturn").attr("href", parsed.url);
+                }
+            }
+        }
+    }
+
+    var originalStatusId = '@Model.StatusId';
+    var originalStatus = '@Model.Status';
+    var originalStatusDate = '@Model.StatusDateDisplay';
+    var originalStateId = '@Model.StateId';
+
+    function OnStateChange(e) {
+        // If State changes from Pending to Current and StatusId was '0' then change Status to Model.StatusOperational
+        if (originalStatusId != '@((int)OperationalStatusType.Inactive)' || originalStateId != '@((int)AssetStateType.Pending)') {
+            return;
+        }
+
+        var newStateId = $("#StateId").val();
+
+        // If newStateId = pending then restore original status values
+        if (newStateId == '@((int)AssetStateType.Pending)') {
+            $("#Status").val(originalStatus);
+            $("#StatusId").val(originalStatusId);
+            $("#StatusDate").val(originalStatusDate);
+            $("#OperationalStatus_Div").text(originalStatus);
+            $("#OperationalStatusDate_Div").text(originalStatusDate);
+        } else {
+            var statusDate = $("#ActivationDate").val();
+            if (statusDate.length < 10) {
+                statusDate = '@Model.ActivationDate';
+            }
+
+            $("#Status").val('@Model.StatusOperational');
+            $("#StatusId").val('@Model.StatusOperationalId');
+            $("#StatusDate").val(statusDate);
+            $("#OperationalStatus_Div").text('@Model.StatusOperational');
+            $("#OperationalStatusDate_Div").text(statusDate);
+        }
+
+
+    }
+
+
+</script>

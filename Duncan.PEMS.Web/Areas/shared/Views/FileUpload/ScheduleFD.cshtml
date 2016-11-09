@@ -1,0 +1,2621 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.GIS.GISModel
+
+
+@{
+    ViewBag.Title = "File Uploads";
+}
+
+@section Scripts 
+{    
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!-- file upload -->
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+
+    <script id="rowTemplate" type="text/x-kendo-tmpl">
+        <tr>
+            <td><a href="${ IssueNo_final }" target="_blank">${ IssueNo_final }</a></td>
+        </tr>
+    </script>
+
+    <script id="delete-confirmation" type="text/x-kendo-template">
+    <p class="delete-message">All selections will be cleared. Do you want to continue?</p>
+    <div style=width:300px;marginLeft:35px;'>
+        <p style='visibility:hidden;float:left;'>hidenhidenhidne</p>
+        <button class="delete-confirm k-button" style="width:80px;">Yes</button>
+        <button class="delete-cancel k-button" style="width:80px;">No</button>
+    </div>
+
+</script>
+
+    <script type="text/x-kendo-tmpl" id="template">
+        <label style='width:100%;fontSize:16;'>#:Text#</label>
+    </script>
+
+    <script type="text/javascript">
+
+        //** for file upload
+        function addExtensionClass(extension) {
+            switch (extension) {
+                case '.jpg':
+                case '.img':
+                case '.png':
+                case '.gif':
+                    return "img-file";
+                case '.doc':
+                case '.docx':
+                    return "doc-file";
+                case '.xls':
+                case '.xlsx':
+                    return "xls-file";
+                case '.pdf':
+                    return "pdf-file";
+                case '.zip':
+                case '.rar':
+                    return "zip-file";
+                default:
+                    return "default-file";
+            }
+        }
+        var storeItemsAll = [];
+        var storeItems = [];
+        var timeInterval;
+        var spinner;
+        var isLicenseState = false;
+        var isLicenseType = false;
+        var isClass = false;
+        var isCode = false;
+        var isViolationDesc = false;
+        var isType = false;
+        var isStatus = false;
+        var isAgency = false;
+        var isBeat = false;
+        var isOfficerID = false;
+        var isOfficerName = false;
+
+       // Define default date-picker dates
+        var startD = new Date();
+
+        startD.setDate(new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]').getDate());
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+
+        var endD = new Date('@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay]');
+        endD.setDate(endD.getDate()+30);
+        endD.setHours(23);
+        endD.setMinutes(59);
+        endD.setSeconds(59);
+
+
+    var viewModel = kendo.observable({
+        startDate: startD,
+        whichListBoxBtnClicked: null,
+        fileNameDD_2_Visible: false,
+        fileNameDD_3_Visible: false,
+        fileNameDD_4_Visible: false,
+        fileNameDD_5_Visible: false,
+        fileNameDD_6_Visible: false,
+        fileNameDD_NextVal: 0,
+        fileInfoArray:[],
+        endDate: endD,
+        deletedItemsArr:[],
+        issueNoPrefix: null,
+        issueNumber_final: null,
+        issueNumberSuffix: null,
+        dropDownIndex: null,
+        presentDropDownName:null,
+        isBackButtonUsed:null,
+        EnforcementLicenseStateassets: [],
+        EnforcementLicenseStateasset: "Please Select",
+
+        EnforcementVehLicNoassets: [],
+        EnforcementVehLicNoasset: null,
+        licenseTypes: [],
+        licenseType: "Please Select",
+        ViolationSelector: "Class",
+
+
+        agencys: [],
+        agency: "Please Select",
+        Beats: [],
+        Beat: "Please Select",
+
+        street: null,
+
+        meterIds: [],
+        meterId: null,
+
+        vehicleVIN: null,
+        StatusA: [],
+        Status: "Please Select",
+        officeIds: [],
+        officeId: "Please Select",
+
+
+        classesa: [],
+        classes: "Please Select",
+        codes: [],
+        code: "Please Select",
+        OfficerNames: [],
+        OfficerName: "Please Select",
+
+
+        types: [],
+        type: "Please Select",
+        vioDescs: [],
+        vioDesc: "Please Select",
+
+    });
+
+
+
+    var onSelect = function (e) {
+
+        //get the input and UL list
+        var input = document.getElementById('fup');
+        var list = document.getElementById('fileList');
+
+        //empty list for now...
+        while (list.hasChildNodes()) {
+            list.removeChild(ul.firstChild);
+        }
+
+        $.each(e.files, function (index, value) {
+            if (value.extension != ".jpg") {
+                e.preventDefault();
+                alert("Please upload jpg image files");
+            }
+        });
+
+        //for every file...
+        for (var x = 0; x < input.files.length; x++) {
+            //add to list
+            var li = document.createElement('li');
+            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name;
+           // alert('app' + input.files[x].name);
+
+            //list.insertBefore(li, list.firstChild);
+
+        }
+        // alert('dsds' + input.files.length);
+
+    };
+
+
+
+    $(document).ready(function () {
+
+
+        kendo.bind($(document.body), viewModel);
+        $("#vioCode").css('display', 'none');
+        //$(".k-datetimepicker input").prop("readonly", true);
+       // $("#startDateTime").attr("readonly", "readonly")
+        //showProgressBar(true);
+        var timezonedateis = '@Model.Text';
+        var errorMsg = '@Model.errorMsg';
+        if (errorMsg != "") {
+          //  alert(errorMsg);
+        }
+
+
+        // when the view state changes, cache it
+        viewModel.bind("change", function (e) {
+            SaveViewState();
+        });
+
+        // if returning from details page, load cached page state (filters, grid state, etc)
+        if (getParameterByName('rtn') == 'true') {
+
+
+            LoadViewState();
+            vioSelChange();
+
+            //** time interval to invoke datasource of kendo grid after the grid is ready;
+            timeInterval = window.setInterval(function () { multiSelectAssetTypeDropDownFunc(); }, 1000);
+
+
+        } else {
+
+            // Since not pulling filter values from cache, get them from server         
+            GetDynamicFilterValues();
+
+        }
+
+        $(window).bind('resize', function () {
+            switch (viewModel.gridType) {
+                case 'Functional Status':
+                    applyFrozenColumns(3);
+                    break;
+                default:
+                    applyFrozenColumns(2);
+            }
+        });
+
+
+    });
+
+        function ClearSelectionMethods() {
+
+            var grplistBoxUI = $("#groupListBox").data("kendoListView");
+            var targetListBoxUI = $("#targetlistView").data("kendoListView");
+
+            grplistBoxUI.dataSource.data({});
+            targetListBoxUI.dataSource.data({});
+
+            $("#ddlLocationType").data("kendoDropDownList").value(-1);
+
+            for (var i = 2; i <= 13; i++) {
+                $('#ftype_' + i).css('display', 'none');
+                $("#fileDropDown_" + i).closest(".k-widget").hide();
+            }
+
+            $("#fileType_1").data("kendoDropDownList").value(-1);
+            var dropdownlist = $("#fileType_1").data("kendoDropDownList");
+            dropdownlist.enable();
+
+          
+            var dd = $("#fileDropDown_1").data("kendoDropDownList");
+            dd.select(0);
+
+            $("#fileDropDown_" + 1).closest(".k-widget").hide();
+
+        }
+
+    function multiSelectAssetTypeDropDownFunc() {
+        window.clearInterval(timeInterval)
+        $("#grdCustomerDetails").css("display", "inline");
+        $("#grdCustomerDetails").data("kendoGrid").dataSource.read();
+
+    }
+
+    function onGroupListReqStart() {
+        $('#groupListBox').addClass('k-loading-image');
+    }
+
+
+
+    function onGroupListReqEnd() {
+        $('#groupListBox').removeClass('k-loading-image');
+    }
+
+    function getRoleId() {
+        var roleID =  '@ViewData[Constants.ViewData.CurrentCityId]';
+        return { RoleID: roleID }
+    }
+
+        function FileDetailsJS() {
+
+        var roleID = '@ViewData[Constants.ViewData.CurrentCityId]';
+        
+        //** First get the selected file Type menu and the file extension type data
+        var currentMenuSuffixIs = viewModel.get('presentDropDownName');
+        var fileTypeDD = $("#fileType_" + currentMenuSuffixIs).data("kendoDropDownList");
+
+
+        var index = $("#fileType_" + currentMenuSuffixIs).data("kendoDropDownList").select();
+        var dropDown_data = fileTypeDD.dataSource.data();
+        var fileTypeIs = dropDown_data[index - 1].FileType;
+        
+        return { RoleID: roleID, fileTypeVal: fileTypeIs}
+     }
+
+    function onChangeFileType(number) 
+    {
+        var index =  $("#fileType_"+number).data("kendoDropDownList").select();
+        var dropdownlist = $("#fileDropDown_"+number).data("kendoDropDownList");
+        if(index>0)
+        {
+
+            $("#fileDropDown_" + number).closest(".k-widget").show();
+            $("#fileNameTitle").css('visibility', 'visible');
+
+            viewModel.set('fileNameDD_' + number + '_Visible', true);
+            viewModel.set('fileNameDD_NextVal', number);
+            
+            dropdownlist.enable();
+
+            //** Populate the file names for the corresponding file type.
+            viewModel.set('presentDropDownName', number);
+            var fName = $("#fileDropDown_" + number).data("kendoDropDownList")
+            fName.dataSource.read();
+
+        }else
+        {
+
+            $("#fileDropDown_" + number).closest(".k-widget").hide();
+            $("#fileNameTitle").css('visibility', 'hidden');
+            dropdownlist.enable(false);
+           
+        }
+
+    }
+
+    function onFileDropDownFetched() {
+        var getCurrentMenu = viewModel.get('presentDropDownName');
+        var fName = $("#fileDropDown_" + getCurrentMenu).data("kendoDropDownList")
+        var dropDown_data = fName.dataSource.data();
+        fName.enable(true);
+        fName.list.width("auto");
+
+        if (dropDown_data.length<1)
+        {
+            //** When there is no data fetched from the service
+
+            fName.dataSource.add({ FileName: '' });
+            fName.dataSource.remove(dropDown_data[0])
+            return false;
+        }
+        
+    }
+
+    function onFileChange(number) 
+    {
+        var increment = number+1;
+        var fType = $("#fileType_"+number).data("kendoDropDownList")
+        var fName = $("#fileDropDown_"+number).data("kendoDropDownList")
+        fType.enable(false);       
+       // fName.enable(false);
+        
+        $("#ftype_"+increment).css('clear', 'both');
+        $("#ftype_" + increment).css('display', 'block');
+
+      
+
+       // $("#fileDropDown_"+increment).closest(".k-widget").hide();
+
+        //** Refresh the file Type dropdown whenevery previous dropdown item is chosen by removing the selected item
+        
+        //** First get the selected file name
+        var index =  $("#fileType_"+number).data("kendoDropDownList").select();
+        var dropDown_data = fType.dataSource.data();
+        var dd_fileName = dropDown_data[index-1].FileName;
+
+        //** Store the selected file name in view model so that it can be removed in all the subsequent file type dropdown menus
+        var getdeletedItemsArr = viewModel.get('deletedItemsArr');
+        getdeletedItemsArr.push({fName: dd_fileName})
+        
+        //**Get the reference of the targeted DD for which the selected file names to be removed
+        var targetedDD = $("#fileType_" + increment).data("kendoDropDownList");
+        var fTypeDD_disabledState = $("#fileType_" + increment).prop('disabled');
+
+        var targetedDD_Data =targetedDD.dataSource.data();
+
+        var getdeletedItemsArr = viewModel.get('deletedItemsArr');
+
+        //** Loop thru the targeted DD to remove the file names mentioned in viewmodel.
+
+        if (fTypeDD_disabledState == false) {
+            for (var i = 0; i < getdeletedItemsArr.length; i++) {
+                for (var j = 0; j < targetedDD_Data.length; j++) {
+                    if (getdeletedItemsArr[i].fName == targetedDD_Data[j].FileName) {
+                        //  alert('status ' + targetedDD.enabled);
+
+                        targetedDD.dataSource.remove(targetedDD_Data[j])
+                    }
+                }
+
+            }
+        }
+
+    }
+
+    
+        
+
+    function SetLocationType_Empty() {
+        var LocationType = $("#ddlLocationType").val();
+        var CustomerId = '@ViewBag.CurrentCityID';
+        var groupItems = [];
+        var targetItems = [];
+        var grpListView = $("#groupListBox").data("kendoListView");
+        var tarListView = $("#targetlistView").data("kendoListView");
+
+        btnUsed = viewModel.get('whichListBoxBtnClicked');
+
+        if (btnUsed == "Add") {
+            $.map($('#groupListBox').data('kendoListView').select(), function (item) {
+                groupItems.push($(item).text());
+            });
+        } else if ( btnUsed == "AddAll") {
+            //** If Add All option is chosen  and Other than Asset ID/Name is chosen;
+
+            //** Fetch data from available lis
+            var data = grpListView.dataSource.data();
+
+            //** Adding all items
+            for (var i = 0; i < data.length; i++) {
+                groupItems.push(data[i].Text);
+            }
+        }
+
+        //**Append target items to the end of the result
+        //** Fetch data from target list
+        var data = tarListView.dataSource.data();
+
+        //** Adding all items
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].Text != "") {
+                targetItems.push(data[i].Text);
+            }
+        }
+
+       // alert('targetItems:' + targetItems.length);
+             //** Get the metergroup ID of the asset type selected.
+        var assetTypeValue = $("#ddlAssetType").val();
+        return { locationType: LocationType, customerid: CustomerId, groupItems: groupItems.toString(), assetTypeVal: assetTypeValue, targetItems: targetItems.toString() }
+    }
+
+    function SetLocationType() {
+
+        //** To retain the previous selection value
+            var grp_list = $("#groupListBox").data("kendoListView");
+            grp_list.bind("dataBound", function (e) {
+                var indexOnFetch = $("#ddlLocationType").data("kendoDropDownList").select();
+
+            viewModel.set('dropDownIndex', indexOnFetch);
+
+
+        });
+
+        //** end of code
+        var LocationType = $("#ddlLocationType").val();
+        var CustomerId = '@ViewBag.CurrentCityID';
+
+        //** Get the metergroup ID of the asset type selected.
+        var assetTypeValue = $("#ddlAssetType").val();
+        return { locationType: LocationType, customerid: CustomerId, meterGrpID: assetTypeValue}
+        }
+
+        function SetLayerId() {
+            var layerID = "1";//$("#layerDropDown").val();
+            return { LayerID: layerID }
+        }
+
+
+        function SaveViewState() {
+
+            /// Save filters view state to local storage, with fallback to
+            /// server if HTML5 local storage not supported (IE7)            
+
+            // serialize viewstate
+            var json = viewModel.toJSON();
+            var stringified = JSON.stringify(json);
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                window.sessionStorage.setItem("enforcementViewState", stringified);
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+        }
+
+        function onScheduleBtnClicked() {
+
+            showProgressBar(true);
+
+            //** Gather all the selected options from the wizard screens
+
+            var selectedAssets = [];
+            var listView = $("#targetlistView").data("kendoListView");
+
+            //** Fetch data from target lis
+            var data = listView.dataSource.data();
+
+            //*** Wizard Screen 1 (Asset Type Selection)
+            var assetTypeValue = $("#ddlAssetType").val();
+          //  alert('assetTypeValue' + assetTypeValue);
+
+            //*** Wizard Screen 2 (Asset ID selection)
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].Text != "") {
+                    selectedAssets.push(data[i].Text);
+                }
+            }
+           
+            var LocationType = $("#ddlLocationType").val();
+          //  alert("loctype" + LocationType);
+         //   alert('selectedAssets' + selectedAssets);
+
+            //*** Wizard Screen 3 (File type and names Selection)
+            var getFileArray = [];
+            var storeFileIDs = viewModel.get('fileInfoArray');
+           // alert('storeFileIDs'+storeFileIDs.length)
+            for (var i = 0; i < storeFileIDs.length; i++) {
+                getFileArray.push(storeFileIDs[i]);
+            }
+           // alert('getFileArray fID:' + getFileArray[0].fID);
+
+            //*** Wizard Screen 4 (Schedule Date Selection)
+            var scheduledDate = $('#startDateTime').val(); //+":00";
+            //   alert('scheduledDate' + scheduledDate);
+
+            var assetTypeValue = $("#ddlAssetType").val();
+
+            //*** Wizard Screen 5 (Activation Date Selection)
+            var activationDate = $('#startDateTime').val(); // + ":00";
+          //  alert('activationDate' + activationDate);
+            //alert('selectedAssets' + selectedAssets.toString())
+            userValues = JSON.stringify({
+                    chosenAsset: assetTypeValue,
+                    locTypeVal: LocationType,
+                    assetSelected: selectedAssets.toString(),
+                    fileSelected: getFileArray.toString(),
+                    dateScheduled: scheduledDate,
+                    dateActivated: activationDate
+               })
+
+             
+
+            //** Pass the user selected values to the controller method
+            $.ajax({
+                url: '../FileUpload/ScheduleAssetJobs',
+                type: 'POST',
+                dataType: 'json',
+                data: userValues,
+                contentType: 'application/json; charset=utf-8',
+                success: function (results) {
+                    var AssetIDArr = [];
+                    var FilesArr = [];
+
+                    //** Store the AssetIDs and Filenames in the respective arrays
+                    for (var i = 0; i<results.length; i++) {
+                        AssetIDArr.push(results[i].AssetIDIs);
+                        FilesArr.push(results[i].FileNameIs);
+                    }
+
+                    //** Remove the duplicates from the arrays.
+                    var uniqueAssetIDs = AssetIDArr.unique();
+                    var uniqueFilesArr = FilesArr.unique();
+
+                    showProgressBar(false);
+
+                    //** Check if no. of assetIDs is more than zero
+                    if (uniqueAssetIDs.length > 0) {
+                        //** SEnd email to duncan operations
+                        alert('Successfully scheduled.');
+                    } else {
+                        alert('Schedule failed.');
+                    }
+
+                 
+
+                },
+                error: function (results) {
+                    jQuery.error(String.format("Status Code: {0}, ", results.status, results.statusText));
+                    showProgressBar(false);
+                }
+            });
+
+               
+             
+        }
+
+        Array.prototype.unique = function () {
+            var r = new Array();
+            o: for (var i = 0, n = this.length; i < n; i++) {
+                for (var x = 0, y = r.length; x < y; x++) {
+                    if (r[x] == this[i]) {
+                       // alert('this is a DUPE!');
+                        continue o;
+                    }
+                }
+                r[r.length] = this[i];
+            }
+            return r;
+        }
+
+
+        
+
+
+        function LoadViewState() {
+            /// Load filter view state if found in session
+
+            var stringified;
+
+            // test for HTML5 local storage support
+            if (typeof (Storage) !== "undefined") {
+                // HTML5 sessionStorage support! Yay!
+                stringified = window.sessionStorage.getItem("enforcementViewState");
+            } else {
+                // No web storage support..
+                // todo: implement fall back to server caching
+            }
+
+            // reconstruct the view model from the cache
+            if (stringified) {
+                var parsed = JSON.parse(stringified);
+                if (parsed) {
+
+                    if (!parsed.licenseTypes) {
+                        GetDynamicFilterValues();
+                    }
+
+                    $('#autocompleteIssueNoPfx').val(parsed.issueNoPrefix);
+                    $("#autocompleteIssueNo").val(parsed.issueNumber_final);
+                    $('#autocompleteIssueNoSfx').val(parsed.issueNumberSuffix);
+                    $('#autocompleteVehVIN').val(parsed.vehicleVIN);
+                    $('#autocompleteVehLicNo').val(parsed.EnforcementVehLicNoasset);
+                    $('#autocompleteStreet').val(parsed.street);
+                    $('#autocompleteMeterID').val(parsed.meterId);
+
+                    if (parsed.EnforcementLicenseStateassets) {
+                        viewModel.set('EnforcementLicenseStateassets', parsed.EnforcementLicenseStateassets);
+                    }
+
+
+                    viewModel.set('EnforcementLicenseStateasset', parsed.EnforcementLicenseStateasset);
+
+                    if (parsed.licenseTypes) {
+                        viewModel.set('licenseTypes', parsed.licenseTypes);
+                    }
+
+                    viewModel.set('licenseType', parsed.licenseType);
+
+
+                    if (parsed.agencys) {
+                        viewModel.set('agencys', parsed.agencys);
+                    }
+                    viewModel.set('agency', parsed.agency);
+                    if (parsed.Beats) {
+                        viewModel.set('Beats', parsed.Beats);
+                    }
+                    viewModel.set('Beat', parsed.Beat);
+
+                    if (parsed.StatusA) {
+                        viewModel.set('StatusA', parsed.StatusA);
+                    }
+                    viewModel.set('Status', parsed.Status);
+                    if (parsed.officeIds) {
+                        viewModel.set('officeIds', parsed.officeIds);
+                    }
+                    viewModel.set('officeId', parsed.officeId);
+                    viewModel.set('ViolationSelector', parsed.ViolationSelector);
+                    if (parsed.classesa) {
+                        viewModel.set('classesa', parsed.classesa);
+                    }
+                    viewModel.set('classes', parsed.classes);
+                    if (parsed.codes) {
+                        viewModel.set('codes', parsed.codes);
+                    }
+                    viewModel.set('code', parsed.code);
+
+                    if (parsed.OfficerNames) {
+                        viewModel.set('OfficerNames', parsed.OfficerNames);
+                    }
+                    viewModel.set('OfficerName', parsed.OfficerName);
+
+                    if (parsed.types) {
+                        viewModel.set('types', parsed.types);
+                    }
+                    viewModel.set('type', parsed.type);
+
+                    if (parsed.vioDescs) {
+                        viewModel.set('vioDescs', parsed.vioDescs);
+                    }
+                    viewModel.set('vioDesc', parsed.vioDesc);
+
+
+                    // first, restore dynamic filter/dropdown values
+
+
+                    // don't want to create a new Date if null because will default to 1970
+                    if (parsed.startDate) {
+
+                        viewModel.set('startDate', new Date(parsed.startDate));
+                    }
+                    if (parsed.endDate) {
+                        viewModel.set('endDate', new Date(parsed.endDate));
+                    }
+
+                }
+            } else {
+                // No view state stored in cache, so get dynamic filter values from server
+                //console.log('no view state found, defaults will be used');
+                GetDynamicFilterValues();
+            }
+
+            showProgressBar(false);
+        }
+        function GetDynamicFilterValues() {
+
+            var url = '@Url.Action("GetFilterValues")';
+                $.post(url, function (data) {
+
+
+                    viewModel.set("EnforcementLicenseStateassets", data.EnforcementLicenseStateassets);
+                    viewModel.set("licenseTypes", data.licenseTypes);
+                    viewModel.set("agencys", data.agencys);
+                    viewModel.set("Beats", data.Beats);
+                    viewModel.set("officeIds", data.officeIds);
+
+
+                    viewModel.set("classesa", data.classesa);
+                    viewModel.set("codes", data.codes);
+                    viewModel.set("OfficerNames", data.OfficerNames);
+
+                    viewModel.set("vioDescs", data.vioDescs);
+
+                    showProgressBar(false);
+
+                });
+            }
+
+
+            function vioSelChange() {
+
+                var value = $("#vioSelector").val();
+
+                if (value == "1") {
+                    $("#vioClass").css('display', 'inline');
+                    $("#vioCode").css('display', 'none');
+                } else {
+                    $("#vioClass").css('display', 'none');
+                    $("#vioCode").css('display', 'inline');
+
+                }
+            }
+
+            function GetLocationTypeId() {
+
+                //** Show alert message when the 'Grouping' changes in the dropdown menu.
+                var grplistBoxUI = $("#groupListBox").data("kendoListView");
+                var targetListBoxUI = $("#targetlistView").data("kendoListView");
+
+                var availableListCnt = grplistBoxUI.dataSource.data()
+                var selectedListCnt = targetListBoxUI.dataSource.data();
+                var LocationType = $("#ddlLocationType").data("kendoDropDownList").text();
+
+                if (selectedListCnt.length > 0) {
+
+                   // var selectedIndex = $("#ddlLocationType").data("kendoDropDownList").select();
+                    //alert('selectedIndex' + selectedIndex);
+
+                    //** Kendo Alert Box
+                    var kendoWindow = $("<div style='width:380px;' />").kendoWindow({
+                        title: "Clear Selections",
+                        resizable: false,
+                        modal: true
+                    });
+
+                    kendoWindow.data("kendoWindow")
+                        .content($("#delete-confirmation").html())
+                        .center().open();
+
+                    kendoWindow
+                        .find(".delete-confirm,.delete-cancel")
+                            .click(function () {
+                                if ($(this).hasClass("delete-confirm")) {
+                                    //grplistBoxUI.remove(grplistBoxUI.element.children());
+                                    grplistBoxUI.dataSource.data({});
+                                    targetListBoxUI.dataSource.data({});
+
+                                    grplistBoxUI.dataSource.read();
+                                    grplistBoxUI.refresh();
+                                } else {
+                                    //** When 'NO' option is chosen, default to previous selected item
+                                    var dropdownlist = $("#ddlLocationType").data("kendoDropDownList");
+
+                                    index = viewModel.get('dropDownIndex');
+                                    dropdownlist.select(index);
+                                }
+
+                                kendoWindow.data("kendoWindow").close();
+                            })
+                            .end()
+
+
+                }
+                else 
+                    {
+
+                        grplistBoxUI.dataSource.read();
+                        grplistBoxUI.refresh();
+                   }
+
+            }
+
+            function isDataInTargetLB() {
+                var listView = $("#targetlistView").data("kendoListView");
+
+                //** Fetch data from available lis
+                var data = listView.dataSource.data();
+                if (data.length == 0 || String(data.length) =="undefined") {
+                    alert("Please select an asset.");
+                    return false;
+                } else {
+                    hidePages(2)
+                    hideDropDowns()
+
+                    var status = viewModel.get('isBackButtonUsed');  //** Check whether page 3 back btn is used or not
+                    if (status == "true") {
+                        return false
+                    }
+                    $("#fileDropDown_1").closest(".k-widget").hide();
+
+                }
+            }
+
+            function isFileTypeNameChosen() {
+                var fileTypeIs;
+                var fileNameIs = "";
+
+                //** Check only for the first file type dd
+                //** File Type DropDown menu
+                var fileTypeDD = $("#fileType_1").data("kendoDropDownList");
+                var dropDown_FType = fileTypeDD.dataSource.data();
+                var index = $("#fileType_1").data("kendoDropDownList").select();
+              
+                if (index == 0) {
+                    alert("Select the file type.");
+                    return;
+                } else {
+                    executeValidation_one(fileTypeIs, fileNameIs);
+                }
+
+               
+            }
+
+            function executeValidation_one(fileTypeIs, fileNameIs) {
+                checkFileType(viewModel.get('fileNameDD_NextVal'), fileTypeIs, fileNameIs);
+                checkFileName(viewModel.get('fileNameDD_NextVal'), fileTypeIs, fileNameIs)
+            }
+
+            function checkFileType(i, fileTypeIs, fileNameIs) {
+                //** File Type DropDown menu
+                var fileTypeDD = $("#fileType_" + i).data("kendoDropDownList");
+                var dropDown_FType = fileTypeDD.dataSource.data();
+                var index = $("#fileType_" + i).data("kendoDropDownList").select();
+                if (index != 0) {
+                    fileTypeIs = dropDown_FType[index - 1].FileType;
+
+                } else if (index == 0 && i > 1) {
+                    //** Changed to default selection 'Please Select'
+                }
+                else {
+                    alert("Select the file type.");
+                    return;
+                }
+
+            }
+
+            function checkFileName(i, fileTypeIs, fileNameIs) {
+                //** File Name DropDown menu
+                var fileNameDD = $("#fileDropDown_" + i).data("kendoDropDownList");
+                var dropDown_FName = fileNameDD.dataSource.data();
+                var index = $("#fileDropDown_" + i).data("kendoDropDownList").select();
+
+                //** File Type DropDown menu
+                var fileTypeDD = $("#fileType_" + i).data("kendoDropDownList");
+                var dropDown_FType = fileTypeDD.dataSource.data();
+                var fType_index = $("#fileType_" + i).data("kendoDropDownList").select();
+
+                if (index == 0 && fType_index == 0 && i > 1) {
+                    goToNextPageDirectly(viewModel.get('fileNameDD_NextVal'));
+                    return;
+                }
+                
+                if (index != 0) {
+                    fileNameIs = dropDown_FName[index - 1].FileName;
+                    var next = viewModel.get('fileNameDD_NextVal') + 1;
+                    var getStatusOfNextDD = viewModel.get('fileNameDD_' + next + '_Visible');
+                    if (getStatusOfNextDD == true) {
+
+                        //** File Type DropDown menu
+                        var fileTypeDD = $("#fileType_" + next).data("kendoDropDownList");
+                        var dropDown_FType = fileTypeDD.dataSource.data();
+                        var index = $("#fileType_" + next).data("kendoDropDownList").select();
+                        if (index != 0) {
+                            alert("Select the file Name.");
+                            return;
+                        } 
+                        //** Check the next ones
+                        executeValidation_one("", "")
+                    } 
+                    else {
+                        //** It indicates it is the last row enabled.
+
+                        //** Check whether user has reverted back to 'Select File Name...' again. If so, show the alert;
+                        checkEmptyValues(viewModel.get('fileNameDD_NextVal'));
+                       
+                    }
+                } else {
+
+                    //** File Name DropDown menu
+                    var fileNameDD = $("#fileDropDown_" + i).data("kendoDropDownList");
+                    var dropDown_FName = fileNameDD.dataSource.data();
+                    var index = $("#fileDropDown_" + i).data("kendoDropDownList").select();
+                    if (index == 0) {
+                        alert("Select the file name.");
+                        return;
+                    }
+                }
+            }
+
+
+            function checkEmptyValues(maxLoop) {
+                
+                var getFileArray = viewModel.get('fileInfoArray');
+                for (var i = 0; i < getFileArray.length; i++) {
+                    getFileArray.pop();
+                }
+
+
+                for (var i = 1; i <= maxLoop; i++) {
+
+                    //** File Type DropDown menu
+                    var fileTypeDD = $("#fileType_" + i).data("kendoDropDownList");
+                    var dropDown_FType = fileTypeDD.dataSource.data();
+                    var fileTypeIndex = $("#fileType_" + i).data("kendoDropDownList").select();
+
+                    //** File Name DropDown menu
+                    var fileNameDD = $("#fileDropDown_" + i).data("kendoDropDownList");
+                    var dropDown_FName = fileNameDD.dataSource.data();
+                    var index = $("#fileDropDown_" + i).data("kendoDropDownList").select();
+
+                    if (index == 0) {
+                        alert("Select the file name.");
+                        return;
+                    } else {
+                        var getFileArray = viewModel.get('fileInfoArray');
+                        fileNameIs = dropDown_FName[index - 1].FileName;
+                        fileID = dropDown_FName[index - 1].FileID;  //** This is what is going to be unique for file name and hence send this to controller method
+                        fileTypeIs = dropDown_FType[fileTypeIndex - 1].FileType;
+                        // getFileArray.push({ fType: fileTypeIs, fName: fileNameIs, fID: fileID})
+                        getFileArray.push(fileID);
+
+                    }
+
+                }
+
+                hidePages(3);
+
+            }
+
+
+            function goToNextPageDirectly(maxLoop) {
+
+                var getFileArray = viewModel.get('fileInfoArray');
+                for (var i = 0; i < getFileArray.length; i++) {
+                    getFileArray.pop();
+                }
+
+                for (var i = 1; i <= maxLoop; i++) {
+
+                    //** File Type DropDown menu
+                    var fileTypeDD = $("#fileType_" + i).data("kendoDropDownList");
+                    var dropDown_FType = fileTypeDD.dataSource.data();
+                    var fileTypeIndex = $("#fileType_" + i).data("kendoDropDownList").select();
+
+                    //** File Name DropDown menu
+                    var fileNameDD = $("#fileDropDown_" + i).data("kendoDropDownList");
+                    var dropDown_FName = fileNameDD.dataSource.data();
+                    var index = $("#fileDropDown_" + i).data("kendoDropDownList").select();
+
+                    if (index == 0) {
+                        hidePages(3);
+                        //alert("Select the file name.");
+                       // return;
+                    } else {
+                        var getFileArray = viewModel.get('fileInfoArray');
+                        fileNameIs = dropDown_FName[index - 1].FileName;
+                        fileID = dropDown_FName[index - 1].FileID;  //** This is what is going to be unique for file name and hence send this to controller method
+                        fileTypeIs = dropDown_FType[fileTypeIndex - 1].FileType;
+                        getFileArray.push(fileID);
+
+                    }
+
+                }
+
+            }
+
+
+
+            
+
+
+            function onNext(pgNum) {
+                if (pgNum == 1) {
+                    hidePages(1)
+                } else if (pgNum == 2) {
+
+                    isDataInTargetLB();
+                } else if (pgNum == 3) {
+                    isFileTypeNameChosen();
+                }else if (pgNum == 4) {
+                    hidePages(4)
+                }else if (pgNum == 5) {
+
+                    hidePages(5)
+                }
+                   
+            }
+
+            function hidePages(number)
+            {
+                for(var i=1;i<=number;i++)
+                {
+                    $("#page_"+number).css('display', 'none');
+                }
+                var increment = number +1;
+                $("#page_"+increment).css('display', 'inline');
+            }
+
+            function hideDropDowns() {
+                var status = viewModel.get('isBackButtonUsed');  //** Check whether page 3 back btn is used or not
+                if(status=="true")
+                {
+                    return false
+                }
+
+                    for (var i = 2; i <= 13; i++) {
+                        $('#ftype_' + i).css('display', 'none');
+                        $("#fileDropDown_" + i).closest(".k-widget").hide();
+                    }
+
+                   
+
+                  
+                
+               
+            }
+
+
+
+            function onBack(pgNum) {
+                if (pgNum == 2) {
+                    $("#page_1").css('display', 'inline');
+                    $("#page_2").css('display', 'none');
+                }else if (pgNum == 3) {
+                    viewModel.set('isBackButtonUsed', 'true');
+                    $("#page_2").css('display', 'inline');
+                    $("#page_3").css('display', 'none');
+                } else if (pgNum == 4) {
+                    viewModel.set('fileInfoArray', [{}]);
+                    $("#page_3").css('display', 'inline');
+                    $("#page_4").css('display', 'none');
+                }else if (pgNum == 5) {
+                    $("#page_4").css('display', 'inline');
+                    $("#page_5").css('display', 'none');
+                }else if (pgNum == 6) {
+                    $("#page_5").css('display', 'inline');
+                    $("#page_6").css('display', 'none');
+            }
+            }
+
+            
+            
+            function onRemove_ALL_Locations() {
+                var selectedMethod = $('#ddlLocationType').val();
+                var listView = $("#targetlistView").data("kendoListView");
+                var grpListView = $("#groupListBox").data("kendoListView");
+
+                if (selectedMethod == "AssetID" || selectedMethod == "AssetName") {
+
+                    //** Asset ID is chosen;
+
+                    //** Fetch data from available lis
+                    var mydata = listView.dataSource.data();
+                    storeItemsAll = [];
+
+                    if (mydata.length == 0 || String(mydata.length) == "undefined") {
+    
+                    } else {
+                        //** Take previous values if any from  Array
+                        var srcdata = grpListView.dataSource.data();
+                        for (var i = 0; i < srcdata.length; i++) {
+                            storeItemsAll.push({ Text: srcdata[i].Text });
+                        }
+
+                        for (var i = 0; i < mydata.length; i++) {
+                            storeItemsAll.push({ Text: mydata[i].Text });
+                        }
+
+                        //storeItemsAll.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        if (selectedMethod == "AssetID") {
+                            storeItemsAll.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        } else {
+                            storeItemsAll.sort(function (a, b) {
+                                var nameA = a.Text.toLowerCase(), nameB = b.Text.toLowerCase()
+                                if (nameA < nameB) //sort string ascending
+                                    return -1
+                                if (nameA > nameB)
+                                    return 1
+                                return 0 //default return value (no sorting)
+                            })
+                        }
+
+                        //** Adding all items
+                        grpListView.dataSource.data(storeItemsAll)
+
+                        //** After adding the target lb, delete all in available lb;
+                        listView.dataSource.data({})
+
+                    }
+
+                    //***********
+                    //** To do sorting;
+                    //** Create an array to store available list items
+                    //var grpListArr = [];
+
+                    //var grpListView = $("#groupListBox").data("kendoListView");
+                    //grpList_Data = grpListView.dataSource.data();
+
+                    //for (var j = 0; j < grpList_Data.length; j++) {
+                    //    grpListArr.push(grpList_Data[j].Text);
+                    //}
+
+                    //** Sort the elements in an ascending order
+                  //  grpListArr.sort();
+
+                    //** Clear the available list view
+                   // grpListView.dataSource.data({})
+
+                    //** Now add the sorted data into the available list
+                    //for (var j = 0; j < grpListArr.length; j++) {
+                    //    grpListView.dataSource.add({ Text: grpListArr[j] });
+                    //}
+
+                } else {
+                    //** Simply delete all the target list items.
+                    listView.dataSource.data({})
+                }
+            }
+
+            function onAdd_ALL_Locations() {
+
+                viewModel.set('whichListBoxBtnClicked', 'AddAll');
+
+                var selectedMethod = $('#ddlLocationType').val();
+                var listView = $("#targetlistView").data("kendoListView");
+                var grpListView = $("#groupListBox").data("kendoListView");
+
+                if (selectedMethod == "AssetID" || selectedMethod == "AssetName") {
+
+                    //** Asset ID/Name is chosen;
+                    
+                    //** Fetch data from available lis
+                    storeItemsAll = [];
+
+                    var mydata = grpListView.dataSource.data();
+                    if (mydata.length == 0 || String(mydata.length) == "undefined") {
+
+                    } else {
+                        //** Take previous values if any from storeItems Array
+                        var targetdata = listView.dataSource.data();
+                        for (var i = 0; i < targetdata.length; i++) {
+                            storeItemsAll.push({ Text: targetdata[i].Text });
+                        }
+
+                        for (var i = 0; i < mydata.length; i++) {
+                            storeItemsAll.push({ Text: mydata[i].Text });
+                        }
+
+                        //  storeItemsAll.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        if (selectedMethod == "AssetID") {
+                            storeItemsAll.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        } else {
+                            storeItemsAll.sort(function (a, b) {
+                                var nameA = a.Text.toLowerCase(), nameB = b.Text.toLowerCase()
+                                if (nameA < nameB) //sort string ascending
+                                    return -1
+                                if (nameA > nameB)
+                                    return 1
+                                return 0 //default return value (no sorting)
+                            })
+                        }
+
+                        //** Adding all items
+                        listView.dataSource.data(storeItemsAll)
+
+                        //** After adding the target lb, delete all in available lb;
+                        grpListView.dataSource.data({})
+
+                    }
+
+
+                } else {
+                    //** Populate the list of meter locations for all the items in that group
+                    listView.dataSource.read();
+                }
+            }
+
+            
+
+            function onRemoveLocations() {
+                var selectedMethod = $('#ddlLocationType').val();
+                var grpListView = $("#groupListBox").data("kendoListView");
+                var listView = $("#targetlistView").data("kendoListView");
+
+                var sortableArr = [];
+                var totalgrpListViewItems = [];
+
+                //** First you store all the items in the right hand side list before the user selects.
+                var tardata = listView.dataSource.data();
+                for (var i = 0; i < tardata.length; i++) {
+                    totalgrpListViewItems.push({ Text: tardata[i].Text });
+                }
+                //alert('totalgrpListViewItems' + totalgrpListViewItems)
+                if (selectedMethod == "AssetID" || selectedMethod == "AssetName") {
+                    //** Asset ID is chosen;
+
+                    filteredItemsList = [];
+                    storeItems = [];
+
+                    $.map($('#targetlistView').data('kendoListView').select(), function (item) {
+                        //** Store the selected items in an array
+                        storeItems.push({ Text: $(item).text() });
+                    });
+
+                    if (storeItems.length == 0) {
+                        return;
+                    } else {
+                        //** Before that, first read the existing elements in the source list and then append to the newly selected items
+                        var srcdata = grpListView.dataSource.data();
+                        for (var i = 0; i < srcdata.length; i++) {
+                            storeItems.push({ Text: srcdata[i].Text });
+                        }
+
+                        // storeItems.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        if (selectedMethod == "AssetID") {
+                            storeItems.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        } else {
+                            storeItems.sort(function (a, b) {
+                                var nameA = a.Text.toLowerCase(), nameB = b.Text.toLowerCase()
+                                if (nameA < nameB) //sort string ascending
+                                    return -1
+                                if (nameA > nameB)
+                                    return 1
+                                return 0 //default return value (no sorting)
+                            })
+                        }
+
+                        var SrcListView = $("#groupListBox").data("kendoListView");
+                        SrcListView.dataSource.data(storeItems)
+
+                        //** after assigning the target, assign new datasource to source listview
+                        for (var j = 0; j < storeItems.length; j++) {
+                            for (var k = 0; k < totalgrpListViewItems.length; k++) {
+                                if (storeItems[j].Text == totalgrpListViewItems[k].Text) {
+                                    //** Filter those items from the source listview
+                                    totalgrpListViewItems.splice(k, 1);
+                                }
+                            }
+
+                        }
+
+                        var tarListView = $("#targetlistView").data("kendoListView");
+                        tarListView.dataSource.data(totalgrpListViewItems)
+                    }
+
+
+                }
+                else  {
+
+                    $.map($('#targetlistView').data('kendoListView').select(), function (item) {
+                        //grpListView.dataSource.add({ Text: $(item).text() });
+                        //grpListView.dataSource.sync();
+                        listView.remove($(item));
+                    });
+                }
+            }
+
+            function onAddLocations() {
+                viewModel.set('whichListBoxBtnClicked', 'Add');
+
+                var selectedMethod = $('#ddlLocationType').val();
+                var grpListView = $("#groupListBox").data("kendoListView");
+                var listView = $("#targetlistView").data("kendoListView");
+
+                //var storeItems = [];
+                var totalgrpListViewItems = [];
+
+                //** First you store all the items in the left hand side list before the user selects.
+                var sourcedata = grpListView.dataSource.data();
+                for (var i = 0; i < sourcedata.length; i++) {
+                    totalgrpListViewItems.push({ Text: sourcedata[i].Text });
+                }
+
+                if (selectedMethod == "AssetID" || selectedMethod == "AssetName") 
+                {
+                    //** Asset ID/Name is chosen;
+                    filteredItemsList = [];
+                    storeItems = [];
+                    $.map($('#groupListBox').data('kendoListView').select(), function (item) {
+                        //** Store the selected items in an array
+                        storeItems.push({ Text: $(item).text() });
+                    });
+                   
+                    if (storeItems.length == 0) {
+                        return;
+                    } else {
+                        //** Before that, first read the existing elements in the target list and then append to the newly selected items
+                        var targetdata = listView.dataSource.data();
+                        for (var i = 0; i < targetdata.length; i++) {
+                            storeItems.push({ Text: targetdata[i].Text });
+                        }
+
+                        if (selectedMethod == "AssetID") {
+                            storeItems.sort(function (a, b) { return parseFloat(a.Text) - parseFloat(b.Text) });
+                        } else {
+                            storeItems.sort(function (a, b) {
+                                var nameA = a.Text.toLowerCase(), nameB = b.Text.toLowerCase()
+                                if (nameA < nameB) //sort string ascending
+                                    return -1
+                                if (nameA > nameB)
+                                    return 1
+                                return 0 //default return value (no sorting)
+                            })
+                        }
+
+                        var TrgListView = $("#targetlistView").data("kendoListView");
+                        TrgListView.dataSource.data(storeItems)
+
+                        //** after assigning the target, assign new datasource to source listview
+                        for (var j = 0; j < storeItems.length; j++) {
+                            for (var k = 0; k < totalgrpListViewItems.length; k++) {
+                                if (storeItems[j].Text == totalgrpListViewItems[k].Text) {
+                                    //** Filter those items from the source listview
+                                    totalgrpListViewItems.splice(k, 1);
+                                }
+                            }
+
+                        }
+
+                        var SrcListView = $("#groupListBox").data("kendoListView");
+                        SrcListView.dataSource.data(totalgrpListViewItems)
+                    }
+
+                   
+                    
+                }
+                else { 
+
+                    //** Populate the list of meter locations for the selected areas
+                    listView.dataSource.read();
+                }
+            }
+
+            
+           
+
+            function LoadFreshGrid() {
+
+                if (isLicenseState == false || isLicenseType == false || isClass == false || isCode == false || isAgency == false || isBeat == false || isOfficerID == false || isViolationDesc == false || isOfficerName == false) {
+                    //alert('The Enforcement AI enqiry filters are being processed. Please wait until processing is completed.')
+                    //return false
+                }
+
+                showProgressBar(false); //** Display Progress bar animation till the server returns response;
+
+                var $startDate = viewModel.startDate;
+
+                //Test to see if the start date is not empty, and if it is a valid date
+                if (!Date.parse($startDate)) {
+                    alert("Start Date Must Be A Valid Date");
+                    return;
+                }
+                var $endDate = viewModel.endDate;
+
+                //Test to see if the end date is not empty and if it is a valid date
+                if (!Date.parse($endDate)) {
+                    alert("End Date Must Be A Valid Date");
+                    return;
+                }
+
+
+                //Test to see if start date is less than end date
+                if ($startDate != '' && $endDate != '') {
+                    if (Date.parse($startDate) > Date.parse($endDate)) {
+                        alert("End Date Must Be Greater Than Start Date");
+                        return;
+                    }
+                }
+
+
+                var CustomerId = '@ViewBag.CurrentCityID';
+        invokeDataSource(50) //** set the default no. of records as 50
+
+    }
+
+
+    function invokeDataSource(maxCount) {
+
+        //** The below line needs to be uncommented after fetching service
+        showProgressBar(true); //** Display Progress bar animation till the server returns response;
+
+        //** The below 4 lines of grid are commented temporarily.
+        var grid = $("#grdCustomerDetails").data("kendoGrid");
+
+        grid.dataSource.pageSize(maxCount);
+        grid.dataSource.groupable(false);
+        grid.dataSource.read();
+
+    }
+
+    function GetAllFilterData() {
+
+
+        //**start and end dates
+
+        var $startDate = viewModel.startDate;
+        var $endDate = viewModel.endDate;
+        var finalStart = new Date($startDate).toJSON()
+        var finalEnd = new Date($endDate).toJSON()
+
+        return {
+            startDate: finalStart,
+            endDate: finalEnd,
+            licensePlate: "",
+            licenseState: "",
+            licenseType: "",
+            vin: "",
+            classes: "",
+            prefix: "",
+            issueNo: "",
+            suffix: "",
+            code: "",
+            officerName: "",
+            agency: "",
+            street: "",
+            beat: "",
+            meterNo: "",
+            officerID: "",
+            vioDesc: ""
+
+        }
+    }
+
+    function onFileSelect(e) {
+
+        //** Find the grid row index so that the changes can be applied 
+        var grid = $('#grdCustomerDetails').data("kendoGrid");
+        var selectedRow = grid.select();
+        var selectedRowIndex = selectedRow.index();
+
+
+        //** store js value in model property
+        var firstItem = $('#grdCustomerDetails').data().kendoGrid.dataSource.data()[selectedRowIndex];
+        var getFileNames = firstItem.get('Beat');
+        getFileNames += getFileInfo(e) + "<br>";
+        firstItem.set('Beat', getFileNames);
+
+    }
+
+    function getFileInfo(e) {
+        return $.map(e.files, function (file) {
+            var info = file.name;
+
+            // File size is not available in all browsers
+            if (file.size > 0) {
+                info += " (" + Math.ceil(file.size / 1024) + " KB)";
+            }
+            return info;
+        }).join(", ");
+    }
+
+    function onDataBound_LicenseState() {
+        isLicenseState = true;
+    }
+
+    function onDataBound_LicenseType() {
+        isLicenseType = true;
+    }
+
+    function onDataBound_Class() {
+        isClass = true;
+    }
+
+
+
+    function onDataBound_Code() {
+        isCode = true;
+    }
+
+    function onDataBound_Agency() {
+        isAgency = true;
+    }
+
+    function onDataBound_Beat() {
+        isBeat = true;
+    }
+
+    function onDataBound_OfficerID() {
+        isOfficerID = true;
+    }
+
+    function onDataBound_OfficerName() {
+        isOfficerName = true;
+    }
+
+
+    function onDataBound_ViolationDesc() {
+        isViolationDesc = true;
+    }
+
+    function onDataBound_IssueNoPrefix() {
+        viewModel.set('issueNoPrefix', $('#autocompleteIssueNoPfx').val());
+    }
+
+    function onDataBound_IssueNoSuffix() {
+        viewModel.set('issueNumberSuffix', $('#autocompleteIssueNoSfx').val());
+    }
+
+    function onDataBound_IssueNo() {
+        viewModel.set('issueNumber_final', $('#autocompleteIssueNo').val());
+    }
+
+    function onDataBound_VehVIN() {
+        viewModel.set('vehicleVIN', $('#autocompleteVehVIN').val());
+    }
+
+    function onDataBound_VehLicNo() {
+        viewModel.set('EnforcementVehLicNoasset', $('#autocompleteVehLicNo').val());
+    }
+
+    function onDataBound_Street() {
+        viewModel.set('street', $('#autocompleteStreet').val());
+    }
+
+    function onDataBound_MeterID() {
+        viewModel.set('meterId', $('#autocompleteMeterID').val());
+    }
+
+
+    function onDataBound(arg) {
+
+        var result = $("#grdCustomerDetails").data().kendoGrid.dataSource.data()
+        showProgressBar(false); //** Hide Progress bar animation after the server response;
+
+        //**First clear the Grid
+        $('#DivCustomerDetails').css('display', 'none');
+
+        //** Check the states of 'Show Map' and 'Show Grid' buttons
+
+        //** Display the Grid part
+        $("#DivCustomerDetails").show();
+        $('#DivCustomerDetails').css('display', 'inline');
+
+        // $(".fup").kendoUpload();
+
+        //$(".fup").kendoUpload({
+
+        //    select: onSelect,
+        //    async: {
+        //        saveUrl: '/Upload',
+        //        autoUpload: true
+        //    },
+        //    multiple: true,
+        //    localization: {
+        //        select: "Choose files:",
+        //        uploadSelectedFiles: ""
+        //    }
+        //});
+
+        //$('#filesP').kendoUpload(
+
+        //    );
+
+        $(".filesPP").each(function () {
+            eval($(this).children("script").last().html());
+        });
+        //$(".filesPP").children("script").last().html();
+
+        //$("input[type='file']").kendoUpload(
+        //   {
+        //       async: {
+        //           saveUrl: "url",
+        //           removeUrl: "url",
+        //           removeField: "files"
+        //       },
+        //       success: onUploadSuccess,
+        //       remove: onUploadRemove
+        //   }
+        //   );
+
+        if (result.length == 0) {
+            alert('No Data.');
+            return;
+        }
+
+
+
+    }
+
+    function showProgressBar(visisbility) {
+
+        if (visisbility == false) {
+            if (spinner != null || spinner != undefined) {
+                spinner.stop() //** hide the PB
+            }
+        } else {
+            //** Create spinner and display PB
+            var opts = {
+                lines: 13, // The number of lines to draw
+                length: 0, // The length of each line
+                width: 5, // The line thickness
+                radius: 15, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 48, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: '#000', // #rgb or #rrggbb
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: '260px', // Top position relative to parent in px
+                left: 'auto' // Left position relative to parent in px
+            };
+            spinner = new Spinner(opts).spin(document.body);
+        }
+
+    }
+
+
+    </script>
+}
+
+
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+      ready .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+        ready .filter-SearchButton:hover {
+	            background: #ccc!important;
+	            text-decoration: none!important;
+         }
+
+         .k-timepicker, .k-datetimepicker, .k-datepicker {
+            background-color: transparent !important;
+        }
+
+
+       
+
+         
+       
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        
+
+         .product {
+        width: 111px;
+        height: 170px;
+        margin: 0;
+        padding: 0;
+    }
+
+        
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+                    .file-icon
+               {
+                   display: inline-block;
+                   float: left;
+                   width: 48px;
+                   height: 48px;
+                   margin-left: 10px;
+                   margin-top: 13.5px;
+               }
+
+               .img-file { background-image: url(/content/web/upload/jpg.png) }
+               .doc-file { background-image: url(/content/web/upload/doc.png) }
+               .pdf-file { background-image: url(/content/web/upload/pdf.png) }
+               .xls-file { background-image: url(/content/web/upload/xls.png) }
+               .zip-file { background-image: url(/content/web/upload/zip.png) }
+               .default-file { background-image: url(/content/web/upload/default.png) }
+
+               #example .file-heading
+               {
+                   font-family: Arial;
+                   font-size: 1.1em;
+                   display: inline-block;
+                   float: left;
+                   width: 450px;
+                   margin: 0 0 0 20px;
+                   height: 25px;
+                   -ms-text-overflow: ellipsis;
+                   -o-text-overflow: ellipsis;
+                   text-overflow: ellipsis;
+                   overflow:hidden;
+                   white-space:nowrap;
+               }
+
+                   #example .file-name-heading
+                   {
+                       font-weight: bold;
+                   }
+
+                    #example .file-size-heading
+                   {
+                       font-weight: normal;
+                       font-style: italic;
+                   }
+
+               li.k-file .file-wrapper .k-upload-action
+               {
+                   position: absolute;
+                   top: 0;
+                   right: 0;
+               }
+
+               li.k-file div.file-wrapper
+               {
+                   position: relative;
+                   height: 75px;
+               }
+
+
+        .k-list-container {
+            white-space: nowrap !important;
+            width: auto !important;
+            overflow-x: hidden !important;
+            min-width: 289px !important;
+            padding-right: 25px;
+        }
+
+        .k-list {
+            overflow-x: hidden !important;
+            /*overflow-style: marquee;*/
+            overflow-y: auto !important;
+            width: auto !important;
+            padding-right: 25px;
+        }
+
+       
+    </style>
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Configuration") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Schedule File to Asset")</h1>
+}
+
+@section PageFilter
+{
+<div id="page_1" style="display:inline">
+  
+         <div id="assetTypeFilter">
+            <div class="filter-option">
+                <label class="filter-label">Select Asset Type:</label>
+                @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlAssetType", onchange = "ClearSelectionMethods()" })
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .BindTo(new List<SelectListItem>() {
+                                      new SelectListItem() {
+                                          Text = "Liberty Location",
+                                          Value = "0"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "Gateway",
+                                          Value = "13"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "Mechanism",
+                                          Value = "31"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "Wireless PoleMount Sensor",
+                                          Value = "10"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "Eagle 2100 Location",
+                                          Value = "0"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "CSPark",
+                                          Value = "16"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "Subterranean Sensor",
+                                          Value = "10"
+                                      },
+                                       new SelectListItem() {
+                                          Text = "PoleMount Sensor",
+                                          Value = "10"
+                                      },
+                                      
+                                  })
+                     
+                )
+
+
+            </div>
+        </div>
+
+
+
+        <div class="filter-searchBox" style="margin-left:40%">
+            <div style="float: left;visibility:hidden" >
+                <button id="btnSearch"  type="button" value="Back" class="button" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+            </div>
+            <div id="ReturnButtonDiv" style="float: right; display: inline">
+                 <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(1); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+            </div>
+        </div>
+
+ </div>   
+
+
+
+<div id="page_2" class="three-column" style="width:1400px;display:none;">
+ 
+
+      <div class="three-column" style="float:left;">
+      
+            <div class="filter-option">
+            <label class="filter-label">Selection Method:</label>
+            @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlLocationType", onchange = "GetLocationTypeId()" })
+                       .OptionLabel("Please Select")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Action("GetGroupingElements", "FileUpload");
+
+                                    });
+                                })
+            )
+            </div>
+
+            <div class="filter-option" style="margin-left:144px;">
+                <label class="filter-label" style="font-size:12px;">Available Assets:</label>
+             </div>
+
+         <div class="filter-option" style="margin-left:144px;">
+           @(Html.Kendo().ListView<Duncan.PEMS.Entities.GIS.GISModel>()
+                .HtmlAttributes(new { id = "groupListBox", style = "width:285px;height:280px;font-size:16px;overflow-y:scroll;" })
+                .Name("listView")
+                .TagName("div")
+                .AutoBind(false)
+                .ClientTemplateId("template")
+                .Selectable(selectable => selectable.Mode(ListViewSelectionMode.Multiple))
+                .DataSource(dataSource =>
+                {
+                    dataSource
+                    .ServerOperation(false)
+                     .Events(events => events
+                         .RequestStart("onGroupListReqStart")
+                         .RequestEnd("onGroupListReqEnd")
+    )
+                    .Read(read => read.Action("GetLocationsForListBox", "FileUpload").Data("SetLocationType"));
+                })
+            )
+        </div>
+
+    </div>
+
+
+    <div style="padding-top:120px;float:left;margin-left:54px;" >
+        <div style="margin-bottom:6px;">
+            <a alt="Add All" title="Add All" class="k-button" onclick=" onAdd_ALL_Locations(); return false; "><span class="k-icon k-i-seek-e"></span></a>
+        </div>
+        <div style="margin-bottom:6px;">
+             <a alt="Add" title="Add" class="k-button" onclick=" onAddLocations(); return false; "><span class="k-icon k-i-arrow-e"></span></a>
+        </div>
+        <div style="margin-bottom:6px;">
+            <a alt="Remove" title="Remove" class="k-button" onclick=" onRemoveLocations(); return false; "><span class="k-icon k-i-arrow-w"></span></a>
+        </div>
+        <div style="margin-bottom:6px;">
+            <a alt="Remove All" title="Remove All" class="k-button" onclick=" onRemove_ALL_Locations(); return false; "><span class="k-icon k-i-seek-w"></span></a>
+        </div>
+    
+
+    </div>   
+     <div class="filter-option" style="margin-top:34px;">
+        <div style="margin-left:44px;">
+            <label class="filter-label" style="font-size:12px;">Selected Assets:</label>
+        </div>
+        <div class="filter-option" style="margin-left:44px;margin-top:4px;">
+           @(Html.Kendo().ListView<Duncan.PEMS.Entities.GIS.GISModel>()
+                .HtmlAttributes(new { id = "targetlistView", style = "width:285px;height:280px;font-size:16px;overflow-y:scroll;" })
+                .Name("targetlistBox")
+                .TagName("div")
+                .AutoBind(false)
+                .ClientTemplateId("template")
+                .Selectable(selectable => selectable.Mode(ListViewSelectionMode.Multiple))
+                .DataSource(dataSource =>
+                {
+                    dataSource
+                    .ServerOperation(false)
+                     .Events(events => events.RequestStart("onGroupListReqStart").RequestEnd("onGroupListReqEnd")
+    )
+                   //.Read(read => read.Action("GetTargetListLocations", "GIS").Data("SetLocationType_Empty"));
+                   .Read(read => read.Action("GetTargetListLocations", "FileUpload").Data("SetLocationType_Empty"));
+                })
+            )
+        </div>
+
+        
+    </div>
+     <div class="filter-searchBox" style="float:left;">
+            <div style="float: left;margin-left:410px;"  >
+                <button id="btnSearch"  type="button" value="Back" class="button" onclick=" onBack(2); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+            </div>
+            <div id="ReturnButtonDiv" style="float: right; display: inline">
+                 <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(2); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+            </div>
+
+    </div>
+    </div>
+    
+    <div id="page_3"  style="width:1400px;display:none;margin-left:10px;">
+      
+
+                    <div id="ftype_1"  class="two-column, filter-option" style="clear:left;display:block;">
+                        <label class="filter-label" style="width:120px; font-size:16px;font-weight:400;">Select File Types:</label>
+                        @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "fileType_1", onchange = "onChangeFileType(1)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_1", onchange = "onFileChange(1)" })
+                               .OptionLabel("Select File Name, File Comment").Enable(false)
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileID")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                   <div id="ftype_2" class="two-column, filter-option">
+                        @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_2", onchange = "onChangeFileType(2)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_2", onchange = "onFileChange(2)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                         .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                     <div id="ftype_3" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_3", onchange = "onChangeFileType(3)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_3", onchange = "onFileChange(3)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                     <div id="ftype_4" class="filter-option">
+                        @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_4", onchange = "onChangeFileType(4)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px; display:inline-block;", id = "fileDropDown_4", onchange = "onFileChange(4)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .AutoBind(false)
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                     <div id="ftype_5" class="filter-option">
+                        @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_5", onchange = "onChangeFileType(5)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_5", onchange = "onFileChange(5)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                         .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                  <div id="ftype_6" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_6", onchange = "onChangeFileType(6)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_6", onchange = "onFileChange(6)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                  <div id="ftype_7" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_7", onchange = "onChangeFileType(7)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_7", onchange = "onFileChange(7)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                  <div id="ftype_8" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_8", onchange = "onChangeFileType(8)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_8", onchange = "onFileChange(8)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                  <div id="ftype_9" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_9", onchange = "onChangeFileType(9)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_9", onchange = "onFileChange(9)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                  <div id="ftype_10" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_10", onchange = "onChangeFileType(10)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_10", onchange = "onFileChange(10)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+           
+                 <div id="ftype_11" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_11", onchange = "onChangeFileType(11)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_11", onchange = "onFileChange(11)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+                 <div id="ftype_12" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_12", onchange = "onChangeFileType(12)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_12", onchange = "onFileChange(12)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+
+                 <div id="ftype_13" class="filter-option">
+                       @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:123px;", id = "fileType_13", onchange = "onChangeFileType(13)" })
+                                        .OptionLabel("Please Select")
+                                        .DataTextField("FileName")
+                                        .DataValueField("FileType")
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetFileTypes", "FileUpload").Data("getRoleId");
+                                            });
+                                        })
+                        )
+
+                         @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:30px;", id = "fileDropDown_13", onchange = "onFileChange(13)" })
+                               .OptionLabel("Select File Name...").Enable(false)
+                                        .DataTextField("FileName")
+                                        .AutoBind(false)
+                                        .Events(e => e
+                                                    .DataBound("onFileDropDownFetched")
+                                                )
+                                        .DataSource(source =>
+                                        {
+                                            source.Read(read =>
+                                            {
+                                                read.Action("GetListOfFileNames", "FileUpload").Data("FileDetailsJS");
+
+                                            });
+                                        })
+                          )
+                    </div>
+
+         <div class="filter-searchBox" style="float:left;">
+            <div style="float: left;margin-left:410px;"  >
+                <button id="btnSearch"  type="button" value="Back" class="button" onclick=" onBack(3); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+            </div>
+            <div id="ReturnButtonDiv" style="float: right; display: inline">
+                 <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(3); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+            </div>
+
+         </div>     
+
+    </div>
+
+      <div id="page_4"  style="width:1400px;display:none;margin-left:10px;">
+          
+            <div class="one-column">
+                <div >
+                    <span class="filter-label" style="width:135px;margin-left:19px;margin-right:13px;">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Schedule Date:")</span>
+                    
+                            @(Html.Kendo().DateTimePicker()
+                                .Name("startDateTime")
+                                //.Value(DateTime.Now)
+                                .Value(@Model.Text)
+                                .Min(@Model.Text)
+                                .Max(DateTime.Now.AddDays(30))
+                            )
+                    
+                        
+                            @*  to  
+
+                             @(Html.Kendo().DateTimePicker()
+                                .Name("endDateTime")
+
+                                .Value(DateTime.Now)
+                                .Min(DateTime.Now)
+                                .Max(DateTime.Now.AddDays(30))
+                             )*@
+
+                     
+
+                    <span class="required_asterisk">*</span>
+                </div>
+            </div>
+
+          
+
+             <div class="filter-searchBox" style="float:left;">
+                <div style="float: left;margin-left:410px;"  >
+                    <button id="btnSearch"  type="button" value="Back" class="button" onclick=" onBack(4); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+                </div>
+                <div id="ReturnButtonDiv" style="float: right; display: inline">
+                     <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(4); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+                </div>
+            </div>   
+      </div>
+
+     <div id="page_5"  style="width:1400px;display:none;margin-left:10px;">
+      
+            <div class="one-column">
+                <div class="filter-option">
+                    <span class="filter-label" style="width:145px;">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Select Activation Date:")</span>
+                      @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;margin-left:10px;", id = "activation_DD", onchange = "onActivationDateChange()" })
+                                        .DataTextField("Text")
+                                        .DataValueField("Value")
+                                        .BindTo(new List<SelectListItem>() {
+                                              new SelectListItem() {
+                                                  Text = "Immediately",
+                                                  Value = "1"
+                                              }
+                                          })
+                                         .Value("1")
+                     )
+            </div>
+
+             <div class="filter-searchBox" style="float:left;">
+                <div style="float: left;margin-left:410px;"  >
+                    <button id="btnSearch"  type="button" value="Back" class="button" onclick=" onBack(5); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+                </div>
+                <div id="ReturnButtonDiv" style="float: right; display: inline">
+                     <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(5); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+                </div>
+            </div>   
+      </div>
+
+      </div>
+    <div id="page_6"  style="width:1400px;display:none;margin-left:10px;">
+      
+            <div class="filter-searchBox" style="float:left;">
+                <div id="ReturnButtonDiv" style="float: right; display: inline;margin-left:392px;">
+                    @*<label class="filter-label" style="font-size:12px;">Click 'Schedule' to save and </label>*@
+                    <input type="button" value="@HttpContext.Current.GetLocaleResource("Buttons", "Schedule")" id="btnSearch" onclick=" onScheduleBtnClicked(); return false; " class="filter-SearchButton" style="background-color: #33BAB1;" />
+                </div>
+            </div>  
+          
+           <div class="filter-searchBox" style="float:left;">
+                <div style="float: left;margin-left:410px;"  >
+                    <button id="btnSearch"  type="button" value="Back" class="button" onclick=" onBack(6); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Back")</button>
+                </div>
+                <div id="ReturnButtonDiv" style="float: right; display: inline;visibility:hidden">
+                     <button id="btnSearch" type="button" value="Next" class="button" onclick=" onNext(6); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Next")</button>
+                </div>
+            </div>   
+      </div>
+
+             
+
+
+    
+
+    
+   
+
+}
+
+
+  <div class="export-buttons" id="exportActions">
+        <div style="padding-right: 20px; padding-top: 3px;display:none;">
+            @using (Html.BeginForm("Action", "Assets", FormMethod.Post, new { @id = "actionForm" }))
+            {
+                <span class="filter-label" style="padding-right: 3px; position:relative; top:5px">Action:</span>
+                <select title="action" style="width: 200px;" id="ddlAction" class="filter-dropdown" style="width: auto" name="ddlActionValue" data-role="dropdownlist">
+                    <option value="">Select</option>
+                    <option value="MassUpdate">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "SET INACTIVE")</option>
+                </select>
+                @Html.Hidden("AssetTypeId")
+                @Html.Hidden("CustomerId", @ViewData[Constants.ViewData.CurrentCityId])
+            }
+        </div>
+    </div>
+
+<div class="grid-header" style="margin-left:-40px">
+
+</div>
+
+<div id="DivCustomerDetails" class="grid-content" style="width: 100%;margin-left:0px;display:none;">
+
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.Enforcement.EnforcementModel>()
+
+        .Name("grdCustomerDetails")
+        .Columns(col =>
+        {
+            col.Bound(a => a.Class).Title("").Width("30px").ClientTemplate("<input type='checkbox' ></input>");
+            col.Bound(a => a.Beat).Title("File Name").Width("90px");
+            col.Bound(a => a.VehLicNo).Title("File Comment").Width("100px");
+            col.Bound(a => a.MeterNo).Title("File Type").Width("90px");
+            col.Bound(a => a.OfficerID).Title("File Status").Width("100px");
+            col.Bound(a => a.VioCode).Title("Date Added").Width("110px");
+            col.Bound(a => a.Status).Title("Uploaded By").Width("110px");
+        }
+            )
+
+
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+            //.Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                 
+                .Ajax()
+                        .Read(read => read.Action("ScheduleAssetJobs", "FileUpload").Data("userValues"))
+                .PageSize(50)
+                .Model(model =>
+                {
+                    model.Field(m => m.VehLicNo).Editable(true);
+                })
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+    )
+
+</div>
+
+
+
+

@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Configuration of NetSqlAzMan for Cicso Test1. Created on 3/20/2013 10:01:24 AM-->
+<Customer Name="Cicso Test1">
+  <Users>
+    <!-- Users section is presently not used. -->
+  </Users>
+  <Groups>
+    <Group Name="_members" SID="a330618e-ad03-4095-bbf6-7fe82589fc9d"  Action="Add">
+    </Group>
+    <Group Name="_maintenance" SID="67e02583-ma3n-47e9-a791-834302be267c" Action="Add">
+      <Member>Admin</Member>
+    </Group>
+    <Group Name="Administrators" SID="e7d12a38-b532-4bcc-aff2-42b3fe463363"  Action="Add">
+      <Member>Admin</Member>
+      <!-- This member needs to be added to the Administrators group.  Do not remove. -->
+    </Group>
+  </Groups>
+  <Applications>
+    <Application Name="Alarms" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>Details</Operation>
+    </Application>
+    <Application Name="PayByCell" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>SpaceMgmt</Operation>
+    </Application>
+    <Application Name="FileUpload" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>ScheduleFD</Operation>
+      <Operation>FDInquiry</Operation>
+    </Application>
+    <Application Name="Assets" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>Create</Operation>
+      <Operation>ViewMeter</Operation>
+      <Operation>ViewMeterToSpaceMapping</Operation>
+      <Operation>EditMeterToSpaceMapping</Operation>
+      <Operation>ResetMeter</Operation>
+      <Operation>AddTimeToMeter</Operation>
+      <Operation>GetMeterBays</Operation>
+      <Operation>EditMeter</Operation>
+      <Operation>MassEditMeter</Operation>
+      <Operation>ViewSpace</Operation>
+      <Operation>EditSpace</Operation>
+      <Operation>MassEditSpace</Operation>
+      <Operation>ViewCashbox</Operation>
+      <Operation>EditCashbox</Operation>
+      <Operation>MassEditCashbox</Operation>
+      <Operation>ViewGateway</Operation>
+      <Operation>EditGateway</Operation>
+      <Operation>ResetGateway</Operation>
+      <Operation>MassEditGateway</Operation>
+      <Operation>ViewSensor</Operation>
+      <Operation>EditSensor</Operation>
+      <Operation>ResetSensor</Operation>
+      <Operation>MassEditSensor</Operation>
+      <Operation>AssetVersion</Operation>
+      <Operation>GetVersionList</Operation>
+      <Operation>ViewTariffConfiguration</Operation>
+      <Operation>PAMConfiguration</Operation>
+    </Application>
+    <Application Name="Authorization" Action="Add">
+    </Application>
+    <Application Name="Collections" Action="Add">
+      <Operation>CreateCollection</Operation>
+      <Operation>EditCollection</Operation>
+      <Operation>CopyCollection</Operation>
+      <Operation>Collection</Operation>
+      <Operation>Index</Operation>
+      <Operation>MeterDetails</Operation>
+      <Operation>SingleSpaceMeterDetails</Operation>
+      <Operation>Aggregation</Operation>
+      <Operation>GroupedAggregation</Operation>
+      <Operation>AggregationDetails</Operation>
+      <!--<Operation>GroupedAggregationDetails</Operation>
+      <Operation>VendorCoinEntry</Operation>-->
+    </Application>
+    <Application Name="Customers" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>Add</Operation>
+      <Operation>EditCustomer</Operation>
+      <Operation>EditAssets</Operation>
+      <Operation>EditPayments</Operation>
+      <Operation>EditRules</Operation>
+      <Operation>EditCustomLabels</Operation>
+      <Operation>EditCustomGrids</Operation>
+      <Operation>EditEventCodes</Operation>
+      <Operation>AddGroupMember</Operation>
+      <Operation>Details</Operation>
+    </Application>
+    <Application Name="Discounts" Action="Add">
+      <Operation>Details</Operation>
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="Events" Action="Add">
+      <Operation>Details</Operation>
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="GIS" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>CurrentLocation</Operation>
+      <Operation>OfficerRoute</Operation>
+      <Operation>FinancialReportType</Operation>
+      <Operation>Citation</Operation>
+    </Application>
+    <Application Name="Enforcement" Action="Add">
+      <Operation>Details</Operation>
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="Home" Action="Add">
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="Occupancy" Action="Add">
+      <Operation>Details</Operation>
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="Profile" Action="Add">
+      <Operation>Edit</Operation>
+    </Application>
+    <Application Name="Reports" Action="Add">
+      <Operation>ReportAssetStatus</Operation>
+      <Operation>ReportAlarmsEvents</Operation>
+      <Operation>ReportAssetMaintenance</Operation>
+      <Operation>ReportFinancial</Operation>
+      <Operation>ReportCollectionRoutes</Operation>
+      <Operation>ReportDashboard</Operation>
+      <Operation>ReportAdHocReports</Operation>
+      <Operation>ReportPEMSReports</Operation>
+      <Operation>ReportEnforcement</Operation>
+    </Application>
+    <Application Name="SpaceStatus" Action="Add">
+      <Operation>ReportSpaceStatus</Operation>
+    </Application>
+    <Application Name="Roles" Action="Add">
+      <Operation>Copy</Operation>
+      <Operation>Create</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="StoreGroups" Action="Add">
+      <Operation>Index</Operation>
+    </Application>
+    <Application Name="Transactions" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>MeterDetails</Operation>
+      <Operation>SensorDetails</Operation>
+    </Application>
+    <Application Name="Users" Action="Add">
+      <Operation>Action</Operation>
+      <Operation>BulkUpdate</Operation>
+      <Operation>Create</Operation>
+      <Operation>CustomerRoles</Operation>
+      <Operation>Delete</Operation>
+      <Operation>Details</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+  </Applications>
+  <AuthTree>
+    <AuthItem Name="Home" authtext="Home" Action="Add">
+      <AuthItem Name="AuthHome" authtext="Home Page">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Assets" authtext="Asset Management" Action="Add">
+      <AuthItem Name="Edit" authtext="Edit" Action="Add">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Create</Operation>
+          <Operation>ViewMeter</Operation>
+          <Operation>ViewMeterToSpaceMapping</Operation>
+          <Operation>EditMeterToSpaceMapping</Operation>
+          <Operation>ResetMeter</Operation>
+          <Operation>AddTimeToMeter</Operation>
+          <Operation>GetMeterBays</Operation>
+          <Operation>EditMeter</Operation>
+          <Operation>MassEditMeter</Operation>
+          <Operation>ViewSpace</Operation>
+          <Operation>EditSpace</Operation>
+          <Operation>MassEditSpace</Operation>
+          <Operation>ViewCashbox</Operation>
+          <Operation>EditCashbox</Operation>
+          <Operation>MassEditCashbox</Operation>
+          <Operation>ViewGateway</Operation>
+          <Operation>EditGateway</Operation>
+          <Operation>ResetGateway</Operation>
+          <Operation>MassEditGateway</Operation>
+          <Operation>ViewSensor</Operation>
+          <Operation>EditSensor</Operation>
+          <Operation>ResetSensor</Operation>
+          <Operation>MassEditSensor</Operation>
+          <Operation>AssetVersion</Operation>
+          <Operation>GetVersionList</Operation>
+          <Operation>ViewTariffConfiguration</Operation>
+          <Operation>PAMConfiguration</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="Inquiry" authtext="Asset Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Events" authtext="Event Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="FileUpload" authtext="File Upload" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>Index</Operation>
+          <Operation>FDInquiry</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>Index</Operation>
+          <Operation>FDInquiry</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>Index</Operation>
+          <Operation>FDInquiry</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>ScheduleFD</Operation>
+          <Operation>FDInquiry</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="PayByCell" authtext="Pay By Cell" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Profile" authtext="User Profile" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Edit</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+          <Authorize>_maintenance</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Alarms" authtext="Alarm Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Transactions" authtext="Transaction Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>MeterDetails</Operation>
+          <Operation>SensorDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Occupancy" authtext="Occupancy" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Collections" authtext="Collections" Action="Add">
+      <AuthItem Name="AuthConfig" authtext="Configuration">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>CreateCollection</Operation>
+          <Operation>CopyCollection</Operation>
+          <Operation>EditCollection</Operation>
+          <Operation>Collection</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthAggregation" authtext="Aggregations">
+        <Operations>
+          <Operation>Aggregation</Operation>
+          <Operation>AggregationDetails</Operation>
+          <Operation>MeterDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <!--<AuthItem Name="AuthGroupedAggregation" authtext="Grouped Aggregations">
+        <Operations>
+          <Operation>GroupedAggregation</Operation>
+          <Operation>GroupedAggregationDetails</Operation>
+          <Operation>MeterDetails</Operation>
+          <Operation>SingleSpaceMeterDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>-->
+      <!--<AuthItem Name="AuthVendorCoinEntry" authtext="Vendor Coin Entry">
+        <Operations>
+          <Operation>VendorCoinEntry</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>-->
+    </AuthItem>
+    <AuthItem Name="GIS" authtext="GIS" Action="Add">
+      <AuthItem Name="AuthConfig" authtext="Configuration">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>CurrentLocation</Operation>
+          <Operation>OfficerRoute</Operation>
+          <Operation>FinancialReportType</Operation>
+          <Operation>Citation</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Enforcement" authtext="Enforcement Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Discounts" authtext="Discounts" Action="Add">
+      <AuthItem Name="AuthApproval" authtext="Approvals">
+        <Operations>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Roles" authtext="Roles" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Copy</Operation>
+          <Operation>Create</Operation>
+          <Operation>Edit</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Users" authtext="User Management" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Action</Operation>
+          <Operation>Create</Operation>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Delete</Operation>
+          <Operation>Details</Operation>
+          <Operation>Edit</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>BulkUpdate</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Customers" authtext="Client Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Add</Operation>
+          <Operation>EditCustomer</Operation>
+          <Operation>EditAssets</Operation>
+          <Operation>EditPayments</Operation>
+          <Operation>EditRules</Operation>
+          <Operation>EditCustomLabels</Operation>
+          <Operation>EditCustomGrids</Operation>
+          <Operation>EditEventCodes</Operation>
+          <Operation>AddGroupMember</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthAdd" authtext="Create">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Add</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="Reports" authtext="Reporting" Action="Add">
+      <AuthItem Name="AuthReportAssetStatus" authtext="Asset Status">
+        <Operations>
+          <Operation>ReportAssetStatus</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportAlarmsEvents" authtext="Alarms Events">
+        <Operations>
+          <Operation>ReportAlarmsEvents</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportAssetMaintenance" authtext="Asset Maintenance">
+        <Operations>
+          <Operation>ReportAssetMaintenance</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportFinancial" authtext="Financial">
+        <Operations>
+          <Operation>ReportFinancial</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportCollectionRoutes" authtext="Collection Routes">
+        <Operations>
+          <Operation>ReportCollectionRoutes</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportDashboard" authtext="Dashboard">
+        <Operations>
+          <Operation>ReportDashboard</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportAdHocReports" authtext="Ad-Hoc Reports">
+        <Operations>
+          <Operation>ReportAdHocReports</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportPEMSReports" authtext="PEMS Reports">
+        <Operations>
+          <Operation>ReportPEMSReports</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthReportEnforcement" authtext="Enforcement">
+        <Operations>
+          <Operation>ReportEnforcement</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <AuthItem Name="SpaceStatus" authtext="Reporting" Action="Add">
+      <AuthItem Name="AuthReportSpaceStatus" authtext="SpaceStatus">
+        <Operations>
+          <Operation>ReportSpaceStatus</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+  </AuthTree>
+  <MenuTree Action="Clear">
+    <MenuItem Name="Assets" menutext="Asset Management" tooltip="Manage meters and other assets"  menuicon="AssetManagement.png"  Action="Add">
+      <MenuItem Name="Inquiries" menutext="Asset Inquiry" tooltip="View assets"  Action="Add">
+        <Link operation="Index" application="Assets" />
+      </MenuItem>
+      <MenuItem Name="PAMConfig" menutext="PAM Configuration" tooltip="PAM Configuration"  Action="Add">
+        <Link operation="PAMConfiguration" application="Assets" />
+      </MenuItem>
+    </MenuItem>
+    <MenuItem Name="FileUpload" menutext="Asset Configuration" tooltip="Configure Assets"  menuicon=""  Action="Add">
+      <MenuItem Name="ConfigFileInquiries" menutext="Upload File Inquiry" tooltip="File Uploads"  Action="Add">
+        <Link operation="Index" application="FileUpload" />
+      </MenuItem>
+      <MenuItem Name="ScheduleFileDownload" menutext="Schedule File Download" tooltip="Schedule File Download"  Action="Add">
+        <Link operation="ScheduleFD" application="FileUpload" />
+      </MenuItem>
+      <MenuItem Name="FileDwnldInquiry" menutext="File Download Inquiry" tooltip="Inquire Files to Download"  Action="Add">
+        <Link operation="FDInquiry" application="FileUpload" />
+      </MenuItem>
+    </MenuItem>
+    <MenuItem Name="Events" menutext="Event Management" tooltip="Manage events"   menuicon="EventManagement.png"  Action="Add">
+      <MenuItem Name="Inquiries" menutext="Event Inquiry" tooltip="View events" Action="Add">
+        <Link operation="Index" application="Events" />
+      </MenuItem>
+    </MenuItem>
+
+    <MenuItem Name="Alarms" menutext="Alarm Management" tooltip="Manage alarms"  menuicon="AlarmManagement.png" Action="Add">
+      <MenuItem Name="Inquiries" menutext="Alarm Transaction Inquiry" tooltip="View alarm transactions" Action="Add">
+        <Link operation="Index" application="Alarms" />
+      </MenuItem>
+    </MenuItem>
+
+    <MenuItem Name="Transactions" menutext="Transaction Management" tooltip="Manage transactions"  menuicon="TransactionManagement.png" Action="Add">
+      <MenuItem Name="TransInquiries" menutext="Payment Transaction Inquiry" tooltip="View payment transactions" Action="Add">
+        <Link operation="Index" application="Transactions" />
+      </MenuItem>
+      <MenuItem Name="OccInquiries" menutext="Occupancy Inquiry" tooltip="View occupancy status" Action="Add">
+        <Link operation="Index" application="Occupancy" />
+      </MenuItem>
+      <!--<MenuItem Name="PayByCellInquiry" menutext="Space Management" tooltip="Pay By Cell Inquiry"  Action="Add">
+        <Link operation="SpaceMgmt" application="PayByCell" />
+      </MenuItem>-->
+    </MenuItem>
+
+    <MenuItem Name="Collections" menutext="Collection Management"  tooltip="Manage collections schedules and routes" menuicon="CollectionManagement.png"  Action="Add">
+      <MenuItem Name="CollectionsRun" menutext="Collection Configuration" tooltip="Collections run configuration.">
+        <Link operation="Index" application="Collections" />
+      </MenuItem>
+      <MenuItem Name="Aggregations" menutext="Collection Aggregation" tooltip="Aggregation of collection run data">
+        <Link operation="Aggregation" application="Collections" />
+      </MenuItem>
+      <!--<MenuItem Name="GroupedAggregations" menutext="Grouped Aggregations" tooltip="Aggregation of collection run data">
+        <Link operation="GroupedAggregation" application="Collections" />
+      </MenuItem>-->
+      <!--<MenuItem Name="VendorCoinEntries" menutext="Vendor Coin Entry" tooltip="Vendor Coin entry">
+        <Link operation="VendorCoinEntry" application="Collections" />
+      </MenuItem>-->
+    </MenuItem>
+    <!--<MenuItem Name="Discounts" menutext="Discount Management" tooltip="Manage discount programs." menuicon="DiscountManagement.png" Action="Add">
+      <MenuItem Name="Inquiries" menutext="Discount Approval Inquiry" tooltip="Review and approve discount applications." Action="Add">
+        <Link operation="Index" application="Discounts" />
+      </MenuItem>
+    </MenuItem>-->
+    <MenuItem Name="Reports" menutext="Reports"  menuicon="Reports.png" Action="Add">
+      <MenuItem Name="AssetStatus" menutext="Asset Status" Action="Add">
+        <Link operation="ReportAssetStatus" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="AlarmsEvents" menutext="Alarms/Events" Action="Add">
+        <Link operation="ReportAlarmsEvents" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="AssetMaint" menutext="Asset Maintenance" Action="Add">
+        <Link operation="ReportAssetMaintenance" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="Financial" menutext="Financial" Action="Add">
+        <Link operation="ReportFinancial" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="CollRuns" menutext="Collection Routes" Action="Add">
+        <Link operation="ReportCollectionRoutes" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="Enforcement" menutext="Enforcement" Action="Add">
+        <Link operation="ReportEnforcement" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <MenuItem Name="AdHocRpts" menutext="Ad Hoc Reports" Action="Add">
+        <Link operation="ReportAdHocReports" application="Reports"  Action="Add"/>
+      </MenuItem>
+      <!--<MenuItem Name="SpaceStatus" menutext="Space Status" Action="Add">
+        <Link operation="ReportSpaceStatus" application="SpaceStatus"  Action="Add"/>
+      </MenuItem>-->
+    </MenuItem>
+    <MenuItem Name="GIS" menutext="GIS Reports"  tooltip="GIS Reports" menuicon="GeographicalReport.png"  Action="Add">
+      <MenuItem Name="Meter" menutext="Meter" tooltip="Meter">
+        <Link operation="Index" application="GIS" />
+      </MenuItem>
+      <MenuItem Name="OfficerLocation" menutext="Officer Current Location" tooltip="Officer Current Location">
+        <Link operation="CurrentLocation" application="GIS" />
+      </MenuItem>
+      <MenuItem Name="Officer" menutext="Officer Route" tooltip="Officer Route">
+        <Link operation="OfficerRoute" application="GIS" />
+      </MenuItem>
+      <MenuItem Name="ReportType" menutext="Financial Report Type" tooltip="FinancialReportType">
+        <Link operation="FinancialReportType" application="GIS" />
+      </MenuItem>
+      <MenuItem Name="Citations" menutext="Citation" tooltip="Citation">
+        <Link operation="Citation" application="GIS" />
+      </MenuItem>
+    </MenuItem>
+    <MenuItem Name="Enforcement" menutext="Enforcement" tooltip="Enforcement"   menuicon="Enforcement.png"  Action="Add">
+      <MenuItem Name="AIEnquiry" menutext="AI Inquiry" tooltip="AI Inquiry" Action="Add">
+        <Link operation="Index" application="Enforcement" />
+      </MenuItem>
+    </MenuItem>
+    <MenuItem Name="Profile" menutext="User Profile" tooltip="Manage my settings" menuicon="UserProfile.png" Action="Add">
+      <Link operation="Edit" application="Profile"  Action="Add"/>
+    </MenuItem>
+    <MenuItem Name="Users" menutext="Administration"  menuicon="Admin.png" Action="Add">
+      <MenuItem Name="MUsers" menutext="User Management" tooltip="Manage client users" Action="Add">
+        <Link operation="Index" application="Users" />
+      </MenuItem>
+      <MenuItem Name="MRoles" menutext="Manage Roles" tooltip="Manage client user roles" Action="Add">
+        <Link operation="Index" application="Roles" />
+      </MenuItem>
+    </MenuItem>
+  </MenuTree>
+</Customer>

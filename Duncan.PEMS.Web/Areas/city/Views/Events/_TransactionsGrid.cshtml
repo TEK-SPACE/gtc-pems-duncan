@@ -1,0 +1,73 @@
+﻿
+@* /******************* CHANGE LOG ***********************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________          ___________________        _______________________________________________________________________________________________
+ * 
+ * 01/23/2014           Sergey Ostrerov            DPTXPEMS-74 - AssetId isn't available in grid page although it's available in filter
+ * 
+ * *****************************************************************************************************************************************************/ *@
+
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Events.TransactionEventModel>
+
+@(Html.Kendo().Grid( Model )
+      .Name( "CurrentGrid" )
+      .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+      .Columns( columns =>
+                    {
+                        columns.Bound(p => p.DateTime).ClientTemplate("#= DateTimeDisplay #").Width(175);
+                        columns.Bound( p => p.TransactionId ).ClientTemplate( "#= CreateTransactionDetailLink(TransactionId, IsSensorTransaction, SensorPaymentTransactionId) #" ).Width( 100 );
+                        columns.Bound( p => p.AssetType ).Width( 150 );
+                        columns.Bound(p => p.AssetId).Width(150);
+                        columns.Bound(p => p.AssetName).Width(175);
+                        columns.Bound( p => p.PaymentType ).Title( "Transaction Type" ).Width( 125 );
+                        columns.Bound(p => p.Bay).Width(75);
+                        columns.Bound(p => p.TimePaid).ClientTemplate("#= TimePaidDisplay  #").Width(100);
+                        columns.Bound(p => p.Amount).ClientTemplate("#= AmountPaidDisplay #").Width(100);
+                        columns.Bound(p => p.CardType).Width(125);
+                        columns.Bound(p => p.CardStatus).Width(175);
+                        columns.Bound(p => p.ReceiptNumber).Width(125);
+                    } )
+      .Selectable( select => select.Mode( GridSelectionMode.Single ).Type( GridSelectionType.Row ) )
+      .Reorderable( reorder => reorder.Columns( false ) )
+      .Pageable( pager => pager.PageSizes( true ).PageSizes( new int[] {100, 250, 500, 1000} ) )
+      .AutoBind( false )
+      .Sortable( sortable => sortable.SortMode( GridSortMode.MultipleColumn ) )
+      .Resizable( resize => resize.Columns( true ) )
+      .Scrollable()
+      .Events( events => events.DataBound( "OnGridDataBound" ) )
+      .Events( events => events.Change( "OnRowSelected" ) )
+      .Events( events => events.ColumnResize( "OnRowResized" ) )
+      .DataSource( dataSource => dataSource.Ajax().Read( read => read.Action( "GetTransactionEvents", "Events" ).Data( "additionalData" ) )
+      ))
+
+<script type="text/javascript">
+
+    function CreateTransactionDetailLink(transactionId, isSensorTransaction, sensorPaymentTransactionId) {
+        /// Create a Event Details link. if null, return empty string
+
+        if (transactionId) {
+            var uri;
+
+            if (isSensorTransaction && isSensorTransaction == true) {
+                console.log("Sensor Transaction - ID: ", transactionId);
+                uri = '@Html.ActionLink( "#TransactionId#", "SensorDetails", "Transactions", new {txId = "#TransactionId#", sensorPmtTxId = "#SensorPaymentTransactionId#"}, new {@onclick = "OnRowSelected(this);"} )';
+                uri = decodeURIComponent(uri);
+                uri = uri.replace('#TransactionId#', transactionId);
+                uri = uri.replace('#TransactionId#', transactionId); // .replace() only replaces first instance, so have to call 2x
+                uri = uri.replace('#SensorPaymentTransactionId#', sensorPaymentTransactionId);
+            } else {
+                uri = '@Html.ActionLink( "#TransactionId#", "MeterDetails", "Transactions", new {txId = "#TransactionId#"}, new {@onclick = "OnRowSelected(this);"} )';
+                uri = decodeURIComponent(uri);
+                uri = uri.replace('#TransactionId#', transactionId);
+                uri = uri.replace('#TransactionId#', transactionId); // .replace() only replaces first instance, so have to call 2x
+            }
+
+            return uri;
+
+        } else {
+            return "";
+        }
+    }
+
+</script>

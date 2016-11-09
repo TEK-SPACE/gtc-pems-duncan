@@ -1,0 +1,198 @@
+﻿@model Duncan.PEMS.Entities.Assets.SpaceTariffViewModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "View Space Tariffs");
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "View Asset")</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+
+@using (Html.BeginForm("ViewTariffConfiguration", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "viewSpace" }))
+{
+    @Html.HiddenFor(m => m.CustomerId)
+    @Html.HiddenFor(m => m.AreaId)
+    @Html.HiddenFor(m => m.AssetId)
+
+    <div class="customer_tab_content">
+
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Information")</div>
+
+        <div class="clear">
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Bay Number")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.BayNumber, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.BayNumber)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Street, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Street)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Area, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Area)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Zone)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Suburb, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Suburb)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetModel, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetModel)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Name, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Name)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Demand Status")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.DemandStatus, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.DemandStatus)&nbsp;
+                </div>
+            </div>
+        </div>
+
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Detail")</div>
+
+        @(Html.Kendo().Grid(Model.Tariffs) // Bind the grid to the Model property of the view
+          .Name("TariffsGrid")
+          .Columns(columns =>
+                        {
+                            columns.Bound(p => p.ConfigProfileSpaceId).Width(120).ClientTemplate("#= CreateTariffDetailLink(ConfigProfileSpaceId) #")
+                                .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration ID").ToString());
+
+                            columns.Bound(p => p.CreationDate).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Creation Date").ToString());
+                            columns.Bound(p => p.ActivationDate).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Activation Date").ToString());
+                            columns.Bound(p => p.ScheduledDate).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Schedule Date").ToString());
+                            columns.Bound(p => p.Status).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Status").ToString());
+                            columns.Bound(p => p.UserName).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Scheduled By").ToString());
+
+                            columns.Bound(p => p.RateConfigId).Width(100).ClientTemplate("#= CreateTariffRateDetailLink(ConfigProfileId, RateConfigId) #")
+                                .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Rate ID").ToString());
+
+                            columns.Bound(p => p.RateConfigId).Width(100).ClientTemplate("#= CreateTariffScheduleDetailLink(ConfigProfileId, ScheduleConfigId) #")
+                                .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Schedule ID").ToString());
+
+                            columns.Bound(p => p.RateConfigId).Width(100).ClientTemplate("#= CreateTariffHolidayDetailLink(ConfigProfileId, HolidayConfigId) #")
+                                .Title(HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Public Holiday ID").ToString());
+
+                        })
+          .Pageable()
+          .Sortable()
+          .Scrollable(scr => scr.Height(430))
+          .Filterable().DataSource(datasource => datasource.Ajax())
+
+          )
+
+
+
+
+
+
+        <div class="customer_actions">
+
+            @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return") ?? "Return"), "ViewSpace", "Assets",
+                                      new { customerId = Model.CustomerId, assetId = Model.AssetId, viewOnly = false },
+                                      new { @class = "button previous" })
+        </div>
+
+    </div>
+}
+
+
+
+<script type="text/javascript">
+
+    function CreateTariffDetailLink(configProfileSpaceId) {
+        /// Create a Event Details link. if null, return empty string
+        if (configProfileSpaceId) {
+            var uri = '@Html.ActionLink("#ConfigProfileSpaceId#", "ViewTariffDetail", "Assets", new { customerId = Model.CustomerId, parkingSpaceId = Model.AssetIdDisplay, configProfileSpaceId = "#ConfigProfileSpaceId#" },new { })';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#ConfigProfileSpaceId#', configProfileSpaceId);
+            uri = uri.replace('#ConfigProfileSpaceId#', configProfileSpaceId); // .replace() only replaces first instance, so have to call 2x
+            return uri;
+        } else {
+            return "";
+        }
+    }
+
+
+    function CreateTariffRateDetailLink(configProfileSpaceId, rateConfigId) {
+        // Create a Tariff Rate Details link. if null, return empty string
+        if (rateConfigId) {
+            var uri = '@Html.ActionLink("#RateConfigId#", "ViewTariffRateDetail", "Assets", new { customerId = Model.CustomerId, parkingSpaceId = Model.AssetIdDisplay, configProfileId = "#ConfigProfileId#", configurationId = "#RateConfigId#" },new { })';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#ConfigProfileSpaceId#', configProfileSpaceId);
+            uri = uri.replace('#RateConfigId#', rateConfigId); // .replace() only replaces first instance, so have to call 2x
+            uri = uri.replace('#RateConfigId#', rateConfigId); // .replace() only replaces first instance, so have to call 2x
+            return uri;
+        } else {
+            return "";
+        }
+    }
+
+
+    function CreateTariffScheduleDetailLink(configProfileSpaceId, scheduleConfigId) {
+        // Create a Tariff Schedule Details link. if null, return empty string
+        if (scheduleConfigId) {
+            var uri = '@Html.ActionLink("#ScheduleConfigId#", "ViewTariffScheduleDetail", "Assets", new { customerId = Model.CustomerId, parkingSpaceId = Model.AssetIdDisplay, configProfileId = "#ConfigProfileId#", configurationId = "#ScheduleConfigId#" },new { })';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#ConfigProfileSpaceId#', configProfileSpaceId);
+            uri = uri.replace('#ScheduleConfigId#', scheduleConfigId); // .replace() only replaces first instance, so have to call 2x
+            uri = uri.replace('#ScheduleConfigId#', scheduleConfigId); // .replace() only replaces first instance, so have to call 2x
+            return uri;
+        } else {
+            return "";
+        }
+    }
+
+    function CreateTariffHolidayDetailLink(configProfileSpaceId, holidayConfigId) {
+        // Create a Tariff Holiday Details link. if null, return empty string
+        if (holidayConfigId) {
+            var uri = '@Html.ActionLink("#HolidayConfigId#", "ViewTariffHolidayDetail", "Assets", new { customerId = Model.CustomerId, parkingSpaceId = Model.AssetIdDisplay, configProfileId = "#ConfigProfileId#", configurationId = "#HolidayConfigId#" },new { })';
+            uri = decodeURIComponent(uri);
+            uri = uri.replace('#ConfigProfileSpaceId#', configProfileSpaceId);
+            uri = uri.replace('#HolidayConfigId#', holidayConfigId); // .replace() only replaces first instance, so have to call 2x
+            uri = uri.replace('#HolidayConfigId#', holidayConfigId); // .replace() only replaces first instance, so have to call 2x
+            return uri;
+        } else {
+            return "";
+        }
+    }
+
+</script>

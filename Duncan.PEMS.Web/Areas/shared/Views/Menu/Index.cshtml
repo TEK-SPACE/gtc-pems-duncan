@@ -1,0 +1,66 @@
+﻿@using Duncan.PEMS.Security.Menu
+@using Duncan.PEMS.Utilities
+@model PemsMenu
+
+<div id="left-navigation">
+    <div class="collapse">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "collapse")</div>
+
+    @foreach (PemsMenuItem menuItem in Model)
+    {
+        //determine if the menu should open in a new window
+        string target = !menuItem.NewWindow ? string.Empty : "_blank";
+
+        //get the background image for the item
+        string backgroundStyle = string.IsNullOrEmpty(menuItem.Icon) ? string.Empty : "background-image:url(/images/Menu/" + menuItem.Icon + ")";
+
+        //also need to determine if the class is active or not
+        string activeClass = menuItem.MenuUrl == null ? "" : (menuItem.MenuUrl.Trim() == Request.Path.Trim()) ? "active" : "";
+        string openClass = "";
+
+        if (activeClass != "")
+        {
+            openClass = "open";
+        }
+
+        //also check sub items
+        if (menuItem.Any(x => x.MenuUrl.Trim() == Request.Path.Trim()))
+        {
+            openClass = "open";
+            activeClass = "active";
+        }
+        if (menuItem.Count > 0)
+        {
+        <div id="menu_@menuItem.ID" class="@activeClass @openClass" >
+            <ul>
+                <li class="top-level " style="@backgroundStyle" >
+                    <div class="menuExpandor">&nbsp;</div>
+                    <a href="@menuItem.Url" class="top-level-header " target="@target" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, @menuItem.Label)</a>
+                    <ul class="submenu">
+                        @foreach (PemsMenuItem subMenuItem in menuItem)
+                        {
+                            string subMenuTarget = !subMenuItem.NewWindow ? string.Empty : "_blank";
+                            <li>
+                                @if (string.IsNullOrWhiteSpace(subMenuItem.MenuUrl))
+                                {
+                                    <a style="font-style:italic">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, @subMenuItem.Label)</a>
+                                }
+                                else
+                                {<a class="menu-link" href="@subMenuItem.Url" target="@subMenuTarget">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, @subMenuItem.Label)</a>}
+                            </li>
+                        }
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        }
+        else
+        {
+        <div class="@activeClass" >
+            <a href="@menuItem.Url" class="top-level top-level-header stopClickEvent" style="@backgroundStyle" target="@target">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, @menuItem.Label)</a>
+        </div>
+        }
+    }
+
+    <div class="collapse">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "collapse")</div>
+</div>

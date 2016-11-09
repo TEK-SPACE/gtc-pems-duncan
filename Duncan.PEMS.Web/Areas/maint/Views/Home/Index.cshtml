@@ -1,0 +1,21 @@
+﻿@using Duncan.PEMS.Utilities
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Field Maintenance Home" );
+}
+                     
+@section PageHeader 
+{
+    
+}
+
+<div id="big-buttons">
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Create Work Order" ), "CreateEvent", "WorkOrders", null,new {@title = "Create Work Order",@class = "button important"} )
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Assigned Work Orders" ), "WorkOrders", "WorkOrders", null,new {@title = "Work Orders",@class = "button important"} )
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Preventative Maintenance" ), "PMWorkOrders", "WorkOrders", null,new {@title = "Preventative Maintenance",@class = "button important"} )
+</div>
+<div id="small-buttons">
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Change Password" ), "ChangePassword", "Profile", null,new {@title = "Change Password",@class = "button"} )
+    @{ Html.RenderAction("MobileChangeCity", "Account", new { Area = "Shared", userName = ViewData[Constants.ViewData.CurrentUser] }); }
+    @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Logout" ), "LogOff", "Account", null,new {@id = "logout", @title = "Logout",@class = "button red"} )
+</div>

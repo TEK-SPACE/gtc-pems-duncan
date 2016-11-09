@@ -1,0 +1,746 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.PayByCell.PayByCellModel
+
+
+@{
+    ViewBag.Title = "Space Management";
+
+}
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <!-- file upload -->
+    <script type="text/javascript" src="/scripts/Kendo/kendo.all.min.js"></script>
+
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    @Scripts.Render("~/bundles/kendo")
+
+    <script type="text/javascript">
+
+        //** for PayByCell
+
+        var spinner;
+
+        var viewModel = kendo.observable({
+
+            VendorIDs:[],
+            VendorID:[],
+
+            AreaIDs: [],
+            AreaID: "All",
+
+            ZoneIDs: [],
+            ZoneID: "All",
+
+            StreetIDs: [],
+            Street: "All",
+
+            SubUrbIDs: [],
+            SubUrbID: "All",
+            selectedDataItems:[],
+
+        });
+
+        function getLocType()
+        {
+        return { locationType: "Area" }
+        }
+        function getSuburb()
+        {
+            return { locationType: "Suburb" }
+        }
+        function getStreet() {
+            return { locationType: "Street" }
+        }
+        function getZone() {
+            return { locationType: "Zone" }
+        }
+
+        function LoadFreshGrid() {
+
+
+            showProgressBar(false); //** Display Progress bar animation till the server returns response;
+            invokeDataSource(50) //** set the default no. of records as 50
+        }
+
+    
+
+        function invokeDataSource(maxCount) {
+            showProgressBar(true); //** Display Progress bar animation till the server returns response;
+            var grid = $("#GridCustProp").data("kendoGrid");
+            grid.dataSource.pageSize(maxCount);
+            grid.dataSource.groupable(false);
+            grid.dataSource.read();
+
+
+
+        }
+
+        function GetAllFilterData() {
+
+            //Vendor
+            var getTextFromVendor = $("#Vendor").data("kendoDropDownList").text()
+            var VndrID;
+            var VendorName;
+            if (getTextFromVendor == "All") {
+                VndrID = -1;
+                VendorName="All"
+            }
+            else {
+                VndrID = $("#Vendor").val();
+                VendorName = getTextFromVendor;
+            }
+            //Area
+            var getTextFromArea = $("#Areas").data("kendoDropDownList").text()
+            var AreaID;
+            var AreaName;
+            if (getTextFromArea == "All") {
+                AreaID = -1;
+                AreaName='All'
+            }
+            else {
+                AreaID = $("#Areas").val();
+                AreaName = getTextFromArea;
+            }
+
+            //Zone
+            var getTextFromZone = $("#Zone").data("kendoDropDownList").text()
+            var ZoneID;
+            var ZoneName;
+            if (getTextFromZone == "All") {
+                ZoneID = -1;
+                ZoneName="All"
+            }else{
+                ZoneID = $("#Zone").val();
+                ZoneName = getTextFromZone;
+            }
+            //SubUrb
+            var getTextFromSuburb = $("#SubUrb").data("kendoDropDownList").text()
+            var SubUrbID;
+            var SuburbName;
+            if (getTextFromSuburb == "All") {
+                SubUrbID = -1;
+                SuburbName = "All";
+            }else{
+                SubUrbID = $("#SubUrb").val();
+                SuburbName = getTextFromSuburb;
+            }
+            //Street
+            var getTextFromStreet = $("#Street").data("kendoDropDownList").text()
+           
+            var street;
+            if (getTextFromStreet == "All") {
+                street = "All";
+            } else {
+                street = getTextFromStreet;
+           }
+
+            return { VendorID: VndrID, AreaID: AreaID, ZoneID: ZoneID, SubUrbID: SubUrbID, Street: street, VendorName:VendorName,AreaName:AreaName,ZoneName:ZoneName,SuburbName:SuburbName }
+
+        }
+
+        function Checked(event) {
+
+            if (event.checked) {
+           
+                var grid = $('#GridCustProp').data("kendoGrid");
+                var selectedRow = grid.select();
+             var selectedRowIndex = selectedRow.index();
+
+                var firstItem = grid.dataSource.data()[selectedRowIndex];
+
+                var meterid = firstItem.get('MeterID')
+               var vendorid = firstItem.get('VendorID')
+                viewModel.selectedDataItems.push(meterid);
+                firstItem.set('VendorID', meterid);
+
+                grid.dataSource.data()[selectedRowIndex].dirty = true;
+                grid.dataSource.sync();
+
+            
+
+            }
+
+        }
+
+        function onDataBound(arg) {
+          
+            var result = $("#GridCustProp").data().kendoGrid.dataSource.data()
+            showProgressBar(false); //** Hide Progress bar animation after the server response;
+
+            //**First clear the Grid
+            $('#DivCustProp').css('display', 'none');
+            $("#DivCustProp").show();
+            $('#DivCustProp').css('visibility', 'visible');
+            if (result.length == 0) {
+                alert('No Data.');
+                return;
+            }
+
+            //** Export options - Step 3
+            UpdateGridState();
+            UpdateExportLinks();
+        }
+
+        //** STEP-3a
+        function UpdateGridState() {
+            /// Update the grid state object with grid's current state
+            var currentGrid = $("#GridCustProp").data("kendoGrid");
+
+            gridFilters.CurrentPage = currentGrid.dataSource.page();
+            gridFilters.SelectedRow = currentGrid.select().index();
+            gridFilters.sorts = JSON.stringify(currentGrid.dataSource._sort);
+            gridFilters.pageSize = currentGrid.dataSource.pageSize();
+
+        }
+
+        //** STEP-3b
+        function UpdateExportLinks() { //** Export options - Step 3
+            /// Update the href for the export buttons
+            var grid = $('#GridCustProp').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            $("#exportButtons").css("display", "inline");
+
+        }
+
+
+        function GetExportHref(href, requestObject, grid) { //** Export options - Step 4
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            //href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            var $VendorID = $("#Vendor").val();//viewModel.get('VendorID');
+            href = href.replace(/VendorID=([^&]*)/, 'VendorID=' + ($VendorID));
+            var $AreaID = $("#Areas").val(); //viewModel.get('AreaID');
+            href = href.replace(/AreaID=([^&]*)/, 'AreaID=' + ($AreaID));
+            var $ZoneID = $("#Zone").val(); //viewModel.get('ZoneID');
+            href = href.replace(/ZoneID=([^&]*)/, 'ZoneID=' + ($ZoneID));
+            var $SubUrbID = $("#SubUrb").val(); //viewModel.get('SubUrbID');
+            href = href.replace(/SubUrbID=([^&]*)/, 'SubUrbID=' + ($SubUrbID));
+            var $Street = $("#Street").data("kendoDropDownList").text() //viewModel.get('Street');
+            href = href.replace(/Street=([^&]*)/, 'Street=' + ($Street));
+            var $VendorName = $("#Vendor").data("kendoDropDownList").text();
+            href = href.replace(/VendorName=([^&]*)/, 'VendorName=' + ($VendorName));
+            var $AreaName = $("#Areas").data("kendoDropDownList").text();
+            href = href.replace(/AreaName=([^&]*)/, 'AreaName=' + ($AreaName));
+            var $ZoneName = $("#Zone").data("kendoDropDownList").text();
+            href = href.replace(/ZoneName=([^&]*)/, 'ZoneName=' + ($ZoneName));
+            var $SuburbName = $("#SubUrb").data("kendoDropDownList").text();
+            href = href.replace(/SuburbName=([^&]*)/, 'SuburbName=' + ($SuburbName));
+            return href;
+        }
+
+
+        //** STEP 2
+        var gridFilters = { "CurrentPage": 1, "PageSize": 50 };
+        var sorts = {};
+
+        $(document).ready(function () {
+            $(".k-grid-cancel-changes", "#GridCustProp").hide();
+ 
+        });
+
+        function OnSaveButtonClick() {
+
+            $.ajax({
+                url: '@Url.Action("SpaceManagement_Update", "PayByCell", Request.RequestContext.RouteData.Values)',
+                type: 'POST',
+                traditional: true,
+                dataType: "json",
+                contentType: "application/json",
+                data: kendo.stringify({ GridRowdata: $("#GridCustProp").data("kendoGrid").dataSource.view().toJSON() }),
+                success: function (data) {
+                    alert('Record saved successfully.');
+                    $('#GridCustProp').data('kendoGrid').dataSource.read();
+                }
+            });
+        }
+
+       function CheckDuncanMeterIDCheckBox() {
+            var useDuncanMID_CB = $('#useDuncMet').prop('checked');
+            if (useDuncanMID_CB == false) {
+                alert('Use Duncan MeterIDs checkbox need to be checked');
+                return false;
+            }
+            var result = $("#GridCustProp").data().kendoGrid.dataSource.data()
+            if (result.length == 0) {
+                alert("No records to update");
+                return false;
+            }
+
+
+            OnSaveButtonClick()
+        }
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '280px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+
+    </script>
+}
+
+
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        ready .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+          ready .filter-SearchButton:hover {
+	            background: #ccc!important;
+	            text-decoration: none!important;
+         }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .k-widget .templateCell {
+            overflow: visible;
+        }
+
+        /*.squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }*/
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /*            for file upload            */
+        .file-icon {
+            display: inline-block;
+            float: left;
+            width: 48px;
+            height: 48px;
+            margin-left: 10px;
+            margin-top: 13.5px;
+        }
+
+        .img-file {
+            background-image: url(/content/web/upload/jpg.png);
+        }
+
+        .doc-file {
+            background-image: url(/content/web/upload/doc.png);
+        }
+
+        .pdf-file {
+            background-image: url(/content/web/upload/pdf.png);
+        }
+
+        .xls-file {
+            background-image: url(/content/web/upload/xls.png);
+        }
+
+        .zip-file {
+            background-image: url(/content/web/upload/zip.png);
+        }
+
+        .default-file {
+            background-image: url(/content/web/upload/default.png);
+        }
+
+        #example .file-heading {
+            font-family: Arial;
+            font-size: 1.1em;
+            display: inline-block;
+            float: left;
+            width: 450px;
+            margin: 0 0 0 20px;
+            height: 25px;
+            -ms-text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #example .file-name-heading {
+            font-weight: bold;
+        }
+
+        #example .file-size-heading {
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        li.k-file .file-wrapper .k-upload-action {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        li.k-file div.file-wrapper {
+            position: relative;
+            height: 75px;
+        }
+
+
+    </style>
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Transaction Management") / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Space Management")</h1>
+
+}
+
+@section PageFilter
+{
+<div class="one-column" style="width: 455px;">
+    <div class="filter-option">
+        <label class="filter-label">Vendor :</label>
+
+        @(Html.Kendo().DropDownList()
+                .Name("Vendor")
+                .OptionLabel("All")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })//, onchange = "GetAssetIds()"
+                .DataTextField("VendorName")
+                .DataValueField("VendorID")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../PayByCell/GetVendors");
+                                    });
+                                })
+        )
+
+    </div>
+</div>
+
+    <div class="two-column-wrapper">
+    
+        <div class="two-column" style="width: 455px;">
+            <div class="filter-option">
+                <label class="filter-label">Area :</label>
+
+                @(Html.Kendo().DropDownList()
+                .Name("Areas")
+                .OptionLabel("All")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })//, onchange = "GetAssetIds()"
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../PayByCell/GetLocs").Data("getLocType");
+                                    });
+                                })
+                )
+            </div>
+        </div>
+
+        <div class="two-column" style="width: 550px;">
+            <div class="filter-option">
+                <label class="filter-label">Suburb:</label>
+                @(Html.Kendo().DropDownList()
+                .Name("SubUrb")
+                .OptionLabel("All")
+                        .HtmlAttributes(new { style = "width: 330px; font-size: 16px;" })//, onchange = "GetAssetIds()"
+                .DataTextField("Text")
+                        .DataValueField("Value")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../PayByCell/GetLocs").Data("getSuburb");
+                                    });
+                                })
+                )
+            </div>
+        </div>
+
+    </div>
+
+<div class="two-column-wrapper">
+
+    <div class="two-column" style="width: 455px;">
+        <div class="filter-option">
+            <label class="filter-label">Zone:</label>
+            @(Html.Kendo().DropDownList()
+                .Name("Zone")
+                .OptionLabel("All")
+                .HtmlAttributes(new { style = "width: 280px; font-size: 16px;" })//, onchange = "GetAssetIds()"
+                        .DataTextField("Text")
+                    .DataValueField("Value")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../PayByCell/GetLocs").Data("getZone");
+                                    });
+                                })
+            )
+        </div>
+    </div>
+
+    <div class="two-column" style="width: 550px;">
+        <div class="filter-option">
+            <label class="filter-label">Street:</label>
+            @(Html.Kendo().DropDownList()
+                        .Name("Street")
+                .OptionLabel("All")
+                .HtmlAttributes(new { style = "width: 330px; font-size: 16px;" })//, onchange = "GetAssetIds()"
+                .DataTextField("Text")
+                    //.DataValueField("Value")
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../PayByCell/GetLocs").Data("getStreet");
+                                    });
+                                })
+            )
+        </div>
+    </div>
+
+</div>
+
+    <div class="filter-searchBox">
+        <div style="float: left">
+            <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+        </div>
+        <div id="ReturnButtonDiv" style="float: right; display: none">
+            <a id="btnReturn" class="button previous filter-ReturnButton" href="@Url.Action("Index", "Assets", new { rtn = "true" })">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString()
+            </a>
+        </div>
+
+    </div>
+
+
+}
+
+<input type="checkbox" id="useDuncMet"> Use Duncan MeterID's<br> 
+
+<div class="grid-header" style="margin-left:-40px">
+
+</div>
+
+<div id="DivCustProp" class="grid-content" style=" width: 100%; margin-left: 0px; padding-bottom: 10px">
+    @*display: none*@
+     @(Html.Kendo().Grid<Duncan.PEMS.Entities.PayByCell.PayByCellModel>()
+
+        .Name("GridCustProp")
+        .Columns(col =>
+        {
+            col.Bound(a => a.MeterID).Title("Vendor Use").Width("90px").ClientTemplate("<input id='#= MeterID #' type='checkbox' onclick='Checked(this)' class='c-ok'></input>");
+            col.Bound(a => a.MeterID).Title("Meter ID").Width("80px");
+            col.Bound(a => a.VendorID).Title("Vendor ID").Width("80px");
+            col.Bound(a => a.AreaName).Title("Area Name").Width("130px");
+            col.Bound(a => a.ZoneName).Title("Zone Name").Width("130px");
+            col.Bound(a => a.Street).Title("Street Name").Width("130px");
+            col.Bound(a => a.SubUrbName).Title("Suburb Name").Width("130px");
+            //col.Bound(a => a.VendorName).Title("Vendor Name").Width("100px");
+            
+
+
+        }
+            )
+                  .Scrollable(scr => scr.Height(250))
+                          //.Editable(editable => editable.Mode(GridEditMode.InCell))
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+             //.ToolBar(toolBar =>
+             //                 {
+             //                     toolBar.Save().SaveText("Save").HtmlAttributes(new{ onclick = "CheckDuncanMeterIDCheckBox()" });
+             //                 })
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                 .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                        //.Model(model =>
+                        //     {
+                        //         model.Id(p => p.MeterID);
+                        //     })
+                .Read(read => read.Action("GetPayByCellSummary", "PayByCell").Data("GetAllFilterData"))
+                //.Update(update => update.Action("SpaceManagement_Update", "PayByCell").Type(HttpVerbs.Post))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+    )
+   @* @(Html.Kendo().Grid<Duncan.PEMS.Entities.PayByCell.PayByCellModel>()
+     .Name("GridCustProp")
+        .Columns(col =>
+        {
+            col.Bound(a => a.VendorID).Title("Use").Width("50px").ClientTemplate("<input id='#= VendorID #' type='checkbox' class='c-ok'></input>");
+            col.Bound(a => a.MeterID).Title("Meter ID").Width("100px");
+            col.Bound(a => a.AreaName).Title("Area Name").Width("150px");
+            col.Bound(a => a.ZoneName).Title("Zone Name").Width("150px");
+            col.Bound(a => a.Street).Title("Street Name").Width("150px");
+            col.Bound(a => a.SubUrbName).Title("Suburb Name").Width("150px");
+            col.Bound(a => a.VendorName).Title("Vendor Name").Width("100px");
+        })
+             .Scrollable(scr => scr.Height(250))
+            .Events(events => events.DataBound("onDataBound"))
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                          
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+                .Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                    .Read(read => read.Action("GetPayByCellSummary", "PayByCell").Data("GetAllFilterData"))
+                   .PageSize(50)
+                )
+
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 10, 50, 100, 200 })) // Enable paging
+
+    )*@
+
+</div>
+
+
+<button id="btnUpdateSpace" value="Update" class="button" onclick="CheckDuncanMeterIDCheckBox()">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Update Space")</button>
+
+@section ExportButtons
+{
+@*Export options - Step 1 *@
+<div class="export-buttons" id="exportButtons">
+    <a id="exportExcel" class="exportButton" href="@Url.Action("ExportToExcel_SpacMgmt", new { page = 1, pageSize = "~", filter = "~", sort = "~", VendorID = "~", AreaID = "~", ZoneID = "~", SubUrbID = "~", Street = "~", VendorName = "~", AreaName = "~", ZoneName = "~", SuburbName = "~" })">
+        <img src='/images/export-excel.png' />
+    </a>
+    <a id="exportCSV" class="exportButton" href="@Url.Action("ExportToCsv_SpacMgmt", new { page = 1, pageSize = "~", filter = "~", sort = "~", VendorID = "~", AreaID = "~", ZoneID = "~", SubUrbID = "~", Street = "~", VendorName = "~", AreaName = "~", ZoneName = "~", SuburbName = "~" })">
+        <img src='/images/export-csv.png' />
+    </a>
+    <a id="exportPDF" class="exportButton" href="@Url.Action("ExportToPdf_SpacMgmt", new { page = 1, pageSize = "~", filter = "~", sort = "~", VendorID = "~", AreaID = "~", ZoneID = "~", SubUrbID = "~", Street = "~", VendorName = "~", AreaName = "~", ZoneName = "~", SuburbName = "~" })">
+        <img src='/images/export-pdf.png' />
+    </a>
+</div>
+}
+
+@*http://www.sitereq.com/post/kendo-mvc-dropdown-lists-inside-inline-kendo-mvc-grids*@

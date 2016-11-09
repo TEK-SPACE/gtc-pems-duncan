@@ -1,0 +1,377 @@
+﻿@model Duncan.PEMS.Entities.AutoAlarm.AutoAlarmModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Duncan.PEMS.Entities.Enumerations
+
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Auto Alarm");
+}
+
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Auto Alarm Management") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Auto Alarm Inquiry")</span></h1>
+}
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        .areas-existing-grid {
+            float: left;
+            width: 55% !important;
+        }
+        .customer_text1 {
+            margin-bottom: 5px;
+            width: 198px;
+        }
+        .areas-new-grid {
+            float: right;
+            width: 45% !important;
+            height: 200px;
+        }
+
+        .filter-option, .filter-searchBox {
+            float: left;
+            margin-left: 0px;
+            margin-bottom: 5px;
+        }
+
+        .areas-new-text {
+            margin-left: 10px;
+            width: 80% !important;
+        }
+
+        .areas-new-button {
+            float: right;
+            margin-right: 30px;
+        }
+
+        .k-button-icontext .k-icon {
+            margin: 0 !important;
+        }
+
+        .k-grid-filter {
+            background-color: #efefef;
+        }
+
+        .k-state-active, .k-state-active:hover, .k-active-filter {
+            background-color: #33bab1 !important;
+        }
+
+        .k-filter-menu > div > span:first-of-type {
+            display: none;
+        }
+
+        .k-grid tbody .k-button, .k-ie8 .k-grid tbody button.k-button {
+            min-width: 20px !important;
+            text-decoration: none !important;
+            padding: 0px !important;
+        }
+
+        .validationSum-container {
+            height: auto !important;
+        }
+
+        .field-validation-error {
+            clear: both !important;
+            display: block;
+        }
+
+        .two-column a {
+            background: none;
+        }
+    </style>
+}
+
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+@using (Html.BeginForm("AutoAlarmSubmit", "AutoAlarm", FormMethod.Post))
+{ 
+
+
+    <div>
+        <div>
+
+
+            <span class="filter-label" style="padding-right: 70px;">AutoAlarm Event Source</span>
+            <span class="filter-label" style="padding-right: 50px;">Meter</span>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt PollInterval")</div>
+            <span class="required_asterisk">*</span>    
+           
+            @(Html.Kendo().NumericTextBox<int>().Name("LowBattPollInterval").Min(0).Format("n0").Decimals(0).Value(Convert.ToInt32(Model.LowBattPollInterval)))
+            
+            <span class="filter-label" style="padding-right: 20px;">Seconds</span>
+           
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt AlarmClearVolt")</div>
+            <span class="required_asterisk">*</span>          
+            @(Html.Kendo().NumericTextBox<double>().Name("LowBattAlarmClearVolt").Min(0.0).Format("n1").Decimals(1).Value(Convert.ToDouble(Model.LowBattAlarmClearVolt)))
+             <span class="filter-label" style="padding-right: 20px;">Volts</span>
+            
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>
+
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt CritLowBattVolt")</div>
+            <span class="required_asterisk">*</span>          
+            @(Html.Kendo().NumericTextBox<double>().Name("LowBattCritLowBattVolt").Min(0.0).Format("n1").Decimals(1).Value(Convert.ToDouble(Model.LowBattCritLowBattVolt)))
+             <span class="filter-label" style="padding-right: 20px;">Volts</span>
+            
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt LowBattVolt")</div>
+            <span class="required_asterisk">*</span>
+            @*@Html.TextBoxFor(m => m.LowBattLowBattVolt, new { @class = "customer_text", @id = "LowBattLowBattVolt" })*@
+            @(Html.Kendo().NumericTextBox<double>().Name("LowBattLowBattVolt").Min(0.0).Format("n1").Decimals(1).Value(Convert.ToDouble(Model.LowBattLowBattVolt)))
+            <span class="filter-label" style="padding-right: 20px;">Volts</span>
+            
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt SampleSince")</div>
+            <span class="required_asterisk">*</span>          
+            @(Html.Kendo().NumericTextBox<int>().Name("LowBattSampleSinceHrs").Min(0).Format("n0").Decimals(0).Value(Convert.ToInt32(Model.LowBattSampleSinceHrs)))
+            <span class="filter-label" style="padding-right: 20px;">Hours</span>
+           
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>       
+        <div >
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "LowBatt SsmVoltDiagType")</div>
+            <span class="required_asterisk">*</span>
+            @Html.DropDownListFor(m => m.LowBattSsmVoltDiagType, new SelectList(Model.LowBattSsmVoltDiagTypes, "Value", "Text"), new { @class = "customer_text1", @id = "LowBattSsmVoltDiagType" }) 
+            
+        </div>
+       
+        <div>
+            <div class="customer_text_label">@HttpContext.GetGlobalResourceObject(ResourceTypes.Label, "NoComm PollTime")</div>
+            <span class="required_asterisk">*</span>          
+            @(Html.Kendo().NumericTextBox<int>().Name("NoCommPollTime").Min(0).Format("n0").Decimals(0).Value(Convert.ToInt32(Model.NoCommPollTime)))
+            <span class="filter-label" style="padding-right: 20px;"> Minutes</span>           
+            <span id="divValidNotifLocation" class="divValidNotificationHide"></span>
+        </div>
+
+    </div>
+
+
+   <div class="grid-header">
+    <div style="float: left">
+        <input type="button" class="button important" value="Save" onclick="SaveAutoAlarm();" />
+        @Html.ActionLink("Add Auto Alarm", "AutoAlarmAdd", "AutoAlarm", null, new { @class = "button", @type = "button" })
+    </div>
+</div>
+    <div id="DivCustomerDetails" class="grid-content" style="margin-left:0px; margin-top:8px; ">
+
+        @(Html.Kendo().Grid<Duncan.PEMS.Entities.AutoAlarm.AutoAlarmModel>()
+
+.Name("grdDetails")
+        .Columns(col =>
+        {
+            col.Bound(a => a.CustomerIDText).Title("Customer ID").Width("150px").ClientTemplate(@Html.ActionLink("#= CustomerIDText #", "AutoAlarmDetails", "AutoAlarm", new
+            {
+                CustomerID = "#= CustomerIDText #",
+                LowBattAlarmCodeMinor = "#= LowBattAlarmCodeMinor #",
+                LowBattAlarmCodeMajor = "#= LowBattAlarmCodeMajor #",
+                LowBattEnabledMeters = "#= LowBattEnabledMeters #",
+                NoCommAlarmCode = "#= NoCommAlarmCode #",
+                NoCommEnabledMeters = "#= NoCommEnabledMeters #",
+            },
+                                                                   new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(100);           
+            col.Bound(a => a.LowBattAlarmCodeMinor).Title("LowBattAlarmCodeMinor").Width("100px");
+            col.Bound(a => a.LowBattAlarmCodeMajor).Title("LowBattAlarmCodeMajor").Width("100px");
+            col.Bound(a => a.LowBattEnabledMeters).Title("LowBattEnabledMeters").Width("100px");
+            col.Bound(a => a.NoCommAlarmCode).Title("NocommAlarmcode").Width("100px");           
+            col.Bound(a => a.NoCommEnabledMeters).Title("NocommEnabledMeters").Width("100px");        
+          
+
+
+        }
+            )
+
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(true)
+        //  .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+        .Editable(editable => editable.Mode(GridEditMode.InLine))
+        .Reorderable(reoder => reoder.Columns(true))
+        .Selectable(selectable => selectable
+        .Mode(GridSelectionMode.Single))
+
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                 .Model(model =>
+                        {
+                            model.Id(a => a.CustomerIDText);
+                            model.Field(a => a.CustomerIDText).Editable(false);
+                            model.Field(a => a.LowBattAlarmCodeMinor).Editable(false);
+                            model.Field(a => a.LowBattAlarmCodeMajor).Editable(false);
+                            model.Field(a => a.LowBattEnabledMeters).Editable(false);
+                            model.Field(a => a.NoCommAlarmCode).Editable(false);
+                            model.Field(a => a.NoCommEnabledMeters).Editable(false);                       
+
+
+                        })
+.Read(read => read.Action("GetAutoAlarmCustomerList", "AutoAlarm").Data("GetAllFilterData"))
+
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(false))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+
+        )
+      
+    </div>
+   
+
+
+
+}
+
+@section Scripts
+{
+}
+
+@Scripts.Render("~/bundles/kendo")
+
+
+
+<script type="text/javascript" src="/scripts/spin.min.js"></script>
+<script type="text/javascript">
+    var spinner;
+   
+
+    $(document).ready(function () {
+       
+        
+    });
+   
+
+
+    function GetAllFilterData() {
+
+        var CustomerId = '@Model.CustomerID';
+
+        return {
+            CustomerId: CustomerId
+        }
+    }
+
+    function SaveAutoAlarm() {
+
+        var temp = 0;
+       
+        var LowBattPollInterval = $("#LowBattPollInterval").val();      
+      
+        if (LowBattPollInterval == "") {
+
+            alert("LowBattPollInterval may not be blank");
+            temp = 1;
+
+        }
+       
+        var LowBattAlarmClearVolt = $("#LowBattAlarmClearVolt").val();
+        if (LowBattAlarmClearVolt == "") {
+
+            alert("LowBattAlarmClearVolt may not be blank");
+            temp = 1;
+
+        }
+
+        var LowBattCritLowBattVolt = $("#LowBattCritLowBattVolt").val();
+        if (LowBattCritLowBattVolt == "") {
+
+            alert("LowBattCritLowBattVolt may not be blank");
+            temp = 1;
+
+        }
+        var LowBattLowBattVolt = $("#LowBattLowBattVolt").val();
+        if (LowBattLowBattVolt == "") {
+
+            alert("LowBattLowBattVolt may not be blank");
+            temp = 1;
+
+        }
+        var LowBattSampleSinceHrs = $("#LowBattSampleSinceHrs").val();
+        if (LowBattSampleSinceHrs == "") {
+
+            alert("LowBattSampleSinceHrs may not be blank");
+            temp = 1;
+
+        }
+
+        var LowBattSsmVoltDiagType = $("#LowBattSsmVoltDiagType").val();
+        if (LowBattSsmVoltDiagType == "") {
+
+            alert('Select LowBattSsmVoltDiagType.');
+            temp = 1;
+
+        }
+
+        var NoCommPollTime = $("#NoCommPollTime").val();
+        if (NoCommPollTime == "") {
+
+            alert("NoCommPollTime may not be blank");
+            temp = 1;
+
+        }
+       
+        if (temp == 1)
+            return false;
+        else {
+
+
+            $.ajax({
+                url: '@Url.Action("AddAdminLevelAutoAlarm", "AutoAlarm")',
+                data: {
+                    LowBattPollInterval: LowBattPollInterval, LowBattAlarmClearVolt: LowBattAlarmClearVolt, LowBattCritLowBattVolt: LowBattCritLowBattVolt,
+                    LowBattLowBattVolt: LowBattLowBattVolt, LowBattSampleSinceHrs: LowBattSampleSinceHrs, LowBattSsmVoltDiagType: LowBattSsmVoltDiagType, NoCommPollTime: NoCommPollTime
+                },
+                type: 'POST',
+                success: function (data) {
+                    if (data == "1")
+                        alert("Successfully added")
+                    else if (data == "1")
+                        alert("Already added")
+                    else
+                        alert("Try again");
+                },
+
+            });
+
+        }
+
+    }
+   
+
+  
+
+
+
+</script>
+
+
+
+
+

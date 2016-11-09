@@ -1,0 +1,100 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.CollectionConfiguration
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Copy Collection Configuraiton" );
+}
+@section PageHeader 
+{
+  <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /  <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Copy Collection Route Configuration" )</span></h1>
+}
+
+@section Styles
+{
+    <style>
+        .validationSum-container { height: auto !important; }
+    </style>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Status" ): <span class="customer_status_state state_@Model.Status.ToLower()">@Model.Status</span></div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection ID" ): </div>
+        System Generated
+        @Html.HiddenFor( model => model.CollectionId )
+        @Html.HiddenFor( model => model.CustomerId )
+        @Html.HiddenFor( model => model.StatusId )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Name" ): </div>
+
+        @Html.TextBoxFor( m => m.CollectionName, new {@class = " k-textbox"} )
+        @Html.ValidationMessageFor( x => x.CollectionName )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Vendor Name" ): </div>
+        @(Html.Kendo().DropDownListFor( m => m.VendorId )
+              .DataTextField( "Text" )
+              .DataValueField( "Value" )
+              .BindTo( Model.VendorOptions ))
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Activation Date" ): </div>
+         @(Html.Kendo().DatePickerFor( x => x.ActivationDate ))
+         @Html.ShowAllErrors("ActivationDate")
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Days Between Collections" ): </div>
+        @(Html.Kendo().IntegerTextBoxFor( m => m.DaysBtwCollections ).Min( 0 ).Max( 14 ))
+        @Html.ValidationMessageFor( x => x.DaysBtwCollections )
+
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Public Holidays" ): </div>
+        @Html.CheckBoxFor( m => m.SkipPublicHolidays )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Specific Days of Week" ): </div>
+        <div style="padding-left: 200px">
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSunday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Sunday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipMonday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Monday" ) </div>
+            <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipTuesday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Tuesday" )</div>
+            <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipWednesday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Wednesday" )</div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipThursday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Thursday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipFriday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Friday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSaturday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Saturday" ) </div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Information" )</div>
+    @(Html.Kendo().Grid( Model.Meters )
+          .HtmlAttributes( new {@style = "width:250px"} )
+          .Name( "CurrentGrid" )
+          .Columns( columns =>
+                        {
+                            columns.Bound( p => p.MeterName ).Width( 200 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Meter Name" ).ToString() );
+                        } )
+          .Scrollable()
+          .Sortable()
+          .Resizable( resize => resize.Columns( true ) )
+          .DataSource( dataSource => dataSource
+                                         .Ajax()
+                                         .ServerOperation( false )
+          )
+          )
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="Save">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create" )</button>
+         @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous"} ) 
+    </div>
+}

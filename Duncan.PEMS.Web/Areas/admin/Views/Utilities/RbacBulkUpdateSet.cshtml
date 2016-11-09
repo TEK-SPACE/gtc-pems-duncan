@@ -1,0 +1,118 @@
+﻿@model Duncan.PEMS.Entities.Utilities.RightsMenusGroupsAndAppsModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "RBAC Bulk Updates";
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Utilities") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "RBAC Bulk Updates")</span></h1>
+}
+
+    @using (Html.BeginForm("RbacBulkUpdateSetSubmit", "Utilities", FormMethod.Post))
+    {
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Actions")</div>
+
+       
+        <div class="two-column payment">
+            
+            Select an RBAC Configuration XML File:
+
+            @(Html.Kendo().Upload().Name("files").Events(events => events.Select("onSelect").Remove( "onRemove" )).Multiple( false ))
+        
+            <button id="btnSubmit" type="submit" name="submitButton" class="button important" value="SAVE" >@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Submit XML File")</button>
+        <br/>
+        <br/>
+        </div>
+
+        <div class="two-column payment">
+            To get an XML file representing <b>@ViewData[Constants.ViewData.CurrentCity]</b>, click the following link: <br/>
+            @Html.ActionLink("Get XML for Present Settings", "RbacBulkUpdateGet", "Utilities", null, null)
+        </div>
+        
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Results")</div>
+        
+        
+        if (Model.ModelIsResults)
+        {
+            @(Html.Kendo().Grid(Model.Logs)
+              .Name("BulkSettingResultsLogGrid")
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Log");
+              })
+            )
+            @(Html.Kendo().Grid(Model.Errors)
+              .Name("BulkSettingResultsErrorGrid")
+              .Columns(columns =>
+              {
+                  columns.Bound("").Title("Errors");
+              })
+            )
+        }
+        else
+        {
+
+        }
+        
+        
+    }
+
+
+
+
+
+<script>
+    
+    function onSelect(e) {
+
+        var grid = $("#BulkSettingResultsLogGrid");
+        
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+        grid = $("#BulkSettingResultsErrorGrid");
+
+        if (grid != null) {
+            grid.empty();
+            grid.kendoGrid();
+        }
+
+        if (e.files.length == 1) {
+            SetButtonState(true);
+        } else {
+            SetButtonState(false);
+        }
+    }
+
+    function onRemove(e) {
+
+        SetButtonState(false);
+    }
+
+    $(document).ready(function () {
+        SetButtonState(false);
+    });
+
+    function SetButtonState(isEnabled) {
+
+        var theButton = $("#btnSubmit");
+
+        if (isEnabled) {
+            theButton.removeAttr('disabled');
+            theButton.removeClass("disabledButton");
+        } else {
+            theButton.attr('disabled', 'disabled');
+            theButton.addClass("disabledButton");
+        }
+
+    }
+
+
+</script>

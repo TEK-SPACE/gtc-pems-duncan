@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Data xmlns="http://www.duncansolutions.com/alarmworkorderv1">
+  <Request>
+    <WorkOrder cid="29" aid="16" mid="1001" WorkOrderId="1234">
+      <ActiveAlarm EventCode="0" EventSource="0" TimeOfOccurrance="2014-02-06T14:22:00" TimeOfNotification="2014-02-06T15:22:00" Notes="Notes 1" />
+      <ActiveAlarm EventCode="1" EventSource="0" TimeOfOccurrance="2014-02-07T14:23:00" TimeOfNotification="2014-02-07T15:24:00" Notes="Notes 2" />
+    </WorkOrder>
+    <WorkOrder cid="29" aid="16" mid="1012" WorkOrderId="1235">
+      <ActiveAlarm EventCode="2" EventSource="0" TimeOfOccurrance="2014-02-08T15:22:00" TimeOfNotification="2014-02-09T16:22:00" Notes="Notes 3"/>
+      <ActiveAlarm EventCode="3" EventSource="0" TimeOfOccurrance="2014-02-10T17:22:00" TimeOfNotification="2014-02-10T18:25:00" Notes="Notes 4"/>
+    </WorkOrder>
+  </Request>
+</Data>

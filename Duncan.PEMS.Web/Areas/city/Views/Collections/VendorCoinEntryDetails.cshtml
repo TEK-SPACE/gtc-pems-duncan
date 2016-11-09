@@ -1,0 +1,239 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.VCEDetailsModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Vendor Coin Entry" );
+}
+@section PageHeader 
+{
+  <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /  <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Vendor Coin Entry" )</span></h1>
+}
+
+@section Styles
+{
+    <style>
+        .validationSum-container { height: auto !important; }
+    </style>
+}
+
+
+<script language="javascript">
+    function UpdateTotals(element) {
+        var $coinCount = $(element).val();
+        var parsed = $coinCount.match(/\d+/);
+        if (!parsed)
+            $(element).val(0);
+
+        //get all of the counts and values and update the total coin count and total coin value.
+        //COIN COUNTS
+        var coin1Count = parseInt($('#Coin1Count').val(), 10);
+        var coin2Count = parseInt($('#Coin2Count').val(), 10);
+        var coin3Count = parseInt($('#Coin3Count').val(), 10);
+        var coin4Count = parseInt($('#Coin4Count').val(), 10);
+        var coin5Count = parseInt($('#Coin5Count').val(), 10);
+        var coin6Count = parseInt($('#Coin6Count').val(), 10);
+        var coin7Count = parseInt($('#Coin7Count').val(), 10);
+        var coin8Count = parseInt($('#Coin8Count').val(), 10);
+        var totalCoins = coin1Count + coin2Count + coin3Count + coin4Count + coin5Count + coin6Count + coin7Count + coin8Count;
+        $('#TotalCoinCountDisplay').html(totalCoins);
+        $('#TotalCoinCount').val(totalCoins);
+
+        //TOTAL VALUES
+        var coin1Value = parseInt($('#Coin1Value').val(), 10);
+        var coin2Value = parseInt($('#Coin2Value').val(), 10);
+        var coin3Value = parseInt($('#Coin3Value').val(), 10);
+        var coin4Value = parseInt($('#Coin4Value').val(), 10);
+        var coin5Value = parseInt($('#Coin5Value').val(), 10);
+        var coin6Value = parseInt($('#Coin6Value').val(), 10);
+        var coin7Value = parseInt($('#Coin7Value').val(), 10);
+        var coin8Value = parseInt($('#Coin8Value').val(), 10);
+        var totalCoinValue = (coin1Count * coin1Value)
+            + (coin2Count * coin2Value)
+            + (coin3Count * coin3Value)
+            + (coin4Count * coin4Value)
+            + (coin5Count * coin5Value)
+            + (coin6Count * coin6Value)
+            + (coin7Count * coin7Value)
+            + (coin8Count * coin8Value);
+        $('#TotalValueDisplay').html(totalCoinValue);
+        $('#TotalValue').val(totalCoinValue);
+    }
+
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection ID" ): </div>
+        @Html.DisplayFor( model => model.CollectionRunId )
+        @Html.HiddenFor( model => model.CustomerId )
+        @Html.HiddenFor( model => model.CollectionRunId )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Name" ): </div>
+        @Html.DisplayFor( m => m.CollectionRunName, new {@class = " k-textbox"} )
+        @Html.HiddenFor( model => model.CollectionRunName )
+        &nbsp;
+    </div>
+  
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Activation Date" ): </div>
+        @Html.DisplayFor( m => m.ActivationDateDisplay, new {@class = " k-textbox"} )
+        @Html.HiddenFor( model => model.ActivationDate )
+
+        &nbsp;
+    </div>
+  
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Enter Coins" )</div>
+    
+    //setup all the hidden values needed here
+      @Html.HiddenFor( model => model.Coin1Display )
+      @Html.HiddenFor( model => model.Coin2Display )
+      @Html.HiddenFor( model => model.Coin3Display )
+      @Html.HiddenFor( model => model.Coin4Display )
+      @Html.HiddenFor( model => model.Coin5Display )
+      @Html.HiddenFor( model => model.Coin6Display )
+      @Html.HiddenFor( model => model.Coin7Display )
+      @Html.HiddenFor( model => model.Coin8Display )
+           @Html.HiddenFor( model => model.Coin1Name )
+           @Html.HiddenFor( model => model.Coin2Name )
+           @Html.HiddenFor( model => model.Coin3Name )
+           @Html.HiddenFor( model => model.Coin4Name )
+           @Html.HiddenFor( model => model.Coin5Name )
+           @Html.HiddenFor( model => model.Coin6Name )
+           @Html.HiddenFor( model => model.Coin7Name )
+           @Html.HiddenFor( model => model.Coin8Name )
+    
+           @Html.HiddenFor( model => model.Coin1Value )
+           @Html.HiddenFor( model => model.Coin2Value )
+           @Html.HiddenFor( model => model.Coin3Value )
+           @Html.HiddenFor( model => model.Coin4Value )
+           @Html.HiddenFor( model => model.Coin5Value )
+           @Html.HiddenFor( model => model.Coin6Value )
+           @Html.HiddenFor( model => model.Coin7Value )
+           @Html.HiddenFor( model => model.Coin8Value )
+    
+   if (@Model.Coin1Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">@Model.Coin1Name: </div>
+           @Html.TextBoxFor( m => m.Coin1Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+    }
+     else
+     {
+            @Html.HiddenFor(m => m.Coin1Count)
+     }
+     if (@Model.Coin2Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">  @Model.Coin2Name: </div>
+           @Html.TextBoxFor( m => m.Coin2Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+     }
+      else
+     {
+            @Html.HiddenFor(m => m.Coin2Count)
+     }
+     if (@Model.Coin3Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">  @Model.Coin3Name: </div>
+           @Html.TextBoxFor( m => m.Coin3Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+     }
+      else
+     {
+            @Html.HiddenFor(m => m.Coin3Count)
+     }
+     if (@Model.Coin4Display)
+     {
+         <div class="two-column">
+             <div class="customer_text_label">@Model.Coin4Name: </div>
+             @Html.TextBoxFor(m => m.Coin4Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+             &nbsp;
+         </div>
+     }
+     else
+     {
+            @Html.HiddenFor(m => m.Coin4Count)
+     }
+     if (@Model.Coin5Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">@Model.Coin5Name: </div>
+           @Html.TextBoxFor( m => m.Coin5Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+      }
+       else
+     {
+            @Html.HiddenFor(m => m.Coin5Count)
+     }
+     if (@Model.Coin6Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">@Model.Coin6Name: </div>
+           @Html.TextBoxFor( m => m.Coin6Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+      }
+       else
+     {
+            @Html.HiddenFor(m => m.Coin6Count)
+     }
+     if (@Model.Coin7Display)
+   {
+       <div class="two-column">
+           <div class="customer_text_label">@Model.Coin7Name: </div>
+           @Html.TextBoxFor( m => m.Coin7Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+           &nbsp;
+       </div>
+      }
+       else
+     {
+            @Html.HiddenFor(m => m.Coin7Count)
+     }
+    if (@Model.Coin8Display)
+    {
+        <div class="two-column">
+            <div class="customer_text_label">@Model.Coin8Name: </div>
+            @Html.TextBoxFor(m => m.Coin8Count, new {@class = " k-textbox",   @onchange="javascript: UpdateTotals( this );"  } )
+            &nbsp;
+        </div>
+    }
+     else
+     {
+            @Html.HiddenFor(m => m.Coin8Count)
+     }
+    
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Coin Count" ): </div>
+        <span  id="TotalCoinCountDisplay">@Model.TotalCoinCount</span>
+        @Html.HiddenFor( model => model.TotalCoinCount,new { @id="TotalCoinCount"}  )
+
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Total Coin Value" ): </div>
+         <span  id="TotalValueDisplay">@Model.TotalValue</span>
+        @Html.HiddenFor( model => model.TotalValue )
+
+        &nbsp;
+    </div>
+    
+    
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="Save">@Model.ButtonText</button>
+        @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ), "VendorCoinEntry", new {rtn = "true"}, new {@class = "button previous"} ) 
+    </div>
+}

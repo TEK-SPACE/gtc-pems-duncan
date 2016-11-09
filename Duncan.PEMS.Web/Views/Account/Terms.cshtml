@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutTerms.cshtml";
+}
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Terms and Conditions");
+    ViewBag.SubTitle = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Terms and Conditions");
+}
+
+<div id="disclaimer">
+    <h1>Terms &amp; Conditions</h1>
+    <p>
+        Please read these terms and conditions of use carefully before using this site. By accessing, using or obtaining any content, data, materials, information, products or services through the CivicSmart., Inc. PEMSSM website ("Website"), users agree to be bound by these terms and conditions ("Terms"). If you do not accept all of these Terms, then you may not use the Website.
+    </p>
+    <p>
+        CivicSmart, along with our affiliates and partners, owns this Website and all of the text, images, software, trademarks, service marks or other material contained on this Website (“Materials”). Users may not copy or transmit any of the Materials, except as specified in an executed and active service contract. Use of and access to this Website does not grant users any license or right to use any of the marks included on the Website.
+    </p>
+    
+    <a href="@Url.Action( "Login" )" class="button previous">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Back To Login" )</a>
+</div>

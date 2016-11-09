@@ -1,0 +1,35 @@
+﻿
+@using Duncan.PEMS.Entities.Technicians
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Technician>
+
+@{
+    ViewBag.Title = "Work Load";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Order Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Work Load" )</span></h1>
+}
+  @(Html.Kendo().Grid(Model)
+                      .Name("WorkLoadGrid")
+                      .Columns(columns =>
+                          {
+                              columns.Bound(p => p.TechnicianName).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Name").ToString());
+                              columns.Bound(p => p.TechnicianID).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Technician ID").ToString());
+                              columns.Bound(p => p.TechnicianAssignedWorkOrderCount).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "# Assigned").ToString());
+                              columns.Bound(p => p.TechnicianCompletedWorkOrderCount).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "# Completed Today").ToString());
+                          })
+                      //do not make this a virtual scrolling table, otherwise it wont pick up the checked items that arent visible to the user
+                      .Scrollable()
+                      .Sortable()
+                      .Resizable(resize => resize.Columns(true))
+                      .DataSource(dataSource => dataSource.Ajax().ServerOperation(false))
+                      )
+<style>
+    .k-grid-content {
+        height: auto !important;
+        width: auto !important;
+    }
+</style>

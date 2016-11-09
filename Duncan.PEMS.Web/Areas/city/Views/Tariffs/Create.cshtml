@@ -1,0 +1,379 @@
+﻿@model Duncan.PEMS.Entities.Tariffs.ConfigProfileModel
+@using Duncan.PEMS.Entities.Enumerations
+@using Duncan.PEMS.Entities.Tariffs
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@using Kendo.Mvc.Resources
+
+@using Kendo.Mvc.UI.Fluent
+@{
+    ViewBag.Title = "Create Tariff Configuration";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Tariff Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Create Tariff")</h1>
+}
+
+
+@section Styles
+{
+    <style type="text/css">
+
+
+        .k-widget.k-window {
+            width: 500px;
+        }
+
+        .k-edit-form-container {
+            width: 490px !important;
+        }
+
+        .k-grid-content a {
+            color: #fff !important;
+        }
+
+        .toolbar-config-value {
+	        padding: .25em;
+            float: left;
+        }
+
+        .toolbar-config-detail {
+	        padding: .25em 1.0em;
+            float: left;
+        }
+
+        .toolbar-config-label {
+	        padding: .25em .5em;
+            float: left;
+            font-weight: bold;
+        }
+
+    .category-label
+    {
+        vertical-align: middle;
+        padding-right: .5em;
+    }
+    #category
+    {
+        vertical-align: middle;
+    }
+
+
+    </style>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+
+@using (Html.BeginForm( "Create", "Tariffs", FormMethod.Post, new {@class = "customer-form", @id = "createConfigProfile"} ))
+{
+
+    @Html.HiddenFor( m => m.CustomerId )
+
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Profile" )</div>
+
+    <div class="clear">
+        <div class="two-column payment">
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Name" )@Html.Raw( ": " )</div>
+                @Html.TextBoxFor( m => m.ConfigurationName, new {@class = "customer_text"} )
+                <span class="required_asterisk">*</span>
+                @Html.ValidationMessageFor( m => m.ConfigurationName )
+            </div>
+        </div>
+        <div class="two-column payment">
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Policy Name" )@Html.Raw( ": " )</div>
+                @Html.TextBoxFor( m => m.TariffPolicyName, new {@class = "customer_text"} )
+                <span class="required_asterisk">*</span>
+                @Html.ValidationMessageFor( m => m.TariffPolicyName )
+            </div>
+            <div class="clear">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "15 Minutes Free" )@Html.Raw( ": " )</div>
+                @Html.CheckBoxFor( m => m.Minute15FreeParking, new {@class = "customer_text"} )
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Tariff Rates" )</div>
+    <div class="clear">
+        @Html.ValidationMessage( "ValidationTariffRate" )
+        @(Html.Kendo().Grid<TariffRateModel>()
+              .Name( "gridTRC" )
+              .Columns( columns =>
+                  {
+                      columns.Bound(m => m.RateName);
+                      columns.Bound(m => m.RateDescription);
+                      columns.Bound(m => m.RateInCents);
+                      columns.Bound(m => m.PerTimeValue).ClientTemplate("#=CreateTimeSpanText(PerTimeValue, PerTimeUnitName)#").Title("Per Time");
+                      columns.Bound(m => m.MaxTimeValue).ClientTemplate("#=CreateTimeSpanText(MaxTimeValue, MaxTimeUnitName)#").Title("Max Time");
+                      columns.Bound(m => m.LinkedTariffRateName).Title("Linked Rate");
+                  })
+              .ToolBar( toolBar => toolBar.Custom().Name( "Edit Tariffs" )
+                  .Action("CreateTariffRateConfig", "Tariffs", new { customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction] })
+                  .HtmlAttributes(new { @class = "tariff-toolbar-button", @type = "button", @id = "gridTRCEditButton" }) )
+              .Events(events => events.DataBound("OnDataBound_TRC"))
+              .DataSource(dataSource => dataSource
+                                            .Ajax()
+                                                    .Read(read => read.Action("GetSessionTariffRates", "Tariffs",
+                                                                                new
+                                                                                {
+                                                                                    customerId = Model.CustomerId,
+                                                                                    tariffRateConfigurationId = "#=TariffRateConfigurationId#"
+                                                                                }).Type(HttpVerbs.Get))
+            )
+            )
+        
+    </div>
+
+    
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Rate Schedules")</div>
+    <div class="clear">
+        @Html.ValidationMessage("ValidationRateSchedule")
+                @(Html.Kendo().Grid<RateScheduleModel>()
+              .Name("gridRSC")
+              .Columns(columns =>
+              {
+                  columns.Bound(m => m.DayOfWeekName).Title("Day of Week");
+                          columns.Bound(m => m.StartTime);
+                          columns.Bound(m => m.OperationModeName).Title("Operation Mode");
+                          columns.Bound(m => m.TariffRateName).Title("Rate Name");
+              })
+              .ToolBar( toolBar => toolBar.Custom().Name( "Edit Schedules" )
+                  .Action("CreateRateScheduleConfig", "Tariffs", new { customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction] })
+                  .HtmlAttributes(new { @class = "tariff-toolbar-button", @type = "button", @id = "gridRSCEditButton" }) )
+              .Events(events => events.DataBound("OnDataBound_RSC"))
+              .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                                     .Read(read => read.Action("GetSessionRateSchedules", "Tariffs",
+                                                                         new
+                                                                             {
+                                                                                 customerId = Model.CustomerId,
+                                                                                 rateScheduleConfigurationId = 0
+                                                                             }).Type(HttpVerbs.Get))
+              )
+              )
+
+
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Holiday Rates")</div>
+    <div class="clear">
+        @(Html.Kendo().Grid<HolidayRateModel>()
+              .Name("gridHRC")
+              .Columns(columns =>
+              {
+                  columns.Bound(m => m.HolidayName);
+                  columns.Bound(m => m.HolidayDateTimeDisplay).Title("Date");
+                  columns.Bound(m => m.DayOfWeekName).Title("Day of Week");
+                  columns.Bound(m => m.RateScheduleCount).Title("Schedules");
+                  columns.Bound(m => m.CreatedOnDisplay).Title("Creation Date");
+              })
+              .ToolBar( toolBar => toolBar.Custom().Name( "Edit Holidays" )
+                  .Action("CreateHolidayRateConfig", "Tariffs", new { customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction] })
+                  .HtmlAttributes(new { @class = "tariff-toolbar-button", @type = "button", @id = "gridHRCEditButton" }) )
+              .Events(events => events.DataBound("OnDataBound_HRC"))
+              .DataSource(dataSource => dataSource
+                                             .Ajax()
+                                                     .Read(read => read.Action("GetSessionHolidayRates", "Tariffs",
+                                                                                 new
+                                                                                 {
+                                                                                     customerId = Model.CustomerId
+                                                                                 }).Type(HttpVerbs.Get))
+              )
+              )
+
+    </div>
+
+
+
+
+    <div class="customer_actions">
+        <button type="submit" name="submitButton" class="button important" value="CONFIGURE">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Configure")</button>
+        <button type="submit" name="submitButton" class="button previous" value="CANCEL">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Cancel")</button>
+    </div>
+
+
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        DecorateGridForConfigDisplay("gridTRC", "@Model.TariffRateConfigurationName", "@Model.TariffRateConfigurationStateName");
+        DecorateGridForConfigDisplay("gridRSC", "@Model.RateScheduleConfigurationName", "@Model.RateScheduleConfigurationStateName");
+        DecorateGridForConfigDisplay("gridHRC", "@Model.HolidayRateConfigurationName", "@Model.HolidayRateConfigurationStateName");
+        
+
+        if ('@Model.TariffRateConfigurationState' == '@TariffStateType.Current') {
+            DisableConfigurationButton("gridTRCEditButton");
+        }
+
+        if ('@Model.RateScheduleConfigurationState' == '@TariffStateType.Current') {
+            DisableConfigurationButton("gridRSCEditButton");
+        }
+
+        if ('@Model.HolidayRateConfigurationState' == '@TariffStateType.Current') {
+            DisableConfigurationButton("gridHRCEditButton");
+        }
+
+
+
+    });
+
+    function DisableConfigurationButton(id) {
+
+        var theButton = $("#" + id);
+        theButton.click(function () { return false; });
+        theButton.addClass("disabledButton");
+
+    }
+
+
+    function CreateTimeSpanText(timeUnit, timeType) {
+
+        if (timeUnit) {
+            return timeUnit + " " + timeType;
+        } else {
+            return "0";
+        }
+    }
+
+
+    function OnDataBound_TRC(e) {
+        DisplayNoDataMessage(e);
+    }
+
+    function OnDataBound_RSC(e) {
+        DisplayNoDataMessage(e);        
+
+        var extraData = $("#gridRSC-ConfigDetail");
+
+        var body = "<div class=\"dayContainer\">" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[0].ToString() + "\">Sun</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[1].ToString() + "\">Mon</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[2].ToString() + "\">Tues</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[3].ToString() + "\">Wed</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[4].ToString() + "\">Thur</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[5].ToString() + "\">Fri</div>" +
+            "<div class=\"activeDay" + @Model.DayOfWeek[6].ToString() + "\">Sat</div>" +
+            "</div>";
+
+        extraData.html(body);
+
+    }
+
+    function OnDataBound_HRC(e) {
+        DisplayNoDataMessage(e);
+    }
+
+
+
+    function DisplayNoDataMessage(e) {
+        var grid = e.sender;
+        var gridHasData = grid.dataSource.data().length > 0;
+        if (!gridHasData) {
+            var columnCount = $(grid.thead.get(0)).children("tr").first().children("th").length;
+            $(grid.tbody.get(0)).append(
+            kendo.format("<tr class='custom-no-data-row'><td colspan='{0}'>No data to display.</td></tr>", columnCount)
+            );
+        }
+    }
+
+
+    function DecorateGridForConfigDisplay(grid, name, state) {
+        $(".k-grid-toolbar", "#" + grid).prepend("<div class='toolbar-config-detail' id='" + grid + "-ConfigDetail'></div>");
+        $(".k-grid-toolbar", "#" + grid).prepend("<div class='toolbar-config-value' id='" + grid + "-ConfigState'>" + state + "</div>");
+        $(".k-grid-toolbar", "#" + grid).prepend("<div class='toolbar-config-label'>State:</div>");
+        $(".k-grid-toolbar", "#" + grid).prepend("<div class='toolbar-config-value' id='" + grid + "-ConfigName'>" + name + "</div>");
+        $(".k-grid-toolbar", "#" + grid).prepend("<div class='toolbar-config-label'>Name:</div>");
+    }
+
+
+
+</script>
+
+
+
+
+
+
+
+
+@*                  columns.Template(@<text></text>).ClientTemplate(Html.ActionLink("Edit", "CreateHolidayRateConfig", "Tariffs",
+                                                                                      new { customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction], holidayRateConfigurationId = "#=HolidayRateConfigurationIdDisplay#" },
+                                                                                      new { @class = "k-button custom-grid-edit", @type = "button" }).ToHtmlString()
+                                                                                          + "<a class=\"k-button custom-grid-edit\" onclick=\"DeleteHolidayRateConfiguration('" + "#= HolidayRateConfigurationIdDisplay #'); return false;\"" + " href=''>Delete</a>"
+                                                                                          ).Width(160);*@
+
+
+@*                      columns.Template(@<text></text> ).ClientTemplate( Html.ActionLink( "Edit", "CreateTariffRateConfig", "Tariffs",
+                                                                                          new {customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction], tariffRateConfigurationId = "#=TariffRateConfigurationIdDisplay#"},
+                                                                                          new {@class = "k-button custom-grid-edit", @type = "button"} ).ToHtmlString()
+                                                                                          + "<a class=\"k-button custom-grid-edit\" onclick=\"DeleteTariffRateConfiguration('" + "#= TariffRateConfigurationIdDisplay #'); return false;\"" + " href=''>Delete</a>"
+                                                                                          ).Width(160);*@
+
+@*                  columns.Template(@<text></text>).ClientTemplate(Html.ActionLink("Edit", "CreateRateScheduleConfig", "Tariffs",
+                                                                                      new { customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction], rateScheduleConfigurationId = "#=RateScheduleConfigurationIdDisplay#" },
+                                                                                      new { @class = "k-button custom-grid-edit", @type = "button" }).ToHtmlString()
+                                                                                          + "<a class=\"k-button custom-grid-edit\" onclick=\"DeleteRateScheduleConfiguration('" + "#= RateScheduleConfigurationIdDisplay #'); return false;\"" + " href=''>Delete</a>"
+                                                                                          ).Width(160);*@
+
+
+
+
+@*                      toolBar.Template( @Html.ActionLink( "Edit Rates", "CreateTariffRateConfig", "Tariffs",
+                                                          new {customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction]},
+                                                          new {@class = "tariff-toolbar-button", @type = "button", @id = "gridTRCEditButton"} ).ToHtmlString() 
+
+
+
+                      toolBar.Template( @<text>
+                                             <div class="toolbar">
+                                                 <label class="category-label" for="category">Select Configured:</label>
+                                                 @(Html.Kendo().DropDownList()
+                                                       .Name( "existingTRC" )
+                                                       .OptionLabel( "[New]" )
+                                                       .DataTextField( "Name" )
+                                                       .DataValueField( "TariffRateConfigurationIdDisplay" )
+                                                       .AutoBind( false )
+                                                       .Events( e => e.Change( "categoriesChange" ) )
+                                                       .DataSource( ds => ds.Read( "GetTariffRateConfigurationsForImport", "Tariffs", new {customerId = Model.CustomerId} ) )
+                                                       ) 
+                                             </div>
+                                         </text> );
+
+
+
+              .ToolBar(toolBar => toolBar.Template( @<text>
+                                                        <div style="float: right">
+                                                            @Html.ActionLink( "Edit Rates", "CreateTariffRateConfig", "Tariffs", 
+                                                            new {customerId = Model.CustomerId, rtn = ViewData[Constants.ViewData.CurrentAction]},
+                                                            new {@class = "tariff-toolbar-button", @type = "button", @id = "gridTRCEditButton"} )
+                                                        </div>
+                                                        <div style="float: right">
+                                                             Select Configured:
+                                                             @(Html.Kendo().DropDownList()
+                                                                   .Name( "existingTRC" )
+                                                                   .OptionLabel( "[New]" )
+                                                                   .DataTextField( "Name" )
+                                                                   .DataValueField( "TariffRateConfigurationIdDisplay" )
+                                                                   .AutoBind( false )
+                                                                   .Events( e => e.Change( "categoriesChange" ) )
+                                                                   .DataSource( ds => ds.Read( "GetTariffRateConfigurationsForSelection", "Tariffs", new {customerId = Model.CustomerId} ) )
+                                                                   ) 
+                                                        </div>
+                                                     </text> 
+                  ))
+              
+              
+
+
+
+*@

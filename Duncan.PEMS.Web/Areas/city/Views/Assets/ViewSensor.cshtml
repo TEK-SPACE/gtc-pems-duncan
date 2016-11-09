@@ -1,0 +1,458 @@
+﻿@model Duncan.PEMS.Entities.Assets.SensorViewModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "View Sensor");
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Management")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Asset Inquiry") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "View Asset")</span></h1>
+}
+
+
+<div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+
+<div class="customer_tab_content">
+
+    @using (Html.BeginForm("ViewSensor", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "viewSensor" }))
+    {
+        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(m => m.AssetId)
+        @Html.HiddenFor(m => m.AreaId)
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Information")
+            @if (Model.HasPendingChanges)
+            {
+                <div style="float: right">
+                    @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "View Pending Changes") ?? "View Pending Changes"), "ViewSensorPending", "Assets",
+                                      new { customerId = @Model.CustomerId, areaId = @Model.AreaId, assetId = @Model.AssetId }, null)
+                </div>
+            }
+        </div>
+
+        <div class="clear">
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Type, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Type)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetId)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Street, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Street)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Area, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Area)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Zone)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Suburb")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Suburb, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Suburb)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Latitude")@Html.Raw(": ")</div>
+                    @Html.DisplayForLatLong(m => m.Latitude, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Latitude)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Longitude")@Html.Raw(": ")</div>
+                    @Html.DisplayForLatLong(m => m.Longitude, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Longitude)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Space Type")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.SpaceType, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.SpaceType)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Model")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AssetModel, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AssetModel)&nbsp;
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Name")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Name, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Name)&nbsp;
+                </div>
+
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Associated Asset ID")@Html.Raw(": ")</div>
+                    @if (Model.MeterId.AssetId > 0)
+                    {
+                        @Html.ActionLink(Model.MeterId.AssetId.ToString(), "ViewMeter", "Assets",
+                            new { customerId = Model.MeterId.CustomerId, areaId = Model.MeterId.AreaId, assetId = Model.MeterId.AssetId, viewOnly = true, activeSensorId = Model.AssetId }, null)
+                    }
+                    else
+                    {
+                        @Html.Raw("")
+                    }
+                    @Html.HiddenFor(m => m.MeterId.AssetId)&nbsp;
+                    @Html.HiddenFor(m => m.MeterId.CustomerId)
+                    @Html.HiddenFor(m => m.MeterId.AreaId)
+                </div>
+                <div>
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Associated Space ID")@Html.Raw(": ")</div>
+                    @if (Model.SpaceId.AssetId > 0)
+                    {
+                        @Html.ActionLink(Model.SpaceId.AssetId.ToString(), "ViewSpace", "Assets",
+                            new { customerId = Model.CustomerId, assetId = Model.SpaceId.AssetId, viewOnly = true, activeSensorId = Model.AssetId }, null)
+                    }
+                    else
+                    {
+                        @Html.Raw("")
+                    }
+                    @Html.HiddenFor(m => m.SpaceId.AssetId)&nbsp;
+                    @Html.HiddenFor(m => m.SpaceId.CustomerId)
+                    @Html.HiddenFor(m => m.SpaceId.AreaId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("LastPreventativeMaintenance")</div>
+                    @Html.DisplayFor(m => m.LastPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.LastPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Next Preventative Maintenance")@Html.Raw(": ")@Html.Tooltip("NextPreventativeMaintenance")</div>
+                    @Html.DisplayFor(m => m.NextPrevMaint, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.NextPrevMaint)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Maintenance Route")@Html.Raw(": ")@Html.Tooltip("MaintenanceRoute")</div>
+                    @Html.DisplayFor(m => m.MaintenanceRoute, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.MaintenanceRoute)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Warranty Expiration")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.WarrantyExpiration, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.WarrantyExpiration)&nbsp;
+                </div>
+            </div>
+
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration Detail")</div>
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Date Installed")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Configuration.DateInstalled, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.DateInstalled)&nbsp;
+                </div>
+            <div>
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Configuration")@Html.Raw(": ")</div>
+                @Html.DisplayFor(m => m.Configuration.ConfigurationName, new { @class = "customer_text" })
+                @Html.HiddenFor(m => m.Configuration.ConfigurationName)&nbsp;
+            </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "MPV Version")@Html.Raw(": ")@Html.Tooltip("MPVVersion")</div>
+                    @Html.DisplayFor(m => m.Configuration.MPVVersion, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.MPVVersion)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Software Version")@Html.Raw(": ")@Html.Tooltip("SoftwareVersion")</div>
+                    @Html.DisplayFor(m => m.Configuration.SoftwareVersion, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.SoftwareVersion)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Firmware Version")@Html.Raw(": ")@Html.Tooltip("FirmwareVersion")</div>
+                    @Html.DisplayFor(m => m.Configuration.FirmwareVersion, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.FirmwareVersion)&nbsp;
+                </div>
+            </div>
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Primary Gateway")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Configuration.PrimaryGateway.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.PrimaryGateway.AssetId)&nbsp;
+                    @Html.HiddenFor(m => m.Configuration.PrimaryGateway.CustomerId)
+                    @Html.HiddenFor(m => m.Configuration.PrimaryGateway.AreaId)
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Secondary Gateway")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.Configuration.SecondaryGateway.AssetId, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Configuration.SecondaryGateway.AssetId)&nbsp;
+                    @Html.HiddenFor(m => m.Configuration.SecondaryGateway.CustomerId)
+                    @Html.HiddenFor(m => m.Configuration.SecondaryGateway.AreaId)
+                </div>
+            </div>
+        </div>
+
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Functional Status")</div>
+        <div class="clear">
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status")@Html.Raw(": ")@Html.Tooltip("OperationalStatus")</div>
+                    @Html.DisplayFor(m => m.Status, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.Status)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Operational Status Date")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.StatusDateDisplay, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.StatusDate)&nbsp;
+                </div>
+            </div>
+
+            <div class="two-column payment">
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Class")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Class, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Class)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Code")@Html.Raw(": ")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Code, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Code)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Alarm Duration")@Html.Raw(": ")@Html.Tooltip("AlarmDuration")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.Duration, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.Duration)&nbsp;
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Target Time")@Html.Raw(": ")@Html.Tooltip("RepairTargetTime")</div>
+                    @Html.DisplayFor(m => m.AlarmConfiguration.RepairTargetTime, new { @class = "customer_text" })
+                    @Html.HiddenFor(m => m.AlarmConfiguration.RepairTargetTime)&nbsp;
+                </div>
+            </div>
+
+        </div>
+
+        <div class="customer_actions" style="float:left">
+            @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Update") ?? "Update"), "EditSensor", "Assets",
+                              new { customerId = Model.CustomerId, assetId = Model.AssetId, parentAssetId = 0 },
+                              new { @class = "button important", @onclick = "SetReturnURL();" })
+            <button type="submit" name="submitButton" class="button" value="COPY">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Copy")</button>
+            @Html.ActionLink((string)(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Reset") ?? "Reset"), "ResetSensor", "Assets",
+                              new { customerId = Model.CustomerId, assetId = Model.AssetId }, new { @class = "button", id = "ResetButton" })
+            <button type="submit" name="submitButton" class="button previous" value="RETURN">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return")</button>
+        </div>
+        <div>
+            <div style="float: right">
+                <select id="detailsActions" class="filter-dropdown">
+                    <option value="NavigateToTransactions">Transactions</option>
+                    <option value="NavigateToEvents">Events</option>
+                    <option value="NavigateToAlarms">Alarms</option>
+                    <option value="NavigateToHistory">History</option>
+                </select>
+                <button type="button" name="submitButton" class="button" onclick=" NavigateTo(); return false; ">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Go")</button>
+            </div>
+        </div>
+        <div class="asset_footer">
+            <div class="asset_last_mod_by">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Last Modified by"): @Html.DisplayFor(m => m.LastUpdatedBy)
+                @Html.Raw(" on ")
+                @Html.DisplayFor(m => m.LastUpdatedOnDisplay)
+            </div>
+            <div class="asset_created_by">
+                @HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created by"): @Html.DisplayFor(m => m.CreatedBy)
+                @Html.Raw(" on ")
+                @Html.DisplayFor(m => m.CreatedOnDisplay)
+            </div>
+        </div>        
+    }
+
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#ResetButton").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '@Url.Action("ResetSensor")',
+                data: { customerId: '@Model.CustomerId', assetId: '@Model.AssetId' },
+                type: 'POST',
+                success: OnActionMeterSuccess,
+                error: function(data) {
+                    pemsPopupShowErrorWithTag(
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                        '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                        "1234", data);
+                },
+            });
+            
+        });        
+
+        ResetReturnURL();
+    });
+
+    function OnActionMeterSuccess(data) {
+        if (data.Success) {
+            pemsPopupShowMessage(data.Description);
+        } else {
+            pemsPopupShowErrorWithTag(
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+                "1234", data.Description);
+        }
+    }
+
+    // *************************************************************
+    // Set/Reset Return URL
+    // *************************************************************
+
+    function SetReturnURL() {
+        var returnURLObject = new Object();
+
+        returnURLObject.url = location.pathname + "?";
+
+        if (getParameterByName('customerId')) {
+            returnURLObject.url += "customerId=" + getParameterByName('customerId');
+        }
+        if (getParameterByName('areaId')) {
+            returnURLObject.url += "&areaId=" + getParameterByName('areaId');
+        }
+        if (getParameterByName('assetId')) {
+            returnURLObject.url += "&assetId=" + getParameterByName('assetId');
+        }
+
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("returnToAssetURL", JSON.stringify(returnURLObject));
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+    }
+
+    function ResetReturnURL() {
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.removeItem("returnToAssetURL");
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+    }
+
+
+    // *************************************************************
+    // Navigation to Events Index Page
+    // *************************************************************
+
+    function NavigateTo() {
+
+        SetReturnURL();
+        eval($("#detailsActions").val() + '()');
+    }
+
+
+    // *************************************************************
+    // Navigation to Events Index Page
+    // *************************************************************
+
+    function NavigateToEvents() {
+
+        var eventsIndexObject = new Object();
+
+        eventsIndexObject.assetId = "@Model.AssetId";
+        eventsIndexObject.assetIdentifier = "AssetId";
+        eventsIndexObject.assetType = "@Model.Type";
+        eventsIndexObject.eventClass = "All";
+        eventsIndexObject.eventIdentifier = "EventClass";
+        eventsIndexObject.eventCode = "";
+        eventsIndexObject.hideEventCode = true;
+        eventsIndexObject.hideEventClass = false;
+        eventsIndexObject.hideAssetName = true;
+        eventsIndexObject.hideAssetId = false;
+        eventsIndexObject.gridType = "Summary";
+        eventsIndexObject.location = "Select a type";
+        eventsIndexObject.locationLabel = "Location";
+
+        var stringified = JSON.stringify(eventsIndexObject);
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("eventsViewState", stringified);
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+
+        window.location = '@Html.Raw(@Url.Action("Index", "Events", new { rtn = true }))';
+    }
+
+    // *************************************************************
+    // Navigation to Transactions Index Page
+    // *************************************************************
+
+    function NavigateToTransactions() {
+
+        var transactionIndexObject = new Object();
+
+        transactionIndexObject.assetId = "@Model.AssetId";
+        transactionIndexObject.assetIdentifier = "AssetId";
+        transactionIndexObject.assetType = "@Model.Type";
+
+        var stringified = JSON.stringify(transactionIndexObject);
+
+        // test for HTML5 local storage support
+        if (typeof (Storage) !== "undefined") {
+            // HTML5 sessionStorage support! Yay!
+            window.sessionStorage.setItem("viewStateTransactions", stringified);
+        } else {
+            // No web storage support..
+            // todo: implement fall back to server caching
+        }
+
+        window.location = '@Html.Raw(@Url.Action("Index", "Transactions", new { rtn = true }))';
+    }
+
+    // *************************************************************
+    // Navigation to Alarms Index Page
+    // *************************************************************
+
+    function NavigateToAlarms() {
+
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        gridFilters.AssetId = "@Model.AssetId";
+        gridFilters.AssetType = "@Model.Type";
+
+        //save the filters
+        $.post('/shared/Sessions/SaveAlarmFilters', gridFilters)
+            .done(OnNavigateToAlarmsDone);
+    }
+
+    function OnNavigateToAlarmsDone() {
+        window.location = '@Html.Raw(@Url.Action("Index", "Alarms", new { rtn = true }))';
+    }
+
+
+    // *************************************************************
+    // Navigation to History Page
+    // *************************************************************
+
+    function NavigateToHistory() {
+
+        window.location = '@Html.Raw(@Url.Action("ViewSensorHistory", "Assets",
+                                                  new { customerId = @Model.CustomerId, areaId = @Model.AreaId, assetId = @Model.AssetIdDisplay }))';
+    }
+
+
+
+</script>

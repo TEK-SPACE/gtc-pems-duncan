@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Log in";
+    ViewBag.BodyId = "login";
+    ViewBag.SubTitle = "Parking Enterprise Management System Login";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+                                <div class="validationSum-containerMain">
+                                    <ul>
+                                        <li>@Html.ValidationSummary(true)</li>
+                                    </ul>
+                                </div>
+                                <fieldset id="login-form">
+                                    <ul>
+                                        <li>
+                                            <label for="UserName">Username</label>
+                                             <input data-val="true" data-val-required="The User name field is required." id="UserName" class="textBox" name="userName" type="text" value="" />
+                                        </li>
+                                        <li>
+                                             <label for="Password">Password</label>
+                                            <input data-val="true" data-val-required="The Password field is required." id="Password" class="textBox"  name="password" type="password" />
+                                        </li>
+                                        <li class="login-link">
+                                              <a href="@Url.Action("ForgotPassword")">I Forgot My Password</a>
+                                        </li>
+                                        <li class="login-link">
+                                            <a href="@Url.Action("ForgotUsername")">I Forgot My Username</a>
+                                        </li>
+                                    </ul>
+                                    <input type="submit" value="Login" class="button">
+                                </fieldset>
+}
+
+@section PageHeader 
+{
+    <h1>Parking Enterprise Management System (PEMS) </h1>
+     <h2>Please Sign in to Access CivicSmart's Parking<br />
+                                Enterprise Management System&trade; Software</h2>
+}

@@ -1,0 +1,155 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianCreateEventModel
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Event" );
+}
+                     
+@section PageHeader 
+{
+     <h2>@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Create Event" )</h2>
+     <a class="back" href='/' >@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Back" )</a>
+
+}
+
+@using (Html.BeginForm("CreateEvent", "WorkOrders", FormMethod.Post, new { @id = "createForm" }))
+{
+
+<div id="content-inner">
+           <div class="validationSum-container">@Html.HeaderMessage()</div>
+    
+    
+    @if (Model.AssetIdOptions.Any())
+    {
+        <div class="two-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Generated")</div>
+        </div>
+        <div class="two-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Event ID"):</div>
+            <div class="customer_text">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Generated")</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID (Area)"):</div><br/>
+            @(Html.Kendo().ComboBoxFor(x => x.SelectedAssetKey)
+                  .Filter("contains")
+                  .HtmlAttributes(new {style = "width:100%"})
+                  .SelectedIndex(0)
+                  .Events(evt => evt.Change("asChange"))
+                  .BindTo(new SelectList(Model.AssetIdOptions, "UniqueKey", "AssetIdFullDisplay"))
+                  .Suggest(true)
+                  )
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Fault Description"):</div><br/>
+            @(Html.Kendo().ComboBoxFor(x => x.SelectedFaultDescription)
+                  .Filter("contains")
+                  .HtmlAttributes(new {style = "width:100%"})
+                  .SelectedIndex(0)
+                  .Events(evt => evt.Change("fdChange"))
+                  .BindTo(new SelectList(Model.FaultDescriptions, "Value", "Text"))
+                  .Suggest(true)
+                  )
+        
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+      
+            @Html.TextAreaFor(m => m.Notes, new {@class = "customer_text_area long_text_area", rows = "5"})
+        </div>
+        <div class="clear" id="image-upload">
+            <a class="button" id="get-images" href="#" onclick=" LoadFileUpload() "></a>
+            <input name="files" id="files" type="file" /> 
+        </div>
+        <div class="clear button-row">
+            <a class="button important" onclick=" Submit(); " href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Save")</a>
+        </div>
+    }
+    else
+    {
+        <div class="clear">
+            Unable to create events: No Assets found.
+        </div>
+    }
+
+</div>
+    <script>
+        function Submit() {
+            
+            //check the values
+            if (!$("#SelectedAssetKey").data("kendoComboBox").value()) {
+                alert('Select an asset');
+            }
+            else if (!$("#SelectedFaultDescription").data("kendoComboBox").value()) {
+                alert('Select an Fault');
+
+            } else {
+                $('#createForm').submit();
+
+            }
+        }
+        
+        function LoadFileUpload() {
+            $("#files").click();
+        }
+      
+        function fdChange(e) {
+            if (this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text(dt[this.options.dataTextField]);
+                this._selectItem();
+            }
+        }
+        
+        function asChange(e) {
+            if (this.selectedIndex == -1) {
+                var dt = this.dataSource._data[0];
+                this.text(dt[this.options.dataTextField]);
+                this._selectItem();
+            }
+        }
+
+        $(document).ready(function () {
+            $("#files").kendoUpload({
+                select: onSelect,
+                remove: onRemove
+            });
+        });
+
+        var totalFiles = 0;
+        var onSelect = function (e) {
+            var selectedFiles = e.files.length;
+            //only 3 per work order
+            if (totalFiles + selectedFiles > 3) {
+                alert("3 images allowed");
+                e.preventDefault();
+            }
+            else {
+                totalFiles += selectedFiles;
+            }
+
+            $.each(e.files, function (index, value) {
+                var extension = value.extension.trim().toLowerCase();
+                //only images
+                if (extension != ".png"
+                    && extension != ".jpeg"
+                    && extension != ".jpg") {
+                    e.preventDefault();
+                    alert("Image Files Only");
+                }
+            });
+        };
+
+        function onRemove(e) {
+            totalFiles--;
+        }
+
+    </script>
+    <style>
+        .k-upload-button {
+            visibility: hidden;
+        }
+    </style>
+}

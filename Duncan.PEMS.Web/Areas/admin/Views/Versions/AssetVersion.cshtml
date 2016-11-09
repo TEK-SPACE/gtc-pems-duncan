@@ -1,0 +1,163 @@
+﻿@model Duncan.PEMS.Entities.Assets.AssetVersionViewModel
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@{
+    ViewBag.Title = "Asset Version Maintenance";
+}
+
+
+@section PageHeader 
+{
+
+    <!--<h1>Admin / <span>Asset Version Maintenance</span></h1>-->
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Asset Version Maintenance")</span></h1>
+}
+
+<div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState)</div>
+
+
+@using (Html.BeginForm("AssetVersion", "Assets", FormMethod.Post, new { @class = "customer-form", @id = "assetVersionMaintenance" }))
+{
+    
+    <div class="customer_tab_content">
+    
+        
+        <div class="customer_tab_content_section">ASSET VERSION MASTER</div>    
+        
+
+@*        <div style="float: right">
+                <input id="version_button" class="button" type="submit" value="+ Add Versions" onclick="AddVersion(); return false;">
+        </div>*@
+
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "File Type")@Html.Raw(": ")</div>
+                    @Html.DropDownListFor(m => m.FileTypesId, new SelectList(Model.FileTypes, "Value", "Text"), new { @class = "customer_text", @onchange="CriteriaChanged();" })
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Group")@Html.Raw(": ")</div>
+                    @Html.DropDownListFor(m => m.MeterGroupsId, new SelectList(Model.MeterGroups, "Value", "Text"), new { @class = "customer_text", @onchange="CriteriaChanged();"  })
+                </div>
+                <div class="clear">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Version Group")@Html.Raw(": ")</div>
+                    @Html.DropDownListFor(m => m.VersionGroupsId, new SelectList(Model.VersionGroups, "Value", "Text"), new { @class = "customer_text", @onchange="CriteriaChanged();"  })
+                </div>
+
+        @(Html.Kendo().Grid<Duncan.PEMS.Entities.Assets.AssetVersionModel>()
+              .HtmlAttributes( new {style = "max-width: 1693px; height: 470px;"} )
+              .Name("VersionGrid")
+              .Columns(columns =>
+                  {
+                      columns.Bound(p => p.Name).Width(100);
+                      columns.Bound(p => p.CreateDateDisplay).Title(HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Create Date").ToString()).Width(170);
+                      columns.Bound(p => p.FileType).Width(100).Title( "File Type" );
+                      columns.Bound(p => p.MeterGroup).Width(100);
+                      columns.Bound(p => p.VersionGroup).Width(100);
+                  })
+              .Reorderable(reorder => reorder.Columns(false))
+              .Pageable(pager => pager.PageSizes(true).PageSizes(new int[] { 20 }))
+              .Sortable(sortable => sortable.SortMode(GridSortMode.MultipleColumn))
+              .Resizable(resize => resize.Columns(false))
+              .Scrollable()
+              .Editable(editable => editable.Mode( GridEditMode.PopUp ).TemplateName("AssetVersionTemplate"  ))
+              .ToolBar(toolbar => toolbar.Create().Text("Add Version").HtmlAttributes( new {@class = "button"} ))
+              .Events( e => e.Edit( "OnEdit" ))
+              .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .Read(read => read.Action("GetVersionList", "Versions").Data("AddSelectedData"))
+                  .Create(update => update.Action("AddVersion", "Versions").Data("AddSelectedData"))
+                  .Events(e => e.Error("GridErrorHandler"))
+                    .Model(model =>
+                    {
+                        model.Id(p => p.Id);
+                        model.Field(p => p.Name);
+                    })
+                    .Batch( true )
+              )
+              )
+
+
+    
+        <div class="customer_actions">
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return").ToString(), "Index", "Home", null, new { @class = "button previous", @type = "button" })
+        </div>
+
+    </div>
+
+}
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#VersionGrid").data("kendoGrid").dataSource.read();
+    });
+
+
+    function OnEdit(e) {
+
+        e.model.set("FileType", $("#FileTypesId  option:selected").text());
+        e.model.set("MeterGroup", $("#MeterGroupsId  option:selected").text());
+        e.model.set("VersionGroup", $("#VersionGroupsId  option:selected").text());
+        e.model.set("CreateDate", (new Date()).toLocaleDateString());
+
+    }
+
+    function AddSelectedData() {
+        var fileTypeId = $("#FileTypesId").val();
+        var meterGroupsId = $("#MeterGroupsId").val();
+        var versionGroupsId = $("#VersionGroupsId").val();
+
+        return {
+            fileType: fileTypeId,
+            meterGroup: meterGroupsId,
+            versionGroup: versionGroupsId
+        };
+    }
+
+    function CriteriaChanged() {
+        
+        // Force grid to refresh
+        $("#VersionGrid").data("kendoGrid").dataSource.read();
+    }
+    
+
+
+    function AddVersion() {
+        $("#VersionGrid").data("kendoGrid").addRow();
+    };
+
+
+    function GridErrorHandler(e) {    
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });        
+            
+
+            var grid = $("#VersionGrid").data("kendoGrid");
+            grid.one("dataBinding", function (e) {
+                e.preventDefault();   // cancel grid rebind if error occurs  
+            });
+
+
+
+
+            pemsPopupShowErrorWithTag(
+    '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentController]',
+                '@ViewData[Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction]',
+"1234", message);
+        }
+    }
+
+</script>

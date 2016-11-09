@@ -1,0 +1,169 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.CollectionConfiguration
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Configuraiton" );
+}
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /  <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a>  / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Route Configuration Details" )</span></h1>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Status" ):@Html.Tooltip( "CollectionStatus" ) <span class="customer_status_state state_@Model.Status.ToLower()">@Model.Status</span></div>
+    </div>
+    <div class="validationSum-container">@Html.ErrorOverview( ViewData.ModelState )</div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection ID" ): </div>
+        @Html.DisplayFor( m => m.CollectionId, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.CollectionId )
+        @Html.HiddenFor( model => model.CustomerId )
+        &nbsp;
+    </div>
+     <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Date Created" ): </div>
+       @Model.DateCreated.ToShortDateString()
+        &nbsp;
+    </div>
+    
+    
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Name" ): </div>
+        @Html.DisplayFor( m => m.CollectionName, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.CollectionName )
+        &nbsp;
+    </div>
+      <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Created By" ): </div>
+       @Model.CreatedBy
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Vendor Name" ): </div>
+        @Html.DisplayFor( m => m.VendorName, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.VendorName )
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Edited On" ): </div>
+       @Model.LastEditedOn.GetValueOrDefault().ToShortDateString()
+        &nbsp;
+    </div>
+    <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Activation Date" ): </div>
+        @Model.ActivationDate.GetValueOrDefault().ToShortDateString()
+        &nbsp;
+    </div>
+       <div class="two-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last Edited By" ): </div>
+       @Model.LastEditedBy
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Days Between Collections" ): </div>
+        @Html.DisplayFor( m => m.DaysBtwCollections, new {@class = "customer_text"} )
+        @Html.HiddenFor( model => model.DaysBtwCollections )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Public Holidays" ): </div>
+        @Html.CheckBoxFor( m => m.SkipPublicHolidays, new {@disabled = "disabled"} )
+        &nbsp;
+    </div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Specific Days of Week" ): </div>
+        <div style="padding-left: 200px">
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSunday, new {@disabled = "disabled"} )     @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Sunday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipMonday, new {@disabled = "disabled"} )     @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Monday" ) </div>
+            <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipTuesday, new {@disabled = "disabled"} )   @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Tuesday" )</div>
+            <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipWednesday, new {@disabled = "disabled"} ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Wednesday" )</div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipThursday, new {@disabled = "disabled"} )   @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Thursday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipFriday, new {@disabled = "disabled"} )     @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Friday" ) </div>
+            <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSaturday, new {@disabled = "disabled"} )   @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Saturday" ) </div>
+        </div>
+    </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Information" )
+    
+    </div>
+     <div style="padding-left: 10px; ">   <a style="text-decoration: none" href="@Url.Action( "ExportMetersToExcel", new {routeId = @Model.CollectionId, customerId = @Model.CustomerId} )">
+            <img src='/images/export-excel.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportMetersToCsv", new {routeId = @Model.CollectionId, customerId = @Model.CustomerId})">
+            <img src='/images/export-csv.png' height="20"/>
+        </a>
+        <a style="text-decoration: none" href="@Url.Action( "ExportMetersToPdf",new {routeId = @Model.CollectionId, customerId = @Model.CustomerId})">
+            <img src='/images/export-pdf.png' height="20"/>
+        </a>
+    </div>
+    @(Html.Kendo().Grid( Model.Meters )
+          .HtmlAttributes( new {@style = "width:250px"} )
+          .Name( "CurrentGrid" )
+          .Columns( columns =>
+                        {
+                            columns.Bound( p => p.MeterName ).Width( 200 ).Title( @HttpContext.Current.GetLocaleResource( ResourceTypes.GridColumn, "Meter Name" ).ToString() );
+                        } )
+          .Scrollable()
+          .Sortable()
+          .Resizable( resize => resize.Columns( true ) )
+          .DataSource( dataSource => dataSource
+                                         .Ajax()
+                                         .ServerOperation( false )
+          )
+          )
+    <div class="customer_actions">
+        @if ( @Model.StatusId == 2 )
+        {
+            <button type="submit" name="submitButton" class="button important" value="Update">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Update" )</button>
+            <button type="submit" name="submitButton" class="button " onclick="return confirm('Are you certain that you want to delete this collection route.  This action cannot be reversed.');" value="Delete">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Delete")</button>
+        }
+        <button type="submit" name="submitButton" class="button" value="Copy">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Copy" )</button>
+        <button type="submit" name="submitButton" class="button previous" value="Return">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+    </div>@*
+    
+    
+    <script  >
+        
+
+        $(document).ready(function () {
+            UpdateExportLinks();
+        });
+
+        function UpdateExportLinks() {
+            /// Update the href for the export buttons
+
+            var grid = $('#CurrentGrid').data('kendoGrid');
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    sort: grid.dataSource.sort()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+        }
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            return href;
+        }
+    </script>*@
+    
+    
+}
+   

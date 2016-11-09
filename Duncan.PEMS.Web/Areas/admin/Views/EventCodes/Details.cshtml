@@ -1,0 +1,89 @@
+﻿@model Duncan.PEMS.Entities.Events.EventCodeViewModel
+@using Duncan.PEMS.Entities.Customers
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "View Event Code" );
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Manage Customer" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event Configuration Inquiry" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Event" )</span></h1>
+}
+
+
+    <div class="customer_tab_content">
+    
+        <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Code Details" )</div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Customer Name" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.CustomerDisplayName, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Code" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Id, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Long Description" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.DescVerbose, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Abreviated Description" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor(m => m.DescAbbrev, new {@class = "customer_text"} ) &nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Type" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Type, new {@class = "customer_text"} )&nbsp;
+        </div>    
+        
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Source" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Source, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Event Category" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.Category, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Asset Type" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor( m => m.AssetType, new {@class = "customer_text"} )&nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "SLA Duration" )@Html.Raw( ": " )</div>
+            @if ( Model.SLAMinutes > -1 )
+            {
+                Html.DisplayFor( m => m.SLAMinutes, new {@class = "customer_text"} );
+            }
+            &nbsp;
+        </div>    
+
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Is Alarm" )@Html.Raw( ": " )</div>
+            @Html.CheckBoxFor( m => m.IsAlarm, new {@class = "checkbox", disabled="disabled"} )
+        </div>    
+    
+        <div>
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Alarm Severity" )@Html.Raw( ": " )</div>
+            @Html.DisplayFor(m => m.AlarmTier, new {@class = "customer_text"} ) &nbsp;
+        </div>    
+
+    
+        <div class="customer_actions">
+            @Html.ActionLink(@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Update").ToString(), "Edit", "EventCodes", 
+                new {customerId = Model.CustomerId, eventSourceId = Model.SourceId, eventCodeId = Model.Id, fromDetailsPage = true}, new { @class = "button important", @type = "button" })
+            @Html.ActionLink( @HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "EditEventCodes", "Customers",
+                new {customerId = Model.CustomerId}, new {@class = "button previous", @type = "button"} )
+        </div>
+
+    </div>
+

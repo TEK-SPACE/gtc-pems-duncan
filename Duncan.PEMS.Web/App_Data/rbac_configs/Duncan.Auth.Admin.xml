@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Configuration of NetSqlAzMan for NorthSydney. Created on 3/20/2013 10:01:24 AM-->
+<Customer Name="Admin">
+  <Users>
+    <User Name="admin" SID="00000001" />
+  </Users>
+  <Groups>
+    <Group Name="_members" SID="67e02583-2cc9-47e9-a791-834302be267c" Action="Add">
+      <Member>admin</Member>
+    </Group>
+    <Group Name="Administrators" SID="51edaab7-34ad-451a-80a5-10b6510c5b49" Action="Add">
+      <Member>admin</Member>
+    </Group>
+  </Groups>
+
+  <Applications>
+
+    <Application Name="Customers" Action="Add">
+      <Operation>ActivateCustomer</Operation>
+      <Operation>Add</Operation>
+      <Operation>AddDetails</Operation>
+      <Operation>AddGroupMember</Operation>
+      <Operation>Details</Operation>
+      <Operation>EditAreas</Operation>
+      <Operation>EditAssets</Operation>
+      <Operation>EditCustomer</Operation>
+      <Operation>EditCustomGrids</Operation>
+      <Operation>EditCustomLabels</Operation>
+      <Operation>EditEventCodes</Operation>
+      <Operation>EditMaintenanceSchedule</Operation>
+      <Operation>EditPayments</Operation>
+      <Operation>EditRules</Operation>
+      <Operation>Index</Operation>
+    </Application>
+      
+   <Application Name="MaintenanceGroups" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>AddMaintenanceGroup</Operation>
+      <Operation>ActivateMaintenanceGroup</Operation>
+      <Operation>EditMaintenanceGroup</Operation>
+      <Operation>EditMaintenanceGroupCustomers</Operation>
+    </Application>
+
+    <Application Name="Home" Action="Add">
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="Profile" Action="Add">
+      <Operation>Edit</Operation>
+    </Application>
+
+    <Application Name="Roles" Action="Add">
+      <Operation>Copy</Operation>
+      <Operation>Create</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="Users" Action="Add">
+      <Operation>Action</Operation>
+      <Operation>BulkUpdate</Operation>
+      <Operation>Create</Operation>
+      <Operation>CustomerRoles</Operation>
+      <Operation>Delete</Operation>
+      <Operation>Details</Operation>
+      <Operation>Edit</Operation>
+      <Operation>Index</Operation>
+    </Application>
+
+    <Application Name="Versions" Action="Add">
+      <Operation>AssetVersion</Operation>
+      <Operation>TariffIndex</Operation>
+      <Operation>ViewTariffConfiguration</Operation>
+    </Application>
+    
+    <!--Added by emqos-->
+    <Application Name="FileUpload" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>FDInquiry</Operation>
+      <Operation>ScheduleFD</Operation>
+    </Application>
+       <Application Name="PayByCell" Action="Add">
+      <Operation>Index</Operation>
+      <Operation>SpaceMgmt</Operation>
+    </Application>
+     <Application Name="AutoAlarm" Action="Add">
+      <Operation>AutoAlarmGeneration</Operation>
+      <Operation>AutoAlarmAdd</Operation>
+     <Operation>AutoAlarmDetails</Operation>
+    </Application>
+    <!--emqos-->
+  </Applications>
+  
+  <AuthTree>
+    <AuthItem Name="Home" authtext="Home" Action="Add">
+      <AuthItem Name="AuthHome" authtext="Home Page">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <!--added by emqos-->
+    <AuthItem Name="FileUpload" authtext="File Upload" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>FDInquiry</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>FDInquiry</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>ScheduleFD</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>FDInquiry</Operation>
+          <Operation>ScheduleFD</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    
+        <AuthItem Name="PayByCell" authtext="Pay By Cell" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>SpaceMgmt</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    
+      <AuthItem Name="AutoAlarm" authtext="Auto Alarm" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+           <Operation>AutoAlarmGeneration</Operation>
+      <Operation>AutoAlarmAdd</Operation>
+     <Operation>AutoAlarmDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+           <Operation>AutoAlarmGeneration</Operation>
+      <Operation>AutoAlarmAdd</Operation>
+     <Operation>AutoAlarmDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+           <Operation>AutoAlarmGeneration</Operation>
+      <Operation>AutoAlarmAdd</Operation>
+     <Operation>AutoAlarmDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>AutoAlarmGeneration</Operation>
+      <Operation>AutoAlarmAdd</Operation>
+     <Operation>AutoAlarmDetails</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    <!--<emqos>-->
+    <AuthItem Name="Profile" authtext="User Profile" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Edit</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+          <Authorize>_members</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="Versions" authtext="Asset Version Management" Action="Add">
+      <AuthItem Name="AuthAssetVersions" authtext="Versioning">
+        <Operations>
+          <Operation>AssetVersion</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthTariffs" authtext="Tariffs">
+        <Operations>
+          <Operation>TariffIndex</Operation>
+          <Operation>ViewTariffConfiguration</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="Roles" authtext="Role Management" Action="Add">
+      <AuthItem Name="AuthRoles" authtext="Roles">
+        <Operations>
+         <Operation>Copy</Operation>
+        <Operation>Create</Operation>
+       <Operation>Edit</Operation>
+        <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    
+    <AuthItem Name="Users" authtext="User Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Details</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Action</Operation>
+          <Operation>Create</Operation>
+          <Operation>CustomerRoles</Operation>
+          <Operation>Delete</Operation>
+          <Operation>Details</Operation>
+          <Operation>Edit</Operation>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthBulk" authtext="Bulk Updates">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>BulkUpdate</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+    <AuthItem Name="Customers" authtext="Client Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Add</Operation>
+          <Operation>EditCustomer</Operation>
+          <Operation>EditAssets</Operation>
+          <Operation>EditPayments</Operation>
+          <Operation>EditRules</Operation>
+          <Operation>EditCustomLabels</Operation>
+          <Operation>EditCustomGrids</Operation>
+          <Operation>EditEventCodes</Operation>
+          <Operation>EditAreas</Operation>
+          <Operation>EditMaintenanceSchedule</Operation>
+          <Operation>ActivateCustomer</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthAdd" authtext="Create">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>Add</Operation>
+          <Operation>Details</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+    
+    <AuthItem Name="MaintenanceGroups" authtext="Maintenance Groups Management" Action="Add">
+      <AuthItem Name="AuthInquiry" authtext="Inquiry">
+        <Operations>
+          <Operation>Index</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthEdit" authtext="Edit">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>AddMaintenanceGroup</Operation>
+          <Operation>ActivateMaintenanceGroup</Operation>
+          <Operation>EditMaintenanceGroup</Operation>
+          <Operation>EditMaintenanceGroupCustomers</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+      <AuthItem Name="AuthAdd" authtext="Create">
+        <Operations>
+          <Operation>Index</Operation>
+          <Operation>AddMaintenanceGroup</Operation>
+          <Operation>ActivateMaintenanceGroup</Operation>
+          <Operation>EditMaintenanceGroup</Operation>
+          <Operation>EditMaintenanceGroupCustomers</Operation>
+        </Operations>
+        <Authorizations>
+          <Authorize>Administrators</Authorize>
+        </Authorizations>
+      </AuthItem>
+    </AuthItem>
+
+  </AuthTree>
+
+
+  <MenuTree Action="Clear">
+
+    <MenuItem Name="Profile" menutext="User Profile" tooltip="Manage my settings" menuicon="UserProfile.png"  Action="Add">
+      <Link operation="Edit" application="Profile"  Action="Add"/>
+    </MenuItem>
+    <!--Added by emqos As per spec changes on (6.5.2014)-->
+    <MenuItem Name="FileUpload" menutext="Asset Configuration" tooltip="Configure Assets"  menuicon=""  Action="Add">
+      <MenuItem Name="ConfigFileInquiries" menutext="Upload File Inquiry" tooltip="File Uploads"  Action="Add">
+        <Link operation="Index" application="FileUpload" />
+      </MenuItem>
+      <MenuItem Name="FileDwnldInquiry" menutext="File Download Inquiry" tooltip="Inquire Files to Download"  Action="Add">
+        <Link operation="FDInquiry" application="FileUpload" />
+      </MenuItem>
+    </MenuItem>
+    
+    <MenuItem Name="PayByCell" menutext="Pay By Cell Inquiry" tooltip="Pay By cell"  menuicon=""  Action="Add">
+      <!--<MenuItem Name="PayByCellInquiries" menutext=" Pay By Cell Inquiry" tooltip="Pay by cell inquiry"  Action="Add">-->
+        <Link operation="Index" application="PayByCell" />
+      <!--</MenuItem>-->
+    </MenuItem>
+    <!--emqos(6.5.2014)-->
+     <MenuItem Name="AutoAlarm" menutext="Auto Alarm Management" tooltip="Auto Alarm"  menuicon=""  Action="Add">
+    
+        <Link operation="AutoAlarmGeneration" application="AutoAlarm" />
+
+    </MenuItem>
+    <MenuItem Name="Users" menutext="Administration" menuicon="Admin.png"  Action="Add">
+      <MenuItem Name="MUsers" menutext="User Management" tooltip="Manage client users" Action="Add">
+        <Link operation="Index" application="Users" />
+      </MenuItem>
+      <MenuItem Name="MClient" menutext="Client Management" tooltip="Manage clients." Action="Add">
+        <Link operation="Index" application="Customers" />
+      </MenuItem>
+       <MenuItem Name="MMaintenanceGroup" menutext="Maintenance Group Management" tooltip="Manage maintenance Groups." Action="Add">
+        <Link operation="Index" application="MaintenanceGroups" />
+      </MenuItem>
+      <MenuItem Name="MRoles" menutext="Manage Roles" tooltip="Manage client user roles" Action="Add">
+        <Link operation="Index" application="Roles" />
+      </MenuItem>
+    </MenuItem>
+
+  </MenuTree>
+</Customer>

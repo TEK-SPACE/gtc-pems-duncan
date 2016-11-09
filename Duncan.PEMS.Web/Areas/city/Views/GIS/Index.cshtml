@@ -1,0 +1,3192 @@
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.GIS.GISModel
+
+@{
+    ViewBag.Title = "GIS Management";
+}
+
+@section Styles
+{
+    @Styles.Render("~/css/Kendo")
+
+    <style type="text/css">
+        .disabled {
+            background-color: #F5F5F5 !important;
+        }
+
+        .filter-SearchButton {
+            background-color: #ff6112 !important;
+            border: 1px solid #00A99D !important;
+        }
+
+            .filter-SearchButton:hover {
+                background: #ccc !important;
+                text-decoration: none !important;
+            }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown {
+            width: 75px !important;
+        }
+
+        #exportButtons {
+            display: none;
+        }
+
+        #legendTitle {
+            width: 223px;
+            height: 27px;
+            margin: 0px;
+            padding-right: 5px;
+            display: none;
+            font-family: "futura-pt-n4", "futura-pt", Arial, sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+        }
+
+        #legendPanel {
+            width: 226px;
+            height: 275px;
+            background: #fff;
+            background-color: #fff;
+            padding: 0px;
+            margin: 0px;
+            margin-right: 0px;
+            border: solid;
+            border-color: darkgray;
+            border-width: thin;
+            display: inline;
+            overflow: scroll;
+        }
+
+        .legendHeaders {
+            margin-left: 5px;
+            margin-top: 5px;
+            margin-bottom: 2px;
+        }
+
+
+        .legImg {
+            float: left;
+        }
+
+        .legendLabels {
+            /*font-family:Arial;*/
+            /*font-weight:normal;*/
+            font-size: 11px;
+            margin: 0px;
+            margin-left: 5px;
+        }
+
+        #legendTitle {
+            background-color: #174A7D;
+            margin: 0px;
+            color: white;
+        }
+
+
+        .k-textbox {
+            height: auto !important;
+        }
+
+        #filterPanel_1 input[type=checkbox] {
+            visibility: hidden;
+        }
+
+        .squaredThree input[type=checkbox] {
+            visibility: hidden;
+        }
+
+
+        #ddlAssetType input[type=checkbox] {
+            visibility: visible;
+        }
+
+        #assetStatusDropDown input[type=checkbox] {
+            visibility: visible;
+        }
+
+        /* SQUARED THREE */
+        .squaredThree {
+            width: 18px;
+            margin: 20px;
+            position: relative;
+        }
+
+            .squaredThree label {
+                cursor: pointer;
+                position: absolute;
+                width: 17px;
+                height: 17px;
+                top: 0;
+                border-radius: 4px;
+                -webkit-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                -moz-box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,.4);
+                background: -webkit-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -moz-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: -o-linear-gradient(top, #222 0%, #45484d 100%);
+                background: -ms-linear-gradient(top, #FFF 0%, #FFF 100%);
+                background: linear-gradient(top, #222 0%, #45484d 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#222', endColorstr='#45484d',GradientType=0 );
+            }
+
+                .squaredThree label:after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+                    filter: alpha(opacity=0);
+                    opacity: 0;
+                    content: '';
+                    position: absolute;
+                    width: 7px;
+                    height: 3px;
+                    background: transparent;
+                    top: 4px;
+                    left: 4px;
+                    border: 2px solid #000000;
+                    border-top: none;
+                    border-right: none;
+                    -webkit-transform: rotate(-45deg);
+                    -moz-transform: rotate(-45deg);
+                    -o-transform: rotate(-45deg);
+                    -ms-transform: rotate(-45deg);
+                    transform: rotate(-45deg);
+                }
+
+                .squaredThree label:hover::after {
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+                    filter: alpha(opacity=30);
+                    opacity: 0.3;
+                }
+
+            .squaredThree input[type=checkbox]:checked + label:after {
+                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+                filter: alpha(opacity=100);
+                opacity: 1;
+            }
+    </style>
+}
+
+@section PageHeader
+{
+    <h1>GIS Management / <span>GIS Maps</span></h1>
+}
+
+@section PageFilter
+{
+    <div class="two-column">
+        <div class="filter-option">
+            <label class="filter-label">Select Layer:</label>
+            @(Html.Kendo().DropDownList()
+                      .Name("layerDropDown")
+                      .DataTextField("Text")
+                      .DataValueField("Value")
+                      .HtmlAttributes(new { style = "width:289px;font-size:16px;" })
+                      .Events(e => e.Change("layerChange"))
+                      .BindTo(new List<SelectListItem>() {
+                          new SelectListItem() {
+                              Text = "Inventory",
+                              Value = "1"
+                          },
+                          new SelectListItem() {
+                              Text = "High Demand Parking Bays",
+                              Value = "2"
+                          },
+                          new SelectListItem() {
+                              Text = "Asset Operational Status",
+                              Value = "3"
+                          }
+                      })
+                      .Value("Inventory")
+            )
+        </div>
+    </div>
+
+    <div id="assetTypeFilter">
+        <div class="filter-option" id="layer1_assetType">
+            <label class="filter-label">Asset Type:</label>
+            @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlAssetType", onchange = "FilterAssetIds()" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .Events(e => e
+                                    .DataBound("onDataBound_AssetType")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetAssetTypes_Inventory").Data("SetLayerId");
+                                    });
+                                }).Value("All")
+            )
+
+
+        </div>
+        <div class="filter-option" id="layer2_assetType" style="display:none">
+            <label class="filter-label">Asset Type:</label>
+            @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlAssetType_2", onchange = "FilterAssetIds()" })
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .Events(e => e
+                                    .DataBound("onDataBound_AssetType")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetAssetTypes_Inventory").Data("SetLayerId");
+                                    });
+                                }).Value("0")
+            )
+
+
+        </div>
+    </div>
+
+    <div style="clear:both;" class="two-column">
+        <div class="filter-option" id="demandZones">
+            <label class="filter-label">Demand Zones:</label>
+            @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlDemandZones", onchange = "" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_DemandZones")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetDemandZones");
+                                    });
+                                })
+            )
+        </div>
+
+
+
+    </div>
+
+
+    <div class="filter-option" id="assetModelStatus">
+        <label class="filter-label">Asset Model:</label>
+
+        @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "assetModel", onchange = "" })
+                       .OptionLabel("All")
+                         .Enable(false)
+                                .AutoBind(false)
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_AssetModel")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        //read.Url("../GIS/GetAssetState");
+                                        read.Url("../GIS/GetAssetModels").Data("GetSingleAssetType");
+
+                                    });
+                                })
+        )
+
+    </div>
+
+
+
+    <div style="clear:both;" class="two-column">
+        <div class="filter-option">
+            <label class="filter-label">Asset ID:</label>
+            @(Html.Kendo().AutoCompleteFor(a => a.AssetId).Name("autocompleteAssetId").DataTextField("Value").HtmlAttributes(new { style = "width:289px;font-size:16px;" })
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Url("../GIS/GetMasterAssetIds").Data("SetAssetType");
+                         });
+                     })
+                                    .Events(e => e.Close("GetAssetName"))
+            )
+
+        </div>
+
+    </div>
+
+    <div>
+        <div class="filter-option">
+            <label class="filter-label">Asset Name:</label>
+            @(Html.Kendo().AutoCompleteFor(a => a.AreaID).Name("txtAssetName").DataTextField("Text").HtmlAttributes(new { style = "width:289px;font-size:16px;" })
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Url("../GIS/GetMasterAssetIds").Data("SetAssetTypeWithName");
+                         });
+                     })
+                                    .Events(e => e.Close("GetAssetIds"))
+            )
+
+        </div>
+    </div>
+
+    <div style="clear:both;" class="two-column">
+        <div class="filter-option">
+            <label class="filter-label">Location Type:</label>
+            @(Html.Kendo().DropDownListFor(a => a.LocationType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "ddlLocationType", onchange = "GetLocationTypeId()" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_LocationType")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetLoacationTypes");
+                                    });
+                                })
+            )
+        </div>
+
+    </div>
+
+    <div>
+        <div class="filter-option" id="location-container">
+            <label id="lblLocationType" class="filter-label">Location:</label>
+            @(Html.Kendo().AutoCompleteFor(a => a.LocationTypeId).Name("autocompleteLocationId").DataTextField("Text").HtmlAttributes(new { style = "width:289px;font-size:16px;" })
+
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Url("../GIS/GetLocationTypeId").Data("SetLocationType");
+                         });
+                     })
+
+            )
+
+
+        </div>
+    </div>
+
+
+
+
+
+    <div id="filterPanel_1" class="two-column">
+        <div class="filter-option" style="float:left;">
+            <label class="filter-label">Show Polygons:</label>
+
+            @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "showPolygonDropDown", onchange = "" })
+                       .OptionLabel("Please select...")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .BindTo(new List<SelectListItem>() {
+                                  new SelectListItem() {
+                                      Text = "All",
+                                      Value = "-1"
+                                  },
+                                  new SelectListItem() {
+                                      Text = "Area",
+                                      Value = "1"
+                                  },
+                                  new SelectListItem() {
+                                      Text = "Zone",
+                                      Value = "2"
+                                  }
+                              })
+                              .Value("-2")
+            )
+
+
+        </div>
+
+    </div>
+
+    <div class="filter-option" id="assetStatus">
+        <label class="filter-label">Inventory Status:</label>
+
+        @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "assetStatusDropDown", onchange = "" })
+                //.OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_AssetStatus")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetAssetState");
+
+                                    });
+                                })
+        )
+
+    </div>
+
+
+
+    <div id="filterPanel_2" style="clear:both;display: none;">
+        <div class="two-column">
+            <div class="filter-option">
+                <label class="filter-label">Space Status:</label>
+
+                @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "specificCriteria_Layer2", onchange = "" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_SpecCriteria_HDPB")
+                                )
+                                  .BindTo(new List<SelectListItem>() {
+                                  new SelectListItem() {
+                                      Text = "Paid",
+                                      Value = "1"
+                                  },
+                                  new SelectListItem() {
+                                      Text = "Paid & Occupied",
+                                      Value = "2"
+                                  },
+                                  new SelectListItem() {
+                                      Text = "Occupied",
+                                      Value = "3"
+                                  },
+                                  new SelectListItem() {
+                                      Text = "Vacant",
+                                      Value = "4"
+                                  },
+                                    new SelectListItem() {
+                                      Text = "Expired",
+                                      Value = "5"
+                                  },
+                                    new SelectListItem() {
+                                      Text = "Violated",
+                                      Value = "6"
+                                  }
+                      })
+                        //.DataSource(source =>
+                        //{
+                        //    source.Read(read =>
+                        //    {
+                        //        read.Url("../GIS/GetOccupancyStatus");
+                        //    });
+                        //})
+                )
+            </div>
+
+            <div class="filter-option" style="display:none;">
+                <label class="filter-label">Compliance Status:</label>
+
+                @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "NonComplianceID", onchange = "" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                 .Events(e => e
+                                    .DataBound("onDataBound_Compliance_HDPB")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetComplianceStatus");
+                                    });
+                                })
+                )
+            </div>
+        </div>
+    </div>
+
+    <div id="filterPanel_3" style="clear:both;display: none;">
+        <div class="filter-option">
+            <label class="filter-label">Operational Status:</label>
+
+            @(Html.Kendo().DropDownListFor(a => a.assetType).HtmlAttributes(new { @class = "filter-dropdown", style = "width:289px;font-size:16px;", id = "specificCriteria_Layer3", onchange = "" })
+                       .OptionLabel("All")
+                                .DataTextField("Text")
+                                .DataValueField("Value")
+                                .Events(e => e
+                                    .DataBound("onDataBound_SpecCriteria_PMO")
+                                )
+                                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../GIS/GetOperationalStatus");
+                                    });
+                                })
+            )
+        </div>
+
+    </div>
+
+    <div id="refreshControls" style="clear:both;margin-left: 20px; float: left;">
+        <div style="float: left;">
+            <button id="btnSearch" type="button" value="Refresh" class="button important filter-SearchButton" onclick="GetCustomerGridDetails_func('clicked', 'Search')">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Refresh")</button>
+        </div>
+        <div class="squaredThree" style="margin-top: 11px;float:left;margin-left: 12px;display:none;">
+            <input type="checkbox" value="None" id="showMapBtn" name="check" checked="checked" />
+            <label for="showMapBtn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;Map</label>
+        </div>
+        <div class="squaredThree" style="margin-top: 11px;margin-left: 65px;float:left;display:none;">
+            <input type="checkbox" value="None" id="showGridBtn" name="check" checked="checked" />
+            <label for="showGridBtn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show&nbsp;Grid</label>
+        </div>
+
+        <div class="generalCheckBox" style="margin-top: 11px; float: left; margin-left: 22px;display:none;">
+            <input type="checkbox" id="showMapBtn" value="None" checked="checked">  Show Map
+        </div>
+        <div class="generalCheckBox" style="margin-top: 11px;  float: left;margin-left: 15px;display:none;">
+            <input type="checkbox" id="showGridBtn" value="None" checked="checked">  Show Grid
+        </div>
+
+
+    </div>
+
+}
+<input type="hidden" name="hdnCheckPageLoad" id="hdnIdCheckPageLoad" />
+
+<!-- Sairam added below line to display google map. Code added on 28th May -->
+<div id="mHolder" style="font-family:futura-pt-n4, futura-pt, Arial, sans-serif;">
+    <div id="map_canvas" style=" max-height: 95%; min-height: 95%; height: 487px; margin: 2px; margin-top:0px; font-family:futura-pt-n4, futura-pt, Arial, sans-serif;"></div>
+
+</div>
+
+<div id="legendPanel">
+
+</div>
+
+<div id="legendTitle">
+    <p>&nbsp;&nbsp;Legend Panel</p>
+</div>
+
+@section ExportButtons
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action("ExportToExcel_Meter", "GIS", new { page = 1, pageSize = "~", filter = "~", sort = "~", assetType = "~", assetId = "~", locationTypeId="~", locationTypeName = "~", parallerLocationId = "~", assetStatus="~", demZone ="~", specificCriteria = "~", layerValue = "~", assetModel = "~", nonCompStatus = "~", complianceStatusIs = "~", pageChosen="~"})">
+            <img src='/images/export-excel.png' />
+        </a>
+        <a id="exportCSV" class="exportButton" href="@Url.Action("ExportToCsv_Meter", "GIS", new {page = 1, pageSize = "~", filter = "~", sort = "~", assetType = "~", assetId = "~", locationTypeId="~", locationTypeName = "~", parallerLocationId = "~", assetStatus="~", demZone ="~", specificCriteria = "~", layerValue = "~", assetModel = "~", nonCompStatus = "~", complianceStatusIs = "~", pageChosen="~"})">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action("ExportToPdf_Meter", "GIS",  new {page = 1, pageSize = "~", filter = "~", sort = "~", assetType = "~", assetId = "~", locationTypeId="~", locationTypeName = "~", parallerLocationId = "~", assetStatus="~", demZone ="~", specificCriteria = "~", layerValue = "~", assetModel = "~", nonCompStatus = "~", complianceStatusIs = "~", pageChosen="~"})">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+
+
+<div id="DivCustomerDetails" style="display: none; width: 100%;margin-left:0px;">
+
+    @(Html.Kendo().Grid<Duncan.PEMS.Entities.GIS.GISModel>()
+
+        .Name("grdCustomerDetails")
+        .Columns(col =>
+        {
+            col.Bound(a => a.AssetId).Title("Asset ID").Width("130px"); //sairam added on oct 3rd 2014
+            col.Bound(a => a.MeterID).Title("Asset ID").Width("130px");
+            col.Bound(a => a.MeterName).Title("Asset Name").Width("130px");
+            col.Bound(a => a.MeterGroupDesc).Title("Asset Type").Width("160px");
+            col.Bound(a => a.assetModelDesc).Title("Asset Model").Width("109px");
+            col.Bound(a => a.DemandZoneDesc).Title("Demand Zone").Width("145px");
+            col.Bound(a => a.Location).Title("Street").Width("152px");
+            col.Bound(a => a.ZoneName).Title("Zone").Width("83px");
+            col.Bound(a => a.AreaName).Title("Area").Width("80px");
+            col.Bound(a => a.PaymentType).Title("Payment Type").Width("130px").Hidden();
+            col.Bound(a => a.amountInCent).Title("Payment Amount").Width("130px").Hidden();
+            col.Bound(a => a.PaymentTime).Title("Payment Time").Width("130px").Hidden();
+            col.Bound(a => a.endDateTimeMob).Title("Expired Time").Width("130px").Hidden();
+            col.Bound(a => a.startDateTimeMob).Title("Sensor In/Out Time").Width("130px").Hidden();
+            col.Bound(a => a.Latitude).Title("Latitude").Width("100px");
+            col.Bound(a => a.Longitude).Title("Longitude").Width("100px");
+            col.Bound(a => a.OccupancyStatusDesc).Title("Space Status").Width("160px");
+            col.Bound(a => a.OperationalStatusDesc).Title("Operational Status").Width("220px");
+            col.Bound(a => a.HasSensor).Title("Has Sensor").Width("130px").Hidden();
+            col.Bound(a => a.ViolationType).Title("Violation Type").Width("130px").Hidden();
+            col.Bound(a => a.NonCommStatusDesc).Title("Non-Comm Asset").Width("130px").Hidden();
+
+
+
+
+
+
+
+
+        }
+            )
+                .Scrollable()
+               .Navigatable()
+                .Sortable()
+                .AutoBind(false)
+                .Groupable()
+                .Pageable(x =>
+                {
+                    x.Enabled(true);
+                    x.PreviousNext(true);
+                    x.PageSizes(true);
+                    x.Info(true);
+                    x.Input(true);
+                    x.Numeric(true);
+                    x.Refresh(false);
+                })
+
+                //.Filterable()
+                .Reorderable(reoder => reoder.Columns(true))
+                .Selectable(selectable => selectable
+                .Mode(GridSelectionMode.Single))
+                .Events(events => events.Change("onGridRowSelected").DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                    // .Read(read => read.Action("GetCustomerGridDetails", "GIS").Data("GetAllFilterData"))
+                .Read(read => read.Action("GetCustomerGridDetails_New", "GIS").Data("GetAllFilterData"))
+                .PageSize(50)
+                )
+                .Resizable(resize => resize.Columns(true))
+                .Pageable(pager => pager.PageSizes(new int[] { 50, 100, 200 })) // Enable paging
+            //.Pageable(pager => pager.PageSizes(new int[] { 200 })) // Enable paging
+
+    )
+
+
+</div>
+
+@section Scripts
+{
+
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>   <!-- Added by Sai on May 28th 2013 -->
+    @*<script src="https://maps.googleapis.com/maps/api/js?client=gme-duncanparkingtechnologies&v=3.17"></script>*@
+    <script type="text/javascript" src="/scripts/markermanager_packed.js"></script> <!-- Added by Sai on June 26th 2013 -->
+    <script type="text/javascript" src="/scripts/maplabel-compiled.js"></script> <!-- Added by Sai on July 10th 2013 -->
+    <script type="text/javascript" src="/scripts/spin.min.js"></script> <!-- Added by Sai on July 2nd 2013 -->
+    <script src="/scripts/nscgis.js"></script>  <!-- Added by Sai on May 28th 2013 -->
+    <script type="text/javascript" src="~/Scripts/html2canvas.js"></script>
+
+    <script>
+
+        var executedOnce = false;
+        var bothmapgrid = false;
+        var mapShownOnce = false;
+        var spinner;
+        var timeInterval;
+        var AssetStatus_timeInterval;
+        var spCrit_layer_2_timeInterval;
+        var isLegendDisplayed = false;
+        var ROOT = '@Url.Content("~/")';
+
+
+        var isAssetTypeLoaded = false;
+        var isAssetStatusLoaded = false;
+        var isLocationTypeLoaded = false;
+        var isDemandZonesLoaded = false;
+        var isLayer2_SpecCriteriaLoaded = false;
+        var isLayer2_ComplianceLoaded = false;
+        var isLayer3_SpecCriteriaLoaded = false;
+
+        var legendImagesArr = [
+                           //** Inventory Layer Icons
+                           ROOT + 'Images/msm_high_demand.png',
+                           ROOT + 'Images/msm_low_demand.png',
+                           ROOT + 'Images/msm_low_medium_demand.png',
+                           ROOT + 'Images/msm_medium_high_demand.png',
+
+                           ROOT + 'Images/sensor_high_demand.png',
+                           ROOT + 'Images/sensor_low_demand.png',
+                           ROOT + 'Images/sensor_low_medium_demand.png',
+                           ROOT + 'Images/sensor_medium_high_demand.png',
+
+                           ROOT + 'Images/gateway_high_demand.png',
+                           ROOT + 'Images/gateway_low_demand.png',
+                           ROOT + 'Images/gateway_low_medium_demand.png',
+                           ROOT + 'Images/gateway_medium_high_demand.png',
+
+                           ROOT + 'Images/space_high_demand.png',
+                           ROOT + 'Images/space_low_demand.png',
+                           ROOT + 'Images/space_low_med_demand.png',
+                           ROOT + 'Images/space_med_high_demand.png',
+
+                           //** High Demand Parking Bays Layer Icons
+                           ROOT + 'Images/OccupiedSpace.png',
+                           ROOT + 'Images/VacantSpace.png',
+                           ROOT + 'Images/Compliant.png',
+                           ROOT + 'Images/Non_Compliant.png',
+
+                           //** Parking Meter Operations Layer Icons
+                           ROOT + 'Images/Inactive.png',
+                           ROOT + 'Images/Operational.png',
+                           ROOT + 'Images/Non_Operational_With_Alarm.png',
+                           ROOT + 'Images/Operational_With_Alarm.png',
+                           ROOT + 'Images/Non_Operational_With_Special_Event.png',
+                           ROOT + 'Images/Non_Operational_With_Work_Zone.png',
+                           ROOT + 'Images/Non_Operational_With_Maintenance.png',
+
+                           //**Single Space Meter Layer Icons
+                           ROOT + 'Images/ssm_high_demand.png',
+                           ROOT + 'Images/ssm_low_demand.png',
+                           ROOT + 'Images/ssm_low_medium_demand.png',
+                           ROOT + 'Images/ssm_medium_high_demand.png',
+
+                           //** Parking Space for Inventories
+                           ROOT + 'Images/parkspace_high_demand.png',
+                           ROOT + 'Images/parkspace_low_demand.png',
+                           ROOT + 'Images/parkspace_low_medium_demand.png',
+                           ROOT + 'Images/parkspace_medium_high_demand.png',
+
+
+                         //** Gateway, CSPark and Sensor Only (starts with 35)
+                          ROOT + 'Images/Gateway.png',
+                          ROOT + 'Images/SensorOnly.png',
+                          ROOT + 'Images/CSPark.png',
+
+                           //** High demand parking bays (NEW)
+                           ROOT + 'Images/occupied.png',
+                           ROOT + 'Images/vacant.png',
+                           ROOT + 'Images/violated.png',
+                           ROOT + 'Images/paid.png',
+                           ROOT + 'Images/expired.png',
+                           ROOT + 'Images/occupiedAlone.png',
+
+                           ROOT + 'Images/occupiedTitle.png',  //44
+                           ROOT + 'Images/vacantTitle.png',
+                           ROOT + 'Images/violatedTitle.png',
+                           ROOT + 'Images/paidTitle.png',
+                           ROOT + 'Images/expiredTitle.png',
+
+
+                           ROOT + 'Images/OccupancyAloneTitle.png',
+
+                            //** Non comm Sensors for parking bays
+                            ROOT + 'Images/violatedGray.png',     //50
+                            ROOT + 'Images/occupiedGray.png',     //51
+                            ROOT + 'Images/vacantGray.png',       //52
+                            ROOT + 'Images/occupiedAloneGray.png', //53
+
+                            //** Titles for Non comm Sensors for parking bays
+                            ROOT + 'Images/violatedTitleGray.png',     //54
+                            ROOT + 'Images/occupiedTitleGray.png',     //55
+                            ROOT + 'Images/vacantTitleGray.png',       //56
+                            ROOT + 'Images/OccupancyAloneTitleGray.png' //57
+
+        ]
+
+
+
+    </script>
+
+    @Scripts.Render("~/bundles/kendo")
+
+    @*Scripts by Sampath Start*@
+
+    <script type="text/javascript">
+
+        var startD = new Date();
+        startD.setDate(new Date().getDate() - 1);
+        startD.setHours(0);
+        startD.setMinutes(0);
+        startD.setSeconds(0);
+        var endD = new Date();
+        endD.setDate(endD.getDate() + 1);
+        endD.setHours(0);
+        endD.setMinutes(0);
+        endD.setSeconds(0);
+
+        var viewModel = kendo.observable({
+            assetTypes: "",
+            assetType: "All",
+            assetStatus: "All", //** newly added on 19th july
+            showPoly: "All", //** newly added on 19th july
+            assetId: null,
+            assetName: null,
+            eventCode: null,
+            startDate: startD,
+            endDate: endD,
+            locationTypes: ["All", "Area", "Zone", "Street", "Suburb", "Demand Area"],
+            locationType: "All",
+            location: "Select Location type",
+            locationLabel: "Location:",
+
+            OnLocationTypeChange: function () {
+                // 'Location Type' filter (e.g. Area ID, Suburb, etc) drives the location input.
+                // So when the location type drop-down is changed, update the location type label
+
+                var $locationInput = $('#txtLocation');
+
+                switch (viewModel.locationType) {
+                    case 'All':
+                        $locationInput.attr("disabled", "disabled"); // disable textbox
+                        $locationInput.addClass('disabled'); // gray background
+                        viewModel.set("location", "Please select location type");
+                        viewModel.set("locationLabel", "Location:");
+                        break;
+                    default:
+                        $locationInput.removeAttr("disabled");
+                        $locationInput.removeClass('disabled');
+                        viewModel.set("locationLabel", viewModel.locationType + ':');
+                        viewModel.set("location", "");
+                }
+            },
+
+        });
+
+
+
+        //** STEP-2
+        var gridFilters = { "CurrentPage": 1, "PageSize": 50 };
+        var sorts = {};
+
+
+
+        //** STEP-3a
+        function UpdateGridState() {
+            /// Update the grid state object with grid's current state
+            var currentGrid = $("#grdCustomerDetails").data("kendoGrid");
+
+            gridFilters.CurrentPage = currentGrid.dataSource.page();
+            //gridFilters.SelectedRow = currentGrid.select().index();
+            gridFilters.sorts = JSON.stringify(currentGrid.dataSource._sort);
+            gridFilters.pageSize = currentGrid.dataSource.pageSize();
+
+        }
+
+        //** STEP-3b
+        function UpdateExportLinks() { //** Export options - Step 3
+            /// Update the href for the export buttons
+            var grid = $('#grdCustomerDetails').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            $("#exportButtons").css("display", "inline");
+
+        }
+
+        function GetExportHref(href, requestObject, grid) { //** Export options - Step 4
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            //href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 100000);  //** sai modified pagesize to export all pages on jan 1st 2015
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            return href;
+        }
+
+
+        $(document).ready(function () {
+
+            //** Get the Lat and Lng details of Customer and load the map accordingly.
+            // loadGoogleMap(34.068030, -118.473127);
+            loadGoogleMap('@Model.Latitude', '@Model.Longitude');
+            orleans('@ViewBag.CurrentCityID');
+            //** Hide the Demand zone dropdownlist by default; Sairam added on oct 7th 2014
+            $("#demandZones").css('display', 'none');
+
+            //** Make the map invisible for the first time when the page is loaded.
+            $("#mHolder").css('display', 'none');
+            $('#DivCustomerDetails').css('display', 'none'); //** When the page loads for the first time, Don't show Grid.
+            $('#legendPanel').css('display', 'none');
+            $("#autocompleteLocationId").val("Select a type");
+
+            $("#txtAssetName").val("");
+            $('#layer2_assetType').css('display', 'none');
+
+            $('#autocompleteAssetId').keyup(function (key) {
+                var code = key.keyCode || key.which;
+                if (code == 46 || code == 8) { // enter,delete and backspace
+                    var assetIdTxt = $("#autocompleteAssetId").val()
+                    //if (assetIdTxt.length == 0 || assetIdTxt.length == 1) //** Asset ID becomes empty
+                    //{
+                    $("#txtAssetName").val("");
+                    //}
+                }
+            });
+
+
+
+            $('#txtAssetName').keyup(function (key) {
+                var code = key.keyCode || key.which;
+
+                if (code == 46 || code == 8) { // enter,delete and backspace
+                    var assetIdTxt = $("#txtAssetName").val()
+                    $("#autocompleteAssetId").val("");
+                }
+            });
+
+            //** Display checkbox for Chrome and other browsers
+            var userAgent = navigator.userAgent.toLowerCase();
+            if ($.browser.chrome) {
+                $(".squaredThree").css("display", "inline");
+                $(".generalCheckBox").css("display", "none");
+            } else if (/msie/.test(userAgent) && parseFloat((userAgent.match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) <= 9) {
+                // Test if the browser is IE and check the version number is lower than or equal 9
+                $(".squaredThree").css("display", "none");
+                $(".generalCheckBox").css("display", "inline");
+            } else if (/msie/.test(userAgent) && parseFloat((userAgent.match(/.*(?:rv|ie)[\/: ](.+?)([ \);]|$)/) || [])[1]) > 9) {
+                // Test if the browser is IE and check the version number is greater than 9
+                $(".squaredThree").css("display", "inline");
+                $(".generalCheckBox").css("display", "none");
+            } else {
+                //** Other browsers
+                $(".squaredThree").css("display", "inline");
+                $(".generalCheckBox").css("display", "none");
+            }
+
+
+            // bind the view model to the filter controls
+            kendo.bind($(document.body), viewModel);
+
+            // when the view state changes, cache it
+            viewModel.bind("change", function (e) {
+            });
+
+            $("#hdnIdCheckPageLoad").val("");
+
+            $('#autocompleteAssetId').keypress(function (key) {
+                var charCode = (typeof key.which == "number") ? key.which : key.keyCode
+                //** Check for empty asset id and if so, empty the corresponding asset name
+                if (key.charCode == 46 || key.charCode == 8 || key.charCode == 0 || charCode == 0) {
+
+                    var assetIdTxt = $("#autocompleteAssetId").val()
+                    if (assetIdTxt.length == 0 || assetIdTxt.length == 1) //** Asset ID becomes empty
+                    {
+                        $("#txtAssetName").val("");
+                    }
+                }
+
+                if (charCode != 46 && charCode != 8 && charCode != 0) //** allows only backspace and delete keys
+                {
+                    if (charCode < 48 || charCode > 57) {
+                        return false;
+                    }
+
+                }
+
+            });
+
+
+            timeInterval = window.setInterval(function () { multiSelectAssetTypeDropDownFunc(); }, 1000);
+            //  AssetStatus_timeInterval = window.setInterval(function () { multiSelectAssetStatusDropDownFunc(); }, 1000);
+            loadLegendDetails();
+
+            function multiSelectAssetTypeDropDownFunc() {
+                window.clearInterval(timeInterval)
+
+                //** The below codes are for asset type selection
+                var firstValueMultiselect = $('#ddlAssetType');
+                firstValueMultiselect.kendoMultiSelectBox({
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "../GIS/GetAssetTypes_Inventory",
+                                dataType: 'json',
+                            },
+
+                            parameterMap: function (options, type) {
+                                if (type === 'read') {
+                                    var layerID = $("#layerDropDown").val();
+                                    return { LayerID: layerID }
+                                }
+                            }
+
+                        }
+
+                    },
+                    emptySelectionLabel: "All",//"Please select...",
+                    value: ["-1"],
+                    placeholder: "All"
+                });
+
+                firstValueMultiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) {
+                    FilterAssetIds();
+                });
+
+            }
+
+            function isIE() {
+                var myNav = navigator.userAgent.toLowerCase();
+                return (myNav.indexOf('msie') != -1) ? parseInt(myNav.split('msie')[1]) : false;
+            }
+
+
+
+
+            function getLegendDetails(xml, layerName) {
+                $(xml).find(layerName).each(function () {
+                    $.each(this.attributes, function (i, attrib) {
+                        var name = attrib.name;
+                        var layerTitle = attrib.value;
+                        $("<p id='ifwTitle'></p>").text(layerTitle).appendTo("#legendPanel");
+                    });
+                });
+
+                $(xml).find(layerName).find("Item").each(function (index) {
+                    var legendName = $(this).find('LegendLabel').text();
+                    var legendImage = "@Url.Content("~/Images/")" + $(this).find('LegendImage').text();
+                    var img = $('<img style="float:left;margin-left:6px;"/>').attr({ 'id': legendName, 'src': legendImage, 'alt': legendName })
+                    if (layerName == "AssetColorCodes") {
+                        var imageLabel = $("<p style='font-size:13px;' id='ifw'>&nbsp;&nbsp;" + legendName + "</p>")
+                    } else {
+                        var imageLabel = $("<p style='line-height: 100%;font-size:13px;' id='ifw'>&nbsp;&nbsp;" + legendName + "</p>")
+                    }
+
+                    var imageHolder = $('<div style="display:inline";>').html(img);
+
+                    var legItem = $("<div style='width:210px;'></div>")
+                    legItem.append(imageHolder)
+                    legItem.append(imageLabel)
+                    $("#legendPanel").append(legItem)
+                });
+            }
+
+            function drawStLine() {
+                var legendImage = "@Url.Content("~/Images/stLine.png")";
+                var img = $('<img style="float:left;margin-left:0px;"/>').attr({ 'id': 'stLiner', 'src': legendImage, 'alt': 'stLiner' })
+                var imageHolder = $('<div style="display:inline";>').html(img);
+                $("#legendPanel").append(imageHolder)
+            }
+
+            function loadLegendDetails() {
+                $("#legendPanel").append("<div></div>");
+                $.ajax({
+                    type: "GET",
+                    // url: "@Url.Content("~/legendDetails.xml")",
+                    url: "@Url.Content("~/Images/legendDetails.xml")",
+                    dataType: "xml",
+                    success: function (xml) {
+
+                        // var value = $("#layerDropDown").val();
+
+                        //** Inventory Layer legends (if any)
+                        // if (value != "2") {
+                        getLegendDetails(xml, 'Inventory_Layer')
+                        drawStLine()
+                        //}
+
+                        //** AssetColorCodes legends (if any)
+                        var isDemZoneVisible = $("#demandZones").css('display');
+                        if (isDemZoneVisible == "none") {
+                        } else {
+                            getLegendDetails(xml, 'AssetColorCodes');
+                            drawStLine()
+                        }
+
+                        //** High Demand Bays Layer legends (if any)
+                        getLegendDetails(xml, 'BaysHighDemand_Layer');
+                        drawStLine()
+
+
+                        //** Grayed High Demand Bays Layer legends (if any)
+                        getLegendDetails(xml, 'GrayHighDemand_Layer');
+                        drawStLine()
+
+                        //** Polygons  (if any)
+                        getLegendDetails(xml, 'Polygons');
+                        drawStLine()
+
+                        // if (value == "3") {
+                        //** Operational Status_Layer  (if any)
+                        getLegendDetails(xml, 'OperationalStatus_Layer');
+                        // }
+
+
+                    },
+                    error: function () {
+                        alert("An error occurred while processing XML file.");
+                    }
+                });
+
+            }
+
+
+            function multiSelectPolygonDropDownFunc() {
+
+                //** The below codes are for asset type selection
+                var polygonMultiselect = $('#showPolygonDropDown');
+
+                polygonMultiselect.kendoMultiSelectBox({
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: [{ "Value": "1", "Text": "Areas" }, { "Value": "2", "Text": "Zones" }],
+                    emptySelectionLabel: "Please select...",
+                    value: ["0"]
+                });
+
+                polygonMultiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) { });
+
+            }
+
+            function multiSelectAssetStatusDropDownFunc() {
+
+                window.clearInterval(AssetStatus_timeInterval)
+
+                //** The below codes are for asset type selection
+                var assetStatus_Multiselect = $('#assetStatusDropDown');
+
+                assetStatus_Multiselect.kendoMultiSelectBox({
+                    dataTextField: "Text",
+
+                    dataValueField: "Value",
+                    dataSource: {
+                        transport: {
+                            read: "../GIS/GetAssetState"
+                        }
+                    },
+                    // emptySelectionLabel: "All",//"Please select...",
+                    // value: ["0"]
+                });
+
+                assetStatus_Multiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) { });
+
+            }
+
+            function multiSelect_SpecificCrtieria_Layer2_DropDownFunc() {
+
+                window.clearInterval(spCrit_layer_2_timeInterval)
+                //** The below codes are for asset type selection
+                var specCriteria_Multiselect = $('#specificCriteria_Layer2');
+
+                specCriteria_Multiselect.kendoMultiSelectBox({
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: {
+                        transport: {
+                            read: "../GIS/GetOccupancyStatus"
+                        }
+                    },
+                    emptySelectionLabel: "All",//"Please select...",
+                    value: ["0"]
+                });
+
+                specCriteria_Multiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) { });
+
+            }
+
+            function multiSelect_SpecificCrtieria_Layer3_DropDownFunc() {
+
+                window.clearInterval(spCrit_layer_3_timeInterval)
+                //** The below codes are for asset type selection
+                var specCriteria_Multiselect = $('#specificCriteria_Layer3');
+
+                specCriteria_Multiselect.kendoMultiSelectBox({
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataSource: {
+                        transport: {
+                            read: "../GIS/GetOperationalStatus"
+                        }
+                    },
+                    emptySelectionLabel: "All",//"Please select...",
+                    value: ["0"]
+                });
+
+                specCriteria_Multiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) { });
+
+            }
+
+
+        });
+
+
+
+    </script>
+
+    <script type="text/javascript">
+
+        var AssetType;
+        var AssetStatus;
+        var showPolygons;
+        var processPolygonValue;
+        var layer2_Criteria;
+        var layer3_Criteria;
+        var markerArr = [];
+
+        function onGridRowSelected(e) {
+            var selectedRows = this.select();
+            var selectedDataItems = [];
+            for (var i = 0; i < selectedRows.length; i++) {
+                var dataItem = this.dataItem(selectedRows[i]);
+                selectedDataItems.push(dataItem);
+            }
+            layerNameIs = $("#layerDropDown").val();
+            var assetIdValue = selectedDataItems[0].AssetId
+            showInfoOnGridRowSelected(selectedDataItems, layerNameIs)
+        }
+
+        function GetSingleAssetType() {
+
+            return { assetTypeIs: $('#ddlAssetType').val() };
+        }
+
+
+
+        function onDataBound(arg) {
+            showProgressBar(false); //** Hide Progress bar animation after the server response;
+            var result = $("#grdCustomerDetails").data().kendoGrid.dataSource.data()
+
+            if ($("#showMapBtn").prop('checked') == false && $("#showGridBtn").prop('checked') == true) {
+                //** Page alone is selected
+                // $("#mHolder").css('display', 'none');
+            } else if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == false) {
+                //** Map alone is selected
+                // $('#DivCustomerDetails').css('display', 'none');
+            } else if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == true) {
+                //** Map and page alone is selected
+                //$('#DivCustomerDetails').css('display', 'none');
+
+            }
+
+            //**First clear both the Grid and Map
+            //   $("#mHolder").css('display', 'none');
+            //$('#DivCustomerDetails').css('display', 'none');
+
+            //** Check the states of 'Show Map' and 'Show Grid' buttons
+
+            if ($("#showGridBtn").prop('checked') == true) {
+                //** Display the Grid part
+                $("#DivCustomerDetails").show();
+                $('#DivCustomerDetails').css('display', 'inline');
+
+            } else {
+                $('#DivCustomerDetails').css('display', 'none');
+            }
+
+            //************************************************************************************************
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+
+            var grouping = grid.dataSource.group();
+            var dataSource = grid.dataSource;
+            var view = dataSource.view();
+            if (grouping.length > 0) {
+                result = [];
+            }
+
+            if (grouping.length == 1) {
+                for (var i = 0; i < view.length; i++) {
+                    for (var j = 0; j < view[i].items.length; j++) {
+                        result.push(view[i].items[j])
+                    }
+                }
+            } else if (grouping.length == 2) {
+                for (var i = 0; i < view.length; i++) {  //no. of views = 2
+                    var holder_1 = view[i].items  //view_0, view_1
+                    for (var j = 0; j < holder_1[0].items.length; j++) {
+                        result.push(holder_1[0].items[j])
+                    }
+                }
+            } else if (grouping.length == 3) {
+                for (var i = 0; i < view.length; i++) {  //no. of views = 2
+                    var holder_1 = view[i].items  //view_0, view_1
+                    var holder_2 = holder_1[0].items
+                    for (var j = 0; j < holder_2[0].items.length; j++) {
+                        result.push(holder_2[0].items[j])
+                    }
+                }
+            } else if (grouping.length == 4) {
+                for (var i = 0; i < view.length; i++) {  //no. of views = 2
+                    var holder_1 = view[i].items  //view_0, view_1
+                    var holder_2 = holder_1[0].items
+                    var holder_3 = holder_2[0].items
+                    for (var j = 0; j < holder_3[0].items.length; j++) {
+                        result.push(holder_3[0].items[j])
+                    }
+                }
+            } else if (grouping.length == 5) {
+                for (var i = 0; i < view.length; i++) {  //no. of views = 2
+                    var holder_1 = view[i].items  //view_0, view_1
+                    var holder_2 = holder_1[0].items
+                    var holder_3 = holder_2[0].items
+                    var holder_4 = holder_3[0].items
+                    for (var j = 0; j < holder_4[0].items.length; j++) {
+                        result.push(holder_4[0].items[j])
+                    }
+                }
+            } else if (grouping.length == 6) {
+                for (var i = 0; i < view.length; i++) {  //no. of views = 2
+                    var holder_1 = view[i].items  //view_0, view_1
+                    var holder_2 = holder_1[0].items
+                    var holder_3 = holder_2[0].items
+                    var holder_4 = holder_3[0].items
+                    var holder_5 = holder_4[0].items
+                    for (var j = 0; j < holder_5[0].items.length; j++) {
+                        result.push(holder_5[0].items[j])
+                    }
+                }
+            }
+
+            //** Once the results are grouped, then Show/Hide occupancy status and operation status descriptions as per layer selection
+            var layerValue = $("#layerDropDown").val();
+            var grid = $("#grdCustomerDetails").data("kendoGrid");
+            if (layerValue.toString() == "1") {
+                grid.hideColumn("OccupancyStatusDesc");
+                //  grid.hideColumn("NonCompliantStatus");
+                grid.hideColumn("NonCompliantStatusDesc");
+                grid.hideColumn("OperationalStatusDesc");
+                $("#grdCustomerDetails th[data-field=AssetId]").html("Asset ID");
+                grid.hideColumn("MeterID");
+            } else if (layerValue.toString() == "2") {
+                grid.showColumn("OccupancyStatusDesc");
+                //  grid.showColumn("NonCompliantStatus");
+                grid.showColumn("NonCompliantStatusDesc");
+                grid.hideColumn("OperationalStatusDesc");
+
+                $("#grdCustomerDetails th[data-field=AssetId]").html("Space ID");
+                grid.showColumn("MeterID");
+                // resizeColumns(11, 300);
+                // resizeColumns(13, 300);
+            } else if (layerValue.toString() == "3") {
+                grid.hideColumn("MeterID");
+                grid.hideColumn("OccupancyStatusDesc");
+                grid.showColumn("OperationalStatusDesc");
+                //  grid.hideColumn("NonCompliantStatus");
+                grid.hideColumn("NonCompliantStatusDesc");
+                $("#grdCustomerDetails th[data-field=AssetId]").html("Asset ID");
+                // resizeColumns(12, 500);
+                //** Export options - Step 3
+
+            }
+
+            // grid.hideColumn("DemandZoneDesc");
+            //**Sairam added code on oct 7th 2014 to display / hide Demand Zones based on customer config
+            if (String($("#demandZones").css('display')) == "none") {
+                grid.hideColumn("DemandZoneDesc");
+            } else {
+                grid.showColumn("DemandZoneDesc");
+            }
+
+
+
+
+
+            ////** Export options - Step 3
+            UpdateGridState();
+            UpdateExportLinks();
+
+        }
+
+        function resizeColumns(idx, width) {
+            $("#grdCustomerDetails .k-grid-header-wrap") //header
+               .find("colgroup col")
+               .eq(idx)
+               .css({ width: width });
+        }
+
+        function onDataBound_AssetType() {
+            isAssetTypeLoaded = true;
+
+        }
+
+        function onDataBound_AssetStatus() {
+            isAssetStatusLoaded = true;
+        }
+
+        function onDataBound_AssetModel(e) {
+            var data = $("#assetModel").data().kendoDropDownList.dataSource.data();
+            for (var i = 0; i < data.length; i++) {
+                values.push(data[i].Value);
+            }
+            if (data.length == 0) {
+                $("#assetModel").data("kendoDropDownList").text("All");
+            }
+            AssetModelVal = values.toString();
+
+        }
+
+        function onDataBound_LocationType() {
+            isLocationTypeLoaded = true;
+        }
+
+        function onDataBound_DemandZones() {
+            var result = $("#ddlDemandZones").data().kendoDropDownList.dataSource.data();
+            if (result.length == 0) {
+                //** Hide the Demand zone dropdownlist;
+                $("#demandZones").css('display', 'none');
+            }
+            isDemandZonesLoaded = true;
+        }
+
+        function onDataBound_SpecCriteria_HDPB() {
+            isLayer2_SpecCriteriaLoaded = true;
+        }
+
+        function onDataBound_Compliance_HDPB() {
+            isLayer2_ComplianceLoaded = true;
+        }
+
+        function onDataBound_SpecCriteria_PMO() {
+            isLayer3_SpecCriteriaLoaded = true;
+        }
+
+
+
+        function GetCustomerGridDetails_func(IsClicked, ClickType) {
+            if (IsClicked == "clicked") {
+
+                //** First check whether all kendo filters are loaded before doing validations
+                //** Check as per layer
+                var value = $("#layerDropDown").val();
+                if (value == 1) { //** Layer 1
+                    if (isAssetTypeLoaded == false || isAssetStatusLoaded == false || isLocationTypeLoaded == false || isDemandZonesLoaded == false) {
+                        alert('The GIS filters are being processed. Please wait until processing is completed.')
+                        return false
+                    }
+
+                } else if (value == 2) { //** Layer 2
+                    if (isAssetTypeLoaded == false || isAssetStatusLoaded == false || isLocationTypeLoaded == false || isDemandZonesLoaded == false || isLayer2_SpecCriteriaLoaded == false || isLayer2_ComplianceLoaded == false) {
+                        alert('The GIS filters are being processed. Please wait until processing is completed.')
+                        return false
+                    }
+                } else if (value == 3) { //** Layer 3
+                    if (isAssetTypeLoaded == false || isAssetStatusLoaded == false || isLocationTypeLoaded == false || isDemandZonesLoaded == false || isLayer3_SpecCriteriaLoaded == false) {
+                        alert('The GIS filters are being processed. Please wait until processing is completed.')
+                        return false
+                    }
+
+                }
+
+                showProgressBar(false); //** Display Progress bar animation till the server returns response;
+
+                if (CheckValidations()) {
+                    var CustomerId = '@ViewBag.CurrentCityID';
+                    mapShownOnce = false;
+
+                    if ($("#showMapBtn").prop('checked') == false && $("#showGridBtn").prop('checked') == false) {
+                        //**Don't execute any service if none of the checkbox options are chosen.
+                        alert('Please select either Show Map or Show Grid before Refresh is clicked.')
+                        return false;
+                    } else if ($("#showMapBtn").prop('checked') == false && $("#showGridBtn").prop('checked') == true) {
+                        //** page alone is selected
+                        $("#mHolder").css('display', 'none');
+                        invokeDataSource(50, "Grid") //** set the default no. of records as 50 - May 4th 2015
+                    } else if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == false) {
+                        //** map alone is selected
+                        executedOnce = false;
+                        $('#DivCustomerDetails').css('display', 'none');
+                        ajaxCallForMapPage()
+                    }
+                    else {
+                        //** Either if map and/or Datagrid options are chosen.
+                        executedOnce = false;
+                        bothmapgrid = false;
+                        // UpdateGridState();
+                        $("#mHolder").css('display', 'none');
+                        $('#DivCustomerDetails').css('display', 'none');
+                        invokeDataSource(50, "Grid") //** set the default no. of records as 50 - May 4th 2015
+                        ajaxCallForMapPage();
+                    }
+
+                }
+            }
+
+        }
+
+        function updateOnDemand(meterid, lat, lng) {
+            //    alert('from view' + meterid + " : " + lat + " : " + lng + " " );
+
+            userValues = JSON.stringify({
+                assetID: meterid.toString(),
+                Latitude: lat.toString(),
+                Longitude: lng.toString()
+            })
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("updateOnDemand", "GIS")',
+                data: userValues,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (Data) {
+                    alert('update successful.');
+                },
+                error: function () {
+                    //alert("Error in updating GIS coordinates in DB.");
+                }
+            });
+
+        }
+
+        function updateAllMarkersOnDemand(poi) {
+            // alert('from view' + poi[0].id + " : " + poi[0].Lat + " : " + poi[0].Lng + " ");
+
+            var assetIDs = [];
+            for (var i = 0; i < poi.length; i++) {
+                assetIDs.push(poi[i].id);
+            }
+
+            var Latitudes = [];
+            for (var i = 0; i < poi.length; i++) {
+                Latitudes.push(poi[i].Lat);
+            }
+
+            var Longitudes = [];
+            for (var i = 0; i < poi.length; i++) {
+                Longitudes.push(poi[i].Lng);
+            }
+
+            //alert('assetIDs' + assetIDs.toString())
+            //alert('Latitudes' + Latitudes.toString())
+            //alert('Longitudes' + Longitudes.toString())
+            userValues = JSON.stringify({
+                assetID: assetIDs.toString(),
+                Latitude: Latitudes.toString(),
+                Longitude: Longitudes.toString()
+            })
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("updateAllMarkersOnDemand", "GIS")',
+                data: userValues,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (Data) {
+                    alert('update successful.');
+                },
+                error: function () {
+                    //alert("Error in updating GIS coordinates in DB.");
+                }
+            });
+
+        }
+
+        function updateSensorsOnDemand(sensorid, lat, lng) {
+            //  alert('from nsc' + sensorid + " : " + lat + " : " + lng + " ");
+
+            userValues = JSON.stringify({
+                assetID: sensorid.toString(),
+                Latitude: lat.toString(),
+                Longitude: lng.toString()
+            })
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("updateSensorsOnDemand", "GIS")',
+                data: userValues,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (Data) {
+                    alert('updating sensor successful.');
+                },
+                error: function () {
+                    //alert("Error in updating GIS coordinates in DB.");
+                }
+            });
+
+        }
+
+        function invokeDataSource(maxCount, pageName) {
+
+            showProgressBar(true); //** Display Progress bar animation till the server returns response;
+
+            // Layer name
+            var AssetIdIs = $("#autocompleteAssetId").val();
+            if (AssetIdIs) {
+                gridFilters.AssetId = AssetIdIs;
+            }
+            var $filter = new Array();
+            $filter.push({ field: "AssetId", operator: "equals", value: AssetIdIs });
+
+            $("#grdCustomerDetails").data("kendoGrid").dataSource.filter($filter);
+
+            if (pageName == "Grid") {
+                $("#grdCustomerDetails").data("kendoGrid").dataSource.view({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            } else {
+                //** Map page is called
+                ajaxCallForMapPage();
+
+                //var grid = $("#grdCustomerDetails").data("kendoGrid");
+
+                //grid.dataSource.pageSize(maxCount);
+                //grid.dataSource.groupable(false);
+                //grid.dataSource.read();
+            }
+
+
+
+        }
+
+
+
+
+        function executeClearPOI() {
+            var layerValue = $("#layerDropDown").val();
+            //** Clear all the OLD data POI on the map for the respective layers
+            if (layerValue == 1) {
+                clearMap(InvMarkerRepository, invMgr, InvPolygonRepository_Area, InvPolylineRepository_Area, InvPolygonRepository_Zone, InvPolylineRepository_Zone)
+            } else if (layerValue == 2) {
+                clearMap(HdbMarkerRepository, hdbMgr, HdbPolygonRepository_Area, HdbPolylineRepository_Area, HdbPolygonRepository_Zone, HdbPolylineRepository_Zone)
+            } else if (layerValue == 3) {
+                clearMap(PmoMarkerRepository, pmoMgr, PmoPolygonRepository_Area, PmoPolylineRepository_Area, PmoPolygonRepository_Zone, PmoPolylineRepository_Zone)
+            }
+        }
+
+
+        function CheckValidations() {
+
+            //** Sampath added code on 8th aug
+
+            //**Show Polygon validation
+            var getTxtFromshowPolygons = $("#showPolygonDropDown").data("kendoDropDownList").text()
+            if (getTxtFromshowPolygons == "All") {
+                //** 'All' is selected by default
+                showPolygons = -1;
+            } else if (getTxtFromshowPolygons == "Please select...") {
+                showPolygons = -2; // no polygon is selected
+            }
+            else {
+                showPolygons = $("#showPolygonDropDown").val();
+                processPolygonValues = showPolygons.split(",")
+                if (processPolygonValues.length > 1) {
+                    //** Both area and zone polygons are selected
+                    showPolygons = -1
+                } else if (processPolygonValues.length == 1 && processPolygonValues[0] == 1) {
+                    //** Area polygon is selected
+                    showPolygons = 1
+                } else if (processPolygonValues.length == 1 && processPolygonValues[0] == 2) {
+                    //** Zone polygon is selected
+                    showPolygons = 2
+                }
+            }
+
+            return true;
+
+            if (Layervalue == "3") {
+
+                //**Parking Meter Operation Status Specific Criteria
+                var getTxtFromLayer = $("#specificCriteria_Layer3").data("kendoDropDownList").text()
+                if (getTxtFromLayer == "All") {
+                    SpecificCriteria = -1;
+
+                } else if (getTxtFromLayer == "Please select...") {
+                    $("#specificCriteria_Layer3").val("-2")
+                    alert('Please select Layer.');
+                    return;
+                }
+                else {
+
+                    SpecificCriteria = $("#specificCriteria_Layer3").val();
+                }
+            }
+
+            //** end of sampath code
+
+            //**Demand Zones validation
+            var getTxtFromDemandZone = $("#ddlDemandZones").data("kendoDropDownList").text()
+            if (getTxtFromDemandZone == "All") {
+                DemandZone = -1;
+
+            } else if (getTxtFromDemandZone == "Please select...") {
+                $("#ddlDemandZones").val("-2")
+                alert('Please select Asset Type.');
+                return;
+            }
+            else {
+
+                DemandZone = $("#ddlDemandZones").val();
+            }
+
+            //**Asset Types validation
+            var getTxtFromAssetType = $("#ddlAssetType").data("kendoDropDownList").text()
+            if (getTxtFromAssetType == "All") {
+                //** 'All' is selected by default
+                // AssetType = -1;
+
+
+            } else if (getTxtFromAssetType == "Please select...") {
+                $("#ddlAssetType").val("-2")
+                alert('Please select Asset Type.');
+                return;
+            }
+            else {
+
+                AssetType = $("#ddlAssetType").val();
+            }
+
+            //**Asset Status validation
+            //var getTxtFromAssetStatus = $("#assetStatusDropDown").data("kendoDropDownList").text()
+            //if (getTxtFromAssetStatus == "All") {
+            //    //** 'All' is selected by default
+            //    AssetStatus = -1;
+            //} else if (getTxtFromAssetStatus == "Please select...") {
+            //    alert('Please select Asset Status.');
+            //    return;
+            //}
+            //else {
+            //    AssetStatus = $("#assetStatusDropDown").val();
+            //}
+
+
+
+
+            if ($("#ddlAssetType").data("kendoDropDownList").text() != "All") {
+
+                if ($("#autocompleteAssetId").val() == "") {
+                    // alert("Please select Asset Id");
+                    return true;
+                }
+            }
+
+            if ($("#ddlLocationType").data("kendoDropDownList").text() != "All") {
+
+                if ($("#autocompleteLocationId").val() == "") {
+                    alert("Please select Location Id");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function GetAllFilterData() {
+
+            var CustomerId = '@ViewBag.CurrentCityID';
+            viewModel.set('CustomerId', CustomerId);
+            var AssetId = $("#autocompleteAssetId").val();
+            var LocationTypeId = $("#ddlLocationType").val();
+            var LocationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            var ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            var Vacant = $("#squaredThree_5").is(':checked') ? "1" : "0";
+
+            var Layervalue = $("#layerDropDown").val();
+
+            //********************************************************************************
+            //**Asset Types validation
+            var getTxtFromAssetType = $("#ddlAssetType").data("kendoDropDownList").text()
+            if (getTxtFromAssetType == "All") {
+                //** 'All' is selected by default
+                // AssetType = -1;
+                var values = [];
+                var data = $("#ddlAssetType").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                AssetType = values.toString();
+            } else if (getTxtFromAssetType == "Please select...") {
+                $("#ddlAssetType").val("-2")
+                alert('Please select Asset Type.');
+                return;
+            }
+            else {
+                AssetType = $("#ddlAssetType").val();
+
+            }
+            viewModel.set('assetType', AssetType);
+            //**Asset Status validation
+            var getTxtFromAssetStatus = $("#assetStatusDropDown").data("kendoDropDownList").text()
+            if (getTxtFromAssetStatus == "All") {
+                //** 'All' is selected by default
+
+                var values = [];
+                var data = $("#assetStatusDropDown").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                AssetStatus = values.toString();
+
+
+            } else if (getTxtFromAssetStatus == "Please select...") {
+                alert('Please select Asset Status.');
+                return;
+            }
+            else {
+                AssetStatus = $("#assetStatusDropDown").val();
+
+            }
+            viewModel.set('assetStatus', AssetStatus);
+            //********************************************************************************
+
+            //** Asset Model validation
+            var assetModel_disabledState = $("#assetModel").prop('disabled');
+            var values = [];
+            if (assetModel_disabledState == true) {
+                //** It indicates 'AssetModel' is disabled
+                //var data = $("#assetModel").data().kendoDropDownList.dataSource.data();
+                //for (var i = 0; i < data.length; i++) {
+                //    values.push(data[i].Value);
+                //}
+                AssetModelVal = "-1";// viewModel.get('assetModelValuesAre');//values.toString();
+                // alert('disal' + AssetModelVal);
+            } else {
+                var getTxtFromAssetModel = $("#assetModel").data("kendoDropDownList").text();
+                if (getTxtFromAssetModel == "All") {
+
+                    var data = $("#assetModel").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    AssetModelVal = values.toString();
+
+                } else {
+                    AssetModelVal = $("#assetModel").val();
+
+                }
+            }
+
+            //**High Demand Parking Bays Specific Criteria (Occupancy Status)
+            if (Layervalue == "2") {
+                var getTxtFromLayer = $("#specificCriteria_Layer2").data("kendoDropDownList").text()
+                var values = [];
+                if (getTxtFromLayer == "All") {
+                    var data = $("#specificCriteria_Layer2").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    SpecificCriteria = values.toString();
+
+                } else if (getTxtFromLayer == "Please select...") {
+                    $("#specificCriteria_Layer2").val("-2")
+                    alert('Please select Layer.');
+                    return;
+                }
+                else {
+
+                    SpecificCriteria = $("#specificCriteria_Layer2").val();
+                }
+            }
+
+            //**High Demand Parking Bays Specific Criteria (Non-Compliance Status)
+            var getTxtFromLayer = $("#NonComplianceID").data("kendoDropDownList").text()
+            var NonComplianceIDVal;
+            var complianceStatusIs;
+            var values = [];
+            if (getTxtFromLayer == "All") {
+                var data = $("#NonComplianceID").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                NonComplianceIDVal = values.toString();
+                complianceStatusIs = "All";
+
+            } else if (getTxtFromLayer == "Compliant") {
+                var data = $("#NonComplianceID").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                NonComplianceIDVal = values.toString();
+                complianceStatusIs = "Compliant";
+                //$("#NonComplianceID").val("-2")
+                //alert('Please select Layer.');
+                //return;
+            }
+            else {
+
+                NonComplianceIDVal = $("#NonComplianceID").val();
+                complianceStatusIs = "NonCompliant";
+            }
+
+
+
+            //**Demand Zone validation
+            var getTxtFromDemZone = $("#ddlDemandZones").data("kendoDropDownList").text();
+
+            if (getTxtFromDemZone == "All") {
+                //** 'All' is selected by default
+                //demZoneVal = -1;
+                var values = [];
+                var data = $("#ddlDemandZones").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                demZoneVal = values.toString();
+            } else {
+                demZoneVal = $("#ddlDemandZones").val();
+
+            }
+
+            if ($("#demandZones").css('display') == "none") {
+                demZoneVal = -1
+            }
+
+            if (Layervalue == "3") {
+
+                //**Parking Meter Operation Status Specific Criteria
+                var getTxtFromLayer = $("#specificCriteria_Layer3").data("kendoDropDownList").text()
+                var values = [];
+                if (getTxtFromLayer == "All") {
+                    var data = $("#specificCriteria_Layer3").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    SpecificCriteria = values.toString();
+
+                } else if (getTxtFromLayer == "Please select...") {
+                    $("#specificCriteria_Layer3").val("-2")
+                    alert('Please select Layer.');
+                    return;
+                }
+                else {
+
+                    SpecificCriteria = $("#specificCriteria_Layer3").val();
+                }
+            }
+
+
+            var LayerValue = $("#layerDropDown").val();
+            if (LayerValue == "1") {
+                //** Inventory Layer
+                SpecificCriteria = -5;
+                if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == true) {
+
+                    if (executedOnce == false) {
+                        executedOnce = true;
+                        return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "gridChosen" };
+
+
+                    } else if (executedOnce == true) {
+                        executedOnce = false;
+                        mapShownOnce = true;
+                        return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "mapChosen" };
+                    }
+
+                }
+                else if ($("#showMapBtn").prop('checked')) {
+                    return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "mapChosen" };
+                } else {
+
+                    return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "gridChosen" };
+                }
+
+            } else if (LayerValue == "3") {
+                //** Asset Operational Layer
+                // SpecificCriteria = -5;
+                if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == true) {
+
+                    if (executedOnce == false) {
+                        executedOnce = true;
+                        // alert("22")
+                        return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "gridChosen" }
+
+
+                    } else if (executedOnce == true) {
+                        executedOnce = false;
+                        mapShownOnce = true;
+                        // alert("33")
+
+                        return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "mapChosen" }
+                    }
+
+                }
+                else if ($("#showMapBtn").prop('checked')) {
+                    return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "mapChosen" }
+                } else {
+                    return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, pageChosen: "gridChosen" }
+                }
+            }
+            else {
+                //** Parking Space and hence hardcode AssetType value as '20'
+                var assetTypeVal = $("#ddlAssetType_2").val();
+                if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == true) {
+
+                    if (executedOnce == false) {
+                        executedOnce = true;
+                        // alert("22")
+                        return { customerId: CustomerId, assetType: assetTypeVal, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, complianceStatusIs: complianceStatusIs, pageChosen: "gridChosen" }
+
+
+                    } else if (executedOnce == true) {
+                        executedOnce = false;
+                        mapShownOnce = true;
+                        //  alert("33")
+
+                        return { customerId: CustomerId, assetType: assetTypeVal, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, complianceStatusIs: complianceStatusIs, pageChosen: "mapChosen" }
+                    }
+
+                }
+                else if ($("#showMapBtn").prop('checked')) {
+
+                    return { customerId: CustomerId, assetType: assetTypeVal, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, complianceStatusIs: complianceStatusIs, pageChosen: "mapChosen" }
+                } else {
+                    return { customerId: CustomerId, assetType: assetTypeVal, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, complianceStatusIs: complianceStatusIs, pageChosen: "gridChosen" }
+                }
+            }
+
+        }
+
+
+
+        function ajaxCallForMapPage() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetCustomerGridDetails_New_MapAlone", "GIS")',
+                data: GetAllFilterData(),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (Data) {
+                    showProgressBar(false); //** Hide Progress bar animation after the server response;
+                    //alert('before'+Data.length)
+                    if ($("#showMapBtn").prop('checked') == false && $("#showGridBtn").prop('checked') == true) {
+                        //** Page alone is selected
+                        //   $("#mHolder").css('display', 'none');
+                    } else if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == false) {
+                        //** Map alone is selected
+                        //   $('#DivCustomerDetails').css('display', 'none');
+                    } else if ($("#showMapBtn").prop('checked') == true && $("#showGridBtn").prop('checked') == true) {
+                        //** Map and page alone is selected
+                        //  $("#mHolder").css('display', 'none');
+
+                    }
+
+                    $("#mHolder").css('display', 'inline');
+                    if ($("#showMapBtn").prop('checked')) {
+
+                        redrawMap();
+                        if (isLegendDisplayed == false) {
+                            showLegendPanel();
+                            isLegendDisplayed = true;
+                            $('#legendPanel').scroll();
+                        }
+
+                        //** Declare an array to hold all inventory layer markers
+                        markerArr = [];
+                        //alert('map length:' + result.length);
+                        $.each(Data, function (index, value) {
+                            if ((Data[index].Latitude == 0 || Data[index].Longitude == 0 || String(Data[index].Latitude) == "null" || String(Data[index].Longitude) == "null")) {
+                                //** dont push records for the map
+                            } else {
+                                markerArr.push(Data[index]) //** This array contains lat and lng objects
+                            }
+
+                        });
+                        // alert('after' + markerArr.length)
+                        executeClearPOI() //** Clear all the OLD data POI on the map for the respective layers
+
+                        if (showPolygons == -1) {
+                            //** Both area and zone polygons are selected
+                            plotInvPolygon_Area()
+                            plotInvPolygon_Zone()
+                        } else if (showPolygons == -2) {
+                            //** No Polygons are selected.
+                            executeClearPOI() //** Clear all the OLD data POI on the map for the respective layers
+                        }
+                        else if (processPolygonValues.length == 2) {
+                            //** Both area and zone polygons are selected
+                            plotInvPolygon_Area()
+                            plotInvPolygon_Zone()
+                        } else if (processPolygonValues.length == 1 && processPolygonValues[0] == 1) {
+                            //** Area polygon is selected
+                            plotInvPolygon_Area()
+                        } else if (processPolygonValues.length == 1 && processPolygonValues[0] == 2) {
+                            //** Zone polygon is selected
+                            plotInvPolygon_Zone()
+                        }
+
+
+                        var layerValue = $("#layerDropDown").val();
+
+                        //** Latest code as on Dec 10th 2015
+                        if (markerArr.length == 0) {
+                            // alert('ss');
+                            zoomCustomerToCenter(CustomerLat, CustomerLng);
+                        }
+
+
+                        if (layerValue.toString() == "1" && markerArr.length != 0) {
+                            plotMarkers_Inventory(markerArr, legendImagesArr, "") //** '1' indicates inventory layer
+                        } else if (layerValue.toString() == "2" && markerArr.length != 0) {
+                            plotMarkers_HighDemandBays_mobileGIS(markerArr, legendImagesArr, "") //** '2' indicates High Demand Parking Bays layer
+                        } else {
+                            if (markerArr.length != 0) {
+
+                                plotMarkers_MeterOperations(markerArr, legendImagesArr) //** '3' indicates  Parking Meter Operations layer
+                            }
+
+                        }
+
+
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    showProgressBar(false); //** Hide Progress bar animation after the server response;
+                    alert("Error: " + XMLHttpRequest.textResponse);
+                }
+            });
+
+            ////** Export options - Step 3
+            UpdateGridState();
+            UpdateExportLinks();
+        }
+
+
+        function GetAssetName() {
+
+            var layerID = $("#layerDropDown").val();
+
+            var MeterId = $("#autocompleteAssetId").val();
+
+            $.ajax(
+            {
+                url: '../GIS/GetAssetName?meterId=' + MeterId + ',' + layerID,
+                type: 'GET',
+                contentType: 'application.json',
+                success: function (data) {
+                    $("#txtAssetName").val(data);
+                },
+                error: function () {
+
+                }
+
+            });
+
+        }
+
+        function UpdateExportLinks() {
+            /// Update the href for the export buttons
+            var grid = $('#grdCustomerDetails').data('kendoGrid');
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+
+            $("#exportButtons").css("display", "inline");
+
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+
+            //********************************************************************************
+            var CustomerId = '@ViewBag.CurrentCityID';
+            //viewModel.set('CustomerId', CustomerId);
+            var AssetId = $("#autocompleteAssetId").val();
+            var LocationTypeId = $("#ddlLocationType").val();
+            var LocationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            var ParallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            var Vacant = $("#squaredThree_5").is(':checked') ? "1" : "0";
+            var Layervalue = $("#layerDropDown").val();
+
+            //********************************************************************************
+            //**Asset Types validation
+            var getTxtFromAssetType = $("#ddlAssetType").data("kendoDropDownList").text()
+            if (getTxtFromAssetType == "All") {
+                //** 'All' is selected by default
+                // AssetType = -1;
+                var values = [];
+                var data = $("#ddlAssetType").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                AssetType = values.toString();
+            } else if (getTxtFromAssetType == "Please select...") {
+                $("#ddlAssetType").val("-2")
+                alert('Please select Asset Type.');
+                return;
+            }
+            else {
+                AssetType = $("#ddlAssetType").val();
+
+            }
+            viewModel.set('assetType', AssetType);
+            //**Asset Status validation
+            var getTxtFromAssetStatus = $("#assetStatusDropDown").data("kendoDropDownList").text()
+            if (getTxtFromAssetStatus == "All") {
+                //** 'All' is selected by default
+
+                var values = [];
+                var data = $("#assetStatusDropDown").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                AssetStatus = values.toString();
+
+
+            } else if (getTxtFromAssetStatus == "Please select...") {
+                alert('Please select Asset Status.');
+                return;
+            }
+            else {
+                AssetStatus = $("#assetStatusDropDown").val();
+
+            }
+            viewModel.set('assetStatus', AssetStatus);
+
+            //********************************************************************************
+
+            //** Asset Model validation
+            var assetModel_disabledState = $("#assetModel").prop('disabled');
+            var values = [];
+            if (assetModel_disabledState == true) {
+                //** It indicates 'AssetModel' is disabled
+                //var data = $("#assetModel").data().kendoDropDownList.dataSource.data();
+                //for (var i = 0; i < data.length; i++) {
+                //    values.push(data[i].Value);
+                //}
+                AssetModelVal = "-1";// viewModel.get('assetModelValuesAre');//values.toString();
+                // alert('disal' + AssetModelVal);
+            } else {
+                var getTxtFromAssetModel = $("#assetModel").data("kendoDropDownList").text();
+                if (getTxtFromAssetModel == "All") {
+
+                    var data = $("#assetModel").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    AssetModelVal = values.toString();
+
+                } else {
+                    AssetModelVal = $("#assetModel").val();
+
+                }
+            }
+
+            //**High Demand Parking Bays Specific Criteria (Occupancy Status)
+            if (Layervalue == "2") {
+                var getTxtFromLayer = $("#specificCriteria_Layer2").data("kendoDropDownList").text()
+                var values = [];
+                if (getTxtFromLayer == "All") {
+                    var data = $("#specificCriteria_Layer2").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    SpecificCriteria = values.toString();
+
+                } else if (getTxtFromLayer == "Please select...") {
+                    $("#specificCriteria_Layer2").val("-2")
+                    alert('Please select Layer.');
+                    return;
+                }
+                else {
+
+                    SpecificCriteria = $("#specificCriteria_Layer2").val();
+                }
+            }
+
+            //**High Demand Parking Bays Specific Criteria (Non-Compliance Status)
+            var getTxtFromLayer = $("#NonComplianceID").data("kendoDropDownList").text()
+            var NonComplianceIDVal;
+            var complianceStatusIs;
+            var values = [];
+            if (getTxtFromLayer == "All") {
+                var data = $("#NonComplianceID").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                NonComplianceIDVal = values.toString();
+                complianceStatusIs = "All";
+
+            } else if (getTxtFromLayer == "Compliant") {
+                var data = $("#NonComplianceID").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                NonComplianceIDVal = values.toString();
+                complianceStatusIs = "Compliant";
+                //$("#NonComplianceID").val("-2")
+                //alert('Please select Layer.');
+                //return;
+            }
+            else {
+
+                NonComplianceIDVal = $("#NonComplianceID").val();
+                complianceStatusIs = "NonCompliant";
+            }
+
+
+
+            //**Demand Zone validation
+            var getTxtFromDemZone = $("#ddlDemandZones").data("kendoDropDownList").text();
+
+            if (getTxtFromDemZone == "All") {
+                //** 'All' is selected by default
+                //demZoneVal = -1;
+                var values = [];
+                var data = $("#ddlDemandZones").data().kendoDropDownList.dataSource.data();
+                for (var i = 0; i < data.length; i++) {
+                    values.push(data[i].Value);
+                }
+                demZoneVal = values.toString();
+            } else {
+                demZoneVal = $("#ddlDemandZones").val();
+
+            }
+
+            if ($("#demandZones").css('display') == "none") {
+                demZoneVal = -1
+            }
+
+            if (Layervalue == "3") {
+
+                //**Parking Meter Operation Status Specific Criteria
+                var getTxtFromLayer = $("#specificCriteria_Layer3").data("kendoDropDownList").text()
+                var values = [];
+                if (getTxtFromLayer == "All") {
+                    var data = $("#specificCriteria_Layer3").data().kendoDropDownList.dataSource.data();
+                    for (var i = 0; i < data.length; i++) {
+                        values.push(data[i].Value);
+                    }
+                    SpecificCriteria = values.toString();
+
+                } else if (getTxtFromLayer == "Please select...") {
+                    $("#specificCriteria_Layer3").val("-2")
+                    alert('Please select Layer.');
+                    return;
+                }
+                else {
+
+                    SpecificCriteria = $("#specificCriteria_Layer3").val();
+                }
+            }
+
+            // alert('1g')
+            var LayerValue = $("#layerDropDown").val();
+            if (LayerValue == "1") {
+                //** Inventory Layer
+                SpecificCriteria = -5;
+                // return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal }
+            } else if (LayerValue == "3") {
+                //** Asset Operational Layer
+                // SpecificCriteria = -5;
+                // return { customerId: CustomerId, assetType: AssetType, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal }
+            }
+            else {
+                //** Parking Space and hence hardcode AssetType value as '20'
+                var assetTypeVal = $("#ddlAssetType_2").val();
+                //return { customerId: CustomerId, assetType: assetTypeVal, assetId: AssetId, locationTypeId: LocationTypeId, locationTypeName: LocationTypeName, parallerLocationId: ParallerLocationId, assetStatus: AssetStatus, demZone: demZoneVal, specificCriteria: SpecificCriteria, layerValue: LayerValue, assetModel: AssetModelVal, nonCompStatus: NonComplianceIDVal, complianceStatusIs: complianceStatusIs }
+            }
+
+
+            //*******************************************************************************
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + 200000);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+
+            var $assetType = AssetType;
+            href = href.replace(/assetType=([^&]*)/, 'assetType=' + ($assetType));
+
+            var $assetId = $("#autocompleteAssetId").val();
+            href = href.replace(/assetId=([^&]*)/, 'assetId=' + ($assetId));
+
+            var $locationTypeId = $("#ddlLocationType").val();
+            href = href.replace(/locationTypeId=([^&]*)/, 'locationTypeId=' + ($locationTypeId));
+
+            var $locationTypeName = $("#ddlLocationType").data("kendoDropDownList").text();
+            href = href.replace(/locationTypeName=([^&]*)/, 'locationTypeName=' + ($locationTypeName));
+
+            var $parallerLocationId = String($("#autocompleteLocationId").val()).trim();
+            href = href.replace(/parallerLocationId=([^&]*)/, 'parallerLocationId=' + ($parallerLocationId));
+
+            var $assetStatus = AssetStatus;
+            href = href.replace(/assetStatus=([^&]*)/, 'assetStatus=' + ($assetStatus));
+
+            var $demZone = demZoneVal;
+            href = href.replace(/demZone=([^&]*)/, 'demZone=' + ($demZone));
+
+            var $specificCriteria = SpecificCriteria;
+            href = href.replace(/specificCriteria=([^&]*)/, 'specificCriteria=' + ($specificCriteria));
+
+            var $layerValue = Layervalue;
+            href = href.replace(/layerValue=([^&]*)/, 'layerValue=' + ($layerValue));
+
+            var $assetModel = AssetModelVal;
+            href = href.replace(/assetModel=([^&]*)/, 'assetModel=' + ($assetModel));
+
+            var $nonCompStatus = NonComplianceIDVal;
+            href = href.replace(/nonCompStatus=([^&]*)/, 'nonCompStatus=' + ($nonCompStatus));
+
+            var $complianceStatusIs = complianceStatusIs;
+            href = href.replace(/complianceStatusIs=([^&]*)/, 'complianceStatusIs=' + ($complianceStatusIs));
+
+
+            var $pageChosen = "mapChosen";
+            href = href.replace(/pageChosen=([^&]*)/, 'pageChosen=' + ($pageChosen));
+
+
+            return href;
+        }
+
+
+        function GetAssetIds() {
+
+            var layerID = $("#layerDropDown").val();
+
+            var MeterName = $("#txtAssetName").val();
+
+            $.ajax(
+            {
+                url: '../GIS/GetAssetID?meterName=' + MeterName + ',' + layerID,
+                type: 'GET',
+                contentType: 'application.json',
+                success: function (data) {
+                    $("#autocompleteAssetId").val(data);
+                },
+                error: function () {
+
+                }
+
+            });
+
+        }
+
+        function SetLocationType() {
+            var LocationType = $("#ddlLocationType").val();
+            var CustomerId = '@ViewBag.CurrentCityID';
+            return { locationType: LocationType, customerid: CustomerId }
+        }
+
+
+        function SetLayerId() {
+            var layerID = $("#layerDropDown").val();
+            return { LayerID: layerID }
+        }
+
+        function SetAssetType() {
+
+            var AssetType = $("#ddlAssetType").val();
+            var layerID = $("#layerDropDown").val();
+
+            return { assetType: AssetType, LayerID: layerID }
+        }
+
+        function SetAssetTypeWithName() {
+            var AssetType = $("#ddlAssetType").val();
+            var layerID = $("#layerDropDown").val();
+
+            var txtTyped = $('#txtAssetName').val();
+            return { assetType: AssetType, LayerID: layerID, SearchBy: 1, TypedText: txtTyped }
+        }
+
+        function GetLocationTypeId() {
+
+
+            var AutoComplete = $("#autocompleteLocationId").data("kendoAutoComplete");
+
+            var LocationType = $("#ddlLocationType").data("kendoDropDownList").text();
+            $("#autocompleteLocationId").val("");
+            if (LocationType != "All") {
+
+                $("#lblLocationType").html(LocationType + ":");
+
+            }
+            else {
+
+                $("#lblLocationType").html("Location:");
+                $("#autocompleteLocationId").val("Select a type");
+            }
+
+            AutoComplete.dataSource.read();
+
+            AutoComplete.refresh();
+
+
+        }
+
+        function FilterAssetIds() {
+            var getSelectedItems = $("#ddlAssetType").data("kendoDropDownList").text();
+            var valAssetType = getSelectedItems.split(",");
+            if ((valAssetType.length == 1 && valAssetType[0] == "All") || valAssetType.length > 1) {
+                //** It indicates 'All' option is chosen, then disable Asset Model dd
+                var fName = $("#assetModel").data("kendoDropDownList");
+                fName.enable(false);
+                $("#assetModel").prop('disabled', disabled);
+            } else {
+                //** Enable Asset Model DD && invoke controller method
+                var fName = $("#assetModel").data("kendoDropDownList");
+                fName.enable(true);
+
+                var DD = $("#assetModel").data("kendoDropDownList");
+                DD.dataSource.read();
+                DD.refresh();
+            }
+
+            if ($("#ddlAssetType").val() == "-2") {
+                $("#autocompleteAssetId").val("");
+                $("#txtAssetName").val("");
+                return;
+            }
+            var AutoComplete = $("#autocompleteAssetId").data("kendoAutoComplete");
+
+            $("#autocompleteAssetId").val("");
+            $("#txtAssetName").val("");
+            AutoComplete.dataSource.read();
+
+            AutoComplete.refresh();
+        }
+
+
+        //function FilterAssetIds() {
+
+        //    if ($("#ddlAssetType").val() == "-2") {
+        //        $("#autocompleteAssetId").val("");
+        //        $("#txtAssetName").val("");
+        //        return;
+        //    }
+        //    var AutoComplete = $("#autocompleteAssetId").data("kendoAutoComplete");
+
+        //    $("#autocompleteAssetId").val("");
+        //    $("#txtAssetName").val("");
+        //    AutoComplete.dataSource.read();
+
+        //    AutoComplete.refresh();
+        //}
+
+    </script>
+
+    @*Scripts by Sampath end *@
+
+
+    @*Scripts by Sairam Start*@
+    <script>
+        function layerChange() {
+            var value = $("#layerDropDown").val();
+
+            //** This code is used to show All as default option when layer dd is changed and disable it.
+            var dropdownlist = $("#assetModel").data("kendoDropDownList");
+            dropdownlist.select(0);
+            dropdownlist.enable(false);
+
+            if (value == "2") {
+
+                $("#layer1_assetType").css('display', 'none');
+                $("#layer2_assetType").css('display', 'inline');
+                $("#assetStatus").css('display', 'none');
+
+
+                var AutoComplete = $("#ddlAssetType_2").data("kendoDropDownList");
+                AutoComplete.dataSource.read();
+                AutoComplete.refresh();
+            } else if (value == "3") {
+                $("#layer1_assetType").css('display', 'inline');
+                $("#layer2_assetType").css('display', 'none');
+                $("#assetStatus").css('display', 'none');
+
+
+                M_A_T_DropDownFunc();
+            }
+            else {
+                M_A_T_DropDownFunc();
+                $("#layer1_assetType").css('display', 'inline');
+                $("#layer2_assetType").css('display', 'none');
+                $("#assetStatus").css('display', 'inline');
+            }
+
+            //** Change it to default value ('All') for all filters
+            $("#ddlAssetType").data("kendoDropDownList").text("All")
+            $("#ddlDemandZones").data("kendoDropDownList").text("All")
+            $("#showPolygonDropDown").data("kendoDropDownList").text("All")
+            $("#assetStatusDropDown").data("kendoDropDownList").text("All")
+            $("#showPolygonDropDown").data("kendoDropDownList").text("Please select...")
+            $("#specificCriteria_Layer2").data("kendoDropDownList").text("All")
+            $("#specificCriteria_Layer3").data("kendoDropDownList").text("All")
+            $("#ddlLocationType").data("kendoDropDownList").text("All")
+            $("#lblLocationType").html("Location:");
+            $("#autocompleteLocationId").val("Select a type");
+            $("#autocompleteAssetId").val("");
+            $("#txtAssetName").val("");
+
+            $("#ddlLocationType").data("kendoDropDownList").select(0);
+            $("#ddlDemandZones").data("kendoDropDownList").select(0);
+            $("#showPolygonDropDown").data("kendoDropDownList").select(0);
+            $("#assetStatusDropDown").data("kendoDropDownList").select(0);
+            $("#specificCriteria_Layer2").data("kendoDropDownList").select(0);
+            $("#specificCriteria_Layer3").data("kendoDropDownList").select(0);
+
+
+            if (value == "1") {
+                $('#assetStatus').css('display', 'inline');
+                $('#filterPanel_2').css('display', 'none');
+                $('#filterPanel_3').css('display', 'none');
+                $('#filterPanel_1').css('display', 'inline');
+                $('#stEndDate').css('display', 'none');
+            } else if (value == "2") {
+                $('#assetStatus').css('display', 'none');
+                $('#filterPanel_2').css('display', 'inline');
+                $('#filterPanel_3').css('display', 'none');
+                $('#filterPanel_1').css('display', 'inline');
+                $('#stEndDate').css('display', 'none');
+
+
+
+            } else if (value == "3") {
+                $('#filterPanel_2').css('display', 'none');
+                $('#filterPanel_3').css('display', 'inline');
+                $('#filterPanel_1').css('display', 'inline');
+                $('#stEndDate').css('display', 'inline');
+            }
+
+        }
+
+        function showProgressBar(visisbility) {
+
+            if (visisbility == false) {
+                if (spinner != null || spinner != undefined) {
+                    spinner.stop() //** hide the PB
+                }
+            } else {
+                //** Create spinner and display PB
+                var opts = {
+                    lines: 13, // The number of lines to draw
+                    length: 0, // The length of each line
+                    width: 5, // The line thickness
+                    radius: 15, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 48, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: '380px', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+                spinner = new Spinner(opts).spin(document.body);
+            }
+
+        }
+
+        //******************
+        //MultiSelect - A user extension of KendoUI DropDownList widget.
+        (function ($) {
+
+            // shorten references to variables
+            var kendo_MS = window.kendo,
+                ui = kendo_MS.ui,
+                DropDownList_MS = ui.DropDownList,
+                keys = kendo_MS.keys,
+                SELECT = "select",
+                SELECTIONCHANGED = "selectionChanged",
+                SELECTED = "k-state-selected",
+                HIGHLIGHTED = "k-state-active",
+                CHECKBOX = "custom-check-item",
+                SELECTALLITEM = "custom-multiselect-selectAll-item",
+                MULTISELECTPOPUP = "custom-multiselect-popup",
+                EMPTYSELECTION = "custom-multiselect-summary-empty";
+
+
+
+
+            var lineTemplate = '<input type="checkbox" name="#= {1} #" value="#= {0} #" class="' + CHECKBOX + '" />' +
+                               '<span data-value=" #= {0} #"> #= {1} #</span>';
+
+
+
+            var MultiSelectBox = DropDownList_MS.extend({
+
+                init: function (element, options) {
+
+                    options.template = kendo_MS.template(kendo_MS.format(lineTemplate, options.dataValueField, options.dataTextField));
+
+                    // base call to widget initialization
+                    DropDownList_MS.fn.init.call(this, element, options);
+                },
+
+                options: {
+                    name: "MultiSelectBox",
+                    index: 0,
+                    showSelectAll: true,
+                    preSummaryCount: 10,  // number of items to show before summarising
+                    emptySelectionLabel: "All"//"Please select..."  // what to show when no items are selected
+                },
+
+                events: [
+                    SELECTIONCHANGED
+                ],
+
+                refresh: function () {
+
+                    // base call
+                    DropDownList_MS.fn.refresh.call(this);
+
+                    this._updateSummary();
+
+                    $(this.popup.element).addClass(MULTISELECTPOPUP);
+                },
+
+
+                current: function (candidate) {
+                    return this._current;
+                },
+
+
+                open: function () {
+                    var that = this;
+
+                    this._removeSelectAllItem();
+
+                    this._addSelectAllItem();
+
+                    if (!that.ul[0].firstChild) {
+                        that._open = true;
+
+                        if (!that._request) {
+                            that.dataSource.fetch();
+                        }
+                    } else {
+                        that.popup.open();
+                        that._scroll(that._current);
+                    }
+                },
+
+
+                close: function () {
+
+                    this._removeSelectAllItem();
+
+                    this._current = null;
+                    this._highlightCurrent();
+
+                    this._raiseSelectionChanged();
+
+                    DropDownList_MS.fn.close.call(this);
+                },
+
+                _raiseSelectionChanged: function () {
+
+                    var currentValue = this.value();
+                    var currentValues = currentValue.length > 0 ? currentValue.split(",") : [];
+
+                    if (this._oldValue) {
+
+                        var hasChanged = !($(this._oldValue).not(currentValues).length == 0 && $(currentValues).not(this._oldValue).length == 0);
+
+                        if (hasChanged) {
+                            this.trigger(SELECTIONCHANGED, { newValue: currentValues, oldValue: this._oldValue });
+                        }
+                    }
+                    else if (currentValue.length > 0) {
+                        this.trigger(SELECTIONCHANGED, { newValue: currentValues, oldValue: this._oldValue });
+                    }
+
+                    this._oldValue = currentValues;
+                },
+
+
+                _addSelectAllItem: function () {
+
+                    if (!this.options.showSelectAll) return;
+
+                    var firstListItem = this.ul.children('li:first');
+
+                    if (firstListItem.length > 0) {
+                        this.selectAllListItem = $('<li tabindex="-1" role="option" unselectable="on" class="k-item ' + SELECTALLITEM + '"></li>').insertBefore(firstListItem);
+
+                        // fake a data object to use for the template binding below
+                        var selectAllData = {};
+                        selectAllData[this.options.dataValueField] = '*';
+                        selectAllData[this.options.dataTextField] = 'All';
+
+                        this.selectAllListItem.html(this.options.template(selectAllData));
+
+                        this._updateSelectAllItem();
+
+                        //this._checkItem(this.selectAllListItem);
+                        //this.selectAllListItem.addClass(SELECTED);
+
+                        this._makeUnselectable(); // required for IE8
+                    }
+                },
+
+
+                _removeSelectAllItem: function () {
+
+                    if (this.selectAllListItem) {
+                        this.selectAllListItem.remove();
+                    }
+                    this.selectAllListItem = null;
+                },
+
+
+                _focus: function (li) {
+                    if (this.popup.visible() && li && this.trigger(SELECT, { item: li })) {
+                        this.close();
+                        return;
+                    }
+                    this.select(li);
+                },
+
+
+                _highlightCurrent: function () {
+
+                    $('li', this.ul).removeClass(HIGHLIGHTED);
+                    $(this._current).addClass(HIGHLIGHTED);
+                },
+
+
+                _keydown: function (e) {
+
+                    // currently ignore Home and End keys
+                    // can be added later
+                    if (e.keyCode == kendo_MS.keys.HOME ||
+                        e.keyCode == kendo_MS.keys.END) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    DropDownList_MS.fn._keydown.call(this, e);
+                },
+
+
+                _move: function (e) {
+                    var that = this,
+                        key = e.keyCode,
+                        ul = that.ul[0],
+                        down = key === keys.DOWN,
+                        pressed;
+
+
+                    if (key === keys.UP || down) {
+
+                        if (down) {
+
+                            if (!that.popup.visible()) {
+                                that.toggle(down);
+                            }
+                            if (!that._current) {
+                                that._current = ul.firstChild;
+                            } else {
+                                that._current = ($(that._current)[0].nextSibling || that._current);
+                            }
+
+                        } else {
+                            //up
+
+                            // only if anything is highlighted
+                            if (that._current) {
+                                that._current = ($(that._current)[0].previousSibling || ul.firstChild);
+                            }
+                        }
+
+
+                        if (that._current) {
+                            that._scroll(that._current);
+                        }
+
+                        that._highlightCurrent();
+
+                        e.preventDefault();
+                        pressed = true;
+
+                    } else {
+                        pressed = DropDownList_MS.fn._move.call(this, e);
+                    }
+
+                    return pressed;
+                },
+
+
+                selectAll: function () {
+                    //alert('ya');
+                    var unselectedItems = this._getUnselectedListItems();
+                    this._selectItems(unselectedItems);
+
+                    // todo: raise custom event
+                },
+
+                unselectAll: function () {
+
+                    var selectedItems = this._getSelectedListItems();
+                    this._selectItems(selectedItems);  // will invert the selection
+
+                    // todo: raise custom event
+                },
+
+
+                _selectItems: function (listItems) {
+                    var that = this;
+
+                    $.each(listItems, function (i, item) {
+                        var idx = ui.List.inArray(item, that.ul[0]);
+                        that.select(idx);  // select OR unselect
+                    });
+                },
+
+                _select: function (li) {
+                    var that = this,
+                         current = that._current,
+                         data = that._data(),
+                         value,
+                         text,
+                         idx;
+
+                    li = that._get(li);
+
+                    if (li && li[0]) {
+                        idx = ui.List.inArray(li[0], that.ul[0]);
+                        if (idx > -1) {
+
+                            if (li.hasClass(SELECTED)) {
+                                li.removeClass(SELECTED);
+                                that._uncheckItem(li);
+
+                                if (this.selectAllListItem && li[0] === this.selectAllListItem[0]) {
+                                    this.unselectAll();
+                                }
+                            } else {
+                                li.addClass(SELECTED);
+                                that._checkItem(li);
+
+                                if (this.selectAllListItem && li[0] === this.selectAllListItem[0]) {
+                                    this.selectAll();
+                                }
+                            }
+
+                            if (this._open) {
+                                that._current(li);
+                                that._highlightCurrent();
+                            }
+
+                            var selecteditems = this._getSelectedListItems();
+                            value = [];
+                            text = [];
+                            $.each(selecteditems, function (indx, item) {
+                                var obj = $(item).children("span").first();
+                                value.push(obj.attr("data-value"));
+                                text.push(obj.text());
+                            });
+
+                            that._updateSummary(text);
+
+                            that._updateSelectAllItem();
+
+                            that._accessor(value, idx);
+
+                            // todo: raise change event (add support for selectedIndex) if required
+                        }
+                    }
+
+                },
+
+                _getAllValueListItems: function () {
+                    if (this.selectAllListItem) {
+                        return this.ul.children("li").not(this.selectAllListItem[0]);
+                    } else {
+                        return this.ul.children("li");
+                    }
+                },
+
+                _getSelectedListItems: function () {
+                    return this._getAllValueListItems().filter("." + SELECTED);
+                },
+
+                _getUnselectedListItems: function () {
+                    return this._getAllValueListItems().filter(":not(." + SELECTED + ")");
+                },
+
+                _getSelectedItemsText: function () {
+
+                    var text = [];
+                    var selecteditems = this._getSelectedListItems();
+                    $.each(selecteditems, function (indx, item) {
+                        var obj = $(item).children("span").first();
+                        text.push(obj.text());
+                    });
+                    return text;
+                },
+
+                _updateSelectAllItem: function () {
+
+                    if (!this.selectAllListItem) return;
+
+                    // are all items selected?
+                    if (this._getAllValueListItems().length == this._getSelectedListItems().length) {
+                        //alert('yes')
+                        this._checkItem(this.selectAllListItem);
+                        this.selectAllListItem.addClass(SELECTED);
+                    }
+                    else {
+                        this._uncheckItem(this.selectAllListItem);
+                        this.selectAllListItem.removeClass(SELECTED);
+                    }
+                },
+
+                _updateSummary: function (itemsText) {
+
+                    if (!itemsText) {
+                        itemsText = this._getSelectedItemsText();
+                    }
+
+                    if (this._getAllValueListItems().length == this._getSelectedListItems().length) {
+                        this.text('All');
+                        return;
+                    }
+                    //** end of code
+                    if (itemsText.length == 0) {
+                        this._inputWrapper.addClass(EMPTYSELECTION);
+                        this.text(this.options.emptySelectionLabel);
+                        return;
+                    } else {
+                        this._inputWrapper.removeClass(EMPTYSELECTION);
+                    }
+
+                    if (itemsText.length <= this.options.preSummaryCount) {
+                        this.text(itemsText.join(", "));
+                    }
+                    else {
+                        this.text(itemsText.length + ' selected');
+                    }
+                },
+
+                _checkItem: function (itemContainer) {
+                    if (!itemContainer) return;
+                    itemContainer.children("input").attr("checked", "checked");
+                },
+
+                _uncheckItem: function (itemContainer) {
+                    if (!itemContainer) return;
+                    itemContainer.children("input").removeAttr("checked");
+                },
+
+                _isItemChecked: function (itemContainer) {
+                    return itemContainer.children("input:checked").length > 0;
+                },
+
+                _valueOnFetch: function (e) {
+                    return;
+                },
+
+                value: function (value) {
+                    var that = this,
+                        idx,
+                        valuesList = [];
+
+                    if (value !== undefined) {
+
+                        if (!$.isArray(value)) {
+                            valuesList.push(value);
+                            this._oldValue = valuesList; // to allow for selectionChanged event
+                        }
+                        else {
+                            valuesList = value;
+                            this._oldValue = value; // to allow for selectionChanged event
+                        }
+
+                        // clear all selections first
+                        $(that.ul[0]).children("li").removeClass(SELECTED);
+                        $("input", that.ul[0]).removeAttr("checked");
+
+                        $.each(valuesList, function (indx, item) {
+                            if (item !== null) {
+                                item = item.toString();
+                            }
+
+                            that._valueCalled = true;
+
+                            if (item && that._valueOnFetch(item)) {
+                                return;
+                            }
+
+                            idx = that._index(item);
+
+                            if (idx > -1) {
+                                that.select(idx);
+                            }
+
+                        });
+
+                    }
+                    else {
+                        return that._accessor();
+                    }
+                }
+
+            });
+
+            ui.plugin(MultiSelectBox);
+
+        })(jQuery);
+
+
+
+        //******************
+
+        function _valueOnFetch(e) {
+            return;
+        }
+
+
+
+
+
+        function M_A_T_DropDownFunc() {
+            //** The below codes are for asset type selection
+            var firstValueMultiselect = $('#ddlAssetType');
+            firstValueMultiselect.kendoMultiSelectBox({
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataBound: onDataBound_AssetType,
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "../GIS/GetAssetTypes_Inventory",
+                            dataType: 'json',
+                        },
+
+                        parameterMap: function (options, type) {
+                            if (type === 'read') {
+                                var layerID = $("#layerDropDown").val();
+                                return { LayerID: layerID }
+                            }
+                        }
+
+                    }
+
+                },
+                emptySelectionLabel: "All",//"Please select...",
+                value: ["-1"],
+                placeholder: ""
+            });
+
+            firstValueMultiselect.data("kendoMultiSelectBox").bind("selectionChanged", function (e) {
+                FilterAssetIds();
+            });
+
+        }
+
+
+    </script>
+
+
+}
+

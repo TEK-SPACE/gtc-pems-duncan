@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shfbBuild product="Sandcastle Help File Builder" version="1.9.8.0" projectFile="C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Duncan.PEMS.Utilities.shfbproj" started="12/11/2013 9:40:02 AM">
+<buildStep step="Initializing">
+Finding tools...
+Found Sandcastle tools in &#39;C:\Program Files (x86)\Sandcastle\&#39;
+Searching for HTML Help 1 compiler...
+Found HTML Help 1 compiler in &#39;C:\Program Files (x86)\HTML Help Workshop\&#39;
+</buildStep>
+<buildStep step="ValidatingDocumentationSources">
+Validating and copying documentation source information
+Source: C:\Unidev\duncan\PEMS\Duncan.PEMS.Web\bin\Duncan.PEMS.Utilities.dll
+    Found assembly &#39;C:\Unidev\duncan\PEMS\Duncan.PEMS.Web\bin\Duncan.PEMS.Utilities.dll&#39;
+Source: C:\Unidev\duncan\PEMS\Duncan.PEMS.Web\bin\Duncan.PEMS.Utilities.xml
+
+Copying XML comments files
+    C:\Unidev\duncan\PEMS\Duncan.PEMS.Web\bin\Duncan.PEMS.Utilities.xml -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Duncan.PEMS.Utilities.xml
+</buildStep>
+<buildStep step="GenerateSharedContent">
+Generating shared content files (en-US, English (United States))...
+    Last step completed in 00:00:00.0140
+</buildStep>
+<buildStep step="GenerateApiFilter">
+Generating API filter for MRefBuilder...
+    Last step completed in 00:00:00.0020
+</buildStep>
+<buildStep step="GenerateReflectionInfo">
+Generating reflection information...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+  MRefBuilder (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Loaded 1 assemblies for reflection and 1 dependency assemblies.
+  Info: Wrote information on 2 namespaces, 32 types, and 168 members
+  XslTransform (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Applying XSL transformation &#39;C:\Program Files (x86)\Sandcastle\ProductionTransforms\MergeDuplicates.xsl&#39;.
+    Last step completed in 00:00:02.4051
+</buildStep>
+<buildStep step="GenerateNamespaceSummaries">
+Generating namespace summary information...
+    Last step completed in 00:00:00.0010
+</buildStep>
+<buildStep step="ApplyVisibilityProperties">
+Applying visibility properties to reflection information file
+    0 attribute nodes removed
+    0 explicit interface implementations removed
+    4 local and base class EII elements removed
+    Last step completed in 00:00:00.0350
+</buildStep>
+<buildStep step="TransformReflectionInfo">
+Transforming reflection output...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+  XslTransform (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Applying XSL transformation &#39;C:\Program Files (x86)\Sandcastle\\ProductionTransforms\ApplyVSDocModel.xsl&#39;.
+  Info: Applying XSL transformation &#39;C:\Program Files (x86)\Sandcastle\ProductionTransforms\AddFilenames.xsl&#39;.
+  XslTransform (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Applying XSL transformation &#39;C:\Program Files (x86)\Sandcastle\ProductionTransforms\ReflectionToManifest.xsl&#39;.
+    Last step completed in 00:00:01.1001
+</buildStep>
+<buildStep step="CopyAdditionalContent">
+Copying additional content files...
+No additional content to copy
+    Last step completed in 00:00:00.0030
+</buildStep>
+<buildStep step="MergeTablesOfContents">
+Merging conceptual and additional tables of contents...
+    Last step completed in 00:00:00.0020
+</buildStep>
+<buildStep step="GenerateIntermediateTableOfContents">
+Generating intermediate table of contents file...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+  XslTransform (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Applying XSL transformation &#39;C:\Program Files (x86)\Sandcastle\\ProductionTransforms\CreateVSToc.xsl&#39;.
+Generating conceptual content intermediate TOC file...
+    Last step completed in 00:00:00.2480
+</buildStep>
+<buildStep step="CreateBuildAssemblerConfigs">
+Creating Sandcastle configuration files...
+    sandcastle.config
+    Last step completed in 00:00:00.4020
+</buildStep>
+<buildStep step="MergeCustomConfigs">
+Merging custom build component configurations
+C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\sandcastle.config
+    Last step completed in 00:00:00.1470
+</buildStep>
+<buildStep step="BuildReferenceTopics">
+Building reference help topics...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+  BuildAssembler (v2.7.4.0)
+  Copyright c 2006-2013, Microsoft Corporation, All Rights Reserved.
+  Portions Copyright c 2006-2013, Eric Woodruff, All Rights Reserved.
+  Info: Loading configuration...
+  Info: Processing topics...
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;param name=&quot;data&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;param name=&quot;filterDescriptors&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;param name=&quot;data&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;param name=&quot;groupDescriptors&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Roles.ListRoleModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Roles.ListRoleModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Roles.ListRoleModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Roles.ListRoleModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Roles.ListRoleModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Roles.ListRoleModel&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;param name=&quot;data&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Missing &lt;param name=&quot;groupDescriptors&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Users.ListUserModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Users.ListUserModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Users.ListUserModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Users.ListUserModel&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyGrouping(System.Linq.IQueryable{Duncan.PEMS.Entities.Users.ListUserModel},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor})] Unknown reference link target &#39;T:Duncan.PEMS.Entities.Users.ListUserModel&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;param name=&quot;data&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;param name=&quot;page&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyPaging``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)] Missing &lt;param name=&quot;pageSize&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;param name=&quot;data&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;param name=&quot;groupDescriptors&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Missing &lt;param name=&quot;sortDescriptors&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.SortDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.SortDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.SortDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.GroupDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplySorting``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.GroupDescriptor},System.Collections.Generic.IList{Kendo.Mvc.SortDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.SortDescriptor&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;param name=&quot;query&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Missing &lt;param name=&quot;filterDescriptors&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.AjaxCustomBindingExtensions.ApplyTimeTypeFiltering``1(System.Linq.IQueryable{``0},System.Collections.Generic.IList{Kendo.Mvc.IFilterDescriptor})] Unknown reference link target &#39;T:Kendo.Mvc.IFilterDescriptor&#39;.
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.CheckBoxListExtension] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Missing &lt;param name=&quot;listOfValues&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Missing &lt;param name=&quot;cbListName&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.SelectListItem&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.SelectListItem&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.SelectListItem&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.SelectListItem&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.CheckBoxListExtension.CheckBoxList(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.Audits] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Audits.RoleTableName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.CollectionRoutes] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.CollectionRoutes.ActiveStatus] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.CollectionRoutes.InactiveStatus] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.CollectionRoutes.PendingStatus] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.DiscountScheme] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.DiscountScheme.ApprovalEmailTemplateId] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.DiscountScheme.RejectionEmailTemplateId] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.Export] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Export.CsvExportCount] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Export.DelimiterChar] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Export.EscapeChar] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Export.ExcelExportCount] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Export.PdfExportCount] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.IdleTimeoutDefaults] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.IdleTimeoutDefaults.IdleTimeout] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.IdleTimeoutDefaults.IdleTimeoutPolling] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.IdleTimeoutDefaults.IdleTimeoutWarning] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.Menu] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.Application] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.AuthText] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.Icon] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.MenuOrder] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.MenuText] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.NewWindow] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.Operation] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.Target] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.ToolTip] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Menu.Url] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.PropertyGroups] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.PropertyGroups.AlarmStatus] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.Routing] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.AdminRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.CityRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.DefaultRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.ErrorRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.IzendaReportingName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.LandingRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Routing.MaintRouteName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.Security] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.ActiveUserAzManColumnName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.CityCookieExpirationAppSettingName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.ConnectionStringSessionVariableName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DaysPasswordValidFor] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DefaultAzManPassword] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DefaultMaintConnectionStringName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DefaultPemsConnectionStringName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DefaultReportingConnectionStringName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.DefaultStoreGroupName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IdleTimeout] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IdleTimeoutPolling] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IdleTimeoutWarning] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IzendaLicenseKey] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IzendaReportLocation] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.IzendaReportViewer] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.MaintConnectionStringNameTemplate] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.MaintenanceConnectionStringSessionVariableName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.NumPasswordFailuresBeforeLockout] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.NumSecondsToLockout] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.PemsConnectionStringNameTemplate] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.RbacConnectionStringName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.ReportingConnectionStringNameTemplate] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.ReportingConnectionStringSessionVariableName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.RequiredAuthorizationsTemplate] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.Security.UserCityCookieName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.User] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.DefaultMiddleName] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.InvalidUserId] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.IsTechnician] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.LastLoginTime] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.OrganizaitonNameField] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.SecondaryIDType] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.SecondaryIDValue] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.User.ValueNotSet] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.Constants.ViewData] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentAction] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentArea] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentCity] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentCityId] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentCityType] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentController] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocale] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTime] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentLocalTimeDisplay] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentRevision] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentTimeFormatIs24] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentTimeZoneOffset] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.CurrentUser] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeout] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeoutPolling] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.IdleTimeoutWarning] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.Constants.ViewData.ModelStateStatusKey] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.DateTimeExtensionMethods] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.DateTimeExtensionMethods.ToLocalizedString(System.DateTime)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.DateTimeExtensionMethods.ToLocalizedString(System.DateTime)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.DateTimeExtensionMethods.ToLocalizedString(System.DateTime)] Missing &lt;param name=&quot;date&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.ErrorDisplayExtension] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;typeparam name=&quot;TModel&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;typeparam name=&quot;TProperty&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;htmlAttributes&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;typeparam name=&quot;TModel&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;param name=&quot;latOrLong&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Missing &lt;param name=&quot;htmlAttributes&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.DisplayForLatLong``1(System.Web.Mvc.HtmlHelper{``0},System.Nullable{System.Double},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Missing &lt;param name=&quot;modelState&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.ModelStateDictionary&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.ModelStateDictionary&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.ModelStateDictionary&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.ModelStateDictionary&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ErrorOverview(System.Web.Mvc.HtmlHelper,System.Web.Mvc.ModelStateDictionary)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;param name=&quot;helper&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.HeaderMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;typeparam name=&quot;TModel&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;typeparam name=&quot;TProperty&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Missing &lt;param name=&quot;htmlAttributes&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.RequiredMarkFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper`1&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;param name=&quot;helper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;param name=&quot;key&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowAllErrors(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Missing &lt;param name=&quot;helper&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.MvcHtmlString&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.ErrorDisplayExtension.ShowStatusMessage(System.Web.Mvc.HtmlHelper)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.FormatHelper] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatBoolean(System.Nullable{System.Boolean})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatBoolean(System.Nullable{System.Boolean})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatBoolean(System.Nullable{System.Boolean})] Missing &lt;param name=&quot;value&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Double})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Double})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Double})] Missing &lt;param name=&quot;amountInDollars&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Int32})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Int32})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatCurrency(System.Nullable{System.Int32})] Missing &lt;param name=&quot;amountInCents&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTime(System.Nullable{System.DateTime},System.Boolean,System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTime(System.Nullable{System.DateTime},System.Boolean,System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTime(System.Nullable{System.DateTime},System.Boolean,System.String)] Missing &lt;param name=&quot;dateTime&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTime(System.Nullable{System.DateTime},System.Boolean,System.String)] Missing &lt;param name=&quot;includeDayOfWeek&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTime(System.Nullable{System.DateTime},System.Boolean,System.String)] Missing &lt;param name=&quot;formatSpecifier&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTimeToShortDate(System.Nullable{System.DateTime})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTimeToShortDate(System.Nullable{System.DateTime})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatDateTimeToShortDate(System.Nullable{System.DateTime})] Missing &lt;param name=&quot;dateTime&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Double})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Double})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Double})] Missing &lt;param name=&quot;minutes&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Int32})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Int32})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromMinutes(System.Nullable{System.Int32})] Missing &lt;param name=&quot;minutes&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Double})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Double})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Double})] Missing &lt;param name=&quot;seconds&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Int32})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Int32})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatTimeFromSeconds(System.Nullable{System.Int32})] Missing &lt;param name=&quot;seconds&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatValue(System.Object)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatValue(System.Object)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.FormatHelper.FormatValue(System.Object)] Missing &lt;param name=&quot;obj&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.HelperMethods] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.ErrorCodeToString(System.Web.Security.MembershipCreateStatus)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.ErrorCodeToString(System.Web.Security.MembershipCreateStatus)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.ErrorCodeToString(System.Web.Security.MembershipCreateStatus)] Missing &lt;param name=&quot;createStatus&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.GetFriendlyLocalizedName(System.String,System.Globalization.TextInfo)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.GetFriendlyLocalizedName(System.String,System.Globalization.TextInfo)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.GetFriendlyLocalizedName(System.String,System.Globalization.TextInfo)] Missing &lt;param name=&quot;originalValue&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HelperMethods.GetFriendlyLocalizedName(System.String,System.Globalization.TextInfo)] Missing &lt;param name=&quot;textInfo&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.HttpContextExtenstions] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HttpContextExtenstions.GetLocaleResource(System.Web.HttpContext,System.String,System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HttpContextExtenstions.GetLocaleResource(System.Web.HttpContext,System.String,System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HttpContextExtenstions.GetLocaleResource(System.Web.HttpContext,System.String,System.String)] Missing &lt;param name=&quot;context&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HttpContextExtenstions.GetLocaleResource(System.Web.HttpContext,System.String,System.String)] Missing &lt;param name=&quot;classKey&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.HttpContextExtenstions.GetLocaleResource(System.Web.HttpContext,System.String,System.String)] Missing &lt;param name=&quot;resourceKey&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.OrderByHelper] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String)] Missing &lt;param name=&quot;enumerable&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Collections.Generic.IEnumerable{``0},System.String)] Missing &lt;param name=&quot;orderBy&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Linq.IQueryable{``0},System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Linq.IQueryable{``0},System.String)] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Linq.IQueryable{``0},System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Linq.IQueryable{``0},System.String)] Missing &lt;param name=&quot;collection&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.OrderByHelper.OrderBy``1(System.Linq.IQueryable{``0},System.String)] Missing &lt;param name=&quot;orderBy&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.ReflectionUtilities] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Missing &lt;summary&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;T:System.Web.Mvc.ActionMethodSelectorAttribute&#39;.
+  Warn: ResolveReferenceLinksComponent2: [T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;T:System.Web.Mvc.ActionMethodSelectorAttribute&#39;.
+  Warn: ResolveReferenceLinksComponent2: [T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;T:System.Web.Mvc.ActionMethodSelectorAttribute&#39;.
+  Warn: ResolveReferenceLinksComponent2: [T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;T:System.Web.Mvc.ActionMethodSelectorAttribute&#39;.
+  Warn: ResolveReferenceLinksComponent2: [AllMembers.T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;M:System.Web.Mvc.ActionMethodSelectorAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)&#39;.
+  Warn: ResolveReferenceLinksComponent2: [Methods.T:Duncan.PEMS.Utilities.RequireRouteValuesAttribute] Unknown reference link target &#39;M:System.Web.Mvc.ActionMethodSelectorAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)&#39;.
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.#ctor(System.String[])] Missing &lt;param name=&quot;valueNames&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Missing &lt;param name=&quot;controllerContext&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Missing &lt;param name=&quot;methodInfo&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Unknown reference link target &#39;T:System.Web.Mvc.ControllerContext&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Unknown reference link target &#39;T:System.Web.Mvc.ControllerContext&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Unknown reference link target &#39;T:System.Web.Mvc.ControllerContext&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)] Unknown reference link target &#39;T:System.Web.Mvc.ControllerContext&#39;.
+  Warn: ShowMissingComponent: [P:Duncan.PEMS.Utilities.RequireRouteValuesAttribute.ValueNames] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.ResourceTypes] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.Button] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.DropDownDefault] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.ErrorMessage] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.Glossary] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.GridColumn] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.Label] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.PageTitle] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.ReportCat] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.ReportDesc] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.StatusMessage] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [F:Duncan.PEMS.Utilities.ResourceTypes.Tooltip] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.SqlResourceHelper] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.GetCustomerResourceCache(System.Int32)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.GetCustomerResourceCache(System.Int32)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.GetCustomerResourceCache(System.Int32)] Missing &lt;param name=&quot;customerId&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.GetCustomResources(System.Int32)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.GetResources(System.String,System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceHelper.ResetCustomerResourceCache(System.Int32)] Missing &lt;param name=&quot;customerId&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.SqlResourceProviderFactory] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateGlobalResourceProvider(System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateGlobalResourceProvider(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateGlobalResourceProvider(System.String)] Missing &lt;param name=&quot;classKey&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateLocalResourceProvider(System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateLocalResourceProvider(System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.SqlResourceProviderFactory.CreateLocalResourceProvider(System.String)] Missing &lt;param name=&quot;virtualPath&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:Duncan.PEMS.Utilities.TooltipHelper] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;param name=&quot;htmlHelper&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Missing &lt;param name=&quot;key&quot;/&gt; documentation
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ResolveReferenceLinksComponent2: [M:Duncan.PEMS.Utilities.TooltipHelper.Tooltip(System.Web.Mvc.HtmlHelper,System.String)] Unknown reference link target &#39;T:System.Web.Mvc.HtmlHelper&#39;.
+  Warn: ShowMissingComponent: [N:System.Linq.Dynamic] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:System.Linq.Dynamic.DynamicClass] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicClass.ToString] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicClass.ToString] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [T:System.Linq.Dynamic.DynamicExpression] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Collections.Generic.IEnumerable{System.Linq.Dynamic.DynamicProperty})] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Collections.Generic.IEnumerable{System.Linq.Dynamic.DynamicProperty})] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Collections.Generic.IEnumerable{System.Linq.Dynamic.DynamicProperty})] Missing &lt;param name=&quot;properties&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Linq.Dynamic.DynamicProperty[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Linq.Dynamic.DynamicProperty[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.CreateClass(System.Linq.Dynamic.DynamicProperty[])] Missing &lt;param name=&quot;properties&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.Parse(System.Type,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.Parse(System.Type,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.Parse(System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;resultType&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.Parse(System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.Parse(System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;parameters&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;resultType&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;typeparam name=&quot;S&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda``2(System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;itType&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;resultType&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;expression&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicExpression.ParseLambda(System.Type,System.Type,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:System.Linq.Dynamic.DynamicProperty] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicProperty.#ctor(System.String,System.Type)] Missing &lt;param name=&quot;name&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicProperty.#ctor(System.String,System.Type)] Missing &lt;param name=&quot;type&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [P:System.Linq.Dynamic.DynamicProperty.Name] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [P:System.Linq.Dynamic.DynamicProperty.Type] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [T:System.Linq.Dynamic.DynamicQueryable] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Any(System.Linq.IQueryable)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Any(System.Linq.IQueryable)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Any(System.Linq.IQueryable)] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Count(System.Linq.IQueryable)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Count(System.Linq.IQueryable)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Count(System.Linq.IQueryable)] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;keySelector&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;elementSelector&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;ordering&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;ordering&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Select(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Select(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Select(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Select(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;selector&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Select(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Skip(System.Linq.IQueryable,System.Int32)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Skip(System.Linq.IQueryable,System.Int32)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Skip(System.Linq.IQueryable,System.Int32)] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Skip(System.Linq.IQueryable,System.Int32)] Missing &lt;param name=&quot;count&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Take(System.Linq.IQueryable,System.Int32)] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Take(System.Linq.IQueryable,System.Int32)] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Take(System.Linq.IQueryable,System.Int32)] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Take(System.Linq.IQueryable,System.Int32)] Missing &lt;param name=&quot;count&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;predicate&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where(System.Linq.IQueryable,System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;typeparam name=&quot;T&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;returns&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;source&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;predicate&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.DynamicQueryable.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])] Missing &lt;param name=&quot;values&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [T:System.Linq.Dynamic.ParseException] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.ParseException.#ctor(System.String,System.Int32)] Missing &lt;param name=&quot;message&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.ParseException.#ctor(System.String,System.Int32)] Missing &lt;param name=&quot;position&quot;/&gt; documentation
+  Warn: ShowMissingComponent: [P:System.Linq.Dynamic.ParseException.Position] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.ParseException.ToString] Missing &lt;summary&gt; documentation
+  Warn: ShowMissingComponent: [M:System.Linq.Dynamic.ParseException.ToString] Missing &lt;returns&gt; documentation
+  Info: Processed 279 topic(s)
+  Info: 488 warning(s)
+  Diagnostic: CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 13 of 15.
+  Diagnostic: CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 3 of 30.
+    Last step completed in 00:00:12.1327
+</buildStep>
+<buildStep step="CombiningIntermediateTocFiles">
+Combining conceptual and API intermediate TOC files...
+    Last step completed in 00:00:00.0030
+</buildStep>
+<buildStep step="ExtractingHtmlInfo">
+Extracting HTML info for HTML Help 1 and/or website...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+Sandcastle Help File Builder, version 1.9.8.0
+Copyright c 2006-2013, Eric Woodruff, All Rights Reserved
+E-Mail: Eric@EWoodruff.us
+
+Using LCID &#39;1033&#39;, code page &#39;65001&#39;, encoding charset &#39;UTF-8&#39;.
+
+Processing Help 1 files in C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1
+Processed 279 HTML files
+Sorting keywords and generating See Also indices
+Saving HTML Help 1 keyword index to C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Duncan.PEMS.Utilities.hhk
+Saving HTML Help 1 table of contents to C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Duncan.PEMS.Utilities.hhc
+    Last step completed in 00:00:00.8540
+</buildStep>
+<buildStep step="CopyStandardHelpContent">
+Copying standard help content...
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\adm.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\adm.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\adm_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\adm_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\adm_dev.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\adm_dev.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\adm_dev_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\adm_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\alert_caution.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\alert_caution.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\alert_note.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\alert_note.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\alert_security.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\alert_security.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\big_adm.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\big_adm.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\big_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\big_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\big_dev.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\big_dev.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\big_kw.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\big_kw.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\box.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\box.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\Caution.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\Caution.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\CFW.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\CFW.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\collall.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\collall.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\collapse.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\collapse.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\collapse_all.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\collapse_all.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\copycode.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\copycode.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\copycodeHighlight.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\copycodeHighlight.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\dev.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\dev.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\dev_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\dev_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\dropdown.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\dropdown.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\dropdownHover.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\dropdownHover.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\drpdown.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\drpdown.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\drpdown_orange.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\drpdown_orange.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\drpdown_orange_up.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\drpdown_orange_up.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\drpup.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\drpup.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\exp.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\exp.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\expall.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\expall.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\expand_all.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\expand_all.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\filter1a.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\filter1a.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\filter1c.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\filter1c.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\footer.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\footer.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\gradient.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\gradient.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\greencheck.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\greencheck.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\greychck.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\greychck.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\header_prev_next.jpg -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\header_prev_next.jpg
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\header_sql_tutorial_blank.jpg -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\header_sql_tutorial_blank.jpg
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\header_sql_tutorial_logo.GIF -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\header_sql_tutorial_logo.GIF
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_adm.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_adm.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_adm_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_adm_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_adm_dev.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_adm_dev.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_adm_dev_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_adm_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_dev.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_dev.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\kw_dev_arch.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\kw_dev_arch.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\LastChild.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\LastChild.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\load.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\load.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\load_hover.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\load_hover.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\note.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\note.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pencil.GIF -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pencil.GIF
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privclass.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privclass.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privdelegate.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privdelegate.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privenum.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privenum.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privenumeration.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privenumeration.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privevent.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privevent.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privextension.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privextension.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privfield.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privfield.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privinterface.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privinterface.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privmethod.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privmethod.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privproperty.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privproperty.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\privstructure.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\privstructure.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protclass.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protclass.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protdelegate.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protdelegate.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protenum.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protenum.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protenumeration.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protenumeration.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protevent.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protevent.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protextension.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protextension.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protfield.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protfield.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protinterface.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protinterface.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protmethod.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protmethod.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protoperator.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protoperator.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protproperty.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protproperty.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\protstructure.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\protstructure.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubclass.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubclass.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubdelegate.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubdelegate.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubenum.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubenum.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubenumeration.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubenumeration.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubevent.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubevent.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubextension.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubextension.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubfield.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubfield.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubinterface.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubinterface.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubmethod.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubmethod.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\puboperator.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\puboperator.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubproperty.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubproperty.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\pubstructure.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\pubstructure.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\requirements1a.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\requirements1a.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\requirements1c.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\requirements1c.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\save.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\save.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\save_hover.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\save_hover.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\security.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\security.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\seealso1a.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\seealso1a.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\seealso1c.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\seealso1c.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\slMobile.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\slMobile.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\static.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\static.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\icons\xna.gif -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\icons\xna.gif
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\CheckboxMenu.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\CheckboxMenu.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\CommonUtilities.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\CommonUtilities.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\Dropdown.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\Dropdown.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\EventUtilities.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\EventUtilities.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\script_feedBack.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\script_feedBack.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\script_manifold.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\script_manifold.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\scripts\SplitScreen.js -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\scripts\SplitScreen.js
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\styles\Presentation.css -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\styles\Presentation.css
+C:\Program Files (x86)\Sandcastle\\Presentation\VS2005\styles\Whidbey\Presentation.css -&gt; C:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\styles\Whidbey\Presentation.css
+    Last step completed in 00:00:00.3870
+</buildStep>
+<buildStep step="GenerateHelpFormatTableOfContents">
+Generating HTML Help 1 table of contents file...
+    Last step completed in 00:00:00.0010
+</buildStep>
+<buildStep step="GenerateHelpFileIndex">
+Generating HTML Help 1 index file...
+    Last step completed in 00:00:00.0020
+</buildStep>
+<buildStep step="GenerateHelpProject">
+Generating HTML Help 1 project file...
+    Last step completed in 00:00:00.0080
+</buildStep>
+<buildStep step="CompilingHelpFile">
+Compiling HTML Help 1 file...
+[C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
+  Microsoft HTML Help Compiler 4.74.8702
+  
+  
+  
+  Compiling c:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\Duncan.PEMS.Utilities.chm
+  
+  
+  
+  
+  
+  Compile time: 0 minutes, 4 seconds
+  
+  281	Topics
+  
+  3,359	Local links
+  
+  713	Internet links
+  
+  0	Graphics
+  
+  
+  
+  
+  
+  Created c:\Unidev\duncan\PEMS\Duncan.PEMS.Install\Documentation\Help\Help\Working\Output\HtmlHelp1\Duncan.PEMS.Utilities.chm, 470,325 bytes
+  
+  Compression decreased file by 3,257,170 bytes.
+  
+    Last step completed in 00:00:04.9353
+</buildStep>
+<buildStep step="CleanIntermediates">
+Removing intermediate files...
+    Last step completed in 00:00:00.4770
+</buildStep>
+<buildStep step="Completed">
+
+Build completed successfully at 12/11/2013 09:40 AM.  Total time: 00:00:23.2733
+
+</buildStep>
+</shfbBuild>

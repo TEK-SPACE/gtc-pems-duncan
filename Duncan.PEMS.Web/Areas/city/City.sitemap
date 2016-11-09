@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0 MvcSiteMapSchema.xsd"
+            enableLocalization="true" >
+
+  <mvcSiteMapNode title="Home" controller="Home" action="Index" area="city" >
+    <mvcSiteMapNode title="Assets" controller="Assets" action="Index" area="city" />
+    <mvcSiteMapNode title="Collections" controller="Collections" action="Index" area="city" />
+    <mvcSiteMapNode title="Customers" controller="Customers" action="Index" area="city" />
+    <mvcSiteMapNode title="Discounts" controller="Discounts" action="Index" area="city" >
+      <mvcSiteMapNode title="Details" controller="Discounts" action="Details" area="city" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Reports" controller="Reports" action="Index" area="city" />
+    <mvcSiteMapNode title="Users" controller="Users" action="Index" area="city" >
+      <mvcSiteMapNode title="Create User" controller="Users" action="Create" area="city" />
+    </mvcSiteMapNode>
+  </mvcSiteMapNode>
+  <mvcSiteMapNode title="Alarms" controller="" action="" area="city">
+    <mvcSiteMapNode title="Details" controller="Users" action="Create" area="city" />
+  </mvcSiteMapNode>
+  <mvcSiteMapNode title="Assets" controller="Assets" action="Index" area="city">
+    <mvcSiteMapNode title="Create" controller="Assets" action="Create" area="city" />
+    <mvcSiteMapNode title="Edit Cashbox" controller="Assets" action="EditCashbox" area="city" />
+    <mvcSiteMapNode title="Edit Gateway" controller="Assets" action="EditGateway" area="city" />
+    <mvcSiteMapNode title="Edit Meter" controller="Assets" action="EditMeter" area="city" />
+    <mvcSiteMapNode title="Edit Meter To Space Mapping" controller="Assets" action="EditMeterToSpaceMapping" area="city" />
+    <mvcSiteMapNode title="Edit Sensor" controller="Assets" action="EditSensor" area="city" />
+    <mvcSiteMapNode title="Edit Space" controller="Assets" action="EditSpace" area="city" />
+    <mvcSiteMapNode title="Mass Edit Cashbox" controller="Assets" action="MassEditCashbox" area="city" />
+    <mvcSiteMapNode title="Mass Edit Gateway" controller="Assets" action="MassEditGateway" area="city" />
+    <mvcSiteMapNode title="Mass Edit Meter" controller="Assets" action="MassEditMeter" area="city" />
+    <mvcSiteMapNode title="Mass Edit Sensor" controller="Assets" action="Mass Edit Sensor" area="city" />
+    <mvcSiteMapNode title="Mass Edit Space" controller="Assets" action="MassEditSpace" area="city" />
+    <mvcSiteMapNode title="View Cashbox" controller="Assets" action="ViewCashbox" area="city" />
+    <mvcSiteMapNode title="View Gateway" controller="Assets" action="ViewGateway" area="city" />
+    <mvcSiteMapNode title="View Meter" controller="Assets" action="ViewMeter" area="city" />
+    <mvcSiteMapNode title="View Meter To Space Mapping" controller="Assets" action="ViewMeterToSpaceMapping" area="city" />
+    <mvcSiteMapNode title="ViewSensor" controller="Assets" action="ViewSensor" area="city" />
+    <mvcSiteMapNode title="ViewSpace" controller="Assets" action="ViewSpace" area="city" />
+  </mvcSiteMapNode>
+  <mvcSiteMapNode title="Collections" controller="Collections" action="Index" area="city">
+    <mvcSiteMapNode title="Aggregation" controller="Collections" action="Aggregation" area="city" />
+    <mvcSiteMapNode title="Aggregation Details" controller="Collections" action="AggregationDetails" area="city" />
+    <mvcSiteMapNode title="Collection" controller="Collections" action="Collection" area="city" />
+    <mvcSiteMapNode title="Copy Collections" controller="Collections" action="CopyCollections" area="city" />
+    <mvcSiteMapNode title="Create Collection" controller="Collections" action="CreateCollection" area="city" />
+    <mvcSiteMapNode title="Edit Collection" controller="Collections" action="EditCollection" area="city" />
+    <mvcSiteMapNode title="Meter Details" controller="Collections" action="MeterDetails" area="city" />
+  </mvcSiteMapNode>
+  <mvcSiteMapNode title="Discounts" controller="Discounts" action="Index" area="city"></mvcSiteMapNode>
+  <mvcSiteMapNode title="Events" controller="Events" action="Index" area="city">
+    <mvcSiteMapNode title="Details" controller="Events" action="Details" area="city" />
+  </mvcSiteMapNode>
+  <mvcSiteMapNode title="GIS" controller="GIS" action="Index" area="city"></mvcSiteMapNode>
+  <mvcSiteMapNode title="Occupancy" controller="Occupancy" action="Index" area="city">
+    <mvcSiteMapNode title="Details" controller="Occupancy" action="Details" area="city" />
+  </mvcSiteMapNode>
+  <!--<mvcSiteMapNode title="Reports" controller="Occupancy" action="Index" area="city">
+
+  </mvcSiteMapNode>-->
+  <mvcSiteMapNode title="Transactions" controller="Transactions" action="Index" area="city">
+    <mvcSiteMapNode title="Meter Details" controller="Transactions" action="MeterDetails" area="city" />
+    <mvcSiteMapNode title="Sensor Details" controller="Transactions" action="SensorDetails" area="city" />
+  </mvcSiteMapNode>
+</mvcSiteMap>

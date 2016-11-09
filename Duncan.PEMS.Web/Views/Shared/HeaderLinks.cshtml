@@ -1,0 +1,21 @@
+﻿
+ @if (Request.IsAuthenticated)
+ {
+     <div id="header-right">
+         <div id="header-links">
+            
+             @Html.ActionLink("Logout As (" + User.Identity.Name + ")", "Logoff", "Account") 
+              <a id="print" href="javascript:window.print();">Print Page</a> 
+             <a href="~/Help/default.htm" id="help" title="Help" target="_blank"></a>
+         </div>
+     </div>
+ }
+ else
+ {
+        <div id="header-right">
+                    <div id="header-links">
+                     <a id="print" href="javascript:window.print();">Print Page</a> 
+                    </div>
+       </div>
+ }
+    

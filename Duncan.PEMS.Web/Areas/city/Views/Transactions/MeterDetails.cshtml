@@ -1,0 +1,337 @@
+﻿@* /******************* CHANGE LOG ****************************************************************************************************************************************
+ * DATE                 NAME                        DESCRIPTION
+ * ___________      ___________________                         _________________________________________________________________________________________________________
+ * 
+ * 01/09/2014       Sergey Ostrerov                 Issue: DPTXPEMS-213. Transaction Inquiry grid page shows incorrect 'TimePaid' value however                 *                                                                          details page still shows correct value.
+ *                                                                       Display TimePaid in minutes.                                               
+ * 02/06/2014       Sergey Ostrerov                                   JIRA: DPTXPEMS-213  TimePaid formatted 00:00:00          *********************************************************************************************************************************************/ *@
+
+@using Duncan.PEMS.Business.ConditionalValues
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@inherits System.Web.Mvc.WebViewPage<Duncan.PEMS.Entities.Transactions.CustomerTransactionMeterModel>
+
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Meter Details" );
+}
+
+@section Styles
+{
+    <style type="text/css">
+        .two-column { width: 43% }
+    </style>
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> / <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Transaction Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Meter Transaction Details" )</span></h1>
+}
+
+
+
+@if ( Model == null )
+{
+    @Html.ValidationSummary()
+}
+else
+{
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Information" )</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Id" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.MeterId )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Name" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.MeterName )</div>
+        </div>
+
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Area" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.Area )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Zone" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.Zone )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Suburb" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.Suburb )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Street" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.Street )</div>
+        </div>
+    </div>
+
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Bay Number" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.BayNumber )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Sensor Id" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.SensorId )</div>
+        </div>
+    <div class="detailRow @ConditionalValueFactory.GetHiddenFieldClass(
+                            int.Parse(ViewData[Constants.ViewData.CurrentCityId].ToString()),
+                            Constants.HiddenFields.FieldDemandArea) " >
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Demand Area" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.DemandZone )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Latitude" ):</div>
+            @Html.DisplayForLatLong( m => m.Latitude, new {@class = "customer_text"} )
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Longitude" ):</div>
+            @Html.DisplayForLatLong( m => m.Longitude, new {@class = "customer_text"} )
+        </div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Detail" )</div>
+
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction ID" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.TransactionId )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Type" ):</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.TransactionTypeDesc )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Status" ):@Html.Tooltip( "CardPaymentStatus" )</div>
+            <div class="customer_text">@FormatHelper.FormatValue( Model.TransactionStatus )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Time Paid" ):</div>
+            <div class="customer_text">@FormatHelper.FormatTimeFromSeconds( Model.TimePaidInSeconds )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Amount Paid" ):</div>
+            <div class="customer_text">@FormatHelper.FormatCurrency( Model.AmountInCents )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Expiration Time" ):</div>
+            <div class="customer_text">@FormatHelper.FormatDateTime( Model.ExpirationTime )</div>
+        </div>
+    </div>
+
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Transaction Date/Time" ):</div>
+            <div class="customer_text">@FormatHelper.FormatDateTime( Model.TransactionDate )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Peak" ):@Html.Tooltip( "Peak" )</div>
+            <div class="customer_text">@FormatHelper.FormatBoolean( Model.Peak )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Prepay Used" ):@Html.Tooltip( "PrepayUsed" )</div>
+            <div class="customer_text">@FormatHelper.FormatBoolean( Model.PrePayUsed )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Discount Scheme Used" ):@Html.Tooltip( "DiscountSchemeUsed" )</div>
+            <div class="customer_text">@FormatHelper.FormatBoolean( Model.DiscountSchemeUsed )</div>
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "15 Minutes Free Used" ):@Html.Tooltip( "FreeParkingMinutes" )</div>
+            <div class="customer_text">@FormatHelper.FormatBoolean( Model.FreeMinutesUsed )</div>
+        </div>
+    </div>
+
+    switch (Model.TransactionType)
+    {
+        case 1: // 'Credit Card'
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Credit Card Detail" )</div>
+            <div class="two-column">
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Credit Card Type" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.CardType )</div>
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Last 4 of Credit Card" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.CCLast4 )</div>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Receipt Number" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.ReceiptNumber )</div>
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Batch ID" ):@Html.Tooltip( "BatchId" )</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.BatchId )</div>
+                </div>
+            </div>
+
+            if ( Model.AcquirerResponses != null && Model.AcquirerResponses.Any() )
+            {
+                <br/><br/><br/>
+                <div class="one-column">
+                    <span style="font-weight: bold">Transaction History</span>
+                    <div style="clear: both;">
+                        @(Html.Kendo().Grid( Model.AcquirerResponses )
+                              .Name( "grdAcquirerResponses" )
+                              .HtmlAttributes( new {style = "text-align: center; width: 600px;"} )
+                              .Columns( columns =>
+                                            {
+                                                columns.Bound( p => p.AuditDate ).ClientTemplate( "#= kendo.toString(AuditDate,'G') #" ).Title( "Date/Time" );
+                                                columns.Bound( p => p.ResponseCode ).Title( "Response Code" ).Width( 75 );
+                                                columns.Bound( p => p.ResponseDetail ).Title( "Response Detail" ).Width( 120 );
+                                                columns.Bound( p => p.ResponseTransRef ).Title( "Trans Ref No" ).Width( 120 );
+                                            } )
+                              )
+                    </div>
+                </div>
+            }
+            break;
+
+        case 2: // 'Smart Card'
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Smartcard Detail" )</div>
+            <div class="two-column">
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Serial Number" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.SmartCardSerialNo )</div>
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Card ID" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.SmartCardId )</div>
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Acquirer Transaction Ref" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.SmartCardAcquirerTransRef )</div>
+                </div>
+                <div class="detailRow">
+                    <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Meter Trans Ref" ):</div>
+                    <div class="customer_text">@FormatHelper.FormatValue( Model.SmartCardMeterTransRef )</div>
+                </div>
+            </div>
+            break;
+
+        case 5: // 'Pay By Phone'
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Pay By Cell Detail" )</div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Recon File ID" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.ReconFileId )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Recon Date/Time" ):</div>
+                <div class="customer_text">@FormatHelper.FormatDateTime( Model.ReconDate )</div>
+            </div>
+            break;
+
+        case 3: // 'Cash'
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Cash Detail" )</div>
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType1Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType1Description:</div>
+                   @* <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType1Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType1Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType2Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType2Description:</div>
+                 @*   <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType2Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType2Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType3Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType3Description:</div>
+                 @*   <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType3Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType3Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType4Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType4Description:</div>
+@*                    <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType4Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType4Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType5Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType5Description:</div>
+                   @* <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType5Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType5Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType6Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType6Description:</div>
+                   @* <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType6Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType6Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType7Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType7Description:</div>
+                  @*  <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType7Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType7Count</div>
+                </div>
+            }
+
+            if ( !String.IsNullOrWhiteSpace( Model.CoinType8Description ) )
+            {
+                <div class="detailRow">
+                    <div class="customer_text_label">@Model.CoinType8Description:</div>
+@*                    <div class="customer_text">@FormatHelper.FormatCurrency( Model.CoinType8Amount )</div>*@
+                    <div class="customer_text">@Model.CoinType8Count</div>
+                </div>
+            }
+            break;
+        case 4:
+        case 11:
+            <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Administration Transaction Information" )</div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Note" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.Note )</div>
+            </div>
+            <div class="detailRow">
+                <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "UserID" ):</div>
+                <div class="customer_text">@FormatHelper.FormatValue( Model.UserName )</div>
+            </div>
+            break;
+    }
+}
+
+<div style="clear: both">&nbsp;</div>
+
+<div class="customer_actions">
+    @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button refresh", id = "btnReturn"} )
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if (window.sessionStorage.returnUrl) {
+            // Update the return button url
+            $("#btnReturn").attr("href", window.sessionStorage.returnUrl + "?rtn=true");
+
+            // remove the saved returnUrl from session
+            window.sessionStorage.removeItem("returnUrl");
+        }
+    });
+</script>
+
+
+

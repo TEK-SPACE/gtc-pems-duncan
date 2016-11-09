@@ -1,0 +1,289 @@
+﻿@{
+    ViewBag.Title = HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Management");
+}
+
+@section ExportButtons 
+{
+    <div class="export-buttons" id="exportButtons">
+        <a id="exportExcel" class="exportButton" href="@Url.Action("ExportToExcel", new { page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~" })">
+            <img src='/images/export-excel.png' />
+        </a>
+
+        <a id="exportCSV" class="exportButton" href="@Url.Action("ExportToCsv", new { page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~" })">
+            <img src='/images/export-csv.png' />
+        </a>
+        <a id="exportPDF" class="exportButton" href="@Url.Action("ExportToPdf", new { page = 1, pageSize = "~", filter = "~", sort = "~", gridType = "~" })">
+            <img src='/images/export-pdf.png' />
+        </a>
+    </div>
+}
+
+<div class="grid-header">
+    <div style="float: left">
+        @Html.ActionLink("Add Customer", "Add", "Customers", null, new { @class = "button", @type = "button" })
+    </div>
+</div>
+<div style="clear: both"></div>
+
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model IEnumerable<Duncan.PEMS.Entities.Customers.ListCustomerModel>
+
+@(Html.Kendo().Grid(Model)
+      .HtmlAttributes(new { style = "max-width: 1693px; height: 470px;" })
+      .Name("CurrentGrid")
+      .Columns(columns =>
+      {
+          columns.Bound(p => p.Id).ClientTemplate(@Html.ActionLink("#= Id #", "EditCustomer", "Customers", new { customerId = "#= Id #" }, new { @onclick = "RowClick(this);" }).ToHtmlString()).Width(50).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Id").ToString());
+          columns.Bound(p => p.DisplayName).Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Display Name").ToString());
+          columns.Bound(p => p.Status).Width(100).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Status").ToString());
+          columns.Bound(p => p.CreatedOn).ClientTemplate("#= CreatedOnDisplay #").Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Created On").ToString());
+          columns.Bound(p => p.CreatedBy).Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Created By").ToString());
+          columns.Bound(p => p.UpdatedOn).ClientTemplate("#= UpdatedOnDisplay #").Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Updated On").ToString());
+          columns.Bound(p => p.UpdatedBy).Width(150).Title(@HttpContext.Current.GetLocaleResource(ResourceTypes.GridColumn, "Updated By").ToString());
+      })
+      .Selectable(select => select.Mode(GridSelectionMode.Single).Type(GridSelectionType.Row))
+      .Reorderable(reorder => reorder.Columns(false))
+      .Pageable(pager => pager.PageSizes(true).PageSizes(new int[] { 100, 250, 500, 1000 }))
+      .AutoBind(false)
+      .Sortable(sortable => sortable.SortMode(GridSortMode.MultipleColumn))
+      .Resizable(resize => resize.Columns(true))
+      .Scrollable()
+      .Events(events => events.DataBound("OnDataBound"))
+      .DataSource(dataSource => dataSource.Ajax().Read(read => read.Action("GetCustomers", "Customers").Type(HttpVerbs.Get))
+      ))
+
+
+
+@section Styles
+{
+    <style type="text/css">
+        #CurrentGrid { display: none; }
+
+        #exportButtons { display: none; }
+
+        .k-grid-header .k-header {
+            overflow: visible;
+            white-space: normal;
+        }
+
+        .k-pager-wrap .k-dropdown { width: 75px !important; }
+
+
+    </style>
+
+}
+
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Admin")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Management") / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Customer Inquiry")</span></h1>
+}
+
+@section PageFilter 
+{
+    <div class="filter-option">
+        <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer Name")</span>
+        <input id="txtCustomerName" class="filter-input" />
+    </div>     
+    <div class="filter-option">
+        <span class="filter-label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Customer ID")</span>
+        <input id="txtCustomerId" class="filter-input" />
+    </div>     
+
+    <div class="filter-searchBox">
+        <button type="button" value="Refresh" id="btnSearch" class="button filter-SearchButton" onclick=" LoadFreshGrid(); return false; ">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Refresh" )</button>
+    </div>
+    <script>
+
+    //ON LOAD
+        $(document).ready(function() {
+            //load any previously loaded filters
+            LoadSorts();
+
+        });
+        //SORTS
+        var sorts = {};
+
+        function LoadSorts() {
+            $.post('/Customers/GetSavedSortValues?indexType=Customers', OnSortsLoaded);
+        }
+
+        function OnSortsLoaded(data) {
+            if (!isEmptyObject(data))  {
+                sorts = data;
+            } else {
+                sorts = {};
+            }
+            LoadFilters();
+        }
+
+        //FILTERS
+        var gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+
+        function LoadFilters() {
+            $.post('/shared/Sessions/GetCustomerFilters', OnFiltersLoaded);
+        }
+
+        function OnFiltersLoaded(data) {
+
+            if (!isEmptyObject(data) && getParameterByName('rtn') == 'true') {
+                gridFilters = data;
+                $("#txtCustomerName").val(gridFilters.CustomerName);
+                $("#txtCustomerId").val(gridFilters.CustomerId);
+                LoadGrid();
+            } else {
+                //if nothing came back, set it back to the default
+                gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": 100 };
+            }
+        }
+
+        //GRID LOADING
+        //pull the filters down and apply them to the grid - calling the .query method will call the read automatically
+
+        function LoadGrid() {
+            LoadGridData();
+        }
+
+        function LoadFreshGrid() {
+           
+                var x = $("#txtCustomerId").val()
+                if (isNaN(x)) {
+                    alert('"' + x + '" Customer ID should be numeric.')
+                  document.getElementById('txtCustomerId').value = ""                
+                  return false;
+              }
+
+            var currentPageSize = $("#CurrentGrid").data("kendoGrid").dataSource.pageSize();
+            // Ensure the page size is at least 100
+            if (currentPageSize < 100) {
+                currentPageSize = 100;
+            }
+            gridFilters = { "SelectedIndex": -1, "CurrentPage": 1, "PageSize": currentPageSize };
+            LoadGrid();
+        }
+
+        function LoadGridData() {
+            //now that the grid order has been set, bind the data
+            var $filter = new Array();
+
+            //Customer name
+            var $customerName = $("#txtCustomerName").val();
+            if ($customerName) {
+                gridFilters.CustomerName = $customerName;
+                $filter.push({ field: "DisplayName", operator: "contains", value: $customerName });
+            }
+
+            //Customer Id
+            var $customerId = $("#txtCustomerId").val();
+            if ($customerId) {
+                gridFilters.CustomerId = $customerId;
+                $filter.push({ field: "Id", operator: "contains", value: $customerId });
+            }
+
+            $("#CurrentGrid").data("kendoGrid").dataSource.query({ page: gridFilters.CurrentPage, filter: $filter, pageSize: gridFilters.PageSize, sort: sorts });
+            $("#CurrentGrid").css("display", "block");
+        }
+
+        //ROW CLICK
+
+        function RowClick() {
+            // Get the grid
+            var grid = $("#CurrentGrid").data("kendoGrid");
+            //get the current page 
+            gridFilters.CurrentPage = grid.dataSource.page();
+            //get selected row here
+            gridFilters.SelectedIndex = grid.select().index();
+            // get the page size
+            gridFilters.PageSize = grid.dataSource.pageSize();
+            //save the filters
+            $.post('/shared/Sessions/SaveCustomerFilters', gridFilters);
+        }
+
+        //DATABOUND EVENT - setting a saved page and selected row
+        //every time a page is changed or row selected, it also call sthe databind event, which calls this method, which is why we need the set variable to determine if some action has already been preformed.
+        //also happens when you page, etc, dont remove this variable unless you can fully test this
+        var set = -1;
+
+        function OnDataBound() {
+            set++;
+            //then once the page changes it hits this -  select the row
+            if (set == 0) {
+
+                //highlight the selected row (if they did)
+                if (gridFilters.SelectedIndex > -1) {
+                    //we have to set a timeout since the databind event gets called again :(
+                    var row = $("#CurrentGrid").data("kendoGrid").tbody.find(">tr:not(.k-grouping-row)").eq(gridFilters.SelectedIndex);
+                    $("#CurrentGrid").data("kendoGrid").select(row);
+                }
+            }
+            applyFrozenColumns();
+            SetExportData();
+        }
+
+        function SetExportData() {
+            var grid = $('#CurrentGrid').data('kendoGrid');
+            //if (set == 0) {
+            //    $(".k-grid-toolbar", "#CurrentGrid").append("<span class='exportButton'>Export: </span>");
+            //}
+
+            // ask the parameterMap to create the request object for you
+            var requestObject = (new kendo.data.transports["aspnetmvc-server"]({ prefix: "" }))
+                .options.parameterMap({
+                    page: grid.dataSource.page(),
+                    sort: grid.dataSource.sort(),
+                    filter: grid.dataSource.filter()
+                });
+
+            //EXCEL
+            var $excelLink = $('#exportExcel');
+            $excelLink.attr('href', GetExportHref($excelLink.attr('href'), requestObject, grid));
+
+            //CSV
+            var $csvLink = $('#exportCSV');
+            $csvLink.attr('href', GetExportHref($csvLink.attr('href'), requestObject, grid));
+
+            //PDF
+            var $pdfLink = $('#exportPDF');
+            $pdfLink.attr('href', GetExportHref($pdfLink.attr('href'), requestObject, grid));
+            //show the div holding these items
+            $("#exportButtons").css("display", "block");
+        }
+
+        function GetExportHref(href, requestObject, grid) {
+            // Update the 'page' parameter with the grid's current page
+            href = href.replace(/page=([^&]*)/, 'page=' + requestObject.page || '~');
+            // Update the 'sort' parameter with the grid's current sort descriptor
+            href = href.replace(/sort=([^&]*)/, 'sort=' + requestObject.sort || '~');
+            // Update the 'pageSize' parameter with the grid's current pageSize
+            href = href.replace(/pageSize=([^&]*)/, 'pageSize=' + grid.dataSource._pageSize);
+            //update filter descriptor with the filters applied
+            href = href.replace(/filter=([^&]*)/, 'filter=' + (requestObject.filter || '~'));
+            //Additional Data
+            href = href.replace(/roleId=([^&]*)/, 'roleId=' + ($("#ddlRoleName").val() || 'All'));
+            href = href.replace(/customerId=([^&]*)/, 'customerId=' + ($("#ddlCustomer").val() || ''));
+            return href;
+        }
+
+        //Freeze columns if you need to for this grid - all columns must have a width for this to work correctly.
+
+        function applyFrozenColumns() {
+            //  $('#CurrentGrid').freezeGridColumn(2);
+        }
+
+        //additional data sent to the action when the read method is called (when we apply a filter)
+
+        function additionalData() {
+            //var roleId = $("#ddlRoleName").val();
+            //var customerId = $("#ddlCustomer").val();
+
+            //return {
+            //    roleId: roleId,
+            //    customerId: customerId
+            //};
+        }
+
+    </script>
+        
+        
+}

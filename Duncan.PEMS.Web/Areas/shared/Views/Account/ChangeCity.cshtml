@@ -1,0 +1,4 @@
+﻿@if ( ViewBag.ShowChangeCityLink )
+{
+    @Html.ActionLink( "Change Client", "ChooseCity", "Account", null, new {@id = "change-client", @title = "Change Client"} )
+}

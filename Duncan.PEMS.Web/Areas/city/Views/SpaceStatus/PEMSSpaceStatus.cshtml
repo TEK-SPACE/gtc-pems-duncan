@@ -1,0 +1,26 @@
+﻿@using Duncan.PEMS.Business.ConditionalValues
+@using Duncan.PEMS.Utilities
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Space Status");
+}
+
+
+@section Styles
+{
+   
+}
+
+@section PageHeader
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Space Status")/ @HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Space Occupancy") </h1>
+}
+
+<div style="float : left; width : 100%;">
+    <iframe src="@ViewBag.Path" style="width :1100px; height :900px;overflow:hidden;" scrolling="no" frameborder="0"></iframe>
+</div>
+
+@section Scripts
+{
+    
+}

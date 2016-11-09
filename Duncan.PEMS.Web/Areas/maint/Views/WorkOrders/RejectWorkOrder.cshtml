@@ -1,0 +1,72 @@
+﻿@using Duncan.PEMS.Business.Resources
+@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Technician.TechnicianWorkOrderDetailsModel
+
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Reject Work Order");
+}
+@section PageHeader  
+{
+    <h2>@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Reject Work Order") </h2>
+ 
+     @if (!Model.WorkOrderEvents.Any())
+     {
+   <a class="back" href='@Url.Action("WorkOrders", "WorkOrders", new { selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection })' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+     }
+     else
+     {
+         <a class="back" href='@Url.Action("WorkOrderDetails", "WorkOrders", new {workOrderId = @Model.WorkOrderId, selectedSort = ViewBag.SortOrder, sortDirection = ViewBag.SortDirection})' >@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Back")</a>
+     }
+}
+
+@using (Html.BeginForm("RejectWorkOrder", "WorkOrders", FormMethod.Post, new { @id = "rejectForm" }))
+{
+     <input type="hidden" value="@ViewBag.SortOrder" name="selectedSort"/>
+    <input type="hidden" value="@ViewBag.SortDirection" name="sortDirection"/>
+    <input type="hidden" value="@Model.WorkOrderId" name="workOrderId"/>
+
+    <div id="content-inner">
+            <div class="validationSum-container">@Html.HeaderMessage()</div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "WO#"):</div>
+            <div class="customer_text">@Model.WorkOrderId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Id"):</div>
+            <div class="customer_text">@Model.WorkOrderAsset.AssetId</div>
+        </div>
+        <div class="clear">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new { @class = "customer_text_area long_text_area", rows = "5" })
+        </div>
+        <div class="clear button-row">
+        <a class="button important" style="float: right" id="btnNext" onclick="RejectWorkOrder();" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Reject")</a>
+        </div>
+    </div>
+    <script>
+        function RejectWorkOrder() {
+
+            //, make sure there are notes
+                var notes = $("#Notes").val();
+                if (notes == '') {
+                    alert("Notes Required");
+                    return false;
+                }
+                $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', "Reject").appendTo('#rejectForm');
+                $('#rejectForm').submit();
+        }
+    </script>
+        <style>
+        .k-upload-button {
+            visibility: hidden;
+        }
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+    </style>
+}

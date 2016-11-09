@@ -1,0 +1,184 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.WorkOrders.Dispatcher.DispatcherWorkOrderDetailsModel
+@{
+    ViewBag.Title = "Resolve Work Order";
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource(ResourceTypes.Glossary, "Home")</a> / <a href="Index">@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Work Order Management")</a> / <span>@HttpContext.Current.GetLocaleResource(ResourceTypes.PageTitle, "Resolve Work Order")</span></h1>
+}
+
+   @using (Html.BeginForm("ResolveWorkOrder", "WorkOrders", FormMethod.Post, new { @class = "admin-form", @id = "woResolveForm" }))
+   {
+         @Html.HiddenFor(model => model.WorkOrderId)
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.ErrorOverview(ViewData.ModelState)</div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Information")</div>
+    <div class="two-column">
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order ID"): </div>
+            @Html.DisplayFor(m => m.WorkOrderId, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.WorkOrderId)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Work Order Status"): </div>
+            @Html.DisplayFor(m => m.Status, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Status)
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Created Date"): </div>
+            @Html.DisplayFor(m => m.CreationDateDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.CreationDate)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Priority"): </div>
+            @Html.DisplayFor(m => m.PriorityDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Priority)
+            @Html.HiddenFor(model => model.PriorityDisplay)&nbsp;
+        </div>
+        <div class="detailRow">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Deadline"): </div>
+            @Html.DisplayFor(m => m.DeadlineDisplay, new { @class = "customer_text" })
+            @Html.HiddenFor(model => model.Deadline)&nbsp;
+        </div>
+       
+    </div>
+       <div class="two-column">
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset Type"): </div>
+               @Html.DisplayFor(m => m.WorkOrderAsset.AssetType, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.WorkOrderAsset.AssetType)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Asset ID"): </div>
+               @Html.DisplayFor(m => m.WorkOrderAsset.AssetId, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.WorkOrderAsset.AssetId)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Area"): </div>
+               @Html.DisplayFor(m => m.AreaId2Display, new { @class = "customer_text" })
+               @Html.HiddenFor(model => model.AreaId2Display)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Street"): </div>
+               @Html.DisplayFor(m => m.Location, new { @class = "customer_text" }) 
+               @Html.HiddenFor(model => model.Location)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Cross Street"): </div>
+               @Html.DisplayFor(m => m.CrossStreet, new { @class = "customer_text" }) 
+               @Html.HiddenFor(model => model.CrossStreet)&nbsp;
+           </div>
+           <div class="detailRow">
+               <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Zone"):</div>
+               <div class="customer_text ">    @Html.DisplayFor(m => m.Zone, new { @class = "customer_text" })
+                   @Html.HiddenFor(model => model.Zone)&nbsp;</div>
+           </div>
+       </div>
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Resolution")</div>
+       
+      <div class="two-column">
+          <div class="detailRow">
+              <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Repair Description"):</div>
+              @(Html.Kendo().DropDownListFor(x => x.SelectedRepairDescription)
+                    .HtmlAttributes(new { style = "width:100%" })
+                    .SelectedIndex(0)
+                    .BindTo(new SelectList(Model.RepairDescriptions, "Value", "Text"))
+                    )
+          
+          </div>
+             <div class="detailRow">
+          <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Vandalism Involved?"):</div><br/>
+            @(Html.Kendo().DropDownList()
+          .Name("ddlVandalism")
+          .HtmlAttributes(new { style = "width:100%" })
+          .DataTextField("Text")
+          .DataValueField("Value")
+          .BindTo(new List<SelectListItem>() {
+              new SelectListItem() {
+                  Text = HttpContext.Current.GetLocaleResource(ResourceTypes.Label, ResourceTypes.DropDownDefault),
+                  Value = "-1"
+              },
+              new SelectListItem() {
+                  Text = "Yes",
+                  Value = "Yes"
+              },
+              new SelectListItem() {
+                  Text = "No",
+                  Value = "No"
+              }
+          })
+          .Value("-1")
+    )
+          </div>
+       </div>
+       <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Notes"):</div>
+            <br />
+            @Html.TextAreaFor(m => m.Notes, new {@id="ResolutionNotes", @class = "customer_text_area long_text_area", rows = "5" })
+       </div>       
+        <div class="customer_actions">
+            <a class="button important"  id="btnNext" onclick="CloseWorkOrder();" href="#">@HttpContext.Current.GetLocaleResource(ResourceTypes.Label, "Close")</a>
+            @Html.ActionLink(HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Return"), "WorkOrderDetail", new { workOrderId = Model.WorkOrderId}, new { @class = "button previous returnButton" })
+        </div>
+   }
+    <script>
+        function CloseWorkOrder() {
+            ////have to make sure they selected something for the vandalism and the repair code.
+            //SelectedRepairDescription
+            var selectedRepairDescription = $("#SelectedRepairDescription").data("kendoDropDownList");
+            if (selectedRepairDescription.value() == "-1") {
+                alert("Repair Description Required");
+                return false;
+            }
+
+            //vandalism
+            var ddlVandalism = $("#ddlVandalism").data("kendoDropDownList");
+            if (ddlVandalism.value() == "-1") {
+                alert("Vandalism Selection Required");
+                return false;
+            }
+
+            //finally, we have to check to see if there was vandalism, make sure there are notes
+            if (ddlVandalism.value() == "Yes") {
+                var notes = $("#ResolutionNotes").val();
+                if (notes == '') {
+                    alert("Vandalism: Notes Required");
+                    return false;
+                }
+            }
+            $('<input />').attr('type', 'hidden').attr('name', 'submitButton').attr('value', "Close").appendTo('#woResolveForm');
+            $('#woResolveForm').submit();
+            return false;
+        }
+      
+    </script>
+<style>
+    .k-grid-content {
+        height: auto !important;
+        width: auto !important;
+    }
+
+    .k-window
+    {
+        max-width: 100% !important;
+         }
+
+     .k-upload-button {
+            visibility: hidden;
+         height: 1px;
+        }
+
+           .k-window { width: 100%;}
+        .k-overlay {
+            z-index: 20000;
+            cursor: pointer;
+        }
+       .parts span{
+            width: auto !important;
+            float: left !important;
+        }
+
+</style>

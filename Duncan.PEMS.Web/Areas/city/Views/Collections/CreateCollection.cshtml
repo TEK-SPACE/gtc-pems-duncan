@@ -1,0 +1,165 @@
+﻿@using Duncan.PEMS.Utilities
+@using Kendo.Mvc.UI
+@model Duncan.PEMS.Entities.Collections.CollectionConfiguration
+
+@{
+    ViewBag.Title = @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Create Collection Configuraiton" );
+}
+
+@section PageHeader 
+{
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Home" )</a> /  <a href="Index">@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Collection Management" )</a> / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Create Collection Route Configuration" )</span></h1>
+}
+
+@section Styles
+{
+    <style>
+        .validationSum-container { height: auto !important; }
+    </style>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function AddVendor()
+        {
+            $("#addvendortextbox").val("");           
+            document.getElementById("AddVendorButton").style.visibility = 'hidden';
+            document.getElementById("addvendortextbox").style.visibility = 'visible';
+            document.getElementById("AddVendor1").style.visibility = 'visible';
+            document.getElementById("AddVendorButton").style.position = 'absolute';
+            document.getElementById("addvendortextbox").style.position = 'relative';
+            document.getElementById("AddVendor1").style.position = 'relative';
+           
+           // $("#VendorId").data("kendoDropDownList").dataSource.read();            
+      
+        }
+        function Add()
+        {
+            var vendorname = $("#addvendortextbox").val();
+            if (vendorname == "")
+            {
+                alert("please enter vendor name");
+                $("#addvendortextbox").focus();
+                return;
+            }
+
+           
+            $.ajax({
+                url: '@Url.Action( "AddVendorname" )',
+                data: { customerId: '@Model.CustomerId', vendorname: vendorname },
+                type: 'POST',
+                success: function (data) {                    
+                    if (data == "1") {
+                        document.getElementById("AddVendorButton").style.visibility = 'visible';
+                        document.getElementById("addvendortextbox").style.visibility = 'hidden';
+                        document.getElementById("AddVendor1").style.visibility = 'hidden';
+                        document.getElementById("AddVendorButton").style.position = 'relative';
+                        document.getElementById("addvendortextbox").style.position = 'absolute';
+                        document.getElementById("AddVendor1").style.position = 'absolute';
+                        $("#VendorId").data("kendoDropDownList").dataSource.read();
+                    }
+                    else if (data == "-1")
+                        alert("already exists")
+                    else
+                        alert("Try again");
+
+                }
+            });
+
+
+            
+        }
+
+        function GetAllFilterData() {
+
+            var CustomerId = '@Model.CustomerId';
+
+            return {
+                CustomerId: CustomerId
+            }
+        }
+
+        </script>
+    }
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="validationSum-container">@Html.HeaderMessage()</div>
+    <div class="customer_status">
+        <div class="customer_status_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Status" ): <span class="customer_status_state state_@Model.Status.ToLower()">@Model.Status</span></div>
+    </div>
+
+    <div class="customer_tab_content_section">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Configuration Detail" )</div>
+    <div class="one-column">
+        <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection ID" ): </div>
+        @HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "System Generated" )
+        @Html.HiddenFor( model => model.CustomerId )
+        @Html.HiddenFor( model => model.StatusId )
+        @Html.HiddenFor( model => model.Status )
+        &nbsp;
+        </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Collection Name" ): </div>
+            @Html.TextBoxFor( m => m.CollectionName, new {@class = " k-textbox"} )
+            @Html.ValidationMessageFor( x => x.CollectionName )
+            &nbsp;
+        </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Vendor Name" ): </div>           
+          
+        @(Html.Kendo().DropDownListFor(m => m.VendorId)
+                .Name("VendorId")              
+                
+            .DataTextField("Text")
+              .DataValueField("Value")
+
+                                       
+                .DataSource(source =>
+                                {
+                                    source.Read(read =>
+                                    {
+                                        read.Url("../Collections/VendorList").Data("GetAllFilterData");
+                                    });
+                                })
+
+        )
+        @Html.ValidationMessageFor(x => x.VendorId)
+        <button type="button" name="AddVendorButton" id="AddVendorButton" class="button important" value="AddVendor" onclick="AddVendor();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add Vendor")</button>
+        <input type="text" class="k-textbox" id="addvendortextbox" style="visibility:hidden"/>
+        <button type="button" name="AddVendor1" id="AddVendor1" class="button important" value="Add" style="visibility: hidden" onclick="Add();">@HttpContext.Current.GetLocaleResource(ResourceTypes.Button, "Add")</button>
+    </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Activation Date" ): </div>
+            @(Html.Kendo().DatePickerFor( x => x.ActivationDate ))
+             @Html.ShowAllErrors("ActivationDate")
+            &nbsp;
+        </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Days Between Collections" ): </div>
+            @(Html.Kendo().IntegerTextBoxFor( m => m.DaysBtwCollections ).Min( 0 ).Max( 14 ))
+            @Html.ValidationMessageFor( x => x.DaysBtwCollections )
+        </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Public Holidays" ): </div>
+            @Html.CheckBoxFor( m => m.SkipPublicHolidays )
+            &nbsp;
+        </div>
+    <div class="one-column">
+            <div class="customer_text_label">@HttpContext.Current.GetLocaleResource( ResourceTypes.Label, "Skip Specific Days of Week" ): </div>
+            <div style="padding-left: 200px">
+                <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSunday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Sunday" ) </div>
+                <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipMonday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Monday" ) </div>
+                <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipTuesday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Tuesday" )</div>
+                <div class="collectionRouteDay">  @Html.CheckBoxFor( m => m.SkipWednesday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Wednesday" )</div>
+                <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipThursday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Thursday" ) </div>
+                <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipFriday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Friday" ) </div>
+                <div class="collectionRouteDay"> @Html.CheckBoxFor( m => m.SkipSaturday ) @HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Saturday" ) </div>
+            </div>
+        </div>
+    <div class="customer_actions">
+            <button type="submit" name="submitButton" class="button important" value="Create">@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Create" )</button>
+             @Html.ActionLink( HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" ).ToString(), "Index", new {rtn = "true"}, new {@class = "button previous"} )
+        </div>
+}

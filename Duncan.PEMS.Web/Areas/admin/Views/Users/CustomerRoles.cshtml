@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title =HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle,  "User Role Management" );
+}
+@using Duncan.PEMS.Utilities
+@model Duncan.PEMS.Entities.Users.CustomerRoleModel
+
+@section PageHeader 
+{
+    <h1>User Management / <span>Customer Roles</span></h1>
+    <h1><a href="/">@HttpContext.Current.GetLocaleResource( ResourceTypes.Glossary, "Admin" )</a> / @HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "User Management" ) / <span>@HttpContext.Current.GetLocaleResource( ResourceTypes.PageTitle, "Customer Roles" )</span></h1>
+}
+
+
+<div >
+    <p id="customerRoleTitle">Modify customer roles for: <b>  @Model.Username</b></p>
+</div>
+
+@using (Html.BeginForm( "CustomerRoles", "Users", FormMethod.Post, new {@class = "admin-form", @id = "customerRolesForm"} ))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    @Html.HiddenFor( x => x.Username )
+
+    int index = 0;
+    foreach (var customerRole in Model.CustomerRoles)
+    {
+        <div class="customerRolesHeading">@customerRole.Customer.DisplayName </div>
+
+        @Html.DropDownListFor( x => x.CustomerRoles[index].CurrentRole,
+                               new SelectList(
+                                   customerRole.Roles,
+                                   "Key",
+                                   "Key", customerRole.CurrentRole ), new {@class = "customerRolesDropdown"} )
+        @Html.HiddenFor( x => x.CustomerRoles[index].CustomerInternalName )
+        @Html.HiddenFor( x => x.CustomerRoles[index].CurrentRole )
+        index++;
+    }
+
+    <br/>
+    <br/>
+
+    <button type="submit" class="button important" name="submitButton" value="Save" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Save" )</button>
+    <button type="submit" class="button previous" name="submitButton" value="Cancel" >@HttpContext.Current.GetLocaleResource( ResourceTypes.Button, "Return" )</button>
+}
