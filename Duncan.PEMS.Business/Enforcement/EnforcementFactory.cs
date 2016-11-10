@@ -16,6 +16,9 @@ using WebMatrix.WebData;
 using Duncan.PEMS.Entities.Enforcement;
 using System.Web.Mvc;
 using System.Data.Entity.Infrastructure;
+using System.Web;
+using Duncan.PEMS.Entities;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Duncan.PEMS.Business.Enforcement
 {
@@ -997,77 +1000,156 @@ namespace Duncan.PEMS.Business.Enforcement
                 //** Valid end date 
             }
 
+            var user = HttpContext.Current.User.Identity.Name;
+            string connectionString, reportQuery;
+            string factory = "Enforcement";
+            using (ReportingQueryEntities context = new ReportingQueryEntities())
+            {
+                var entity = (from up in context.UserProfiles
+                              join uca in context.UserCustomerAccesses on up.UserId equals uca.UserId
+                              join cs in context.CustomerSettings on uca.CustomerId equals cs.CustomerId
+                              join cp in context.CustomerProfiles on cs.CustomerId equals cp.CustomerId
+                              where up.UserName == user && cp.CustomerId == CurrentCity
+                              select new { cp.CustomerId, cp.ConnectionStringName, cp.DisplayName }
+                ).FirstOrDefault();
+
+
+                connectionString = entity?.ConnectionStringName;
+                reportQuery = (from rq in context.ReportQueries
+                               join rt in context.ReportTypes on rq.ReportId equals rt.Id
+                               where rt.Name == factory && rq.CustomerId == entity.CustomerId
+                               select rq.Query).FirstOrDefault();
+            }
+           
+
             try
             {
                 ((IObjectContextAdapter)NewOrleansDataContext).ObjectContext.CommandTimeout = 3600;
 
+                using (OracleConnection connection = new OracleConnection(connectionString))
+                {
+                    var oracleCommand =
+                        new OracleCommand(reportQuery, connection);
+                    oracleCommand.Parameters.Add(new OracleParameter("startTimeOutput", startTimeOutput.ToString("dd-MMM-yyyy")));
+                    oracleCommand.Parameters.Add(new OracleParameter("startTimeEndOutput", startTimeEndOutput.ToString("dd-MMM-yyyy")));
+                    oracleCommand.Parameters.Add(new OracleParameter("endTimeOutput", endTimeOutput.ToString("dd-MMM-yyyy")));
+                    oracleCommand.Parameters.Add(new OracleParameter("endTimeEndOutput", endTimeEndOutput.ToString("dd-MMM-yyyy")));
+                    oracleCommand.Parameters.Add(new OracleParameter("licensePlate", licensePlate));
+                    oracleCommand.Parameters.Add(new OracleParameter("licenseState", licenseState));
+                    oracleCommand.Parameters.Add(new OracleParameter("licenseType", licenseType));
+                    oracleCommand.Parameters.Add(new OracleParameter("vin", vin));
+                    oracleCommand.Parameters.Add(new OracleParameter("startIssueNo", startIssueNo));
+                    oracleCommand.Parameters.Add(new OracleParameter("endIssueNo", endIssueNo));
+                    oracleCommand.Parameters.Add(new OracleParameter("code", code));
+                    oracleCommand.Parameters.Add(new OracleParameter("vioDesc", vioDesc));
+                    oracleCommand.Parameters.Add(new OracleParameter("parkingStatus", parkingStatus));
+                    oracleCommand.Parameters.Add(new OracleParameter("parkingType", parkingType));
+                    oracleCommand.Parameters.Add(new OracleParameter("prefix", prefix));
+                    oracleCommand.Parameters.Add(new OracleParameter("suffix", suffix));
+                    oracleCommand.Parameters.Add(new OracleParameter("agency", agency));
+                    oracleCommand.Parameters.Add(new OracleParameter("beat", beat));
+                    oracleCommand.Parameters.Add(new OracleParameter("meterNo", meterNo));
+                    oracleCommand.Parameters.Add(new OracleParameter("myOfficerId", myOfficerId));
+                    oracleCommand.Parameters.Add(new OracleParameter("officerName", officerName));
+                    connection.Open();
 
-                Enforcementsummary = (from ai_PARKING in NewOrleansDataContext.PARKINGs
+                    using (OracleDataReader row = oracleCommand.ExecuteReader())
+                    {
+                        while (row.Read())
+                        {
+                            Enforcementsummary.Add(new EnforcementModel
+                            {
+                                OfficerID = Convert.ToInt32(row["officerId"]),
+                                OfficerName = row["OFFICERNAME"].ToString(),
+                                IssueNo = Convert.ToInt64(row["IssueNo"]),
+                                IssueDateTime =
+                                 Convert.ToDateTime(Convert.ToDateTime(row["IssueDate"]).ToString("MM/dd/yyyy") + " " + Convert.ToDateTime(row["IssueTime"]).ToString("hh:mm:ss")),
 
-                                      //join customer in NewOrleansDataContext.Customers
-                                      //on ai_PARKING.CustomerID equals customer.CustomerID
-
-                                      join offName in NewOrleansDataContext.SECURITY_USER
-                                      on ai_PARKING.OFFICERID equals offName.OFFICERID
-
-                                      join parVios in NewOrleansDataContext.PARKING_VIOS  //** new join created based on oracle
-                                      on ai_PARKING.UNIQUEKEY equals parVios.MASTERKEY
-
-                                      where
-                                      ((ai_PARKING.ISSUEDATE >= startTimeOutput && ai_PARKING.ISSUETIME >= startTimeEndOutput) &&
-                                       (ai_PARKING.ISSUEDATE <= endTimeOutput && ai_PARKING.ISSUETIME <= endTimeEndOutput))
-                                        && (ai_PARKING.VEHLICNO.Equals(licensePlate) || string.IsNullOrEmpty(licensePlate))
-                                        && (ai_PARKING.VEHLICSTATE.Equals(licenseState) || string.IsNullOrEmpty(licenseState))
-                                        && (ai_PARKING.VEHLICTYPE.Equals(licenseType) || string.IsNullOrEmpty(licenseType)) //** license type added on sep 14 2016
-                                        && (ai_PARKING.VEHVIN.Equals(vin) || string.IsNullOrEmpty(vin))
-                                        && ((ai_PARKING.ISSUENO >= startIssueNo || startIssueNo == -1) && (ai_PARKING.ISSUENO <= endIssueNo || endIssueNo == -1))
-                                          //&& (ai_PARKING.ViolationClass == classes || classes == string.Empty)
-                                       && (parVios.VIOCODE.Equals(code) || string.IsNullOrEmpty(code))
-                                       && (parVios.VIODESCRIPTION1.Equals(vioDesc) || string.IsNullOrEmpty(vioDesc)) //** Violation Description added on sep 14 2016
-                                       && (ai_PARKING.VOIDSTATUS.Equals(parkingStatus) || string.IsNullOrEmpty(parkingStatus))
-                                       && (ai_PARKING.VEHTYPE.Equals(parkingType) || string.IsNullOrEmpty(parkingType))
-                                        && (ai_PARKING.ISSUENOPFX.Equals(prefix) || string.IsNullOrEmpty(prefix))
-                                        && (ai_PARKING.ISSUENOSFX.Equals(suffix) || string.IsNullOrEmpty(suffix))
-                                        && (ai_PARKING.AGENCY.Equals(agency) || string.IsNullOrEmpty(agency))
-                                        && (ai_PARKING.BEAT.Equals(beat) || string.IsNullOrEmpty(beat))
-                                        && (ai_PARKING.METERNO.Equals(meterNo) || string.IsNullOrEmpty(meterNo))
-                                        && (ai_PARKING.OFFICERID.Equals(myOfficerId) || string.IsNullOrEmpty(myOfficerId))
-                                        && (ai_PARKING.OFFICERNAME.Equals(officerName) || string.IsNullOrEmpty(officerName))
+                                IssueDateTime_final = Convert.ToDateTime(Convert.ToDateTime(row["IssueDate"]).ToString("MM/dd/yyyy") + " " + Convert.ToDateTime(row["IssueTime"]).ToString("hh:mm:ss")).ToString(),
+                                IssueNoWithPfxSfx = string.Concat(Convert.ToString(row["IssueNoPfx"]), GetIssueNoWithLeftPaddedZeroes(Convert.ToInt64(row["IssueNo"])), Convert.ToString(row["IssueNoSfx"])),
+                                Status = row["Status"].ToString(),
+                                IssueNoPfx = row["IssueNoPfx"].ToString(),
+                                IssueNoSfx = row["IssueNoSfx"].ToString(),
+                                VehLicNo = Convert.ToString(row["VehLicNo"]),
+                                Beat = Convert.ToString(row["Beat"]),
+                                MeterNo = Convert.ToString(row["MeterNo"]),
+                                VioCode = Convert.ToString(row["VioCode"]),
+                                isAutoBindReqd = true //Convert.ToBoolean(row["isAutoBindReqd"])
+                            });
+                        }
+                    }
+                    connection.Close();
+                }
 
 
-                                      select new
-                                      {
-                                          OfficerID = ai_PARKING.OFFICERID,
-                                          OfficerName = offName.OFFICERNAME,
-                                          IssueNo = ai_PARKING.ISSUENO,
-                                          IssueDate = ai_PARKING.ISSUEDATE,
-                                          IssueTime = ai_PARKING.ISSUETIME,
-                                          Status = ai_PARKING.VOIDSTATUS ?? "",
-                                          IssueNoPfx = ai_PARKING.ISSUENOPFX == null ? "" : ai_PARKING.ISSUENOPFX,
-                                          IssueNoSfx = ai_PARKING.ISSUENOSFX == null ? "" : ai_PARKING.ISSUENOSFX,
-                                          VehLicNo = ai_PARKING.VEHLICNO,
-                                          Beat = ai_PARKING.BEAT,
-                                          MeterNo = ai_PARKING.METERNO == null ? "" : ai_PARKING.METERNO,
-                                          VioCode = parVios.VIOCODE == null ? "" : parVios.VIOCODE,
-                                          isAutoBindReqd = true
-                                      }).ToList().Select(x => new EnforcementModel
-                                      {
-                                          OfficerID = Convert.ToInt32(x.OfficerID),
-                                          OfficerName = x.OfficerName,
-                                          IssueNo = Convert.ToInt64(x.IssueNo),
-                                          IssueDateTime = ConvertToDateTimeFormat(x.IssueDate, x.IssueTime),
-                                          IssueDateTime_final = ConvertToDateTimeFormat(x.IssueDate, x.IssueTime).ToString(),
-                                          IssueNoWithPfxSfx = String.Concat(Convert.ToString(x.IssueNoPfx), GetIssueNoWithLeftPaddedZeroes(Convert.ToInt64(x.IssueNo)), Convert.ToString(x.IssueNoSfx)),
+                //Enforcementsummary = (from ai_PARKING in NewOrleansDataContext.PARKINGs
 
-                                          Status = x.Status ?? "",
-                                          IssueNoPfx = x.IssueNoPfx ?? "",
-                                          IssueNoSfx = x.IssueNoSfx ?? "",
-                                          VehLicNo = x.VehLicNo,
-                                          Beat = x.Beat,
-                                          MeterNo = x.MeterNo == null ? "" : x.MeterNo,
-                                          VioCode = x.VioCode == null ? "" : x.VioCode,
-                                          isAutoBindReqd = x.isAutoBindReqd
-                                      }).ToList();
+                //                      //join customer in NewOrleansDataContext.Customers
+                //                      //on ai_PARKING.CustomerID equals customer.CustomerID
+
+                //                      join offName in NewOrleansDataContext.SECURITY_USER
+                //                      on ai_PARKING.OFFICERID equals offName.OFFICERID
+
+                //                      join parVios in NewOrleansDataContext.PARKING_VIOS  //** new join created based on oracle
+                //                      on ai_PARKING.UNIQUEKEY equals parVios.MASTERKEY
+
+                //                      where
+                //                      ((ai_PARKING.ISSUEDATE >= startTimeOutput && ai_PARKING.ISSUETIME >= startTimeEndOutput) &&
+                //                       (ai_PARKING.ISSUEDATE <= endTimeOutput && ai_PARKING.ISSUETIME <= endTimeEndOutput))
+
+
+                //                        && (ai_PARKING.VEHLICNO.Equals(licensePlate) || string.IsNullOrEmpty(licensePlate))
+                //                        && (ai_PARKING.VEHLICSTATE.Equals(licenseState) || string.IsNullOrEmpty(licenseState))
+                //                        && (ai_PARKING.VEHLICTYPE.Equals(licenseType) || string.IsNullOrEmpty(licenseType)) //** license type added on sep 14 2016
+                //                        && (ai_PARKING.VEHVIN.Equals(vin) || string.IsNullOrEmpty(vin))
+                //                        && ((ai_PARKING.ISSUENO >= startIssueNo || startIssueNo == -1) && (ai_PARKING.ISSUENO <= endIssueNo || endIssueNo == -1))
+                //                          //&& (ai_PARKING.ViolationClass == classes || classes == string.Empty)
+                //                       && (parVios.VIOCODE.Equals(code) || string.IsNullOrEmpty(code))
+                //                       && (parVios.VIODESCRIPTION1.Equals(vioDesc) || string.IsNullOrEmpty(vioDesc)) //** Violation Description added on sep 14 2016
+                //                       && (ai_PARKING.VOIDSTATUS.Equals(parkingStatus) || string.IsNullOrEmpty(parkingStatus))
+                //                       && (ai_PARKING.VEHTYPE.Equals(parkingType) || string.IsNullOrEmpty(parkingType))
+                //                        && (ai_PARKING.ISSUENOPFX.Equals(prefix) || string.IsNullOrEmpty(prefix))
+                //                        && (ai_PARKING.ISSUENOSFX.Equals(suffix) || string.IsNullOrEmpty(suffix))
+                //                        && (ai_PARKING.AGENCY.Equals(agency) || string.IsNullOrEmpty(agency))
+                //                        && (ai_PARKING.BEAT.Equals(beat) || string.IsNullOrEmpty(beat))
+                //                        && (ai_PARKING.METERNO.Equals(meterNo) || string.IsNullOrEmpty(meterNo))
+                //                        && (ai_PARKING.OFFICERID.Equals(myOfficerId) || string.IsNullOrEmpty(myOfficerId))
+                //                        && (ai_PARKING.OFFICERNAME.Equals(officerName) || string.IsNullOrEmpty(officerName))
+
+
+                //                      select new
+                //                      {
+                //                          OfficerID = ai_PARKING.OFFICERID,
+                //                          OfficerName = offName.OFFICERNAME,
+                //                          IssueNo = ai_PARKING.ISSUENO,
+                //                          IssueDate = ai_PARKING.ISSUEDATE,
+                //                          IssueTime = ai_PARKING.ISSUETIME,
+                //                          Status = ai_PARKING.VOIDSTATUS ?? "",
+                //                          IssueNoPfx = ai_PARKING.ISSUENOPFX == null ? "" : ai_PARKING.ISSUENOPFX,
+                //                          IssueNoSfx = ai_PARKING.ISSUENOSFX == null ? "" : ai_PARKING.ISSUENOSFX,
+                //                          VehLicNo = ai_PARKING.VEHLICNO,
+                //                          Beat = ai_PARKING.BEAT,
+                //                          MeterNo = ai_PARKING.METERNO == null ? "" : ai_PARKING.METERNO,
+                //                          VioCode = parVios.VIOCODE == null ? "" : parVios.VIOCODE,
+                //                          isAutoBindReqd = true
+                //                      }).ToList().Select(x => new EnforcementModel
+                //                      {
+                //                          OfficerID = Convert.ToInt32(x.OfficerID),
+                //                          OfficerName = x.OfficerName,
+                //                          IssueNo = Convert.ToInt64(x.IssueNo),
+                //                          IssueDateTime = ConvertToDateTimeFormat(x.IssueDate, x.IssueTime),
+                //                          IssueDateTime_final = ConvertToDateTimeFormat(x.IssueDate, x.IssueTime).ToString(),
+                //                          IssueNoWithPfxSfx = String.Concat(Convert.ToString(x.IssueNoPfx), GetIssueNoWithLeftPaddedZeroes(Convert.ToInt64(x.IssueNo)), Convert.ToString(x.IssueNoSfx)),
+
+                //                          Status = x.Status ?? "",
+                //                          IssueNoPfx = x.IssueNoPfx ?? "",
+                //                          IssueNoSfx = x.IssueNoSfx ?? "",
+                //                          VehLicNo = x.VehLicNo,
+                //                          Beat = x.Beat,
+                //                          MeterNo = x.MeterNo == null ? "" : x.MeterNo,
+                //                          VioCode = x.VioCode == null ? "" : x.VioCode,
+                //                          isAutoBindReqd = x.isAutoBindReqd
+                //                      }).ToList();
 
             }
             catch (Exception ex)
